@@ -168,7 +168,8 @@ html, body {
   letter-spacing:.18em; text-transform:uppercase;
   color:var(--green); background:rgba(74,222,128,.1);
   border:1px solid rgba(74,222,128,.5); border-radius:4px;
-  padding:5px 14px; cursor:pointer; white-space:nowrap;
+  padding:8px 14px; cursor:pointer; width:80%; margin-top:14px;
+  text-align:center; justify-content:center;
   animation:ctaPulse 1.2s ease infinite;
   transition:background .2s, box-shadow .2s;
 }
@@ -205,17 +206,24 @@ html, body {
   min-height:560px;
 }
 
-/* ── BACKGROUND — deep navy with radial glows, EV-style ── */
+/* ── BACKGROUND — deep dark, two subtle glows only ── */
 .bg {
   position:fixed; inset:0; z-index:0;
-  background:radial-gradient(ellipse 120% 80% at 60% 40%, #0d1f3a 0%, #060e1c 55%, #040a14 100%);
+  background:#020c1a;
+  overflow:hidden;
 }
 .bg::before {
   content:''; position:absolute; inset:0;
   background:
-    radial-gradient(ellipse 50% 60% at 8% 15%, rgba(56,189,248,0.07) 0%, transparent 55%),
-    radial-gradient(ellipse 40% 50% at 90% 80%, rgba(74,222,128,0.04) 0%, transparent 50%);
+    radial-gradient(ellipse 55% 50% at 15% 20%, rgba(56,189,248,0.09) 0%, transparent 60%),
+    radial-gradient(ellipse 45% 55% at 85% 80%, rgba(56,189,248,0.07) 0%, transparent 60%);
 }
+.bg::after { display:none; }
+
+.bg-shapes, .bg-panel-1, .bg-panel-2, .bg-panel-3,
+.bg-ring, .bg-ring-2, .bg-grid, .bg-streak, .bg-streak-2 { display:none; }
+
+#bgCanvas { display:none; }
 
 @keyframes fadeUp  { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
 @keyframes slideIn { from{opacity:0;transform:translateX(14px)} to{opacity:1;transform:translateX(0)} }
@@ -240,7 +248,7 @@ html, body {
 /* ── SIDEBAR METRICS ── */
 /* Timer in sidebar */
 .sb-timer {
-  background:rgba(56,189,248,.03); border:1px solid rgba(56,189,248,.1);
+  background:rgba(239,68,68,.04); border:1px solid rgba(239,68,68,.14);
   border-radius:8px; padding:11px 14px; flex-shrink:0;
   display:flex; align-items:center; justify-content:space-between;
 }
@@ -278,10 +286,13 @@ html, body {
 
 /* ── CONSOLE ── */
 .console {
-  padding:14px 20px 18px; display:flex; flex-direction:column; gap:12px;
+  padding:0; display:flex; flex-direction:column; gap:12px;
   overflow:hidden; position:relative;
   animation:fadeUp .5s ease .1s both;
-  min-height:400px;
+  background:none !important;
+  border:none !important;
+  box-shadow:none !important;
+  backdrop-filter:none !important;
 }
 
 /* Scanline */
@@ -368,22 +379,8 @@ html, body {
 .gpt-user-bubble .tok.clickable { color:#1a1a1a; }
 .gpt-user-bubble .tok.clickable:hover { background:rgba(0,0,0,.08); border-radius:3px; }
 .gpt-user-bubble .tok.hint-scan { color:#1d4ed8 !important; background:rgba(37,99,235,.12) !important; outline-color:rgba(37,99,235,.3) !important; }
-.gpt-user-bubble .tok.redacted.cat-cred { background:#2d0808; border-color:rgba(239,68,68,.5); }
-.gpt-user-bubble .tok.redacted.cat-pii  { background:#2d1800; border-color:rgba(251,146,60,.5); }
-.gpt-user-bubble .tok.redacted.cat-int  { background:#2d2600; border-color:rgba(250,204,21,.5); }
 /* Attachment chip */
 .gpt-attach-row { margin-top:10px; }
-.gpt-attach-chip {
-  display:inline-flex; align-items:center; gap:7px;
-  background:#fff; border:1px solid #d0d0d0;
-  border-radius:10px; padding:7px 12px;
-  font-family:'DM Sans',sans-serif; font-size:10px; font-weight:500; color:#444;
-  cursor:pointer; transition:background .15s; user-select:none;
-}
-.gpt-attach-chip:hover { background:#f4f4f4; }
-.gpt-attach-chip .chip-icon { font-size:14px; }
-.gpt-attach-chip .chip-name { flex:1; }
-.gpt-attach-chip .chip-arrow { font-size:8px; opacity:.5; }
 /* Word doc overlay */
 .word-doc-overlay {
   display:none; margin-top:10px;
@@ -424,9 +421,6 @@ html, body {
 }
 .word-doc-body .tok.clickable { color:#1a1a1a; }
 .word-doc-body .tok.clickable:hover { background:rgba(43,87,154,.12); border-radius:2px; color:#1e3a6e; }
-.word-doc-body .tok.redacted.cat-cred { background:#2d0808; border-color:rgba(239,68,68,.5); }
-.word-doc-body .tok.redacted.cat-pii  { background:#2d1800; border-color:rgba(251,146,60,.5); }
-.word-doc-body .tok.redacted.cat-int  { background:#2d2600; border-color:rgba(250,204,21,.5); }
 .word-doc-body .tok.hint-scan { color:#1e3a6e !important; background:rgba(43,87,154,.15) !important; outline-color:rgba(43,87,154,.35) !important; }
 /* Attachment chip nudge animation */
 @keyframes attachNudge {
@@ -438,13 +432,23 @@ html, body {
   75%  { transform:translateX(-1px); }
   100% { transform:translateX(0); }
 }
-@keyframes attachGlow {
-  0%,100% { box-shadow:0 0 0 0 rgba(37,99,235,.0), 0 0 0 1px #d0d0d0; }
-  50%      { box-shadow:0 0 12px 3px rgba(37,99,235,.25), 0 0 0 1px rgba(37,99,235,.5); }
+@keyframes attachPulse {
+  0%,100% { box-shadow:0 0 0 0 rgba(37,99,235,0),   0 1px 2px rgba(0,0,0,.1); border-color:#d0d0d0; }
+  50%      { box-shadow:0 0 0 5px rgba(37,99,235,.18), 0 0 18px 3px rgba(37,99,235,.35); border-color:rgba(37,99,235,.8); }
 }
+.gpt-attach-chip {
+  display:inline-flex; align-items:center; gap:7px;
+  background:#fff; border:1px solid #d0d0d0;
+  border-radius:10px; padding:7px 12px;
+  font-family:'DM Sans',sans-serif; font-size:10px; font-weight:500; color:#444;
+  cursor:pointer; transition:background .15s; user-select:none;
+}
+.gpt-attach-chip:hover { background:#f4f4f4; }
+.gpt-attach-chip .chip-icon { font-size:14px; }
+.gpt-attach-chip .chip-name { flex:1; }
+.gpt-attach-chip .chip-arrow { font-size:8px; opacity:.5; }
 .gpt-attach-chip.nudge {
-  animation:attachNudge .6s ease, attachGlow 1.5s ease-in-out 0.7s infinite;
-  border-color:rgba(37,99,235,.4);
+  animation:attachNudge .6s ease, attachPulse 1.6s ease-in-out 0.7s infinite;
 }
 /* Realistic ChatGPT input bar */
 .gpt-input-bar {
@@ -502,35 +506,45 @@ html, body {
 .tok.clickable:hover { background:rgba(255,255,255,.07); }
 .tok.noise.clickable:hover { background:rgba(255,255,255,.05); }
 
-/* Redacted block */
+/* Redacted block — solid pill style */
 .tok.redacted {
-  display:inline-flex; align-items:center; justify-content:center;
-  min-width:80px; height:18px;
-  border-radius:4px;
+  display:inline;
+  padding:1px 3px;
+  border-radius:3px;
   cursor:default !important;
   pointer-events:none;
-  vertical-align:middle; position:relative; overflow:hidden;
+  vertical-align:baseline;
+  text-decoration:line-through;
+  text-decoration-thickness:2px;
 }
-.tok.redacted::before {
-  content:''; position:absolute; inset:0;
-  background:repeating-linear-gradient(90deg, #0a131f 0px, #081018 3px, #0a131f 6px);
-}
+.tok.redacted::before { display:none; }
 .tok.redacted .redact-label {
-  position:relative; z-index:1;
-  font-family:'Orbitron',monospace; font-size:7px; font-weight:700;
-  letter-spacing:.1em;
+  font-family:inherit !important; font-size:inherit; font-weight:inherit;
+  letter-spacing:inherit; white-space:inherit; text-decoration:inherit;
+  text-decoration-color:inherit;
 }
-.tok.redacted.cat-cred { background:#0f0a0a; border:1px solid rgba(239,68,68,.3); }
-.tok.redacted.cat-cred .redact-label { color:rgba(239,68,68,.5); }
-.tok.redacted.cat-pii  { background:#0f0c09; border:1px solid rgba(251,146,60,.3); }
-.tok.redacted.cat-pii  .redact-label { color:rgba(251,146,60,.45); }
-.tok.redacted.cat-int  { background:#0f0f09; border:1px solid rgba(250,204,21,.3); }
-.tok.redacted.cat-int  .redact-label { color:rgba(250,204,21,.4); }
+.tok.redacted.cat-cred .redact-label { color:#fff !important; text-decoration-color:rgba(255,255,255,.7) !important; }
+.tok.redacted.cat-pii  .redact-label { color:#fff !important; text-decoration-color:rgba(255,255,255,.7) !important; }
+.tok.redacted.cat-int  .redact-label { color:#fff !important; text-decoration-color:rgba(255,255,255,.7) !important; }
+.tok.redacted.cat-safe .redact-label { color:#fff !important; text-decoration-color:rgba(255,255,255,.7) !important; }
+/* CREDENTIALS — red */
+.tok.redacted.cat-cred { background:#ef4444; color:#fff !important; text-decoration-color:rgba(255,255,255,.7); box-shadow:0 0 8px rgba(239,68,68,.35); }
+/* PII — orange */
+.tok.redacted.cat-pii  { background:#fb923c; color:#fff !important; text-decoration-color:rgba(255,255,255,.7); box-shadow:0 0 8px rgba(251,146,60,.35); }
+/* INTEL — yellow */
+.tok.redacted.cat-int  { background:#facc15; color:#fff !important; text-decoration-color:rgba(255,255,255,.7); box-shadow:0 0 6px rgba(250,204,21,.3); }
+/* SAFE — grey, no strikethrough */
+.tok.redacted.cat-safe { background:#64748b; color:#fff !important; text-decoration:none; box-shadow:none; }
 
-/* Redacted tokens on light email background */
-.email-body .tok.redacted.cat-cred { background:#2d0808; border-color:rgba(239,68,68,.5); }
-.email-body .tok.redacted.cat-pii  { background:#2d1800; border-color:rgba(251,146,60,.5); }
-.email-body .tok.redacted.cat-int  { background:#2d2600; border-color:rgba(250,204,21,.5); }
+/* Override for light backgrounds */
+.gpt-user-bubble .tok.redacted.cat-cred,
+.word-doc-body   .tok.redacted.cat-cred { background:#ef4444; color:#fff !important; text-decoration-color:rgba(255,255,255,.6); }
+.gpt-user-bubble .tok.redacted.cat-pii,
+.word-doc-body   .tok.redacted.cat-pii  { background:#fb923c; color:#fff !important; text-decoration-color:rgba(255,255,255,.6); }
+.gpt-user-bubble .tok.redacted.cat-int,
+.word-doc-body   .tok.redacted.cat-int  { background:#facc15; color:rgba(20,14,0,.85) !important; text-decoration-color:rgba(0,0,0,.6); }
+.gpt-user-bubble .tok.redacted.cat-safe,
+.word-doc-body   .tok.redacted.cat-safe { background:#64748b; color:#fff !important; text-decoration-color:rgba(255,255,255,.6); }
 .email-body .tok.hint-scan { color:#1d4ed8 !important; background:rgba(37,99,235,.12) !important; outline-color:rgba(37,99,235,.3) !important; }
 
 /* Scan hint flash — single neutral colour, no clues */
@@ -600,7 +614,28 @@ html, body {
 }
 .cat-popup-close:hover { color:var(--text); }
 
-/* ── DIAGNOSTICS ── */
+/* ── SECURED GRAPHIC ── */
+.diag-secured {
+  margin-top:15%; padding-top:16px;
+  display:flex; flex-direction:column; align-items:center; gap:6px;
+  animation:fadeUp .5s ease both;
+}
+.diag-secured-ring {
+  position:absolute;
+  width:70px; height:70px; border-radius:50%;
+  border:1px solid rgba(74,222,128,.2);
+  animation:ringPulse 2s ease-out infinite;
+  pointer-events:none;
+}
+.diag-secured-icon { width:44px; height:44px; filter:drop-shadow(0 0 12px rgba(74,222,128,.5)); position:relative; z-index:1; }
+.diag-secured-label {
+  font-family:'Orbitron',monospace; font-size:9px; font-weight:700;
+  letter-spacing:.18em; color:var(--green); text-transform:uppercase;
+}
+.diag-secured-sub {
+  font-family:'JetBrains Mono',monospace; font-size:8px;
+  color:rgba(74,222,128,.5); letter-spacing:.06em;
+}
 .diag {
   grid-column: 2 / 3;
   padding:16px 15px; display:flex; flex-direction:column; gap:10px;
@@ -648,17 +683,53 @@ html, body {
 .dc-pill.exposed-int  { background:rgba(250,204,21,.14); color:var(--yellow); border:1px solid rgba(250,204,21,.28); }
 .dc-pill.secured { background:rgba(74,222,128,.12); color:var(--green); border:1px solid rgba(74,222,128,.28); }
 
-.dc-dots { display:flex; gap:5px; margin-bottom:7px; }
-.dc-dot {
-  width:7px; height:7px; border-radius:50%; transition:all .35s;
-}
-.dc-dot.exposed      { background:var(--red);    box-shadow:0 0 6px rgba(239,68,68,.6); }
-.dc-dot.exposed-pii  { background:var(--orange); box-shadow:0 0 6px rgba(251,146,60,.6); }
-.dc-dot.exposed-int  { background:var(--yellow); box-shadow:0 0 6px rgba(250,204,21,.5); }
-.dc-dot.secured { background:rgba(74,222,128,.3); box-shadow:none; }
-.dc-dot.pop     { animation:dotPop .4s ease; }
+.dc-dots { display:none; }
+.dc-dot { display:none; }
 
-.dc-drain {
+/* Segmented token bar — one segment per token, gap between them */
+.dc-segments {
+  display:flex; gap:3px; margin-bottom:6px; height:5px;
+}
+.dc-seg {
+  flex:1; height:100%; border-radius:2px;
+  background:rgba(255,255,255,.1); box-shadow:none;
+  transition:background .35s, box-shadow .35s;
+  position:relative; overflow:hidden;
+}
+/* Swipe-in fill via pseudo element */
+.dc-seg::after {
+  content:''; position:absolute;
+  inset:0; border-radius:2px;
+  background:var(--green);
+  box-shadow:0 0 5px rgba(74,222,128,.4);
+  transform:translateX(-100%);
+  transition:none;
+}
+.dc-seg.secured::after {
+  transform:translateX(0);
+  transition:transform .4s cubic-bezier(.4,0,.2,1);
+}
+/* Only individually-secured segments go green via swipe */
+.dc-seg.secured { background:rgba(255,255,255,.1); }
+/* When whole category secured, all segments swipe green */
+.diag-cat.secured .dc-seg::after { transform:translateX(0); transition:transform .4s cubic-bezier(.4,0,.2,1); }
+.diag-cat.secured .dc-seg:nth-child(2)::after { transition-delay:.06s; }
+.diag-cat.secured .dc-seg:nth-child(3)::after { transition-delay:.12s; }
+
+/* Progress bar — removed, segments replace it */
+.dc-progress-track { display:none; }
+.dc-progress-fill  { display:none; }
+.dc-progress-fill {
+  height:100%; border-radius:2px;
+  transition:width .6s cubic-bezier(.4,0,.2,1), background-color .4s;
+  width:0%;
+}
+.diag-cat.exposed      .dc-progress-fill { background:var(--red);    box-shadow:0 0 6px rgba(239,68,68,.5); }
+.diag-cat.exposed-pii  .dc-progress-fill { background:var(--orange); box-shadow:0 0 6px rgba(251,146,60,.5); }
+.diag-cat.exposed-int  .dc-progress-fill { background:var(--yellow); box-shadow:0 0 5px rgba(250,204,21,.4); }
+.diag-cat.secured      .dc-progress-fill { background:var(--green);  box-shadow:0 0 8px rgba(74,222,128,.5); }
+
+.dc-drain { display:none; }
   font-family:'JetBrains Mono',monospace; font-size:8.5px;
   color:rgba(200,220,255,.28); transition:color .4s;
 }
@@ -670,109 +741,170 @@ html, body {
 .tm.warn  { color:var(--orange); }
 .tm.sep   { color:rgba(200,220,255,.2); }
 
+/* ── BRIEFING OVERLAY ABSTRACT SHAPES ── */
+.bo-shape {
+  position:absolute; border-radius:50%;
+  pointer-events:none;
+}
+.bo-shape-1 {
+  width:600px; height:600px;
+  top:-200px; left:-150px;
+  background:radial-gradient(circle at 40% 40%, rgba(56,189,248,0.18) 0%, rgba(14,60,140,0.1) 40%, transparent 70%);
+  border:1px solid rgba(56,189,248,0.08);
+}
+.bo-shape-2 {
+  width:500px; height:500px;
+  bottom:-160px; right:-120px;
+  background:radial-gradient(circle at 55% 55%, rgba(99,102,241,0.18) 0%, rgba(40,20,140,0.08) 45%, transparent 70%);
+  border:1px solid rgba(99,102,241,0.07);
+}
+.bo-shape-3 {
+  width:320px; height:320px;
+  bottom:10%; left:5%;
+  background:radial-gradient(circle at 45% 45%, rgba(74,222,128,0.1) 0%, transparent 65%);
+  border:1px solid rgba(74,222,128,0.06);
+}
+.bo-ring {
+  position:absolute; border-radius:50%;
+  pointer-events:none;
+}
+.bo-ring-1 {
+  width:440px; height:440px;
+  top:-120px; right:5%;
+  border:1px solid rgba(56,189,248,0.1);
+}
+.bo-ring-1::after {
+  content:''; position:absolute; inset:50px;
+  border-radius:50%; border:1px solid rgba(56,189,248,0.06);
+}
+.bo-ring-2 {
+  width:220px; height:220px;
+  bottom:5%; left:30%;
+  border:1px solid rgba(99,102,241,0.08);
+}
+.bo-grid {
+  position:absolute; inset:0; pointer-events:none;
+  background-image:radial-gradient(circle, rgba(56,189,248,0.14) 1px, transparent 1px);
+  background-size:48px 48px;
+  mask-image:radial-gradient(ellipse 100% 100% at 50% 50%, transparent 30%, rgba(0,0,0,0.6) 60%, black 100%);
+  -webkit-mask-image:radial-gradient(ellipse 100% 100% at 50% 50%, transparent 30%, rgba(0,0,0,0.6) 60%, black 100%);
+}
+.bo-streak {
+  position:absolute; width:100%; height:1px; pointer-events:none;
+  top:28%;
+  background:linear-gradient(90deg, transparent 0%, rgba(56,189,248,0.2) 25%, rgba(56,189,248,0.35) 50%, rgba(56,189,248,0.2) 75%, transparent 100%);
+  box-shadow:0 0 24px 6px rgba(56,189,248,0.07);
+}
+.bo-streak-2 { top:72%; background:linear-gradient(90deg, transparent 0%, rgba(99,102,241,0.15) 30%, rgba(99,102,241,0.25) 55%, rgba(99,102,241,0.15) 75%, transparent 100%); box-shadow:0 0 20px 5px rgba(99,102,241,0.06); }
+
 /* ── BRIEFING MODAL ── */
 .briefing-overlay {
   position:fixed; inset:0; z-index:300;
-  background:rgba(0,2,8,.95); backdrop-filter:blur(28px);
+  background:#040a14;
   display:flex; align-items:center; justify-content:center;
   transition:opacity .5s ease;
+  overflow:hidden;
 }
 .briefing-overlay.hidden { opacity:0; pointer-events:none; }
 
-/* ── BRIEFING MODAL ── */
 .briefing-card {
-  width:580px; max-width:calc(100vw - 32px);
-  background:var(--panel);
-  border:1px solid rgba(56,189,248,.18);
+  width:540px; max-width:calc(100vw - 32px);
+  background:rgba(8,20,45,0.55);
+  border:1px solid rgba(255,255,255,.18);
   border-radius:14px; overflow:hidden;
-  box-shadow:0 0 0 1px rgba(56,189,248,.04), 0 40px 80px rgba(0,0,0,.9), 0 0 60px rgba(56,189,248,.05);
-  animation:verdictIn .4s cubic-bezier(.34,1.56,.64,1) both;
+  backdrop-filter:blur(32px);
+  -webkit-backdrop-filter:blur(32px);
+  box-shadow:0 40px 80px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.07);
+  animation:verdictIn .5s cubic-bezier(.34,1.56,.64,1) both;
+  position:relative; z-index:1;
 }
-/* Top accent line — matches sidebar card style */
+
+/* Top accent bar — red to signal threat */
 .briefing-top-bar {
-  height:1px; display:block;
-  background:linear-gradient(90deg, transparent, rgba(56,189,248,.5) 35%, rgba(125,211,252,.3) 65%, transparent);
+  height:3px; display:block;
+  background:linear-gradient(90deg, transparent, rgba(239,68,68,.8) 30%, rgba(239,68,68,.5) 70%, transparent);
 }
-.briefing-body { padding:28px 32px 28px; }
+.briefing-graphic {
+  position:relative; height:120px;
+  background:linear-gradient(180deg, rgba(239,68,68,.07) 0%, rgba(6,16,36,0) 100%);
+  display:flex; align-items:center; justify-content:center;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  overflow:hidden;
+}
+.briefing-graphic .b-ring {
+  position:absolute; width:110px; height:110px; border-radius:50%;
+  border:1px solid rgba(239,68,68,.3);
+  animation:ringPulse 2s ease-out infinite;
+}
+.briefing-graphic .b-ring2 { animation-delay:.7s; }
+.briefing-graphic svg.b-shield { width:58px; height:58px; filter:drop-shadow(0 0 16px rgba(239,68,68,.45)); position:relative; z-index:2; animation:shieldPop .6s cubic-bezier(.34,1.56,.64,1) .1s both; }
+.briefing-graphic .b-lbl {
+  position:absolute; bottom:12px; left:0; right:0; text-align:center;
+  font-family:'Orbitron',monospace; font-size:9px; font-weight:700;
+  letter-spacing:.22em; color:rgba(255,255,255,.45); text-transform:uppercase;
+  animation:scanReveal .5s ease .4s both;
+}
 
-/* Eyebrow — same as diag-title */
-.briefing-eyebrow {
-  font-family:'Orbitron',monospace; font-size:8px; font-weight:700;
-  letter-spacing:.18em; text-transform:uppercase; color:var(--dim);
-  padding-bottom:14px; margin-bottom:18px;
-  border-bottom:1px solid rgba(56,189,248,.1);
-  display:flex; align-items:center; gap:10px;
-}
-.briefing-eyebrow::before {
-  content:''; width:6px; height:6px; border-radius:50%;
-  background:var(--red); box-shadow:0 0 8px rgba(239,68,68,.9);
-  animation:pulse .8s ease infinite; flex-shrink:0;
-}
+.briefing-body { padding:24px 28px 24px; }
 
-/* Title */
-.briefing-title {
-  font-family:'Orbitron',monospace; font-size:22px; font-weight:900;
-  color:var(--text); letter-spacing:.02em; line-height:1.25; margin-bottom:22px;
-}
-
-/* Stat strip — matches diag-cat style */
+/* Stat strip */
 .briefing-stat-strip {
   display:grid; grid-template-columns:1fr 1fr 1fr;
-  gap:8px; margin-bottom:22px;
+  gap:8px; margin-bottom:18px;
 }
 .bss-item {
-  background:rgba(56,189,248,.03); border:1px solid rgba(56,189,248,.1);
-  border-radius:8px; padding:10px 12px;
+  background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.1);
+  border-radius:8px; padding:11px 13px;
 }
 .bss-lbl {
-  font-family:'JetBrains Mono',monospace; font-size:7px; letter-spacing:.16em;
-  text-transform:uppercase; color:var(--dim); margin-bottom:5px;
+  font-size:8px; letter-spacing:.12em; text-transform:uppercase;
+  color:rgba(200,220,255,.35); margin-bottom:5px;
 }
 .bss-val {
-  font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600;
-  color:var(--text);
+  font-family:'Orbitron',monospace; font-size:13px; font-weight:700;
+  color:#fff; letter-spacing:.02em;
 }
-.bss-val.danger { color:var(--red); }
+.bss-val.danger { color:#fff; }
 
 /* Divider */
-.briefing-divider { height:1px; background:rgba(56,189,248,.08); margin:0 0 18px; }
+.briefing-divider { height:1px; background:rgba(255,255,255,.08); margin:0 0 16px; }
 
-/* Legend — 2×2 grid matching sidebar label style */
-.briefing-legend {
-  display:grid; grid-template-columns:1fr 1fr;
-  gap:8px 20px; margin-bottom:20px;
-}
+/* Token legend */
+.briefing-legend { display:flex; flex-direction:column; gap:0; margin-bottom:16px; }
 .b-leg {
-  display:flex; align-items:center; gap:9px;
-  font-family:'JetBrains Mono',monospace; font-size:10px;
+  display:flex; align-items:center; gap:10px;
+  padding:7px 0; border-bottom:1px solid rgba(255,255,255,.07);
+  font-size:10.5px;
 }
-.b-leg-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
-.b-leg-name { font-weight:400; letter-spacing:.04em; }
-.b-leg-desc { color:var(--dim); font-size:9px; margin-left:2px; }
+.b-leg:last-child { border-bottom:none; }
+.b-leg-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+.b-leg-name { font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:700; letter-spacing:.04em; flex-shrink:0; min-width:130px; }
+.b-leg-desc { font-family:'JetBrains Mono',monospace; color:var(--dim); font-size:9px; letter-spacing:.01em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
 /* Body text */
 .briefing-text {
   font-family:'DM Sans',sans-serif;
-  font-size:12.5px; color:rgba(200,220,255,.5); line-height:1.8; font-weight:300;
-  margin-bottom:22px; border-top:1px solid rgba(56,189,248,.07); padding-top:18px;
+  font-size:12px; color:rgba(200,220,255,.7); line-height:1.8; font-weight:300;
+  margin-bottom:20px; border-top:1px solid rgba(255,255,255,.08); padding-top:16px;
 }
-.briefing-text strong { color:rgba(200,220,255,.85); font-weight:500; }
-.briefing-text .hl { color:var(--blue2); font-weight:500; }
+.briefing-text strong { color:#ffffff; font-weight:600; }
+.briefing-text .hl { color:var(--blue2); font-weight:600; }
 
-/* CTA — same treatment as btn-scan */
+/* CTA — white outline, white text */
 .briefing-start-btn {
-  width:100%; padding:14px;
-  font-family:'Orbitron',monospace; font-size:10px; font-weight:700;
-  letter-spacing:.22em; text-transform:uppercase; color:var(--text);
-  background:rgba(56,189,248,.06); border:1px solid rgba(56,189,248,.25);
-  border-radius:8px; cursor:pointer; transition:all .25s;
+  width:100%; padding:13px;
+  font-family:'Orbitron',monospace; font-size:11px; font-weight:700;
+  letter-spacing:.2em; text-transform:uppercase;
+  background:transparent; border:1px solid rgba(255,255,255,.2);
+  border-radius:8px; color:rgba(255,255,255,.85);
+  cursor:pointer; transition:all .2s;
 }
 .briefing-start-btn:hover {
-  background:rgba(56,189,248,.14); border-color:rgba(56,189,248,.5);
-  box-shadow:0 0 20px rgba(56,189,248,.1); color:#fff;
+  background:rgba(255,255,255,.05); border-color:rgba(255,255,255,.4);
+  box-shadow:0 0 20px rgba(255,255,255,.06);
 }
 
-/* suppress old left/right panel references */
+/* suppress old layout refs */
 .briefing-header, .briefing-body-panel,
 .briefing-left, .briefing-right { display:contents; }
 .briefing-header-top, .briefing-badge { display:none; }
@@ -781,20 +913,23 @@ html, body {
 /* ── VERDICT ── */
 .verdict-overlay {
   position:fixed; inset:0; z-index:200;
-  background:rgba(4,10,20,.95); backdrop-filter:blur(18px);
+  background:#040a14;
   display:flex; align-items:center; justify-content:center;
   opacity:0; pointer-events:none; transition:opacity .45s ease;
+  overflow:hidden;
 }
 .verdict-overlay.show { opacity:1; pointer-events:all; }
 
 .verdict-card {
-  background:rgba(6,16,36,.98);
-  border:1px solid rgba(56,189,248,.18);
+  background:rgba(8,20,45,0.55);
+  border:1px solid rgba(255,255,255,.18);
   border-radius:14px; width:480px;
-  box-shadow:0 40px 80px rgba(0,0,0,.65), inset 0 1px 0 rgba(56,189,248,.1);
+  backdrop-filter:blur(32px);
+  -webkit-backdrop-filter:blur(32px);
+  box-shadow:0 40px 80px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.07);
   overflow:hidden;
   animation:verdictIn .5s cubic-bezier(.34,1.56,.64,1) both;
-  position:relative;
+  position:relative; z-index:1;
 }
 
 /* ── SUCCESS GRAPHIC ── */
@@ -846,7 +981,7 @@ html, body {
   position:relative; height:140px; overflow:hidden;
   background:linear-gradient(180deg, rgba(239,68,68,.07) 0%, transparent 100%);
   display:flex; align-items:center; justify-content:center;
-  border-bottom:1px solid rgba(239,68,68,.14);
+  border-bottom:1px solid rgba(255,255,255,.08);
 }
 .v-fail-shield-wrap {
   position:relative; z-index:2;
@@ -888,7 +1023,7 @@ html, body {
 .v-divider { height:1px; background:rgba(56,189,248,.1); margin:18px 0; }
 .v-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
 .v-metric {
-  background:rgba(56,189,248,.03); border:1px solid rgba(56,189,248,.1);
+  background:rgba(239,68,68,.04); border:1px solid rgba(239,68,68,.14);
   border-radius:8px; padding:11px 13px;
 }
 .v-ml { font-size:8px; letter-spacing:.12em; text-transform:uppercase; color:rgba(200,220,255,.35); margin-bottom:4px; }
@@ -901,7 +1036,7 @@ html, body {
 .v-rows-lbl { font-size:8px; letter-spacing:.12em; text-transform:uppercase; color:rgba(200,220,255,.3); margin-bottom:8px; }
 .v-row {
   display:flex; justify-content:space-between; align-items:center;
-  padding:7px 0; border-bottom:1px solid rgba(56,189,248,.08);
+  padding:7px 0; border-bottom:1px solid rgba(239,68,68,.08);
   font-size:10.5px;
 }
 .v-row:last-child { border-bottom:none; }
@@ -910,12 +1045,17 @@ html, body {
 .v-rv.green { color:var(--green); }
 .v-rv.red   { color:var(--red); }
 .v-rv.orange { color:var(--orange); }
+.v-rv.yellow { color:var(--yellow); }
 
 .v-status-row { display:none; }
 .v-single-metric {
   display:flex; justify-content:space-between; align-items:center;
   padding:10px 14px; margin-bottom:14px;
   background:rgba(56,189,248,.04); border:1px solid rgba(56,189,248,.1); border-radius:8px;
+}
+  background:rgba(239,68,68,.04); border:1px solid rgba(239,68,68,.14);
+  border-radius:8px; padding:11px 14px;
+  display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;
 }
 .v-slbl { font-family:'Orbitron',monospace; font-size:8px; letter-spacing:.14em; color:var(--dim); }
 .v-sval { font-family:'Orbitron',monospace; font-size:11px; font-weight:700; letter-spacing:.1em; }
@@ -925,12 +1065,12 @@ html, body {
 
 .v-reset {
   width:100%; padding:12px;
-  background:rgba(56,189,248,.05); border:1px solid rgba(56,189,248,.18);
-  border-radius:8px; color:var(--text);
+  background:transparent; border:1px solid rgba(255,255,255,.2);
+  border-radius:8px; color:rgba(255,255,255,.85);
   font-family:'DM Sans',sans-serif; font-size:11px; font-weight:500;
   letter-spacing:.06em; cursor:pointer; transition:all .2s;
 }
-.v-reset:hover { background:rgba(56,189,248,.1); border-color:rgba(56,189,248,.35); }
+.v-reset:hover { background:rgba(255,255,255,.05); border-color:rgba(255,255,255,.4); }
 
 /* ── BOOT ── */
 .boot {
@@ -952,7 +1092,7 @@ html, body {
   transition:opacity .7s ease; overflow:hidden;
 }
 .splash.hidden { opacity:0; pointer-events:none; }
-/* Ambient glow rings */
+/* Ambient glow ring */
 .splash::before {
   content:''; position:absolute;
   width:600px; height:600px; border-radius:50%;
@@ -960,6 +1100,7 @@ html, body {
   top:50%; left:50%; transform:translate(-50%,-60%);
   pointer-events:none;
 }
+.splash::after { display:none; }
 .splash-logo {
   font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:400;
   letter-spacing:.3em; color:rgba(56,189,248,.5); text-transform:uppercase;
@@ -1180,7 +1321,18 @@ html, body {
 </style>
 <body>
 
-<div class="bg"></div>
+<div class="bg">
+  <div class="bg-shapes">
+    <div class="bg-panel-1"></div>
+    <div class="bg-panel-2"></div>
+    <div class="bg-panel-3"></div>
+    <div class="bg-ring"></div>
+    <div class="bg-ring-2"></div>
+    <div class="bg-grid"></div>
+    <div class="bg-streak"></div>
+    <div class="bg-streak-2"></div>
+  </div>
+</div>
 
 <!-- SPLASH — audio trigger screen -->
 <div class="splash" id="splashScreen">
@@ -1206,12 +1358,22 @@ html, body {
 <div class="briefing-overlay" id="briefingOverlay">
   <div class="briefing-card">
     <div class="briefing-top-bar"></div>
+
+    <!-- Alert graphic — mirrors verdict success graphic -->
+    <div class="briefing-graphic">
+      <div class="b-ring"></div>
+      <div class="b-ring b-ring2"></div>
+      <svg class="b-shield" viewBox="0 0 40 40" fill="none">
+        <path d="M20 4 L34 10 L34 22 C34 29 27 35 20 37 C13 35 6 29 6 22 L6 10 Z" stroke="rgba(239,68,68,.9)" stroke-width="1.5" fill="rgba(239,68,68,.08)"/>
+        <line x1="14" y1="14" x2="26" y2="26" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="26" y1="14" x2="14" y2="26" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"/>
+      </svg>
+      <div class="b-lbl">Sensitive Data Detected</div>
+    </div>
+
     <div class="briefing-body">
 
-      <div class="briefing-eyebrow">// Sensitive Data Detected</div>
-      <div class="briefing-title">ChatGPT Submission<br>Contains Sensitive Data</div>
-
-      <!-- Stats — matches diag-cat card style -->
+      <!-- Stats -->
       <div class="briefing-stat-strip">
         <div class="bss-item">
           <div class="bss-lbl">Destination</div>
@@ -1229,16 +1391,32 @@ html, body {
 
       <div class="briefing-divider"></div>
 
-      <!-- Legend — 2×2 matching sidebar label colours -->
+      <!-- Legend -->
       <div class="briefing-legend">
-        <div class="b-leg"><div class="b-leg-dot" style="background:var(--red)"></div><span class="b-leg-name" style="color:var(--red)">[CREDENTIALS]</span></div>
-        <div class="b-leg"><div class="b-leg-dot" style="background:rgba(148,163,184,.5)"></div><span class="b-leg-name" style="color:var(--dim)">[SAFE]</span></div>
-        <div class="b-leg"><div class="b-leg-dot" style="background:var(--orange)"></div><span class="b-leg-name" style="color:var(--orange)">[PII]</span></div>
-        <div class="b-leg"><div class="b-leg-dot" style="background:var(--yellow)"></div><span class="b-leg-name" style="color:var(--yellow)">[INTERNAL_INTEL]</span></div>
+        <div class="b-leg">
+          <div class="b-leg-dot" style="background:var(--red); box-shadow:0 0 6px rgba(239,68,68,.7)"></div>
+          <span class="b-leg-name" style="color:var(--red)">[CREDENTIALS]</span>
+          <span class="b-leg-desc">Passwords, API keys &amp; access tokens — highest risk</span>
+        </div>
+        <div class="b-leg">
+          <div class="b-leg-dot" style="background:var(--orange); box-shadow:0 0 6px rgba(251,146,60,.6)"></div>
+          <span class="b-leg-name" style="color:var(--orange)">[PII]</span>
+          <span class="b-leg-desc">Names, emails &amp; personally identifiable information</span>
+        </div>
+        <div class="b-leg">
+          <div class="b-leg-dot" style="background:var(--yellow); box-shadow:0 0 6px rgba(250,204,21,.5)"></div>
+          <span class="b-leg-name" style="color:var(--yellow)">[INTERNAL_INTEL]</span>
+          <span class="b-leg-desc">Internal codenames, project refs &amp; confidential context</span>
+        </div>
+        <div class="b-leg">
+          <div class="b-leg-dot" style="background:rgba(148,163,184,.5)"></div>
+          <span class="b-leg-name" style="color:var(--dim)">[SAFE]</span>
+          <span class="b-leg-desc">Non-sensitive tokens — confirm these to boost integrity</span>
+        </div>
       </div>
 
       <div class="briefing-text">
-        Your colleague Marcus is about to send a ChatGPT prompt containing sensitive data. <strong>Review it before it's submitted.</strong><br><br>
+        Your colleague Marcus is about to send a ChatGPT prompt containing sensitive data. <strong>Review the prompt for policy violations before it is transmitted to an external server.</strong><br><br>
         Click each highlighted token to classify it. Sensitive tokens <strong>drain the integrity meter</strong> until redacted. Misclassifying as Safe costs <strong>−10% integrity</strong>. Use <span class="hl">Vulnerability Scan</span> for a hint.
       </div>
 
@@ -1303,14 +1481,12 @@ html, body {
       <div class="v-single-metric"><div class="v-ml">Integrity Remaining</div><div class="v-mv" id="vInt">—</div></div>
       <div class="v-rows">
         <div class="v-rows-lbl">Exposure Analysis</div>
-        <div class="v-row"><span class="v-rk">Credentials Exposed</span><span class="v-rv" id="vCred">—</span></div>
-        <div class="v-row"><span class="v-rk">PII Exposure</span><span class="v-rv" id="vPii">—</span></div>
+        <div class="v-row"><span class="v-rk">Unauthorized Access Risk</span><span class="v-rv" id="vCred">—</span></div>
+        <div class="v-row"><span class="v-rk">Privacy Compliance (GDPR/CCPA)</span><span class="v-rv" id="vPii">—</span></div>
         <div class="v-row"><span class="v-rk">Internal Intel</span><span class="v-rv" id="vIntel">—</span></div>
         <div class="v-row"><span class="v-rk">Classification Errors</span><span class="v-rv" id="vErrors">—</span></div>
-        <div class="v-row"><span class="v-rk">Safe Confirmations</span><span class="v-rv" id="vSafe">—</span></div>
-        <div class="v-row"><span class="v-rk">Scan Tool Used</span><span class="v-rv" id="vScan">—</span></div>
       </div>
-      <button class="v-reset" onclick="resetGame()">↺ &nbsp; REVIEW AGAIN</button>
+      <button class="v-reset" onclick="resetGame()">REVIEW AGAIN</button>
     </div>
   </div>
 </div>
@@ -1357,9 +1533,6 @@ html, body {
         </div>
         <div class="ib-drain-label" id="iwDrain">— paused —</div>
         <span class="ib-delta" id="iwDelta"></span>
-        <button class="ib-submit-cta" id="ibSubmitCta" onclick="submitGame()" style="display:none">
-          ▶ SUBMIT REPORT
-        </button>
       </div>
     </div>
   </div>
@@ -1370,7 +1543,7 @@ html, body {
 <div class="shell">
 
   <!-- CONSOLE -->
-  <div class="card console" id="consoleEl">
+  <div class="console" id="consoleEl">
     <div class="scanline" id="scanline"></div>
     <div class="payload" id="payload"></div>
   </div>
@@ -1396,8 +1569,8 @@ html, body {
           <div class="dc-name" style="color:var(--red)">[CREDENTIALS]</div>
           <div class="dc-pill exposed" id="pillCred">EXPOSED</div>
         </div>
-        <div class="dc-dots" id="dotsCred"></div>
-        <div class="dc-drain" id="drainCred">⬇ −0.56%/s per token</div>
+        <div class="dc-segments" id="segsCred"></div>
+        <div class="dc-progress-track"><div class="dc-progress-fill" id="progCred" style="width:0%"></div></div>
       </div>
 
       <!-- PII — orange -->
@@ -1406,8 +1579,8 @@ html, body {
           <div class="dc-name" style="color:var(--orange)">[PII]</div>
           <div class="dc-pill exposed-pii" id="pillPii">EXPOSED</div>
         </div>
-        <div class="dc-dots" id="dotsPii"></div>
-        <div class="dc-drain" id="drainPii">⬇ −0.16%/s per token</div>
+        <div class="dc-segments" id="segsPii"></div>
+        <div class="dc-progress-track"><div class="dc-progress-fill" id="progPii" style="width:0%"></div></div>
       </div>
 
       <!-- INTERNAL — yellow -->
@@ -1416,12 +1589,29 @@ html, body {
           <div class="dc-name" style="color:var(--yellow)">[INTERNAL_INTEL]</div>
           <div class="dc-pill exposed-int" id="pillInt">EXPOSED</div>
         </div>
-        <div class="dc-dots" id="dotsInt"></div>
-        <div class="dc-drain" id="drainInt">⬇ −0.064%/s per token</div>
+        <div class="dc-segments" id="segsInt"></div>
+        <div class="dc-progress-track"><div class="dc-progress-fill" id="progInt" style="width:0%"></div></div>
       </div>
 
+    </div><!-- /diag-cats -->
+
+    <!-- SECURED graphic — shown when all tokens redacted -->
+    <div class="diag-secured" id="diagSecured" style="display:none">
+      <div class="diag-secured-ring"></div>
+      <svg class="diag-secured-icon" viewBox="0 0 40 40" fill="none">
+        <path d="M20 4 L34 10 L34 22 C34 29 27 35 20 37 C13 35 6 29 6 22 L6 10 Z" stroke="rgba(74,222,128,.9)" stroke-width="1.5" fill="rgba(74,222,128,.08)"/>
+        <polyline points="13,20 18,26 28,14" stroke="#4ade80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke-dasharray="30" stroke-dashoffset="30">
+          <animate attributeName="stroke-dashoffset" from="30" to="0" dur="0.5s" fill="freeze" begin="0s"/>
+        </polyline>
+      </svg>
+      <div class="diag-secured-label">ALL TOKENS SECURED</div>
+      <div class="diag-secured-sub">Submission safe to send</div>
+      <button class="ib-submit-cta" id="ibSubmitCta" onclick="submitGame()" style="display:none">
+        ▶ &nbsp;SUBMIT REPORT
+      </button>
     </div>
-  </div>
+
+  </div><!-- /diag -->
 
 </div><!-- /shell -->
 </div><!-- /page-wrap -->
@@ -1444,11 +1634,11 @@ function preloadAudio() {
   SND.bg      = new Audio(base + 'SunoBG.mp3');
   SND.bg.loop = true; SND.bg.volume = 0.5; SND.bg.preload = 'auto';
 
-  SND.vo      = new Audio(base + 'Briefing.mp3');
+  SND.vo      = new Audio(base + 'BriefingVO.mp3');
   SND.vo.volume = 1.0; SND.vo.preload = 'auto';
 
   SND.bleep   = new Audio(base + 'bleep_p8nRzd6T.mp3');
-  SND.bleep.volume = 0.65; SND.bleep.preload = 'auto';
+  SND.bleep.volume = 0.325; SND.bleep.preload = 'auto';
 
   SND.success = new Audio(base + 'success_avrPRnht.mp3');
   SND.success.volume = 1.0; SND.success.preload = 'auto';
@@ -1456,10 +1646,10 @@ function preloadAudio() {
   SND.error   = new Audio(base + 'error.mp3');
   SND.error.volume = 1.0; SND.error.preload = 'auto';
 
-  SND.voSuccess = new Audio(base + 'VOSuccess.mp3');
+  SND.voSuccess = new Audio(base + 'SuccessVO.mp3');
   SND.voSuccess.volume = 1.0; SND.voSuccess.preload = 'auto';
 
-  SND.voFailure = new Audio(base + 'VOFailure.mp3');
+  SND.voFailure = new Audio(base + 'IncorrectVO.mp3');
   SND.voFailure.volume = 1.0; SND.voFailure.preload = 'auto';
 
   SND.selected = new Audio(base + 'selected_wbItGBcM.mp3');
@@ -1469,7 +1659,7 @@ function preloadAudio() {
   SND.hover.volume = 0.6; SND.hover.preload = 'auto';
 
   SND.click = new Audio(base + 'click.mp3');
-  SND.click.volume = 0.7; SND.click.preload = 'auto';
+  SND.click.volume = 0.35; SND.click.preload = 'auto';
 
   SND.wrong = new Audio(base + 'wronganswer.mp3');
   SND.wrong.volume = 0.8; SND.wrong.preload = 'auto';
@@ -1505,7 +1695,7 @@ function playHover() {
 function playClick() {
   if (!audioReady || !SND.click) return;
   const a = new Audio(SND.click.src);
-  a.volume = 0.7; a.play().catch(()=>{});
+  a.volume = 0.35; a.play().catch(()=>{});
 }
 
 function playWrong() {
@@ -1550,7 +1740,7 @@ document.addEventListener('click', e => {
 function splashBegin() {
   // Play bleep directly (audio already preloaded, this is the gesture)
   const b = new Audio('https://aigenesis2023.github.io/CyberSecurity/assets/audio/bleep_p8nRzd6T.mp3');
-  b.volume = 0.65; b.play().catch(()=>{});
+  b.volume = 0.325; b.play().catch(()=>{});
   startAudio();
   const el = document.getElementById('splashScreen');
   el.classList.add('hidden');
@@ -1643,7 +1833,6 @@ let activePopupTokenId = null;
 // ════════════════════════════════════════════
 function buildPayload() {
   document.getElementById('payload').innerHTML = `
-    <div class="zone-lbl">CHATGPT SUBMISSION // FLAGGED BEFORE SEND</div>
     <div class="gpt-window">
 
       <div class="gpt-titlebar">
@@ -1666,7 +1855,7 @@ function buildPayload() {
             </div>
             <div class="gpt-user-bubble">
               Can you help me write an executive summary for a client presentation? Here's the context.<br><br>
-              The engagement is called <span class="tok clickable" data-id="project">Project Nightfall</span> — that's our internal codename so don't include it in the output. My client contact is <span class="tok clickable" data-id="name">James Okafor</span> at <span class="tok clickable" data-id="email">j.okafor@pinnacle-group.com</span>.<br><br>
+              The engagement is called <span class="tok clickable" data-id="project">Project Cobalt-Seven</span> — that's our internal codename so don't include it in the output. My client contact is <span class="tok clickable" data-id="name">James Okafor</span> at <span class="tok clickable" data-id="email">j.okafor@pinnacle-group.com</span>.<br><br>
               This is a <span class="tok clickable noise" data-id="version">Q4 review</span> covering <span class="tok clickable noise" data-id="turbine">3 workstreams</span>. I've attached my briefing notes doc for the full details — the summary should be formal and about one page.
               <div class="gpt-attach-row">
                 <div class="gpt-attach-chip" onclick="toggleAttachment()">
@@ -1733,17 +1922,17 @@ function toggleAttachment() {
   if (open && chip) chip.classList.remove('nudge');
 }
 // ════════════════════════════════════════════
-function buildDots() {
-  const dotClass = { credential:'exposed', pii:'exposed-pii', internal:'exposed-int' };
+function buildSegments() {
   Object.entries(CAT_TOKENS).forEach(([cat, ids]) => {
     const key = catKey(cat);
-    const cont = document.getElementById(`dots${key}`);
+    const cont = document.getElementById(`segs${key}`);
+    if (!cont) return;
     cont.innerHTML = '';
     ids.forEach(id => {
-      const d = document.createElement('div');
-      d.className = `dc-dot ${dotClass[cat]}`;
-      d.id = `dot_${id}`;
-      cont.appendChild(d);
+      const s = document.createElement('div');
+      s.className = 'dc-seg';
+      s.id = `seg_${id}`;
+      cont.appendChild(s);
     });
   });
 }
@@ -1888,10 +2077,10 @@ function redactToken(id, cat) {
   if (!el) return;
 
   // Build redacted block
-  const catClass = cat === 'fp' ? 'cat-cred' : `cat-${cat === 'credential' ? 'cred' : cat === 'pii' ? 'pii' : 'int'}`;
-  const labelText = cat === 'fp' ? 'SAFE' : TOKENS[id].label;
+  const catClass = cat === 'fp' ? 'cat-safe' : `cat-${cat === 'credential' ? 'cred' : cat === 'pii' ? 'pii' : 'int'}`;
+  const originalText = el.textContent.trim();
   el.className = `tok redacted ${catClass}`;
-  el.innerHTML = `<span class="redact-label">${labelText}</span>`;
+  el.innerHTML = `<span class="redact-label">${originalText}</span>`;
   el.removeEventListener('click', onTokenClick);
 }
 
@@ -1903,17 +2092,26 @@ const CAT_EXPOSED_CLASS = { credential:'exposed', pii:'exposed-pii', internal:'e
 const CAT_DOT_CLASS     = { credential:'exposed', pii:'exposed-pii', internal:'exposed-int' };
 
 function updateDiag(cat, tokenId) {
-  const dot = document.getElementById(`dot_${tokenId}`);
-  if (dot) {
-    dot.classList.remove('exposed','exposed-pii','exposed-int');
-    dot.classList.add('secured', 'pop');
-    setTimeout(() => dot.classList.remove('pop'), 450);
+  const key  = catKey(cat);
+
+  // Fill the next unfilled segment from left (left-to-right fill)
+  const cont = document.getElementById(`segs${key}`);
+  if (cont) {
+    const next = cont.querySelector('.dc-seg:not(.secured)');
+    if (next) next.classList.add('secured');
   }
 
-  const key  = catKey(cat);
   const ids  = CAT_TOKENS[cat];
-  const left = ids.filter(id => !tokState[id].redacted).length;
+  const total = ids.length;
+  const secured = ids.filter(id => tokState[id].redacted).length;
+  const left = total - secured;
   const catEl = document.getElementById(`cat${key}`);
+
+  // Update progress bar — fill proportionally to tokens secured
+  const progEl = document.getElementById(`prog${key}`);
+  if (progEl) {
+    progEl.style.width = Math.round((secured / total) * 100) + '%';
+  }
 
   // Positive pulse across whole panel
   catEl.classList.remove('pulse');
@@ -1925,8 +2123,8 @@ function updateDiag(cat, tokenId) {
     catEl.className = 'diag-cat secured';
     document.getElementById(`pill${key}`).className = 'dc-pill secured';
     document.getElementById(`pill${key}`).textContent = 'SECURED';
-    document.getElementById(`drain${key}`).className = 'dc-drain done';
-    document.getElementById(`drain${key}`).textContent = '✓ Category neutralised';
+    // Full green bar on secured
+    if (progEl) { progEl.style.width = '100%'; }
   }
 }
 
@@ -2080,13 +2278,9 @@ function endGame(reason) {
   document.getElementById('vPii').textContent   = piiLeft===0   ? 'Mitigated' : piiLeft+' Still Exposed';
   document.getElementById('vPii').className     = `v-rv ${piiLeft===0?'green':'orange'}`;
   document.getElementById('vIntel').textContent = intLeft===0   ? 'Secured'   : 'Exposed';
-  document.getElementById('vIntel').className   = `v-rv ${intLeft===0?'green':'orange'}`;
+  document.getElementById('vIntel').className   = `v-rv ${intLeft===0?'green':'yellow'}`;
   document.getElementById('vErrors').textContent = classifyErrors===0 ? 'None' : classifyErrors+' Errors';
   document.getElementById('vErrors').className   = `v-rv ${classifyErrors===0?'green':'red'}`;
-  document.getElementById('vSafe').textContent   = safeConfirmed===0 ? 'None' : safeConfirmed+' Confirmed';
-  document.getElementById('vSafe').className     = `v-rv ${safeConfirmed>0?'green':''}`;
-  document.getElementById('vScan').textContent  = scansUsed===0 ? 'No' : 'Yes ('+scansUsed+'×)';
-  document.getElementById('vScan').className    = 'v-rv';
   // system status removed
 
   setTimeout(() => document.getElementById('verdictOverlay').classList.add('show'), 400);
@@ -2168,17 +2362,24 @@ function updateIntUI() {
   const drainEl  = document.getElementById('iwDrain');
   const ctaEl    = document.getElementById('ibSubmitCta');
   const sevEl    = document.getElementById('ibSeverity');
+  const barSubEl = document.querySelector('.ib-bar-sub');
   if (!gameActive) return;
   if (allSecured()) {
-    drainEl.textContent = '✓ secured';
+    drainEl.textContent = '';
     drainEl.className = 'ib-drain-label secured';
-    if (ctaEl)  { ctaEl.style.display  = 'inline-flex'; }
-    if (sevEl)  { sevEl.style.opacity  = '0.2'; }
+    if (ctaEl)    { ctaEl.style.display  = 'flex'; }
+    if (sevEl)    { sevEl.style.opacity  = '0.2'; }
+    if (barSubEl) { barSubEl.style.display = 'none'; }
+    const ds = document.getElementById('diagSecured');
+    if (ds) { ds.style.display = 'flex'; }
   } else {
     drainEl.textContent = 'active drain';
     drainEl.className = 'ib-drain-label draining';
-    if (ctaEl)  { ctaEl.style.display  = 'none'; }
-    if (sevEl)  { sevEl.style.opacity  = '1'; }
+    if (ctaEl)    { ctaEl.style.display  = 'none'; }
+    if (sevEl)    { sevEl.style.opacity  = '1'; }
+    if (barSubEl) { barSubEl.style.display = ''; }
+    const ds = document.getElementById('diagSecured');
+    if (ds) { ds.style.display = 'none'; }
   }
 }
 
@@ -2193,6 +2394,7 @@ function resetGame() {
   clearInterval(timerInt); clearInterval(drainInt);
 
   document.getElementById('verdictOverlay').classList.remove('show');
+  const ds = document.getElementById('diagSecured'); if (ds) ds.style.display = 'none';
   const timerEl = document.getElementById('timerVal');
   if (timerEl) { timerEl.textContent = '120'; timerEl.className = 'sb-timer-val'; }
   document.getElementById('scanCt').textContent   = '3';
@@ -2202,20 +2404,17 @@ function resetGame() {
   document.getElementById('catCred').className  = 'diag-cat exposed';
   document.getElementById('pillCred').className = 'dc-pill exposed';
   document.getElementById('pillCred').textContent = 'EXPOSED';
-  document.getElementById('drainCred').className = 'dc-drain';
-  document.getElementById('drainCred').textContent = '⬇ −0.56%/s per token';
+  const pCred = document.getElementById('progCred'); if (pCred) pCred.style.width = '0%';
 
   document.getElementById('catPii').className   = 'diag-cat exposed-pii';
   document.getElementById('pillPii').className  = 'dc-pill exposed-pii';
   document.getElementById('pillPii').textContent = 'EXPOSED';
-  document.getElementById('drainPii').className  = 'dc-drain';
-  document.getElementById('drainPii').textContent = '⬇ −0.16%/s per token';
+  const pPii = document.getElementById('progPii'); if (pPii) pPii.style.width = '0%';
 
   document.getElementById('catInt').className   = 'diag-cat exposed-int';
   document.getElementById('pillInt').className  = 'dc-pill exposed-int';
   document.getElementById('pillInt').textContent = 'EXPOSED';
-  document.getElementById('drainInt').className  = 'dc-drain';
-  document.getElementById('drainInt').textContent = '⬇ −0.064%/s per token';
+  const pInt = document.getElementById('progInt'); if (pInt) pInt.style.width = '0%';
 
   for (let i=1;i<=10;i++) { const s=document.getElementById(`ibSeg${i}`); if(s) s.className='ib-seg'; }
   const ctaEl = document.getElementById('ibSubmitCta');
@@ -2224,13 +2423,15 @@ function resetGame() {
   if (sevEl) sevEl.style.opacity = '1';
   document.getElementById('iwDrain').textContent = '— paused —';
   document.getElementById('iwDrain').className   = 'ib-drain-label';
+  const barSubEl = document.querySelector('.ib-bar-sub');
+  if (barSubEl) barSubEl.style.display = '';
   const intBar = document.getElementById('iwIntBar');
   if (intBar) { intBar.style.width='100%'; intBar.className='ib-bar-fill green'; }
   document.getElementById('iwDelta').classList.remove('visible','gain','penalty');
   const numEl = document.getElementById('iwNum');
   numEl.textContent = '100'; numEl.className = 'ib-num green';
 
-  buildPayload(); buildDots();
+  buildPayload(); buildSegments();
 
   // Show briefing again + restart voiceover
   const b = document.getElementById('briefingOverlay');
@@ -2248,7 +2449,7 @@ const BOOT_STEPS = [
 ];
 
 function boot() {
-  buildPayload(); buildDots();
+  buildPayload(); buildSegments();
   const msgEl = document.getElementById('bootMsg');
   const fillEl = document.getElementById('bootFill');
   let step = 0;
@@ -2266,8 +2467,8 @@ function boot() {
 }
 
 window.addEventListener('load', () => {
-  preloadAudio(); // start fetching assets immediately — silent
-  runSplashLoader(); // 2-second loading bar
+  preloadAudio();
+  runSplashLoader();
   setTimeout(boot, 200);
 });
 </script>
