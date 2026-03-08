@@ -1291,7 +1291,7 @@ let audioReady = false;
 
 // Called on page load — preloads all assets silently (no play yet)
 function preloadAudio() {
-  const base = 'https://aigenesis2023.github.io/CyberSecurity/assets/audio/';
+  const base = 'assets/audio/';
 
   SND.bg      = new Audio(base + 'SunoBG.mp3');
   SND.bg.loop = true; SND.bg.volume = 0.5; SND.bg.preload = 'auto';
@@ -1401,7 +1401,7 @@ document.addEventListener('click', e => {
 // ════════════════════════════════════════════
 function splashBegin() {
   // Play bleep directly (audio already preloaded, this is the gesture)
-  const b = new Audio('https://aigenesis2023.github.io/CyberSecurity/assets/audio/bleep_p8nRzd6T.mp3');
+  const b = new Audio('assets/audio/bleep_p8nRzd6T.mp3');
   b.volume = 0.65; b.play().catch(()=>{});
   startAudio();
   const el = document.getElementById('splashScreen');
