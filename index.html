@@ -218,7 +218,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 .ib-brand { display:flex; align-items:center; gap:12px; padding:0 26px 0 20px; flex-shrink:0; }
 .h-dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; background:var(--green); animation:statusDot 2.4s ease infinite; }
 .h-title { font-family:'Orbitron',monospace; font-size:11px; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:var(--text); }
-.ib-center { display:flex; align-items:center; gap:36px; padding:0 32px; }
+.ib-center { display:flex; align-items:center; gap:36px; padding:0 104px 0 32px; }
 .ib-lbl { font-size:8px; letter-spacing:.16em; text-transform:uppercase; color:var(--dim); margin-bottom:5px; }
 .ib-num-wrap { display:flex; align-items:center; gap:8px; }
 .ib-num-col { display:flex; flex-direction:column; flex-shrink:0; }
@@ -641,6 +641,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 .cert-eyebrow { font-family:'JetBrains Mono',monospace; font-size:8px; letter-spacing:.2em; text-transform:uppercase; color:rgba(200,220,255,.35); margin-bottom:8px; }
 .cert-title { font-family:'Orbitron',monospace; font-size:22px; font-weight:900; letter-spacing:.04em; color:#fff; line-height:1.15; margin-bottom:6px; }
 .cert-subtitle { font-family:'DM Sans',sans-serif; font-size:12px; color:rgba(200,220,255,.6); line-height:1.7; margin-bottom:20px; font-weight:300; }
+.cert-scores-header { font-family:'JetBrains Mono',monospace; font-size:8px; letter-spacing:.16em; text-transform:uppercase; color:rgba(200,220,255,.3); margin-bottom:8px; padding-bottom:6px; border-bottom:1px solid rgba(255,255,255,.06); }
 .cert-scores { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:20px; }
 .cert-score-item { background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.1); border-radius:8px; padding:12px 10px; text-align:center; }
 .cert-score-lbl { font-family:'JetBrains Mono',monospace; font-size:8px; letter-spacing:.1em; text-transform:uppercase; color:rgba(200,220,255,.4); margin-bottom:6px; }
@@ -666,11 +667,26 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 
 /* Print styles for certificate */
 @media print {
+  * { -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
   body > *:not(#certOverlay) { display:none !important; }
-  #certOverlay { position:static !important; opacity:1 !important; padding:0 !important; background:#fff !important; }
-  .cert-card { box-shadow:none !important; border-color:#ccc !important; background:#fff !important; color:#000 !important; }
+  #certOverlay { position:static !important; opacity:1 !important; padding:0 !important; background:#fff !important; display:block !important; }
+  .cert-card { box-shadow:none !important; border:2px solid #cce8f4 !important; border-radius:12px !important; background:#fff !important; max-width:720px; margin:20px auto; }
+  .cert-top-bar { background:linear-gradient(90deg, #38bdf8, #6366f1) !important; height:4px !important; }
+  .cert-graphic { background:linear-gradient(180deg, #eef7fd 0%, #fff 100%) !important; border-bottom:1px solid #e2eaf2 !important; }
+  .cert-ring { border-color:rgba(56,189,248,.35) !important; }
+  .cert-graphic-icon { color:#38bdf8 !important; }
+  .cert-graphic-label { color:#38bdf8 !important; }
+  .cert-eyebrow { color:#6b7280 !important; }
+  .cert-title { color:#0f172a !important; }
+  .cert-subtitle { color:#374151 !important; }
+  .cert-scores-header { color:#374151 !important; border-color:#e2eaf2 !important; }
+  .cert-score-item { background:#f8fafc !important; border:1px solid #e2eaf2 !important; }
+  .cert-score-lbl { color:#6b7280 !important; }
+  .cert-score-val { color:#059669 !important; }
+  .cert-score-val.orange { color:#d97706 !important; }
+  .cert-score-val.red { color:#dc2626 !important; }
+  .cert-date { color:#6b7280 !important; border-top-color:#e2eaf2 !important; }
   .cert-actions { display:none !important; }
-  .cert-body, .cert-scores { color:#000 !important; }
   #muteBtn, #pauseBtn { display:none !important; }
 }
 
@@ -729,6 +745,23 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
   border-radius:8px; cursor:pointer; transition:all .2s; animation:ctaPulse 1.4s ease infinite;
 }
 .pause-resume-btn:hover { background:rgba(56,189,248,.18); border-color:var(--blue); }
+.pause-quit-btn {
+  padding:10px 36px;
+  font-family:'DM Sans',sans-serif; font-size:12px; font-weight:500; letter-spacing:.06em;
+  background:transparent; border:1px solid rgba(200,220,255,.12); color:rgba(200,220,255,.35);
+  border-radius:8px; cursor:pointer; transition:all .2s;
+}
+.pause-quit-btn:hover { background:rgba(239,68,68,.07); border-color:rgba(239,68,68,.35); color:rgba(239,68,68,.7); }
+.pause-quit-warn { font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.1em; color:rgba(200,220,255,.2); text-transform:uppercase; margin-top:4px; }
+
+/* Briefing back button */
+.briefing-back-btn {
+  position:absolute; top:14px; left:16px; z-index:2;
+  font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.12em; text-transform:uppercase;
+  background:transparent; border:none; color:rgba(200,220,255,.3); cursor:pointer;
+  padding:4px 8px; transition:color .2s; display:flex; align-items:center; gap:5px;
+}
+.briefing-back-btn:hover { color:rgba(200,220,255,.7); }
 
 /* Pause button — sits left of mute button */
 #pauseBtn {
@@ -821,8 +854,8 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
      LEARNING OBJECTIVES INTERSTITIAL
      Shown once (on first visit). Skipped on return.
 ══════════════════════════════════════════════ -->
-<div class="obj-overlay" id="objOverlay">
-  <div class="obj-card">
+<div class="obj-overlay" id="objOverlay" onclick="dismissObjectives()">
+  <div class="obj-card" onclick="event.stopPropagation()">
     <div class="obj-top"></div>
     <div class="obj-body">
       <div class="obj-eyebrow">AI Safety Training · Learning Objectives</div>
@@ -876,7 +909,6 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
             <path d="M18 22 L18 19 C18 16.8 26 16.8 26 19 L26 22" stroke="rgba(56,189,248,.9)" stroke-width="1.5" fill="none"/>
             <circle cx="22" cy="26.5" r="1.5" fill="rgba(56,189,248,.9)"/>
           </svg>
-          <div class="mc-domain">AI Risk Domain 1</div>
           <div class="mc-title">Sensitive Data Exposure</div>
           <div class="mc-desc">A colleague is about to send sensitive data to an AI tool. Classify and redact all dangerous tokens before the submission escapes the network.</div>
           <div class="mc-footer">
@@ -903,7 +935,6 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
             <circle cx="32" cy="30" r="8" fill="rgba(8,20,45,1)" stroke="rgba(56,189,248,.7)" stroke-width="1.5"/>
             <text x="32" y="34" text-anchor="middle" font-size="11" font-weight="bold" fill="rgba(56,189,248,.9)" font-family="monospace">?</text>
           </svg>
-          <div class="mc-domain">AI Risk Domain 2</div>
           <div class="mc-title">AI Hallucination Detection</div>
           <div class="mc-desc">An AI has generated a plausible-sounding report full of false citations, invented statistics, and fabricated legal clauses. Find them before they spread.</div>
           <div class="mc-footer">
@@ -931,7 +962,6 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
             <circle cx="36" cy="34" r="6" fill="rgba(239,68,68,.15)" stroke="rgba(239,68,68,.7)" stroke-width="1.5"/>
             <path d="M33 34 L37 34 M35 32 L35 36" stroke="rgba(239,68,68,.9)" stroke-width="1.5" stroke-linecap="round"/>
           </svg>
-          <div class="mc-domain">AI Risk Domain 3</div>
           <div class="mc-title">Prompt Injection Attacks</div>
           <div class="mc-desc">A document contains hidden instructions trying to hijack your AI tool. Under time pressure, find the injected command before the AI executes it.</div>
           <div class="mc-footer">
@@ -981,6 +1011,8 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
   <div class="pause-title">⏸ &nbsp;PAUSED</div>
   <div class="pause-sub">Press P or click Resume to continue</div>
   <button class="pause-resume-btn" onclick="togglePause()">▶ &nbsp;RESUME</button>
+  <button class="pause-quit-btn" onclick="pauseQuitToMenu()">← &nbsp;QUIT TO MENU</button>
+  <div class="pause-quit-warn">Progress on this mission will not be saved</div>
 </div>
 
 <!-- GLOBAL MUTE BUTTON -->
@@ -998,6 +1030,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 <div class="briefing-overlay" id="s1briefing">
   <div class="briefing-card">
     <div class="briefing-top-bar m1"></div>
+    <button class="briefing-back-btn" onclick="goMenu()">← MENU</button>
     <div class="briefing-graphic" style="background:linear-gradient(180deg,rgba(56,189,248,.06) 0%,transparent 100%)">
       <div class="b-ring"></div><div class="b-ring b-ring2"></div>
       <svg class="b-shield" viewBox="0 0 40 40" fill="none">
@@ -1170,6 +1203,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 <div class="briefing-overlay" id="s2briefing">
   <div class="briefing-card">
     <div class="briefing-top-bar m2"></div>
+    <button class="briefing-back-btn" onclick="goMenu()">← MENU</button>
     <div class="briefing-graphic" style="background:linear-gradient(180deg,rgba(56,189,248,.06) 0%,transparent 100%)">
       <div class="b-ring"></div>
       <div class="b-ring b-ring2"></div>
@@ -1334,6 +1368,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 <div class="briefing-overlay" id="s3briefing">
   <div class="briefing-card">
     <div class="briefing-top-bar m3"></div>
+    <button class="briefing-back-btn" onclick="goMenu()">← MENU</button>
     <div class="briefing-graphic" style="background:linear-gradient(180deg,rgba(56,189,248,.06) 0%,transparent 100%)">
       <div class="b-ring"></div>
       <div class="b-ring b-ring2"></div>
@@ -1631,8 +1666,8 @@ function updateMenuState() {
     document.getElementById('m2dot').className = 'mc-dot-s green';
     if (!courseProgress.s2done) document.getElementById('m2statuslbl').textContent = 'UNLOCKED';
     const b2 = document.getElementById('m2btn');
-    b2.textContent = '▶  LAUNCH MISSION';
-    b2.classList.remove('locked-btn');
+    if (courseProgress.s2done) { b2.textContent = '↺  REPLAY MISSION'; b2.classList.add('replay-btn'); }
+    else { b2.textContent = '▶  LAUNCH MISSION'; b2.classList.remove('locked-btn'); }
   }
   // Mission 3
   if (courseProgress.s2done) {
@@ -1642,8 +1677,8 @@ function updateMenuState() {
     document.getElementById('m3dot').className = 'mc-dot-s green';
     if (!courseProgress.s3done) document.getElementById('m3statuslbl').textContent = 'UNLOCKED';
     const b3 = document.getElementById('m3btn');
-    b3.textContent = '▶  LAUNCH MISSION';
-    b3.classList.remove('locked-btn');
+    if (courseProgress.s3done) { b3.textContent = '↺  REPLAY MISSION'; b3.classList.add('replay-btn'); }
+    else { b3.textContent = '▶  LAUNCH MISSION'; b3.classList.remove('locked-btn'); }
   }
   // Progress dots (legacy — hidden, kept for compat)
   const d1=document.getElementById('pdot1'), d2=document.getElementById('pdot2'), d3=document.getElementById('pdot3');
@@ -3182,6 +3217,12 @@ function togglePause() {
   }
 }
 
+function pauseQuitToMenu() {
+  _paused = false;
+  document.getElementById('pauseOverlay').classList.remove('show');
+  goMenu();
+}
+
 // Show/hide pause button based on whether a mission is active
 function updatePauseBtn() {
   const btn = document.getElementById('pauseBtn');
@@ -3357,6 +3398,7 @@ function s3ShowInsight(category, tokenText, message, afterFn) {
       <div class="cert-eyebrow">Certificate of Completion</div>
       <div class="cert-title">AI Data Guardian</div>
       <div class="cert-subtitle">You have successfully completed all three AI safety missions — identifying sensitive data exposure, AI hallucinations, and prompt injection attacks. You are cleared to work safely with AI tools in your organisation.</div>
+      <div class="cert-scores-header">Integrity score per mission</div>
       <div class="cert-scores">
         <div class="cert-score-item">
           <div class="cert-score-lbl">Mission 01<br>Data Leakage</div>
