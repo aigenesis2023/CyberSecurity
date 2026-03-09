@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Data Guardians</title>
+<title>AI Data Guardian — Cybersecurity Awareness Training</title>
+<noscript><style>body{display:flex;align-items:center;justify-content:center;min-height:100vh;background:#020610;font-family:sans-serif;color:#ddeeff;text-align:center;padding:20px}.ns-msg{max-width:400px}.ns-msg h1{font-size:1.4rem;margin-bottom:12px}.ns-msg p{opacity:.65;font-size:.9rem;line-height:1.6}</style><div class="ns-msg"><h1>JavaScript Required</h1><p>This training module requires JavaScript to run. Please enable JavaScript in your browser and reload the page.</p></div></noscript>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
@@ -74,6 +75,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 }
 .splash.hidden { opacity:0; pointer-events:none; }
 .splash::before { content:''; position:absolute; width:600px; height:600px; border-radius:50%; background:radial-gradient(circle, rgba(56,189,248,.06) 0%, transparent 70%); top:50%; left:50%; transform:translate(-50%,-60%); pointer-events:none; }
+.splash-hero { width:76px; height:76px; margin-bottom:22px; opacity:.85; filter:drop-shadow(0 0 20px rgba(56,189,248,.4)); }
 .splash-eyebrow { font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.2em; color:rgba(56,189,248,.35); text-transform:uppercase; margin-bottom:18px; display:flex; align-items:center; gap:12px; width:480px; max-width:90vw; }
 .splash-eyebrow::before, .splash-eyebrow::after { content:''; flex:1; height:1px; background:rgba(56,189,248,.15); }
 .splash-title { font-family:'Orbitron',monospace; font-size:52px; font-weight:900; letter-spacing:.04em; color:#ffffff; text-align:center; line-height:1.1; margin-bottom:12px; text-shadow: 0 0 80px rgba(56,189,248,.2), 0 2px 4px rgba(0,0,0,.9); }
@@ -139,11 +141,12 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 
 .mc-badge { font-family:'JetBrains Mono',monospace; font-size:8px; letter-spacing:.1em; text-transform:uppercase; padding:3px 10px; border-radius:20px; background:rgba(56,189,248,.08); color:rgba(56,189,248,.7); border:1px solid rgba(56,189,248,.22); }
 .mc-badge.threat-high, .mc-badge.threat-medium, .mc-badge.threat-critical { background:rgba(56,189,248,.08); color:rgba(56,189,248,.7); border:1px solid rgba(56,189,248,.22); }
-.mc-top-row { display:flex; justify-content:flex-start; align-items:center; margin-bottom:0; }
+.mc-top-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:0; }
 .mc-domain { font-family:'JetBrains Mono',monospace; font-size:8px; letter-spacing:.12em; text-transform:uppercase; color:rgba(200,220,255,.3); margin-bottom:6px; }
 
 .mc-body { padding:24px 22px 22px; }
 .mc-num { font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.2em; color:rgba(200,220,255,.3); margin-bottom:10px; }
+.mc-stars { font-size:13px; color:rgba(250,204,21,.75); letter-spacing:1px; text-shadow:0 0 8px rgba(250,204,21,.4); margin-bottom:10px; }
 .mc-icon { width:44px; height:44px; margin-bottom:14px; }
 .mc-title { font-family:'Orbitron',monospace; font-size:15px; font-weight:700; color:#fff; letter-spacing:.04em; margin-bottom:8px; }
 .mc-desc { font-family:'DM Sans',sans-serif; font-size:12px; font-weight:300; color:rgba(200,220,255,.55); line-height:1.6; margin-bottom:16px; }
@@ -181,9 +184,9 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 
 /* Mastery meter */
 .mastery-wrap { display:flex; flex-direction:column; align-items:center; gap:8px; }
-.mastery-label { font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.18em; color:rgba(200,220,255,.35); text-transform:uppercase; }
-.mastery-bar { display:flex; gap:6px; align-items:center; }
-.mastery-seg { width:48px; height:6px; border-radius:3px; background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.1); transition:all .5s ease; }
+.mastery-label { font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.18em; color:rgba(200,220,255,.5); text-transform:uppercase; }
+.mastery-bar { display:flex; gap:8px; align-items:center; }
+.mastery-seg { width:64px; height:10px; border-radius:5px; background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.1); transition:all .5s ease; }
 .mastery-seg.filled { background:var(--green); border-color:rgba(74,222,128,.4); box-shadow:0 0 8px rgba(74,222,128,.45); }
 .mastery-seg.filled.s1 { background:rgba(74,222,128,.7); }
 .mastery-seg.filled.s2 { background:rgba(74,222,128,.85); }
@@ -371,9 +374,11 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 .briefing-overlay { position:fixed; inset:0; z-index:300; background:#040a14; display:flex; align-items:center; justify-content:center; transition:opacity .5s ease; overflow:hidden; }
 .briefing-overlay.hidden { opacity:0; pointer-events:none; }
 .briefing-card { width:540px; max-width:calc(100vw - 32px); background:rgba(8,20,45,0.55); border:1px solid rgba(255,255,255,.18); border-radius:14px; overflow:hidden; backdrop-filter:blur(32px); box-shadow:0 40px 80px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.07); animation:verdictIn .5s cubic-bezier(.34,1.56,.64,1) both; position:relative; z-index:1; }
+.briefing-card::after { content:''; position:absolute; inset:0; background-image:radial-gradient(rgba(56,189,248,.045) 1.5px, transparent 1.5px); background-size:22px 22px; pointer-events:none; z-index:0; }
 .briefing-top-bar { height:3px; display:block; background:linear-gradient(90deg, transparent, rgba(56,189,248,.8) 30%, rgba(56,189,248,.5) 70%, transparent); }
-.briefing-top-bar.red, .briefing-top-bar.orange, .briefing-top-bar.yellow,
-.briefing-top-bar.m1, .briefing-top-bar.m2, .briefing-top-bar.m3 { background:linear-gradient(90deg, transparent, rgba(56,189,248,.8) 30%, rgba(56,189,248,.5) 70%, transparent); }
+.briefing-top-bar.m1 { background:linear-gradient(90deg, transparent, rgba(56,189,248,.9) 30%, rgba(56,189,248,.6) 70%, transparent); }
+.briefing-top-bar.m2 { background:linear-gradient(90deg, transparent, rgba(139,92,246,.9) 30%, rgba(139,92,246,.6) 70%, transparent); }
+.briefing-top-bar.m3 { background:linear-gradient(90deg, transparent, rgba(251,146,60,.9) 30%, rgba(251,146,60,.6) 70%, transparent); }
 .briefing-graphic { position:relative; height:120px; display:flex; align-items:center; justify-content:center; border-bottom:1px solid rgba(255,255,255,.08); overflow:hidden; }
 .briefing-graphic .b-ring { position:absolute; width:110px; height:110px; border-radius:50%; border:1px solid rgba(56,189,248,.25); animation:ringPulse 2s ease-out infinite; }
 .briefing-graphic .b-ring2 { animation-delay:.7s; }
@@ -406,6 +411,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 .verdict-overlay { position:fixed; inset:0; z-index:200; background:#040a14; display:flex; align-items:flex-start; justify-content:center; opacity:0; pointer-events:none; transition:opacity .45s ease; overflow-y:auto; padding:24px 16px 40px; }
 .verdict-overlay.show { opacity:1; pointer-events:all; }
 .verdict-card { background:rgba(8,20,45,0.55); border:1px solid rgba(255,255,255,.18); border-radius:14px; width:480px; max-width:100%; backdrop-filter:blur(32px); box-shadow:0 40px 80px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.07); overflow:hidden; animation:verdictIn .5s cubic-bezier(.34,1.56,.64,1) both; position:relative; z-index:1; flex-shrink:0; }
+.verdict-card::after { content:''; position:absolute; inset:0; background-image:radial-gradient(rgba(56,189,248,.04) 1.5px, transparent 1.5px); background-size:22px 22px; pointer-events:none; z-index:0; }
 .v-bar { height:3px; }
 .v-bar.pass    { background:linear-gradient(90deg,transparent,var(--green),transparent); }
 .v-bar.fail    { background:linear-gradient(90deg,transparent,var(--red),transparent); }
@@ -499,6 +505,8 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 .ai-response-title { font-family:'DM Sans',sans-serif; font-size:12px; font-weight:600; color:var(--text); flex:1; }
 .ai-model-badge { font-family:'JetBrains Mono',monospace; font-size:8px; padding:3px 8px; border-radius:20px; background:rgba(99,102,241,.15); color:rgba(147,149,251,1); border:1px solid rgba(99,102,241,.3); }
 .ai-warning-strip { background:rgba(56,189,248,.04); border-bottom:1px solid rgba(56,189,248,.15); padding:7px 16px; font-family:'DM Sans',sans-serif; font-size:10px; color:rgba(56,189,248,.65); display:flex; align-items:center; gap:6px; }
+.ai-scenario-frame { background:rgba(99,102,241,.07); border-bottom:1px solid rgba(99,102,241,.2); padding:9px 16px; font-family:'DM Sans',sans-serif; font-size:11px; color:rgba(200,210,255,.75); line-height:1.5; }
+.ai-scenario-frame strong { color:rgba(147,149,251,.9); }
 .ai-response-body { padding:18px; color:var(--text); font-family:'DM Sans',sans-serif; font-size:12.5px; line-height:1.85; }
 .ai-response-body h4 { font-family:'Orbitron',monospace; font-size:11px; letter-spacing:.06em; color:var(--blue2); margin:14px 0 8px; }
 .ai-response-body .cite { font-family:'JetBrains Mono',monospace; font-size:10px; color:rgba(200,220,255,.45); display:block; margin:6px 0; padding-left:12px; border-left:2px solid rgba(56,189,248,.2); }
@@ -585,6 +593,170 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 .s3-timeout-msg strong { color:var(--red); }
 
 /* ════════════════════════════════════════════
+   COMPLETION / CERTIFICATE SCREEN
+════════════════════════════════════════════ */
+.cert-overlay {
+  position:fixed; inset:0; z-index:3000;
+  background:rgba(2,6,16,0.96);
+  display:flex; align-items:center; justify-content:center;
+  opacity:0; pointer-events:none;
+  transition:opacity .4s ease;
+  overflow-y:auto; padding:24px 16px 40px;
+  backdrop-filter:blur(6px);
+}
+.cert-overlay.show { opacity:1; pointer-events:all; }
+.cert-card {
+  width:540px; max-width:100%;
+  background:rgba(8,20,45,0.6);
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:16px; overflow:hidden;
+  backdrop-filter:blur(32px);
+  box-shadow:0 40px 80px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.07);
+  animation:verdictIn .55s cubic-bezier(.34,1.56,.64,1) both;
+  position:relative; flex-shrink:0;
+}
+.cert-top-bar { height:3px; background:linear-gradient(90deg,transparent,var(--green) 30%,var(--blue2) 70%,transparent); }
+.cert-graphic {
+  position:relative; height:160px; overflow:hidden;
+  background:linear-gradient(180deg,rgba(74,222,128,.07) 0%,rgba(56,189,248,.04) 50%,transparent 100%);
+  display:flex; align-items:center; justify-content:center;
+  border-bottom:1px solid rgba(74,222,128,.1);
+}
+.cert-ring { position:absolute; border-radius:50%; border:1.5px solid rgba(74,222,128,.35); animation:ringPulse 2s ease-out infinite; }
+.cert-ring.r1 { width:140px; height:140px; }
+.cert-ring.r2 { width:100px; height:100px; animation-delay:.7s; }
+.cert-star {
+  position:relative; z-index:2;
+  font-family:'Orbitron',monospace; font-size:44px;
+  filter:drop-shadow(0 0 24px rgba(74,222,128,.6));
+  animation:shieldPop .7s cubic-bezier(.34,1.56,.64,1) .1s both;
+}
+.cert-badge {
+  position:absolute; bottom:12px; left:0; right:0; text-align:center;
+  font-family:'Orbitron',monospace; font-size:9px; font-weight:700;
+  letter-spacing:.22em; color:rgba(74,222,128,.75); text-transform:uppercase;
+  animation:scanReveal .5s ease .5s both;
+}
+.cert-body { padding:26px 28px 8px; }
+.cert-eyebrow { font-family:'JetBrains Mono',monospace; font-size:8px; letter-spacing:.2em; text-transform:uppercase; color:rgba(200,220,255,.35); margin-bottom:8px; }
+.cert-title { font-family:'Orbitron',monospace; font-size:22px; font-weight:900; letter-spacing:.04em; color:#fff; line-height:1.15; margin-bottom:6px; }
+.cert-subtitle { font-family:'DM Sans',sans-serif; font-size:12px; color:rgba(200,220,255,.6); line-height:1.7; margin-bottom:20px; font-weight:300; }
+.cert-scores { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:20px; }
+.cert-score-item { background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.1); border-radius:8px; padding:12px 10px; text-align:center; }
+.cert-score-lbl { font-family:'JetBrains Mono',monospace; font-size:8px; letter-spacing:.1em; text-transform:uppercase; color:rgba(200,220,255,.4); margin-bottom:6px; }
+.cert-score-val { font-family:'Orbitron',monospace; font-size:20px; font-weight:700; color:var(--green); }
+.cert-score-val.orange { color:var(--orange); }
+.cert-score-val.red    { color:var(--red); }
+.cert-date { font-family:'JetBrains Mono',monospace; font-size:9px; color:rgba(200,220,255,.3); letter-spacing:.08em; margin-bottom:16px; padding:10px 12px; background:rgba(255,255,255,.02); border:1px solid rgba(255,255,255,.07); border-radius:6px; }
+.cert-actions { display:flex; gap:10px; padding:0 28px 24px; }
+.cert-print-btn {
+  flex:1; padding:13px; font-family:'Orbitron',monospace; font-size:10px; font-weight:700;
+  letter-spacing:.18em; text-transform:uppercase;
+  background:rgba(74,222,128,.1); border:1px solid rgba(74,222,128,.5); color:var(--green);
+  border-radius:8px; cursor:pointer; transition:all .2s; text-align:center; animation:ctaPulse 1.2s ease infinite;
+}
+.cert-print-btn:hover { background:rgba(74,222,128,.2); box-shadow:0 0 18px rgba(74,222,128,.3); }
+.cert-menu-btn {
+  flex:1; padding:13px; font-family:'Orbitron',monospace; font-size:10px; font-weight:700;
+  letter-spacing:.18em; text-transform:uppercase;
+  background:rgba(56,189,248,.06); border:1px solid rgba(56,189,248,.28); color:var(--blue2);
+  border-radius:8px; cursor:pointer; transition:all .2s; text-align:center;
+}
+.cert-menu-btn:hover { background:rgba(56,189,248,.14); border-color:rgba(56,189,248,.55); }
+
+/* Print styles for certificate */
+@media print {
+  body > *:not(#certOverlay) { display:none !important; }
+  #certOverlay { position:static !important; opacity:1 !important; padding:0 !important; background:#fff !important; }
+  .cert-card { box-shadow:none !important; border-color:#ccc !important; background:#fff !important; color:#000 !important; }
+  .cert-actions { display:none !important; }
+  .cert-body, .cert-scores { color:#000 !important; }
+  #muteBtn, #pauseBtn { display:none !important; }
+}
+
+/* ════════════════════════════════════════════
+   LEARNING OBJECTIVES INTERSTITIAL
+════════════════════════════════════════════ */
+.obj-overlay {
+  position:fixed; inset:0; z-index:350;
+  background:rgba(4,10,20,0.96);
+  display:flex; align-items:center; justify-content:center;
+  opacity:0; pointer-events:none;
+  transition:opacity .5s ease;
+}
+.obj-overlay.show { opacity:1; pointer-events:all; }
+.obj-card {
+  width:500px; max-width:calc(100vw - 32px);
+  background:rgba(8,20,45,0.55);
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:14px; overflow:hidden;
+  backdrop-filter:blur(32px);
+  box-shadow:0 40px 80px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.07);
+  animation:verdictIn .55s cubic-bezier(.34,1.56,.64,1) both;
+}
+.obj-top { height:3px; background:linear-gradient(90deg,transparent,rgba(56,189,248,.7) 30%,rgba(56,189,248,.4) 70%,transparent); }
+.obj-body { padding:28px 30px 24px; }
+.obj-eyebrow { font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.2em; text-transform:uppercase; color:rgba(56,189,248,.45); margin-bottom:10px; }
+.obj-title  { font-family:'Orbitron',monospace; font-size:18px; font-weight:900; color:#fff; margin-bottom:8px; letter-spacing:.04em; }
+.obj-intro  { font-family:'DM Sans',sans-serif; font-size:12px; color:rgba(200,220,255,.6); line-height:1.75; font-weight:300; margin-bottom:20px; }
+.obj-list   { display:flex; flex-direction:column; gap:10px; margin-bottom:24px; }
+.obj-item   { display:flex; align-items:flex-start; gap:12px; }
+.obj-num    { font-family:'Orbitron',monospace; font-size:10px; font-weight:700; color:rgba(56,189,248,.7); background:rgba(56,189,248,.08); border:1px solid rgba(56,189,248,.2); border-radius:5px; padding:3px 8px; flex-shrink:0; margin-top:1px; }
+.obj-text   { font-family:'DM Sans',sans-serif; font-size:12px; color:rgba(200,220,255,.75); line-height:1.6; font-weight:300; }
+.obj-text strong { color:#fff; font-weight:500; }
+.obj-footer { padding:0 30px 26px; }
+.obj-cta    { width:100%; padding:13px; font-family:'Orbitron',monospace; font-size:11px; font-weight:700; letter-spacing:.2em; text-transform:uppercase; background:transparent; border:1px solid rgba(255,255,255,.22); color:rgba(255,255,255,.85); border-radius:8px; cursor:pointer; transition:all .2s; animation:ctaPulse 1.4s ease 1s infinite; }
+.obj-cta:hover { background:rgba(255,255,255,.05); border-color:rgba(255,255,255,.45); }
+/* First-time flag — shown only once per device */
+
+/* ════════════════════════════════════════════
+   PAUSE OVERLAY
+════════════════════════════════════════════ */
+#pauseOverlay {
+  position:fixed; inset:0; z-index:8000;
+  background:rgba(2,6,16,0.92);
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:18px;
+  opacity:0; pointer-events:none; transition:opacity .3s ease;
+  backdrop-filter:blur(10px);
+}
+#pauseOverlay.show { opacity:1; pointer-events:all; }
+.pause-title { font-family:'Orbitron',monospace; font-size:22px; font-weight:900; letter-spacing:.1em; color:#fff; }
+.pause-sub   { font-family:'DM Sans',sans-serif; font-size:13px; color:rgba(200,220,255,.5); letter-spacing:.04em; }
+.pause-resume-btn {
+  margin-top:8px; padding:14px 52px;
+  font-family:'Orbitron',monospace; font-size:11px; font-weight:700; letter-spacing:.22em; text-transform:uppercase;
+  background:rgba(56,189,248,.08); border:1px solid rgba(56,189,248,.4); color:var(--blue2);
+  border-radius:8px; cursor:pointer; transition:all .2s; animation:ctaPulse 1.4s ease infinite;
+}
+.pause-resume-btn:hover { background:rgba(56,189,248,.18); border-color:var(--blue); }
+
+/* Pause button — sits left of mute button */
+#pauseBtn {
+  position:fixed; top:14px; right:58px; z-index:9000;
+  width:34px; height:34px; border-radius:50%;
+  background:rgba(6,16,36,0.7); border:1px solid rgba(56,189,248,.22);
+  color:rgba(56,189,248,.75); font-size:13px;
+  display:none; align-items:center; justify-content:center;
+  cursor:pointer; transition:all .2s; backdrop-filter:blur(8px);
+}
+#pauseBtn.visible { display:flex; }
+#pauseBtn:hover { background:rgba(56,189,248,.12); border-color:rgba(56,189,248,.45); color:#fff; }
+
+/* ════════════════════════════════════════════
+   MUTE BUTTON (global, fixed top-right)
+════════════════════════════════════════════ */
+#muteBtn {
+  position:fixed; top:14px; right:16px; z-index:9000;
+  width:34px; height:34px; border-radius:50%;
+  background:rgba(6,16,36,0.7); border:1px solid rgba(56,189,248,.22);
+  color:rgba(56,189,248,.75); font-size:14px;
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; transition:all .2s; backdrop-filter:blur(8px);
+}
+#muteBtn:hover { background:rgba(56,189,248,.12); border-color:rgba(56,189,248,.45); color:#fff; }
+#muteBtn.muted { color:rgba(200,220,255,.35); border-color:rgba(200,220,255,.15); background:rgba(6,16,36,0.55); }
+
+/* ════════════════════════════════════════════
    RESPONSIVE
 ════════════════════════════════════════════ */
 @media (max-width: 768px) {
@@ -616,8 +788,18 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
      SPLASH SCREEN
 ══════════════════════════════════════════════ -->
 <div class="splash" id="splashScreen">
+  <svg class="splash-hero" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M36 6 L60 17 L60 37 C60 51 49.5 61.5 36 66 C22.5 61.5 12 51 12 37 L12 17 Z" stroke="rgba(56,189,248,.55)" stroke-width="1.5" fill="rgba(56,189,248,.04)"/>
+    <path d="M36 6 L60 17 L60 37 C60 51 49.5 61.5 36 66 C22.5 61.5 12 51 12 37 L12 17 Z" stroke="rgba(56,189,248,.12)" stroke-width="6" fill="none"/>
+    <circle cx="36" cy="38" r="12" stroke="rgba(56,189,248,.55)" stroke-width="1.5" fill="rgba(56,189,248,.06)"/>
+    <circle cx="36" cy="38" r="5" fill="rgba(56,189,248,.55)"/>
+    <line x1="36" y1="26" x2="36" y2="32" stroke="rgba(56,189,248,.35)" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="36" y1="44" x2="36" y2="50" stroke="rgba(56,189,248,.35)" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="24" y1="38" x2="30" y2="38" stroke="rgba(56,189,248,.35)" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="42" y1="38" x2="48" y2="38" stroke="rgba(56,189,248,.35)" stroke-width="1.5" stroke-linecap="round"/>
+  </svg>
   <div class="splash-eyebrow">Cybersecurity Awareness Training</div>
-  <div class="splash-title">AI Data<br>Guardians</div>
+  <div class="splash-title">AI Data<br>Guardian</div>
   <div class="splash-subtitle">Three missions. Real threats. Learn to protect your AI interactions.</div>
   <div class="splash-load-wrap">
     <div class="splash-load-track"><div class="splash-load-fill" id="splashFill"></div></div>
@@ -633,6 +815,38 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
   <div class="boot-title">AI DATA GUARDIANS</div>
   <div class="boot-msg" id="bootMsg">INITIALISING SYSTEMS...</div>
   <div class="boot-track"><div class="boot-fill" id="bootFill"></div></div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     LEARNING OBJECTIVES INTERSTITIAL
+     Shown once (on first visit). Skipped on return.
+══════════════════════════════════════════════ -->
+<div class="obj-overlay" id="objOverlay">
+  <div class="obj-card">
+    <div class="obj-top"></div>
+    <div class="obj-body">
+      <div class="obj-eyebrow">AI Safety Training · Learning Objectives</div>
+      <div class="obj-title">What You Will Learn</div>
+      <div class="obj-intro">This module trains you to identify the three most common AI-related security risks in the workplace. By the end, you will be able to:</div>
+      <div class="obj-list">
+        <div class="obj-item">
+          <div class="obj-num">01</div>
+          <div class="obj-text"><strong>Identify and classify sensitive data</strong> in AI prompts — including credentials, personal data, and internal information — before it leaves your organisation.</div>
+        </div>
+        <div class="obj-item">
+          <div class="obj-num">02</div>
+          <div class="obj-text"><strong>Spot AI hallucinations</strong> in generated reports — fabricated citations, invented statistics, and non-existent legal provisions — before they reach decision-makers.</div>
+        </div>
+        <div class="obj-item">
+          <div class="obj-num">03</div>
+          <div class="obj-text"><strong>Detect prompt injection attacks</strong> hidden inside documents — adversarial instructions that attempt to hijack your AI tool's behaviour.</div>
+        </div>
+      </div>
+    </div>
+    <div class="obj-footer">
+      <button class="obj-cta" onclick="dismissObjectives()">▶ &nbsp;&nbsp;BEGIN TRAINING</button>
+    </div>
+  </div>
 </div>
 
 <!-- ══════════════════════════════════════════════
@@ -654,11 +868,13 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
         <div class="mc-body">
           <div class="mc-top-row">
             <div class="mc-num">// MISSION 01</div>
+            <div class="mc-stars" id="m1stars"></div>
           </div>
           <svg class="mc-icon" viewBox="0 0 44 44" fill="none">
             <path d="M22 4 L38 11 L38 25 C38 33.5 31 39.5 22 42 C13 39.5 6 33.5 6 25 L6 11 Z" stroke="rgba(56,189,248,.7)" stroke-width="1.5" fill="rgba(56,189,248,.05)"/>
-            <line x1="16" y1="16" x2="28" y2="28" stroke="rgba(56,189,248,.9)" stroke-width="2" stroke-linecap="round"/>
-            <line x1="28" y1="16" x2="16" y2="28" stroke="rgba(56,189,248,.9)" stroke-width="2" stroke-linecap="round"/>
+            <rect x="16" y="22" width="12" height="9" rx="2" stroke="rgba(56,189,248,.9)" stroke-width="1.5" fill="rgba(56,189,248,.12)"/>
+            <path d="M18 22 L18 19 C18 16.8 26 16.8 26 19 L26 22" stroke="rgba(56,189,248,.9)" stroke-width="1.5" fill="none"/>
+            <circle cx="22" cy="26.5" r="1.5" fill="rgba(56,189,248,.9)"/>
           </svg>
           <div class="mc-domain">AI Risk Domain 1</div>
           <div class="mc-title">Sensitive Data Exposure</div>
@@ -677,12 +893,15 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
         <div class="mc-body">
           <div class="mc-top-row">
             <div class="mc-num">// MISSION 02</div>
+            <div class="mc-stars" id="m2stars"></div>
           </div>
           <svg class="mc-icon" viewBox="0 0 44 44" fill="none">
-            <circle cx="22" cy="22" r="16" stroke="rgba(56,189,248,.7)" stroke-width="1.5" fill="rgba(56,189,248,.05)"/>
-            <path d="M22 13 L22 24" stroke="rgba(56,189,248,.9)" stroke-width="2.5" stroke-linecap="round"/>
-            <circle cx="22" cy="30" r="1.8" fill="rgba(56,189,248,.9)"/>
-            <path d="M15 10 Q22 6 29 10" stroke="rgba(56,189,248,.25)" stroke-width="1" fill="none" stroke-dasharray="2 2"/>
+            <rect x="9" y="7" width="22" height="30" rx="2" stroke="rgba(56,189,248,.7)" stroke-width="1.5" fill="rgba(56,189,248,.05)"/>
+            <line x1="13" y1="14" x2="27" y2="14" stroke="rgba(56,189,248,.5)" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="13" y1="19" x2="27" y2="19" stroke="rgba(56,189,248,.35)" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="13" y1="24" x2="21" y2="24" stroke="rgba(56,189,248,.25)" stroke-width="1.5" stroke-linecap="round"/>
+            <circle cx="32" cy="30" r="8" fill="rgba(8,20,45,1)" stroke="rgba(56,189,248,.7)" stroke-width="1.5"/>
+            <text x="32" y="34" text-anchor="middle" font-size="11" font-weight="bold" fill="rgba(56,189,248,.9)" font-family="monospace">?</text>
           </svg>
           <div class="mc-domain">AI Risk Domain 2</div>
           <div class="mc-title">AI Hallucination Detection</div>
@@ -701,15 +920,16 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
         <div class="mc-body">
           <div class="mc-top-row">
             <div class="mc-num">// MISSION 03</div>
+            <div class="mc-stars" id="m3stars"></div>
           </div>
           <svg class="mc-icon" viewBox="0 0 44 44" fill="none">
-            <rect x="8" y="14" width="28" height="20" rx="3" stroke="rgba(56,189,248,.7)" stroke-width="1.5" fill="rgba(56,189,248,.05)"/>
-            <path d="M8 20 L36 20" stroke="rgba(56,189,248,.3)" stroke-width="1"/>
-            <circle cx="12" cy="17" r="1.5" fill="rgba(56,189,248,.45)"/>
-            <circle cx="17" cy="17" r="1.5" fill="rgba(56,189,248,.3)"/>
-            <circle cx="22" cy="17" r="1.5" fill="rgba(56,189,248,.2)"/>
-            <path d="M14 28 L22 28 M14 32 L30 32" stroke="rgba(56,189,248,.35)" stroke-width="1.5" stroke-linecap="round"/>
-            <path d="M26 26 L36 36 M32 26 L36 30" stroke="rgba(56,189,248,.9)" stroke-width="2" stroke-linecap="round"/>
+            <rect x="13" y="12" width="20" height="20" rx="3" stroke="rgba(56,189,248,.7)" stroke-width="1.5" fill="rgba(56,189,248,.05)"/>
+            <line x1="17" y1="19" x2="27" y2="19" stroke="rgba(56,189,248,.4)" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="17" y1="23" x2="23" y2="23" stroke="rgba(56,189,248,.25)" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M3 22 L13 22" stroke="rgba(56,189,248,.9)" stroke-width="2" stroke-linecap="round"/>
+            <path d="M9 18 L14 22 L9 26" stroke="rgba(56,189,248,.9)" stroke-width="2" stroke-linejoin="round" fill="none"/>
+            <circle cx="36" cy="34" r="6" fill="rgba(239,68,68,.15)" stroke="rgba(239,68,68,.7)" stroke-width="1.5"/>
+            <path d="M33 34 L37 34 M35 32 L35 36" stroke="rgba(239,68,68,.9)" stroke-width="1.5" stroke-linecap="round"/>
           </svg>
           <div class="mc-domain">AI Risk Domain 3</div>
           <div class="mc-title">Prompt Injection Attacks</div>
@@ -739,6 +959,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
         <div class="title-unlock-eyebrow">⬡ All Missions Complete — Title Unlocked</div>
         <div class="title-unlock-name">AI DATA GUARDIAN</div>
         <div class="title-unlock-sub">You identified sensitive data leaks, AI hallucinations, and prompt injection attacks. You are cleared to work safely with AI tools.</div>
+        <button onclick="showCertificate()" style="margin-top:12px;padding:9px 28px;font-family:'Orbitron',monospace;font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.4);color:var(--green);border-radius:6px;cursor:pointer;transition:all .2s">▶ VIEW CERTIFICATE</button>
       </div>
       <!-- legacy dots kept for JS compat, hidden by CSS -->
       <div class="mp-dots" style="display:none">
@@ -751,6 +972,19 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 
   </div>
 </div>
+
+<!-- GLOBAL PAUSE BUTTON (shown only during active gameplay) -->
+<button id="pauseBtn" onclick="togglePause()" title="Pause / Resume (P)" aria-label="Pause game">⏸</button>
+
+<!-- PAUSE OVERLAY -->
+<div id="pauseOverlay" role="dialog" aria-modal="true" aria-label="Game paused">
+  <div class="pause-title">⏸ &nbsp;PAUSED</div>
+  <div class="pause-sub">Press P or click Resume to continue</div>
+  <button class="pause-resume-btn" onclick="togglePause()">▶ &nbsp;RESUME</button>
+</div>
+
+<!-- GLOBAL MUTE BUTTON -->
+<button id="muteBtn" onclick="toggleMute()" title="Toggle audio (M)" aria-label="Toggle audio mute">🔊</button>
 
 <!-- DEV PANEL TOAST -->
 <div id="devPanel" style="position:fixed;bottom:16px;left:50%;transform:translateX(-50%);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:rgba(74,222,128,.9);background:rgba(6,16,36,.95);border:1px solid rgba(74,222,128,.3);border-radius:6px;padding:7px 18px;z-index:9999;opacity:0;transition:opacity .4s;pointer-events:none;text-transform:uppercase;"></div>
@@ -775,12 +1009,12 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
     </div>
     <div class="briefing-body">
       <div class="briefing-stat-strip">
-        <div class="bss-item"><div class="bss-lbl">Destination</div><div class="bss-val">ChatGPT</div></div>
+        <div class="bss-item"><div class="bss-lbl">Destination</div><div class="bss-val">AI Assistant</div></div>
         <div class="bss-item"><div class="bss-lbl">Submitted By</div><div class="bss-val">Marcus Webb</div></div>
         <div class="bss-item"><div class="bss-lbl">Risk Level</div><div class="bss-val" style="color:var(--blue2)">HIGH</div></div>
       </div>
       <div class="briefing-divider"></div>
-      <div class="briefing-text">Marcus is about to paste a work prompt into ChatGPT. Once it's sent, you can't take it back — anything in that prompt could be stored, logged, or used to train external models. Read the prompt. Find anything that shouldn't leave the organisation. Redact it before it goes.</div>
+      <div class="briefing-text">Marcus is about to paste a work prompt into an AI assistant. Once it's sent, you can't take it back — anything in that prompt could be stored, logged, or used to train external models. Read the prompt. Find anything that shouldn't leave the organisation. Redact it before it goes.</div>
       <div class="briefing-legend">
         <div class="b-leg"><div class="b-leg-dot" style="background:var(--red);box-shadow:0 0 6px rgba(239,68,68,.7)"></div><span class="b-leg-name" style="color:var(--red)">[CREDENTIALS]</span><span class="b-leg-desc">Passwords, API keys — highest risk</span></div>
         <div class="b-leg"><div class="b-leg-dot" style="background:var(--orange);box-shadow:0 0 6px rgba(251,146,60,.6)"></div><span class="b-leg-name" style="color:var(--orange)">[PII]</span><span class="b-leg-desc">Names, emails, personal identifiers</span></div>
@@ -1125,7 +1359,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
         <div class="b-mech">Click any text that looks like an instruction aimed at an AI, not a human</div>
         <div class="b-mech">Wrong selections −15%. Missing the injection −30% + reveal</div>
       </div>
-      <button class="briefing-start-btn" onclick="s3Start()">▶ &nbsp;&nbsp; START SCAN</button>
+      <button class="briefing-start-btn" onclick="s3Start()">▶ &nbsp;&nbsp; START REVIEW</button>
     </div>
   </div>
 </div>
@@ -1263,8 +1497,8 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 <div class="cat-popup" id="s3injPopup" style="z-index:9999">
   <div class="cat-popup-lbl">Is this an injection?</div>
   <div class="cat-btns" style="grid-template-columns:1fr 1fr">
-    <button class="cat-btn" style="background:rgba(239,68,68,.15);color:var(--red);border-color:rgba(239,68,68,.5);font-size:10px;padding:11px 6px" onclick="s3Flag(true)">⚠ FLAG IT</button>
-    <button class="cat-btn cat-btn-safe" onclick="s3Flag(false)" style="font-size:10px;padding:11px 6px">✓ SAFE</button>
+    <button class="cat-btn" style="background:rgba(239,68,68,.15);color:var(--red);border-color:rgba(239,68,68,.5);font-size:13px;padding:18px 10px;min-height:56px;letter-spacing:.06em" onclick="s3Flag(true)">⚠ FLAG IT</button>
+    <button class="cat-btn cat-btn-safe" onclick="s3Flag(false)" style="font-size:13px;padding:18px 10px;min-height:56px;letter-spacing:.06em">✓ SAFE</button>
   </div>
   <button class="cat-popup-close" onclick="s3ClosePopup()">✕</button>
 </div>
@@ -1276,33 +1510,72 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 const SND = {};
 let audioReady = false;
 
-function preloadAudio() {
-  const base = 'https://aigenesis2023.github.io/CyberSecurity/assets/audio/';
-  SND.bg      = new Audio(base+'SunoBG.mp3'); SND.bg.loop=true; SND.bg.volume=0.325;
-  SND.bleep   = new Audio(base+'bleep_p8nRzd6T.mp3'); SND.bleep.volume=0.325;
-  SND.success = new Audio(base+'success_avrPRnht.mp3'); SND.success.volume=1.0;
-  SND.error   = new Audio(base+'error.mp3'); SND.error.volume=1.0;
-  SND.selected= new Audio(base+'selected_wbItGBcM.mp3'); SND.selected.volume=0.8;
-  SND.click   = new Audio(base+'click.mp3'); SND.click.volume=0.35;
-  SND.wrong   = new Audio(base+'wronganswer.mp3'); SND.wrong.volume=0.8;
-  SND.hover   = new Audio(base+'hover.mp3'); SND.hover.volume=0.6;
-  Object.values(SND).forEach(a => a.load());
+// ── Audio path helper — resolves relative to the HTML file ──────────────
+// AUDIO_BASE is relative so it works in LMS iframes, local servers, and
+// GitHub Pages without hard-coded absolute URLs. Add new filenames to
+// AUDIO_FILES and they will be preloaded and fall back silently if absent.
+const AUDIO_BASE = 'assets/audio/';
+const AUDIO_FILES = {
+  bg:       { file:'SunoBG.mp3',              loop:true,  volume:0.325 },
+  bleep:    { file:'bleep_p8nRzd6T.mp3',      volume:0.325 },
+  success:  { file:'success_avrPRnht.mp3',    volume:1.0 },
+  error:    { file:'error.mp3',               volume:1.0 },
+  selected: { file:'selected_wbItGBcM.mp3',   volume:0.8 },
+  click:    { file:'click.mp3',               volume:0.35 },
+  wrong:    { file:'wronganswer.mp3',         volume:0.8 },
+  hover:    { file:'Hover.mp3',              volume:0.6 },
+};
+
+function _makeAudio(key, def) {
+  try {
+    const a = new Audio(AUDIO_BASE + def.file);
+    a.volume = def.volume ?? 1.0;
+    if (def.loop) a.loop = true;
+    a.preload = 'auto';
+    // Silent fallback: if file 404s or can't decode, mark as unavailable
+    a.addEventListener('error', () => { SND[key] = null; }, { once:true });
+    return a;
+  } catch(e) { return null; }
 }
+
+function preloadAudio() {
+  Object.entries(AUDIO_FILES).forEach(([key, def]) => {
+    SND[key] = _makeAudio(key, def);
+  });
+  Object.values(SND).forEach(a => { if(a) try { a.load(); } catch(e){} });
+}
+let _muted = false;
 function startAudio() {
   if (audioReady) return; audioReady=true;
-  SND.bg.play().catch(()=>{});
+  if (!_muted && SND.bg) SND.bg.play().catch(()=>{});
 }
-function pClick()    { if(!audioReady||!SND.click)   return; const a=new Audio(SND.click.src);    a.volume=0.35; a.play().catch(()=>{}); }
-function pWrong()    { if(!audioReady||!SND.wrong)   return; const a=new Audio(SND.wrong.src);    a.volume=0.8;  a.play().catch(()=>{}); }
-function pSelected() { if(!audioReady||!SND.selected)return; SND.selected.cloneNode().play().catch(()=>{}); }
-function pSuccess()  { if(!audioReady||!SND.success) return; const a=new Audio(SND.success.src);  a.volume=1.0;  a.play().catch(()=>{}); }
-function pError()    { if(!audioReady||!SND.error)   return; SND.error.cloneNode().play().catch(()=>{}); }
-function pBleep()    { if(!audioReady||!SND.bleep)   return; SND.bleep.cloneNode().play().catch(()=>{}); }
+function toggleMute() {
+  _muted = !_muted;
+  const btn = document.getElementById('muteBtn');
+  if(btn) { btn.textContent = _muted ? '🔇' : '🔊'; btn.classList.toggle('muted', _muted); }
+  // Apply to all active Audio objects
+  Object.values(SND).forEach(a => { if(a) a.muted = _muted; });
+  // Persist preference
+  try { localStorage.setItem('adg_muted', _muted ? '1' : '0'); } catch(e){}
+}
+function loadMuteState() {
+  try {
+    const saved = localStorage.getItem('adg_muted');
+    if(saved === '1') { _muted = true; const btn=document.getElementById('muteBtn'); if(btn){btn.textContent='🔇';btn.classList.add('muted');} }
+  } catch(e){}
+}
+function _play(a) { if(a) { a.muted=_muted; a.play().catch(()=>{}); } }
+function pClick()    { if(!audioReady||!SND.click)   return; const a=new Audio(SND.click.src);    a.volume=0.35; _play(a); }
+function pWrong()    { if(!audioReady||!SND.wrong)   return; const a=new Audio(SND.wrong.src);    a.volume=0.8;  _play(a); }
+function pSelected() { if(!audioReady||!SND.selected)return; const a=SND.selected.cloneNode();    _play(a); }
+function pSuccess()  { if(!audioReady||!SND.success) return; const a=new Audio(SND.success.src);  a.volume=1.0;  _play(a); }
+function pError()    { if(!audioReady||!SND.error)   return; const a=SND.error.cloneNode();        _play(a); }
+function pBleep()    { if(!audioReady||!SND.bleep)   return; const a=SND.bleep.cloneNode();        _play(a); }
 
 // ════════════════════════════════════════════
 //  COURSE PROGRESS
 // ════════════════════════════════════════════
-let courseProgress = { s1done:false, s2done:false, s3done:false };
+let courseProgress = { s1done:false, s2done:false, s3done:false, s1score:null, s2score:null, s3score:null };
 
 function saveProgress() {
   try { localStorage.setItem('adg_progress', JSON.stringify(courseProgress)); } catch(e){}
@@ -1315,6 +1588,9 @@ function loadProgress() {
       if(p.s1done) courseProgress.s1done = true;
       if(p.s2done) courseProgress.s2done = true;
       if(p.s3done) courseProgress.s3done = true;
+      if(p.s1score != null) courseProgress.s1score = p.s1score;
+      if(p.s2score != null) courseProgress.s2score = p.s2score;
+      if(p.s3score != null) courseProgress.s3score = p.s3score;
     }
   } catch(e){}
 }
@@ -1384,6 +1660,16 @@ function updateMenuState() {
   });
   const mc=document.getElementById('masteryCount');
   if(mc){ mc.textContent=lvlCount+' / 3'; mc.className='mastery-count'+(lvlCount>=3?' complete':''); }
+  // Star ratings on mission cards
+  ['1','2','3'].forEach(n => {
+    const starsEl = document.getElementById('m'+n+'stars');
+    if (!starsEl) return;
+    const score = courseProgress['s'+n+'score'];
+    if (!courseProgress['s'+n+'done'] || score == null) { starsEl.textContent = ''; return; }
+    const starCount = score >= 80 ? 3 : score >= 50 ? 2 : 1;
+    starsEl.textContent = '★'.repeat(starCount) + '☆'.repeat(3 - starCount);
+    starsEl.title = 'Score: ' + score + '%';
+  });
   const clearanceNames=['AI Operator','AI Reviewer','AI Security Guardian','AI Data Guardian'];
   const cl=document.getElementById('clearanceLabel');
   if(cl){
@@ -1540,8 +1826,8 @@ function s1BuildPayload() {
     <div class="gpt-window">
       <div class="gpt-titlebar">
         <div class="gpt-logo">⬡</div>
-        <div class="gpt-title-text">ChatGPT</div>
-        <div class="gpt-model-pill">GPT-5.2 Instant</div>
+        <div class="gpt-title-text">AI Assistant</div>
+        <div class="gpt-model-pill">Enterprise Model v2</div>
       </div>
       <div class="gpt-warning-bar">⚠&nbsp; Sensitive data detected — redact all tokens before sending</div>
       <div class="gpt-chat-area">
@@ -1584,7 +1870,7 @@ function s1BuildPayload() {
         </div>
       </div>
       <div class="gpt-input-bar">
-        <div class="gpt-input-field"><span style="color:#bbb">Message ChatGPT…</span><div class="gpt-input-field-icons"><div class="gpt-input-icon">📎</div><div class="gpt-input-icon">↑</div></div></div>
+        <div class="gpt-input-field"><span style="color:#bbb">Message AI Assistant…</span></div><div class="gpt-input-field-icons"><div class="gpt-input-icon">📎</div><div class="gpt-input-icon">↑</div></div></div>
       </div>
     </div>`;
   document.querySelectorAll('#s1payload .tok.clickable').forEach(el => el.addEventListener('click', s1TokenClick));
@@ -1754,6 +2040,7 @@ function s1Start() {
   const b=document.getElementById('s1briefing'); b.classList.add('hidden');
   setTimeout(()=>b.style.display='none',600);
   s1state.gameActive=true;
+  updatePauseBtn();
   // Delay drain start by 5s — give learners time to read first
   setTimeout(()=>{
     if(!s1state.gameActive) return;
@@ -1772,6 +2059,7 @@ function s1Start() {
 }
 function s1EndGame(reason) {
   if(!s1state.gameActive) return; s1state.gameActive=false;
+  updatePauseBtn();
   clearInterval(s1state.drainInt);
   const intFinal=Math.max(0,Math.round(s1state.integrity));
   const credLeft=S1_CAT_TOKENS.credential.filter(id=>!s1state.tokState[id].redacted).length;
@@ -1782,6 +2070,7 @@ function s1EndGame(reason) {
   const precisionPass = pass && s1state.classifyErrors===0;
   if(pass){ pSuccess(); courseProgress.s1done=true; saveProgress(); }
   else pError();
+  scormReport(intFinal, pass, 's1');
   const sg=document.getElementById('s1vSuccess'), fg=document.getElementById('s1vFail');
   sg.style.display='none'; fg.style.display='none'; sg.classList.remove('animate');
   if(pass){ sg.style.display='flex'; setTimeout(()=>sg.classList.add('animate'),50); setTimeout(()=>sg.querySelectorAll('.ring').forEach(r=>r.classList.add('frozen')),2000); }
@@ -1796,7 +2085,7 @@ function s1EndGame(reason) {
     if(credLeft>0) missed.push('credentials (API key / password)');
     if(piiLeft>0) missed.push('personal data (name / email)');
     if(intLeft>0) missed.push('internal codenames');
-    vMsg = `Data transmitted. ${totalLeft} sensitive token${totalLeft>1?'s':''} reached ChatGPT — including ${missed.join(' and ')}. In a real incident, this would be a reportable breach under GDPR. The AI tool now holds data it was never meant to see.`;
+    vMsg = `Data transmitted. ${totalLeft} sensitive token${totalLeft>1?'s':''} reached the AI assistant — including ${missed.join(' and ')}. In a real incident, this would be a reportable breach under GDPR. The AI tool now holds data it was never meant to see.\n\nTip: Open the attachment early — it contains the most sensitive credentials. Classify credentials first (red) as they drain integrity the fastest.`;
   }
   document.getElementById('s1vMsg').textContent = vMsg;
   document.getElementById('s1vInt').textContent=intFinal+'%';
@@ -1923,7 +2212,7 @@ function s2BuildPayload() {
       id:'s2sec4',
       html:`<h4>RECOMMENDED ACTIONS</h4>
         <p>Organisations should immediately audit their AI data processing workflows. ${at('acc4')} — your AI tools must honour deletion requests within 30 days of verification. Failure to comply exposes organisations to the full range of regulatory sanctions.</p>
-        <span class="cite">⬡ Generated by Claude Enterprise · Unverified · Review before use</span>`
+        <span class="cite">⬡ Generated by AI Assistant · Unverified · Review before use</span>`
     }
   ];
 
@@ -1943,8 +2232,9 @@ function s2BuildPayload() {
       <div class="ai-response-header">
         <div class="ai-logo">✦</div>
         <div class="ai-response-title">AI Assistant — GDPR Compliance Report</div>
-        <div class="ai-model-badge">Claude Enterprise</div>
+        <div class="ai-model-badge">Enterprise AI</div>
       </div>
+      <div class="ai-scenario-frame">📋 <strong>Your task:</strong> The legal team used an AI assistant to draft this GDPR compliance brief. Before it reaches senior management, <strong>you must flag every fabricated claim</strong>. Hallucinations carry the same confident tone as facts — there is no internal signal.</div>
       <div class="ai-warning-strip">⚠ Unverified AI output — flag fabricated claims before forwarding to legal or compliance</div>
       <div class="ai-response-body" id="s2docBody">${sectionHTML}</div>
     </div>`;
@@ -2134,8 +2424,16 @@ function s2UpdateDiag(cat) {
 function s2Start() {
   const b=document.getElementById('s2briefing'); b.classList.add('hidden'); setTimeout(()=>b.style.display='none',600);
   s2state.gameActive=true;
-  document.getElementById('s2iwDrain').textContent='reviewing…';
-  document.getElementById('s2iwDrain').className='ib-drain-label';
+  updatePauseBtn();
+  document.getElementById('s2iwDrain').textContent='active drain';
+  document.getElementById('s2iwDrain').className='ib-drain-label draining';
+  // Gentle drain: 0.3%/min = 0.005%/s — creates light time pressure without punishing careful readers
+  s2state.drainInt = setInterval(()=>{
+    if(!s2state.gameActive) return;
+    s2state.integrity = Math.max(0, s2state.integrity - 0.0005);
+    updateIntUI('s2', s2state.integrity, 0, S1_MAX_DRAIN);
+    if(s2state.integrity<=0) s2EndGame('breach');
+  }, 100);
   setTimeout(()=>{
     const sl=document.getElementById('s2scanline'); sl.classList.remove('run'); void sl.offsetWidth; sl.classList.add('run');
     // Scan only currently visible hallucination tokens
@@ -2150,12 +2448,14 @@ function s2Submit() {
 }
 function s2EndGame(reason) {
   if(!s2state.gameActive) return; s2state.gameActive=false;
+  updatePauseBtn();
   clearInterval(s2state.drainInt);
   const intFinal=Math.max(0,Math.round(s2state.integrity));
   const pass=(reason!=='breach')&&s2state.flagsCorrect>=6;
   const precisionPass = pass && s2state.flagsWrong===0;
   if(pass){ pSuccess(); courseProgress.s2done=true; saveProgress(); }
   else pError();
+  scormReport(intFinal, pass, 's2');
   const sg=document.getElementById('s2vSuccess'), fg=document.getElementById('s2vFail');
   sg.style.display='none'; fg.style.display='none'; sg.classList.remove('animate');
   if(pass){ sg.style.display='flex'; setTimeout(()=>sg.classList.add('animate'),50); setTimeout(()=>sg.querySelectorAll('.ring').forEach(r=>r.classList.add('frozen')),2000); }
@@ -2163,7 +2463,7 @@ function s2EndGame(reason) {
   document.getElementById('s2vBar').className='v-bar '+(pass?'pass':'fail');
   const vMsg = pass
     ? 'Report quarantined. You found all 6 fabricated claims — including a fake legal framework, invented enforcement statistics, and a non-existent exemption clause. AI models generate false information with the same confident tone as accurate information. There is no internal signal for uncertainty. Verification is always on the human.'
-    : `The report reached legal with ${6-s2state.flagsCorrect} fabricated claim${6-s2state.flagsCorrect!==1?'s':''} still inside. In a real scenario, your legal team would act on invented regulations, false statistics, and non-existent GDPR clauses — potentially exposing the organisation to real risk.`;
+    : `The report reached legal with ${6-s2state.flagsCorrect} fabricated claim${6-s2state.flagsCorrect!==1?'s':''} still inside. In a real scenario, your legal team would act on invented regulations, false statistics, and non-existent GDPR clauses — potentially exposing the organisation to real risk.\n\nTip: Focus on any claim that cites a specific document, regulation, or statistic — these are the hallucination hotspots. Real GDPR article numbers and percentages are verifiable; invented ones sound authoritative but can't be found in primary sources.`;
   document.getElementById('s2vMsg').textContent = vMsg;
   document.getElementById('s2vInt').textContent=intFinal+'%';
   document.getElementById('s2vInt').className='v-mv '+(intFinal>60?'green':intFinal>30?'orange':'red');
@@ -2399,6 +2699,7 @@ function s3UpdateTimer() {
 function s3Start() {
   const b=document.getElementById('s3briefing'); b.classList.add('hidden'); setTimeout(()=>b.style.display='none',600);
   s3state.gameActive=true;
+  updatePauseBtn();
   s3LoadLevel(0);
 }
 
@@ -2536,7 +2837,7 @@ function s3Flag(isInjection) {
         fp2: 'This is standard CRM next-steps guidance for a human sales rep. It names a specific person (Dan) and describes real-world tasks — an injection tells an AI system how to behave or extract data, not what a salesperson should do.',
         fp3: 'These are genuine brand editorial guidelines for human writers. They guide a writer\'s style and voice, not an AI\'s data processing behaviour. Injections hijack AI output; style guides shape human writing.',
       };
-      const msg = 'Wrong — Integrity −15. ' + (fpFeedback[id] || 'This is legitimate document content, not an injection. Injections specifically instruct an AI system to change its behaviour, extract data, or override prior instructions.');
+      const msg = fpFeedback[id] || 'This is legitimate document content, not an injection. Injections specifically instruct an AI system to change its behaviour, extract data, or override prior instructions.';
       const el=document.querySelector(`#s3payload .tok[data-id="${id}"]`);
       if(el){ el.style.background='rgba(239,68,68,.22)'; setTimeout(()=>el.style.background='',900); }
       s3ShowInsight('False Alarm', '', msg);
@@ -2607,12 +2908,18 @@ function s3Flag(isInjection) {
 
 function s3EndGame(reason) {
   if(!s3state.gameActive) return; s3state.gameActive=false;
+  updatePauseBtn();
   clearInterval(s3state.timerInt);
   const intFinal=Math.max(0,Math.round(s3state.integrity));
   const pass=(reason==='complete')&&s3state.integrity>0;
   const precisionPass = pass && s3state.falseAlarms===0 && s3state.timeouts===0;
   if(pass){ pSuccess(); courseProgress.s3done=true; saveProgress(); }
   else pError();
+  scormReport(intFinal, pass, 's3');
+  // Show certificate when all missions complete after final mission
+  if (pass && courseProgress.s1done && courseProgress.s2done) {
+    setTimeout(showCertificate, 2800);
+  }
   const sg=document.getElementById('s3vSuccess'), fg=document.getElementById('s3vFail');
   sg.style.display='none'; fg.style.display='none'; sg.classList.remove('animate');
   if(pass){ sg.style.display='flex'; setTimeout(()=>sg.classList.add('animate'),50); setTimeout(()=>sg.querySelectorAll('.ring').forEach(r=>r.classList.add('frozen')),2000); }
@@ -2620,7 +2927,7 @@ function s3EndGame(reason) {
   document.getElementById('s3vBar').className='v-bar '+(pass?'pass':'fail');
   const vMsg = pass
     ? 'All injection attempts neutralised. You identified adversarial instructions hidden inside legitimate-looking documents — including a camouflaged formatting note and an invisible HTML comment. Always read external documents before pasting them into an AI tool. The document is the attack surface.'
-    : `One or more prompt injections were not identified. Attackers deliberately embed instructions in innocent-looking documents because they know people scan rather than read. If an AI produces unexpected output after processing an external document, a prompt injection may be why.`;
+    : `One or more prompt injections were not identified. Attackers deliberately embed instructions in innocent-looking documents because they know people scan rather than read. If an AI produces unexpected output after processing an external document, a prompt injection may be why.\n\nTip: Ask yourself "is this addressed to a human or to an AI system?" Injections give instructions about how the AI should process data, what to output first, or how to handle "prior context" — no legitimate document section does that.`;
   document.getElementById('s3vMsg').textContent = vMsg;
   document.getElementById('s3vInt').textContent=intFinal+'%';
   document.getElementById('s3vInt').className='v-mv '+(intFinal>60?'green':intFinal>30?'orange':'red');
@@ -2644,10 +2951,103 @@ function s3EndGame(reason) {
 }
 
 // ════════════════════════════════════════════
+//  SCORM 1.2 WRAPPER
+//  No-op in standalone/browser mode.
+//  Auto-initialises; finishes on unload.
+// ════════════════════════════════════════════
+const SCORM = (() => {
+  let _api = null, _init = false, _sessionTime = 0, _sessionStart = Date.now();
+  function _findAPI(w) {
+    let n = 0;
+    while (!w.API && w.parent && w.parent !== w) { if(++n > 7) return null; w = w.parent; }
+    return w.API || null;
+  }
+  function _getAPI() {
+    if (_api) return _api;
+    _api = _findAPI(window);
+    if (!_api && window.opener) _api = _findAPI(window.opener);
+    return _api;
+  }
+  function initialize() {
+    const api = _getAPI(); if (!api) return false;
+    const r = api.LMSInitialize('');
+    _init = (r === 'true' || r === true);
+    _sessionStart = Date.now();
+    return _init;
+  }
+  function finish() {
+    const api = _getAPI(); if (!api || !_init) return;
+    // Report session time in hh:mm:ss
+    const secs = Math.round((Date.now() - _sessionStart) / 1000);
+    const hh = String(Math.floor(secs/3600)).padStart(2,'0');
+    const mm = String(Math.floor((secs%3600)/60)).padStart(2,'0');
+    const ss = String(secs%60).padStart(2,'0');
+    api.LMSSetValue('cmi.core.session_time', `${hh}:${mm}:${ss}`);
+    api.LMSCommit(''); api.LMSFinish(''); _init = false;
+  }
+  function set(el, val) { const api=_getAPI(); if(!api||!_init) return; api.LMSSetValue(el, String(val)); api.LMSCommit(''); }
+  function get(el)       { const api=_getAPI(); if(!api||!_init) return ''; return api.LMSGetValue(el); }
+  function setScore(raw, min=0, max=100) { set('cmi.core.score.raw',raw); set('cmi.core.score.min',min); set('cmi.core.score.max',max); }
+  function setStatus(passed) { set('cmi.core.lesson_status', passed ? 'passed' : 'failed'); }
+  function setBookmark(obj)  { try { set('cmi.suspend_data', JSON.stringify(obj)); } catch(e){} }
+  function getBookmark()     { try { const r=get('cmi.suspend_data'); return r ? JSON.parse(r) : null; } catch(e){ return null; } }
+  initialize();
+  window.addEventListener('beforeunload', finish);
+  return { initialize, finish, set, get, setScore, setStatus, setBookmark, getBookmark };
+})();
+
+// ── Certificate screen ──────────────────────────────────────────────────
+function showCertificate() {
+  const scores = window._scormScores || {};
+  const fmt = (v) => v !== null && v !== undefined ? v + '%' : '—';
+  const cls = (v) => !v ? '' : v > 60 ? '' : v > 30 ? 'orange' : 'red';
+  ['s1','s2','s3'].forEach(k => {
+    const el = document.getElementById('cert'+k.toUpperCase());
+    if (!el) return;
+    const v = scores[k];
+    el.textContent = fmt(v);
+    el.className = 'cert-score-val ' + cls(v);
+  });
+  const dateEl = document.getElementById('certDate');
+  if (dateEl) {
+    const now = new Date();
+    dateEl.textContent = '⬡ Completed: ' + now.toLocaleDateString('en-GB', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+  }
+  document.getElementById('certOverlay').classList.add('show');
+}
+function closeCert() {
+  document.getElementById('certOverlay').classList.remove('show');
+  goMenu();
+}
+
+// ── Called by each mission's endGame to report to LMS ──────────────────
+function scormReport(score, passed, missionId) {
+  // Composite score: average of all completed missions
+  const scores = { s1: null, s2: null, s3: null };
+  if (window._scormScores) Object.assign(scores, window._scormScores);
+  scores[missionId] = score;
+  window._scormScores = scores;
+  // Persist best score for star-rating display across reloads
+  const scoreKey = missionId + 'score';
+  if (courseProgress[scoreKey] == null || score > courseProgress[scoreKey]) {
+    courseProgress[scoreKey] = score;
+    saveProgress();
+  }
+  const completed = Object.values(scores).filter(v => v !== null);
+  const avgScore = completed.length ? Math.round(completed.reduce((a,b)=>a+b,0) / completed.length) : score;
+  const allPassed = courseProgress.s1done && courseProgress.s2done && courseProgress.s3done;
+  SCORM.setScore(avgScore, 0, 100);
+  SCORM.setStatus(allPassed ? true : passed);
+  SCORM.setBookmark({ progress: courseProgress, scores });
+}
+
+// ════════════════════════════════════════════
 //  SPLASH SCREEN
 // ════════════════════════════════════════════
 function splashBegin() {
-  pBleep(); startAudio();
+  // Play bleep directly on user gesture — audio context requires this
+  try { const b=_makeAudio('_bleep',AUDIO_FILES.bleep); if(b){b.volume=0.325;b.play().catch(()=>{});} } catch(e){}
+  startAudio();
   const el=document.getElementById('splashScreen');
   el.classList.add('hidden'); setTimeout(()=>el.style.display='none',800);
 }
@@ -2668,15 +3068,38 @@ function runSplashLoader() {
 }
 
 // ════════════════════════════════════════════
+//  LEARNING OBJECTIVES INTERSTITIAL
+// ════════════════════════════════════════════
+function showObjectivesIfNeeded() {
+  try {
+    const seen = localStorage.getItem('adg_objectives_seen');
+    if (!seen) {
+      document.getElementById('objOverlay').classList.add('show');
+      return;
+    }
+  } catch(e) {}
+  // Already seen — go straight to menu
+}
+function dismissObjectives() {
+  document.getElementById('objOverlay').classList.remove('show');
+  try { localStorage.setItem('adg_objectives_seen', '1'); } catch(e){}
+}
+
+// ════════════════════════════════════════════
 //  BOOT
 // ════════════════════════════════════════════
-const BOOT_STEPS=['LOADING DETECTION MODULES...','TOKENISATION ENGINE READY...','SCANNING MISSION DATABASE...','CALIBRATING INTEGRITY MONITORS...','ALL SYSTEMS ONLINE.','READY.'];
+const BOOT_STEPS=['LOADING DATA PROTECTION MODULES...','TOKENISATION ENGINE INITIALISED...','THREE-THREAT SCENARIO LOADED...','INTEGRITY MONITOR CALIBRATED...','BRIEFING ASSETS DECRYPTED...','AGENT — YOU ARE CLEARED.'];
 function boot() {
   const msgEl=document.getElementById('bootMsg');
   const fillEl=document.getElementById('bootFill');
   let step=0;
   const iv=setInterval(()=>{
-    if(step>=BOOT_STEPS.length){ clearInterval(iv); document.getElementById('boot').classList.add('hidden'); setTimeout(()=>document.getElementById('boot').style.display='none',900); return; }
+    if(step>=BOOT_STEPS.length){
+      clearInterval(iv);
+      document.getElementById('boot').classList.add('hidden');
+      setTimeout(()=>{ document.getElementById('boot').style.display='none'; showObjectivesIfNeeded(); },900);
+      return;
+    }
     msgEl.textContent=BOOT_STEPS[step];
     fillEl.style.width=((step+1)/BOOT_STEPS.length*100)+'%';
     step++;
@@ -2689,9 +3112,103 @@ function boot() {
 window.addEventListener('load', ()=>{
   preloadAudio();
   loadProgress();
+  // Restore SCORM bookmark (merges with localStorage progress)
+  const bm = SCORM.getBookmark();
+  if (bm && bm.progress) {
+    if(bm.progress.s1done) courseProgress.s1done = true;
+    if(bm.progress.s2done) courseProgress.s2done = true;
+    if(bm.progress.s3done) courseProgress.s3done = true;
+  }
+  if (bm && bm.scores) window._scormScores = bm.scores;
+  loadMuteState();
   updateMenuState();
   runSplashLoader();
   setTimeout(boot, 200);
+});
+
+// ════════════════════════════════════════════
+//  PAUSE / RESUME
+// ════════════════════════════════════════════
+let _paused = false;
+
+function _getActiveSection() {
+  if (s1state.gameActive) return 's1';
+  if (s2state.gameActive) return 's2';
+  if (s3state.gameActive) return 's3';
+  return null;
+}
+
+function togglePause() {
+  const sec = _getActiveSection();
+  if (!sec && !_paused) return; // nothing running, nothing to pause
+  _paused = !_paused;
+  const overlay = document.getElementById('pauseOverlay');
+  overlay.classList.toggle('show', _paused);
+
+  if (_paused) {
+    // Pause timers/drains for active section
+    if (sec === 's1') { clearInterval(s1state.drainInt); }
+    if (sec === 's3') { clearInterval(s3state.timerInt); }
+    // Mute audio while paused (without toggling the mute preference)
+    Object.values(SND).forEach(a => { if(a) a.muted = true; });
+    document.getElementById('pauseBtn').textContent = '▶';
+  } else {
+    // Resume
+    document.getElementById('pauseBtn').textContent = '⏸';
+    // Restore mute state
+    Object.values(SND).forEach(a => { if(a) a.muted = _muted; });
+    // Restart drain / timer for active section
+    if (sec === 's1' && s1state.gameActive && !s1AllSecured()) {
+      s1state.drainInt = setInterval(()=>{
+        if(!s1state.gameActive) return;
+        s1state.integrity = Math.max(0, s1state.integrity - s1GetDrain()*(100/1000));
+        document.getElementById('s1iwDrain').textContent = '▼ draining';
+        document.getElementById('s1iwDrain').className = 'ib-drain-label draining';
+        updateIntUI('s1', s1state.integrity, s1GetDrain(), S1_MAX_DRAIN);
+        if(s1state.integrity <= 0) s1EndGame('breach');
+      }, 100);
+    }
+    if (sec === 's3' && s3state.gameActive && s3state.levelActive) {
+      const lvl = S3_LEVELS[s3state.currentLevel];
+      if(lvl && lvl.timeLimit > 0) {
+        s3state.timerInt = setInterval(()=>{
+          if(!s3state.gameActive || !s3state.levelActive) { clearInterval(s3state.timerInt); return; }
+          s3state.timeLeft--;
+          s3UpdateTimer();
+          if(s3state.timeLeft <= 0) { clearInterval(s3state.timerInt); }
+        }, 1000);
+      }
+    }
+  }
+}
+
+// Show/hide pause button based on whether a mission is active
+function updatePauseBtn() {
+  const btn = document.getElementById('pauseBtn');
+  const active = _getActiveSection() !== null;
+  if(btn) btn.classList.toggle('visible', active);
+}
+
+// Keyboard shortcut: P to pause/resume, M to mute
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT') return;
+  if (e.key === 'p' || e.key === 'P') { if (_getActiveSection() || _paused) togglePause(); }
+  if (e.key === 'm' || e.key === 'M') toggleMute();
+});
+
+// Auto-pause when tab loses visibility (prevents drain/timer running in background)
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden && !_paused && _getActiveSection()) togglePause();
+});
+
+// ════════════════════════════════════════════
+//  BEFOREUNLOAD GUARD
+// ════════════════════════════════════════════
+window.addEventListener('beforeunload', e => {
+  if (_getActiveSection()) {
+    e.preventDefault();
+    e.returnValue = ''; // Required for Chrome to show the dialog
+  }
 });
 
 // ════════════════════════════════════════════
@@ -2826,6 +3343,42 @@ function s3ShowInsight(category, tokenText, message, afterFn) {
   });
 }
 </script>
+
+<!-- COURSE COMPLETION / CERTIFICATE OVERLAY -->
+<div class="cert-overlay" id="certOverlay">
+  <div class="cert-card">
+    <div class="cert-top-bar"></div>
+    <div class="cert-graphic">
+      <div class="cert-ring r1"></div><div class="cert-ring r2"></div>
+      <div class="cert-star">⬡</div>
+      <div class="cert-badge">All Missions Complete</div>
+    </div>
+    <div class="cert-body">
+      <div class="cert-eyebrow">Certificate of Completion</div>
+      <div class="cert-title">AI Data Guardian</div>
+      <div class="cert-subtitle">You have successfully completed all three AI safety missions — identifying sensitive data exposure, AI hallucinations, and prompt injection attacks. You are cleared to work safely with AI tools in your organisation.</div>
+      <div class="cert-scores">
+        <div class="cert-score-item">
+          <div class="cert-score-lbl">Mission 01<br>Data Leakage</div>
+          <div class="cert-score-val" id="certS1">—</div>
+        </div>
+        <div class="cert-score-item">
+          <div class="cert-score-lbl">Mission 02<br>Hallucination</div>
+          <div class="cert-score-val" id="certS2">—</div>
+        </div>
+        <div class="cert-score-item">
+          <div class="cert-score-lbl">Mission 03<br>Prompt Injection</div>
+          <div class="cert-score-val" id="certS3">—</div>
+        </div>
+      </div>
+      <div class="cert-date" id="certDate"></div>
+    </div>
+    <div class="cert-actions">
+      <button class="cert-print-btn" onclick="window.print()">⬡ &nbsp;PRINT / SAVE PDF</button>
+      <button class="cert-menu-btn" onclick="closeCert()">← MISSION SELECT</button>
+    </div>
+  </div>
+</div>
 
 <!-- INSIGHT LIGHTBOX -->
 <style>
