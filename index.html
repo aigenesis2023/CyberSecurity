@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI Data Guardian — Cybersecurity Awareness Training</title>
 <noscript><style>body{display:flex;align-items:center;justify-content:center;min-height:100vh;background:#020610;font-family:sans-serif;color:#ddeeff;text-align:center;padding:20px}.ns-msg{max-width:400px}.ns-msg h1{font-size:1.4rem;margin-bottom:12px}.ns-msg p{opacity:.65;font-size:.9rem;line-height:1.6}</style><div class="ns-msg"><h1>JavaScript Required</h1><p>This training module requires JavaScript to run. Please enable JavaScript in your browser and reload the page.</p></div></noscript>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
@@ -62,6 +63,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 @keyframes intPenalty { 0%{transform:scale(1)} 30%{transform:scale(1.08)} 100%{transform:scale(1)} }
 @keyframes timerWarn { 0%,100%{box-shadow:0 0 0 rgba(239,68,68,0)} 50%{box-shadow:0 0 18px rgba(239,68,68,.35)} }
 @keyframes cardGlow { 0%,100%{box-shadow:0 0 0 rgba(56,189,248,0)} 50%{box-shadow:0 0 30px rgba(56,189,248,.15)} }
+@keyframes chipPulse { 0%,100%{box-shadow:0 0 3px rgba(99,102,241,.25);border-color:#b0aaee} 50%{box-shadow:0 0 10px rgba(99,102,241,.55);border-color:#7c75e0} }
 @keyframes missionUnlock { 0%{transform:scale(1.05);opacity:.6} 100%{transform:scale(1);opacity:1} }
 
 /* ════════════════════════════════════════════
@@ -479,8 +481,9 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 .gpt-user-bubble .tok.clickable { color:#1a1a1a; }
 .gpt-user-bubble .tok.clickable:hover { background:rgba(0,0,0,.08); border-radius:3px; }
 .gpt-attach-row { margin-top:12px; }
-.gpt-attach-chip { display:inline-flex; align-items:center; gap:6px; padding:6px 12px; background:#f0f0f0; border:1px solid #d4d4d4; border-radius:8px; cursor:pointer; transition:background .15s; font-size:11px; }
+.gpt-attach-chip { display:inline-flex; align-items:center; gap:6px; padding:6px 12px; background:#f0f0f0; border:1px solid #d4d4d4; border-radius:8px; cursor:pointer; transition:background .15s; font-size:11px; animation:chipPulse 2.2s ease-in-out infinite; }
 .gpt-attach-chip:hover { background:#e8e8e8; }
+.gpt-attach-chip.opened { animation:none; border-color:#d4d4d4; }
 .gpt-attach-chip.nudge { animation:dotPop .5s ease 2s 3; border-color:#6366f1; background:#f0edff; }
 .chip-icon { font-size:14px; }
 .chip-name { font-family:'DM Sans',sans-serif; font-size:11px; font-weight:500; color:#333; }
@@ -576,6 +579,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 .v-anchor-text { font-family:'DM Sans',sans-serif; font-size:11px; line-height:1.65; color:rgba(200,220,255,.55); font-weight:300; }
 .v-precision-bonus { display:inline-block; font-family:'Orbitron',monospace; font-size:8px; letter-spacing:.14em; background:rgba(74,222,128,.1); border:1px solid rgba(74,222,128,.3); color:var(--green); padding:3px 9px; border-radius:10px; margin-top:6px; }
 .v-bonus-wrap { margin:10px 0 2px; }
+.v-star-note { font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.08em; color:rgba(200,220,255,.28); text-align:center; margin:10px 0 2px; }
 
 /* ════════════════════════════════════════════
    MICRO-FEEDBACK TEACH LINE
@@ -1120,8 +1124,9 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
         <div class="v-anchor-lbl">⬡ Real World</div>
         <div class="v-anchor-text" id="s1vAnchorText"></div>
       </div>
+      <div class="v-star-note">★★★ 80%+ &nbsp;·&nbsp; ★★ 60–79% &nbsp;·&nbsp; ★ below 60%</div>
       <button class="v-reset" onclick="s1Reset()">↺ REVIEW AGAIN</button>
-      <button class="v-menu-btn" id="s1menuBtn" onclick="goMenu()" style="display:none">← MISSION SELECT</button>
+      <button class="v-menu-btn" id="s1menuBtn" onclick="goMenu()">← MISSION SELECT</button>
     </div>
   </div>
 </div>
@@ -1282,6 +1287,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
         <div class="v-anchor-lbl">⬡ Real World</div>
         <div class="v-anchor-text" id="s2vAnchorText"></div>
       </div>
+      <div class="v-star-note">★★★ 80%+ &nbsp;·&nbsp; ★★ 60–79% &nbsp;·&nbsp; ★ below 60%</div>
       <button class="v-reset" onclick="s2Reset()">↺ REVIEW AGAIN</button>
       <button class="v-menu-btn" id="s2menuBtn" onclick="goMenu()">← MISSION SELECT</button>
     </div>
@@ -1356,7 +1362,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
       <div class="diag-secured-label">ALL CLAIMS FLAGGED</div>
     </div>
     <div class="diag-actions" style="margin-top:auto">
-      <button class="hal-submit-btn" id="s2submitBtn" onclick="s2Submit()" disabled>▶ &nbsp; SUBMIT REPORT <span id="s2submitCounter">(0 / 6)</span></button>
+      <button class="hal-submit-btn" id="s2submitBtn" onclick="s2Submit()" disabled><span id="s2submitIcon">—</span> &nbsp; SUBMIT REPORT <span id="s2submitCounter">(0 / 6)</span></button>
     </div>
   </div>
 </div>
@@ -1448,6 +1454,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
         <div class="v-anchor-lbl">⬡ Real World</div>
         <div class="v-anchor-text" id="s3vAnchorText"></div>
       </div>
+      <div class="v-star-note">★★★ 80%+ &nbsp;·&nbsp; ★★ 60–79% &nbsp;·&nbsp; ★ below 60%</div>
       <button class="v-reset" onclick="s3Reset()">↺ REVIEW AGAIN</button>
       <button class="v-menu-btn" id="s3menuBtn" onclick="goMenu()">← MISSION SELECT</button>
     </div>
@@ -1926,8 +1933,10 @@ function s1BuildPayload() {
 function s1ToggleAttach() {
   const doc=document.getElementById('s1attachDoc');
   const arr=document.getElementById('s1chipArrow');
+  const chip=document.querySelector('.gpt-attach-chip');
   const open=doc.classList.toggle('open');
   if(arr) arr.textContent=open?'▲':'▼';
+  if(open&&chip) chip.classList.add('opened'); // stop pulse once attachment reviewed
 }
 function s1TokenClick(e) {
   if(!s1state.gameActive) return;
@@ -2004,7 +2013,11 @@ function s1Classify(chosen) {
   }
   if(chosen!==token.cat) {
     pWrong(); s1FlashToken(id,'red');
-    flashDelta('s1',-0,'wrong category');
+    s1state.integrity=Math.max(0,s1state.integrity-3);
+    s1state.classifyErrors++;
+    showIntPop('s1',-3);
+    flashDelta('s1',-3,'Identified correctly — but category matters for incident reporting. Try again.');
+    updateIntUI('s1',s1state.integrity,s1GetDrain(),S1_MAX_DRAIN);
     const key={credential:'Cred',pii:'Pii',internal:'Int'}[token.cat];
     const catEl=document.getElementById('s1cat'+key);
     catEl.style.animation='none'; void catEl.offsetWidth; catEl.style.animation='wrongShake .4s ease';
@@ -2012,6 +2025,7 @@ function s1Classify(chosen) {
       const catLabel={'credential':'Credential Risk','pii':'Personal Data Risk','internal':'Internal Info'}[token.cat]||'Wrong Category';
       s1ShowInsight(catLabel, tokText, S1_TEACH[id].wrong);
     }
+    if(s1state.integrity<=0) { s1EndGame('breach'); return; }
     return;
   }
   // Correct classification
@@ -2145,14 +2159,15 @@ function s1EndGame(reason) {
   document.getElementById('s1vIntel').className='v-rv '+(intLeft===0?'green':'yellow');
   document.getElementById('s1vErrors').textContent=s1state.classifyErrors===0?'None':s1state.classifyErrors+' Errors';
   document.getElementById('s1vErrors').className='v-rv '+(s1state.classifyErrors===0?'green':'red');
+  const mb1=document.getElementById('s1menuBtn'); mb1.style.display='block'; mb1.textContent=pass?'▶ MISSION SELECT':'← MISSION SELECT';
+  const anchor1=document.getElementById('s1vAnchor');
+  const anchorText1=document.getElementById('s1vAnchorText');
+  anchor1.style.display='block';
   if(pass) {
-    const mb1=document.getElementById('s1menuBtn'); mb1.style.display='block'; mb1.textContent='▶ MISSION SELECT';
-    // Show real-world anchor
-    const anchor=document.getElementById('s1vAnchor');
-    const anchorText=document.getElementById('s1vAnchorText');
-    anchor.style.display='block';
-    anchorText.innerHTML = 'In 2023, Samsung engineers accidentally submitted proprietary source code to ChatGPT for debugging help. The data was potentially retained by OpenAI and used in model training. Samsung subsequently banned AI tools company-wide.' + '<br><br><span style="font-family:\'JetBrains Mono\',monospace;font-size:9px;letter-spacing:.12em;color:rgba(56,189,248,.5);text-transform:uppercase;">What you now do differently</span><br><span style="font-size:11px;line-height:1.9;color:rgba(200,220,255,.65);">→ Never paste credentials, PII, or internal codenames into public AI tools<br>→ Treat every AI prompt like an email sent to a stranger<br>→ When in doubt, redact first — ask your manager before including sensitive data</span>';
+    anchorText1.innerHTML = 'In 2023, Samsung engineers accidentally submitted proprietary source code to ChatGPT for debugging help. The data was potentially retained by OpenAI and used in model training. Samsung subsequently banned AI tools company-wide.' + '<br><br><span style="font-family:\'JetBrains Mono\',monospace;font-size:9px;letter-spacing:.12em;color:rgba(56,189,248,.5);text-transform:uppercase;">What you now do differently</span><br><span style="font-size:11px;line-height:1.9;color:rgba(200,220,255,.65);">→ Never paste credentials, PII, or internal codenames into public AI tools<br>→ Treat every AI prompt like an email sent to a stranger<br>→ When in doubt, redact first — ask your manager before including sensitive data</span>';
     if(precisionPass){ const b=document.getElementById('s1vBonus'); b.style.display='block'; b.innerHTML='<div class="v-bonus-wrap"><span class="v-precision-bonus">⬡ PRECISION BONUS — Zero classification errors</span></div>'; }
+  } else {
+    anchorText1.textContent = 'In 2023, Samsung engineers accidentally submitted proprietary source code to ChatGPT — the data was potentially retained and used in model training. Samsung subsequently banned AI tools company-wide. Every unclassified item you missed could have the same consequence.';
   }
   forceCloseInsight();
   setTimeout(()=>document.getElementById('s1verdict').classList.add('show'),400);
@@ -2197,6 +2212,7 @@ function s2Init() {
   document.getElementById('s2flagStatus').textContent='Flag all fabricated claims. Accurate claims: leave them.';
   document.getElementById('s2diagSecured').style.display='none';
   document.getElementById('s2submitBtn').disabled=true;
+  const s2icon=document.getElementById('s2submitIcon'); if(s2icon) s2icon.textContent='—';
   document.getElementById('s2vAnchor').style.display='none'; document.getElementById('s2vBonus').style.display='none';
   // Reset diag cats
   ['Citations','Figures','Laws'].forEach((k,i)=>{
@@ -2419,9 +2435,9 @@ function s2Classify(chosen) {
   if(chosen!==tok.cat) {
     pWrong();
     s2FlashTok(id,'red');
-    s2state.integrity=Math.max(0,s2state.integrity-15);
-    s2state.cooldownUntil = Date.now() + 2200;
-    showIntPop('s2',-15); flashDelta('s2',-15,'wrong type — re-read carefully');
+    s2state.integrity=Math.max(0,s2state.integrity-5);
+    s2state.cooldownUntil = Date.now() + 1600;
+    showIntPop('s2',-5); flashDelta('s2',-5,'wrong type — re-read carefully');
     updateIntUI('s2',s2state.integrity,0,S1_MAX_DRAIN);
     if(s2state.integrity<=0) { s2EndGame('breach'); return; }
     const correctLabel={'citation':'Fake Citation','figure':'Wrong Figure','law':'Fake Law'}[tok.cat]||'Wrong Category';
@@ -2446,6 +2462,7 @@ function s2Classify(chosen) {
   if(allFlagged) {
     document.getElementById('s2flagStatus').textContent='All hallucinations flagged — ready to submit.';
     document.getElementById('s2submitBtn').disabled=false;
+    document.getElementById('s2submitIcon').textContent='▶';
     document.getElementById('s2submitCounter').textContent='✓';
     document.getElementById('s2diagSecured').style.display='flex';
     document.getElementById('s2iwDrain').textContent='✓ report verified';
@@ -2523,12 +2540,14 @@ function s2EndGame(reason) {
   document.getElementById('s2vLaws').className='v-rv '+(s2state.catCount.law>=2?'green':'orange');
   document.getElementById('s2vFalseFlags').textContent=s2state.flagsWrong===0?'None':s2state.flagsWrong;
   document.getElementById('s2vFalseFlags').className='v-rv '+(s2state.flagsWrong===0?'green':'red');
+  const anchor2=document.getElementById('s2vAnchor');
+  const anchorText2=document.getElementById('s2vAnchorText');
+  anchor2.style.display='block';
   if(pass) {
-    const anchor=document.getElementById('s2vAnchor');
-    const anchorText=document.getElementById('s2vAnchorText');
-    anchor.style.display='block';
-    anchorText.innerHTML = 'Research consistently finds that most professionals cannot reliably spot errors in AI-generated legal summaries without independent verification. In the Mata v. Avianca case — documented in 2023 — lawyers submitted AI-generated case citations to a federal court. Every cited case was invented. The judge sanctioned the attorneys and noted that the AI had produced the fabrications with the same confident prose as genuine legal analysis.' + '<br><br><span style="font-family:\'JetBrains Mono\',monospace;font-size:9px;letter-spacing:.12em;color:rgba(56,189,248,.5);text-transform:uppercase;">What you now do differently</span><br><span style="font-size:11px;line-height:1.9;color:rgba(200,220,255,.65);">→ Verify AI-generated statistics and citations against primary sources before sharing<br>→ Never forward an AI output directly to legal, compliance, or clients without review<br>→ AI confidence is not the same as accuracy — always check the source</span>';
+    anchorText2.innerHTML = 'Research consistently finds that most professionals cannot reliably spot errors in AI-generated legal summaries without independent verification. In the Mata v. Avianca case — documented in 2023 — lawyers submitted AI-generated case citations to a federal court. Every cited case was invented. The judge sanctioned the attorneys and noted that the AI had produced the fabrications with the same confident prose as genuine legal analysis.' + '<br><br><span style="font-family:\'JetBrains Mono\',monospace;font-size:9px;letter-spacing:.12em;color:rgba(56,189,248,.5);text-transform:uppercase;">What you now do differently</span><br><span style="font-size:11px;line-height:1.9;color:rgba(200,220,255,.65);">→ Verify AI-generated statistics and citations against primary sources before sharing<br>→ Never forward an AI output directly to legal, compliance, or clients without review<br>→ AI confidence is not the same as accuracy — always check the source</span>';
     if(precisionPass){ const b=document.getElementById('s2vBonus'); b.style.display='block'; b.innerHTML='<div class="v-bonus-wrap"><span class="v-precision-bonus">⬡ PRECISION BONUS — Zero false alarms</span></div>'; }
+  } else {
+    anchorText2.textContent = 'In the Mata v. Avianca case (2023), lawyers submitted AI-generated case citations to a US federal court — every cited case was invented. The attorneys were sanctioned. AI-fabricated content in legal and compliance contexts carries direct professional and financial consequences.';
   }
   const mb2=document.getElementById('s2menuBtn'); mb2.textContent=pass?'▶ MISSION SELECT':'← MISSION SELECT';
   forceCloseInsight();
@@ -2579,7 +2598,7 @@ const S3_LEVELS = [
   // ── LEVEL 2 (false positive) — client services team review, no timer ──
   {
     timeLimit: 0, isInjection: false, injectionId: null,
-    hint: 'Operational meeting language is directive and imperative — but it\'s addressed to people, not to an AI system. Ask: would this instruction make sense in a briefing from a manager to their staff? If yes, it\'s not an injection.',
+    hint: 'Operational meeting language is directive and imperative — but it\'s addressed to people, not to an AI system. Ask: would this instruction make sense in a briefing from a manager to their staff? If yes, it\'s not an injection. If the document is clean, click the highlighted text and mark it SAFE to proceed.',
     timeoutNote: null,
     content: () => `
       <div class="ai-response-window">
@@ -2633,7 +2652,7 @@ const S3_LEVELS = [
   // ── LEVEL 4 (false positive) — sales call transcript, 50s ──
   {
     timeLimit: 50, isInjection: false, injectionId: null,
-    hint: 'Sales scripts and CRM notes tell reps what to say and how to respond — they sound like instructions because they are. But they\'re written for a human salesperson, not to manipulate an AI. Ask: who is the intended reader of this text?',
+    hint: 'Sales scripts and CRM notes tell reps what to say and how to respond — they sound like instructions because they are. But they\'re written for a human salesperson, not to manipulate an AI. Ask: who is the intended reader of this text? If the document is clean, click the highlighted text and mark it SAFE to proceed.',
     timeoutNote: null,
     content: () => `
       <div class="ai-response-window">
@@ -2688,7 +2707,7 @@ const S3_LEVELS = [
   // ── LEVEL 6 (false positive) — editorial style guide, 35s ──
   {
     timeLimit: 35, isInjection: false, injectionId: null,
-    hint: 'Style guides and editorial briefs tell writers how to format and present content — they\'re instructions, but for humans. A prompt injection tells an AI how to behave in ways that serve an attacker\'s goals. Is this guiding a writer\'s voice, or hijacking an AI\'s output?',
+    hint: 'Style guides and editorial briefs tell writers how to format and present content — they\'re instructions, but for humans. A prompt injection tells an AI how to behave in ways that serve an attacker\'s goals. Is this guiding a writer\'s voice, or hijacking an AI\'s output? If the document is clean, click the highlighted text and mark it SAFE to proceed.',
     timeoutNote: null,
     content: () => `
       <div class="ai-response-window">
@@ -2840,7 +2859,7 @@ function s3RevealInjection(id) {
   const el=document.querySelector(`#s3payload .tok[data-id="${id}"]`);
   if(el){ el.className='tok injection-flagged'; el.innerHTML=`<span class="redact-label">${el.textContent.trim()}</span>⚠`; }
 }
-function s3NextLevel() { s3LoadLevel(s3state.currentLevel+1); }
+function s3NextLevel() { if(!s3state.gameActive) return; s3LoadLevel(s3state.currentLevel+1); }
 
 function s3TokenClick(e) {
   if(!s3state.gameActive||!s3state.levelActive) return;
@@ -2957,6 +2976,7 @@ function s3Flag(isInjection) {
 
 function s3EndGame(reason) {
   if(!s3state.gameActive) return; s3state.gameActive=false;
+  s3state.levelActive=false; // prevent any pending s3NextLevel callbacks from loading a new level after end
   updatePauseBtn();
   clearInterval(s3state.timerInt);
   const intFinal=Math.max(0,Math.round(s3state.integrity));
@@ -2984,12 +3004,14 @@ function s3EndGame(reason) {
   document.getElementById('s3vFalse').className='v-rv '+(s3state.falseAlarms===0?'green':'red');
   document.getElementById('s3vTimeouts').textContent=s3state.timeouts===0?'None':s3state.timeouts;
   document.getElementById('s3vTimeouts').className='v-rv '+(s3state.timeouts===0?'green':'orange');
+  const anchor3=document.getElementById('s3vAnchor');
+  const anchorText3=document.getElementById('s3vAnchorText');
+  anchor3.style.display='block';
   if(pass) {
-    const anchor=document.getElementById('s3vAnchor');
-    const anchorText=document.getElementById('s3vAnchorText');
-    anchor.style.display='block';
-    anchorText.innerHTML = 'Prompt injection attacks on AI-integrated business tools are documented in the wild. In 2024, researchers demonstrated attacks where malicious documents caused AI email assistants to forward confidential messages to attackers — by embedding instructions invisible to human readers but processed by the AI. In this training, the injections were visible so you could learn to spot the pattern — but in the real world, they can also be hidden in white-on-white text, metadata fields, or encoded characters that humans cannot see at all. The skill is the same: always review AI output for unexpected behaviour after processing external documents.' + '<br><br><span style="font-family:\'JetBrains Mono\',monospace;font-size:9px;letter-spacing:.12em;color:rgba(56,189,248,.5);text-transform:uppercase;">What a Guardian does before submitting any external document</span><br><span style="font-size:11px;line-height:1.9;color:rgba(200,220,255,.65);">→ Read external documents carefully before pasting them into any AI tool<br>→ Unexpected AI output after processing an external file is a red flag<br>→ The document is the attack surface — treat it as untrusted input</span>';
+    anchorText3.innerHTML = 'Prompt injection attacks on AI-integrated business tools are documented in the wild. In 2024, researchers demonstrated attacks where malicious documents caused AI email assistants to forward confidential messages to attackers — by embedding instructions invisible to human readers but processed by the AI. In this training, the injections were visible so you could learn to spot the pattern — but in the real world, they can also be hidden in white-on-white text, metadata fields, or encoded characters that humans cannot see at all. The skill is the same: always review AI output for unexpected behaviour after processing external documents.' + '<br><br><span style="font-family:\'JetBrains Mono\',monospace;font-size:9px;letter-spacing:.12em;color:rgba(56,189,248,.5);text-transform:uppercase;">What a Guardian does before submitting any external document</span><br><span style="font-size:11px;line-height:1.9;color:rgba(200,220,255,.65);">→ Read external documents carefully before pasting them into any AI tool<br>→ Unexpected AI output after processing an external file is a red flag<br>→ The document is the attack surface — treat it as untrusted input</span>';
     if(precisionPass){ const b=document.getElementById('s3vBonus'); b.style.display='block'; b.innerHTML='<div class="v-bonus-wrap"><span class="v-precision-bonus">⬡ PRECISION BONUS — No false alarms, no timeouts</span></div>'; }
+  } else {
+    anchorText3.textContent = 'In 2024, researchers demonstrated that prompt injections in shared documents could cause AI email assistants to forward confidential data to attackers without the user\'s knowledge. The same technique was used in every injection you missed — a hidden instruction the AI processed while you scanned past it.';
   }
   const mb3=document.getElementById('s3menuBtn'); mb3.textContent=pass?'▶ MISSION SELECT':'← MISSION SELECT';
   forceCloseInsight();
