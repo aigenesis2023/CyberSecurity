@@ -26,12 +26,14 @@
     line-height: 1.3;
   }
   .ib-center {
-    padding: 10px 16px;
+    padding: 10px 16px 12px;
     gap: 14px;
   }
   .ib-num  { font-size: 32px; }
   .ib-unit { font-size: 14px; }
   .ib-bar-track { height: 8px; }
+  /* Show mini diag row in banner on mobile */
+  .ib-mini-diag { display: flex; }
 
   /* Shell: single column, leave space at bottom for the fixed diag drawer */
   .shell {
@@ -142,21 +144,30 @@
   /* Verdict overlay: scrollable on mobile so nav buttons are always reachable */
   .verdict-overlay {
     overflow-y: auto;
-    align-items: flex-start;
-    padding: 16px;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 0;
   }
 
   /* Verdict card */
   .verdict-card {
     width: calc(100vw - 32px);
     max-width: 480px;
-    margin: 0 auto;
+    margin: auto;
+    flex-shrink: 0;
   }
-  .v-body { padding: 18px 16px 16px; }
+  .v-body { padding: 20px 18px 18px; }
   .v-row  { flex-wrap: wrap; gap: 4px; }
+  .v-eyebrow { font-size: 8.5px; }
+  .v-verdict-msg { font-size: 13px; line-height: 1.8; }
+  .v-rk { font-size: 11px; }
+  .v-rv { font-size: 12px; }
+  .v-next-btn { padding: 15px; font-size: 11px; }
+  .v-menu-btn { font-size: 10px; padding: 13px; }
+  .v-reset { font-size: 12px; padding: 13px; }
 
-  /* Scroll hint: visible on mobile */
-  .v-scroll-hint { display: block; }
+  /* Scroll hint: hidden on mobile (card is now properly centered) */
+  .v-scroll-hint { display: none; }
 
   /* Code panel font */
   .code-line { font-size: 11px; }
@@ -220,11 +231,13 @@
   .briefing-start-btn { padding: 13px 24px; font-size: 10px; }
 
   /* Verdict */
-  .verdict-card { width: calc(100vw - 16px); margin: 8px; }
-  .v-body       { padding: 14px 12px 12px; }
-  .v-eyebrow    { font-size: 7px; }
+  .verdict-overlay { padding: 16px 0; }
+  .verdict-card { width: calc(100vw - 24px); margin: auto; }
+  .v-body       { padding: 18px 14px 14px; }
+  .v-eyebrow    { font-size: 8px; }
   .v-headline   { font-size: 22px; }
-  .v-reset      { font-size: 10px; padding: 10px; }
+  .v-next-btn   { padding: 14px; font-size: 10px; }
+  .v-reset      { font-size: 12px; padding: 13px; }
 
   /* Mission select: prevent header from being pushed off-screen */
   .mission-screen  { padding: 56px 16px 40px; justify-content: flex-start; }
