@@ -1193,7 +1193,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
       <div class="briefing-text">Marcus is about to paste a work prompt into an AI assistant. Once it's sent, you can't take it back — anything in that prompt could be stored, logged, or used to train external models. Read the prompt. Find anything that shouldn't leave the organisation. Redact it before it goes.</div>
       <div class="briefing-legend">
         <div class="b-leg"><div class="b-leg-dot" style="background:var(--blue2);box-shadow:0 0 6px rgba(56,189,248,.7)"></div><span class="b-leg-name" style="color:var(--blue2)">[CREDENTIALS]</span><span class="b-leg-desc">Passwords, API keys — highest risk</span></div>
-        <div class="b-leg"><div class="b-leg-dot" style="background:var(--blue2);box-shadow:0 0 6px rgba(56,189,248,.6)"></div><span class="b-leg-name" style="color:var(--blue2)">[PERSONAL DATA]</span><span class="b-leg-desc">Names, emails, personal identifiers (PII)</span></div>
+        <div class="b-leg"><div class="b-leg-dot" style="background:var(--blue2);box-shadow:0 0 6px rgba(56,189,248,.6)"></div><span class="b-leg-name" style="color:var(--blue2)">[PERSONAL DATA]</span><span class="b-leg-desc">Names, emails, personal identifiers</span></div>
         <div class="b-leg"><div class="b-leg-dot" style="background:var(--blue2);box-shadow:0 0 6px rgba(56,189,248,.5)"></div><span class="b-leg-name" style="color:var(--blue2)">[INTERNAL INFO]</span><span class="b-leg-desc">Internal codenames, project references</span></div>
         <div class="b-leg"><div class="b-leg-dot" style="background:rgba(148,163,184,.5)"></div><span class="b-leg-name" style="color:var(--dim)">[SAFE]</span><span class="b-leg-desc">Non-sensitive — classify as SAFE to boost integrity</span></div>
       </div>
@@ -2179,9 +2179,8 @@ function s1Classify(chosen) {
       if(s1state.integrity<=0) { s1EndGame('breach'); return; }
       updateIntUI('s1',s1state.integrity,s1GetDrain(),S1_MAX_DRAIN);
       if(S1_TEACH[id]) {
-        const catLabel={'credential':'Credential Risk','pii':'Personal Data Risk','internal':'Internal Info'}[token.cat]||'Wrong Category';
-        const catCls={credential:'cat-credential',pii:'cat-pii',internal:'cat-internal'}[token.cat]||'';
-        const g1=`<span class="tok ${catCls}" style="cursor:default;font-family:'JetBrains Mono',monospace;font-size:11px;border-radius:4px;padding:2px 7px">${tokText}</span>`;
+        const catLabel={'credential':'[CREDENTIALS]','pii':'[PERSONAL DATA]','internal':'[INTERNAL INFO]'}[token.cat]||'Wrong Category';
+        const g1=`<span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:rgba(220,235,255,.9);font-weight:500">${tokText}</span>`;
         s1ShowInsight(catLabel, tokText, S1_TEACH[id].wrong, null, g1);
       }
     }
@@ -2204,9 +2203,8 @@ function s1Classify(chosen) {
     const catEl=document.getElementById('s1cat'+key);
     catEl.style.animation='none'; void catEl.offsetWidth; catEl.style.animation='wrongShake .4s ease';
     if(S1_TEACH[id]) {
-      const catLabel={'credential':'Credential Risk','pii':'Personal Data Risk','internal':'Internal Info'}[token.cat]||'Wrong Category';
-      const catCls={credential:'cat-credential',pii:'cat-pii',internal:'cat-internal'}[token.cat]||'';
-      const g2=`<span class="tok ${catCls}" style="cursor:default;font-family:'JetBrains Mono',monospace;font-size:11px;border-radius:4px;padding:2px 7px">${tokText}</span>`;
+      const catLabel={'credential':'[CREDENTIALS]','pii':'[PERSONAL DATA]','internal':'[INTERNAL INFO]'}[token.cat]||'Wrong Category';
+      const g2=`<span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:rgba(220,235,255,.9);font-weight:500">${tokText}</span>`;
       s1ShowInsight(catLabel, tokText, S1_TEACH[id].wrong, null, g2);
     }
     if(s1state.integrity<=0) { s1EndGame('breach'); return; }
@@ -2220,7 +2218,7 @@ function s1Classify(chosen) {
   updateIntUI('s1',s1state.integrity,s1GetDrain(),S1_MAX_DRAIN);
   const allDone = s1AllSecured();
   if(S1_TEACH[id]) {
-    const catLabel={'credential':'Credential Risk','pii':'Personal Data Risk','internal':'Internal Info'}[token.cat]||'Secured';
+    const catLabel={'credential':'[CREDENTIALS]','pii':'[PERSONAL DATA]','internal':'[INTERNAL INFO]'}[token.cat]||'Secured';
     showToast(catLabel, S1_TEACH[id].correct);
   }
   if(allDone) {
@@ -3500,22 +3498,22 @@ window.addEventListener('keydown', e => {
    INSIGHT LIGHTBOX ENGINE
 ═══════════════════════════════════════════════════════════ */
 const INSIGHT_ICONS = {
-  'Credential Risk':  '🔑',
-  'Personal Data Risk': '👤',
-  'Internal Info':    '🏢',
-  'Fake Citation':    '📄',
-  'Wrong Figure':     '📊',
-  'Fake Law':         '⚖️',
-  'Accurate Claim':   '✓',
-  'Safe Item':        '✓',
-  'Injection Found':  '⚡',
-  'False Alarm':      '⚠',
-  'Wrong Category':   '↩',
-  'Missed':           '⚠',
-  'Timeout':          '⏱',
+  '[CREDENTIALS]':  '🔑',
+  '[PERSONAL DATA]': '👤',
+  '[INTERNAL INFO]': '🏢',
+  'Fake Citation':   '📄',
+  'Wrong Figure':    '📊',
+  'Fake Law':        '⚖️',
+  'Accurate Claim':  '✓',
+  'Safe Item':       '✓',
+  'Injection Found': '⚡',
+  'False Alarm':     '⚠',
+  'Wrong Category':  '↩',
+  'Missed':          '⚠',
+  'Timeout':         '⏱',
 };
 const INSIGHT_TONE = {
-  'Credential Risk': 'warn', 'Personal Data Risk': 'warn', 'Internal Info': 'warn',
+  '[CREDENTIALS]': 'credential', '[PERSONAL DATA]': 'pii', '[INTERNAL INFO]': 'internal',
   'Wrong Category': 'warn', 'False Alarm': 'warn', 'Missed': 'warn', 'Timeout': 'warn',
   'Fake Citation': 'warn', 'Wrong Figure': 'warn', 'Fake Law': 'warn',
   'Accurate Claim': 'ok', 'Safe Item': 'ok', 'Injection Found': 'ok',
@@ -3533,7 +3531,7 @@ function showInsight(category, tokenText, message, onDismiss, graphicHtml) {
 
   const tone = INSIGHT_TONE[category] || 'warn';
   const icon = INSIGHT_ICONS[category] || 'ℹ';
-  const isError = tone === 'warn';
+  const isError = tone === 'warn' || tone === 'credential' || tone === 'pii' || tone === 'internal';
 
   catEl.textContent  = category;
   catEl.className    = 'insight-cat insight-cat-' + tone;
@@ -3745,17 +3743,23 @@ function s3ShowInsight(category, tokenText, message, afterFn, graphicHtml) {
   display:flex; align-items:center; justify-content:center;
   font-size:17px; flex-shrink:0;
 }
-.insight-icon-warn  { background:rgba(239,68,68,.12);  border:1px solid rgba(239,68,68,.25); }
-.insight-icon-flag  { background:rgba(167,139,250,.12); border:1px solid rgba(167,139,250,.25); }
-.insight-icon-ok    { background:rgba(74,222,128,.12);  border:1px solid rgba(74,222,128,.25); }
+.insight-icon-warn       { background:rgba(239,68,68,.12);  border:1px solid rgba(239,68,68,.25); }
+.insight-icon-flag       { background:rgba(167,139,250,.12); border:1px solid rgba(167,139,250,.25); }
+.insight-icon-ok         { background:rgba(74,222,128,.12);  border:1px solid rgba(74,222,128,.25); }
+.insight-icon-credential { background:rgba(239,68,68,.12);   border:1px solid rgba(239,68,68,.3); }
+.insight-icon-pii        { background:rgba(251,146,60,.12);  border:1px solid rgba(251,146,60,.3); }
+.insight-icon-internal   { background:rgba(250,204,21,.1);   border:1px solid rgba(250,204,21,.3); }
 
 .insight-cat {
   font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:700;
   letter-spacing:.16em; text-transform:uppercase; padding:3px 10px; border-radius:20px;
 }
-.insight-cat-warn  { background:rgba(239,68,68,.1);    color:#fca5a5; border:1px solid rgba(239,68,68,.3); }
-.insight-cat-flag  { background:rgba(167,139,250,.1);  color:#c4b5fd; border:1px solid rgba(167,139,250,.3); }
-.insight-cat-ok    { background:rgba(74,222,128,.1);   color:#86efac; border:1px solid rgba(74,222,128,.3); }
+.insight-cat-warn       { background:rgba(239,68,68,.1);    color:#fca5a5; border:1px solid rgba(239,68,68,.3); }
+.insight-cat-flag       { background:rgba(167,139,250,.1);  color:#c4b5fd; border:1px solid rgba(167,139,250,.3); }
+.insight-cat-ok         { background:rgba(74,222,128,.1);   color:#86efac; border:1px solid rgba(74,222,128,.3); }
+.insight-cat-credential { background:rgba(239,68,68,.1);    color:var(--red);    border:1px solid rgba(239,68,68,.45); }
+.insight-cat-pii        { background:rgba(251,146,60,.1);   color:var(--orange); border:1px solid rgba(251,146,60,.45); }
+.insight-cat-internal   { background:rgba(250,204,21,.1);   color:var(--yellow); border:1px solid rgba(250,204,21,.45); }
 
 /* Error-mode secondary category pill — hidden; main header handles the category */
 .insight-error-cat { display:none !important; }
