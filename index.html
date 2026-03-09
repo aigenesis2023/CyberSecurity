@@ -668,6 +668,39 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 }
 
 /* ════════════════════════════════════════════
+   PAUSE OVERLAY
+════════════════════════════════════════════ */
+#pauseOverlay {
+  position:fixed; inset:0; z-index:8000;
+  background:rgba(2,6,16,0.92);
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:18px;
+  opacity:0; pointer-events:none; transition:opacity .3s ease;
+  backdrop-filter:blur(10px);
+}
+#pauseOverlay.show { opacity:1; pointer-events:all; }
+.pause-title { font-family:'Orbitron',monospace; font-size:22px; font-weight:900; letter-spacing:.1em; color:#fff; }
+.pause-sub   { font-family:'DM Sans',sans-serif; font-size:13px; color:rgba(200,220,255,.5); letter-spacing:.04em; }
+.pause-resume-btn {
+  margin-top:8px; padding:14px 52px;
+  font-family:'Orbitron',monospace; font-size:11px; font-weight:700; letter-spacing:.22em; text-transform:uppercase;
+  background:rgba(56,189,248,.08); border:1px solid rgba(56,189,248,.4); color:var(--blue2);
+  border-radius:8px; cursor:pointer; transition:all .2s; animation:ctaPulse 1.4s ease infinite;
+}
+.pause-resume-btn:hover { background:rgba(56,189,248,.18); border-color:var(--blue); }
+
+/* Pause button — sits left of mute button */
+#pauseBtn {
+  position:fixed; top:14px; right:58px; z-index:9000;
+  width:34px; height:34px; border-radius:50%;
+  background:rgba(6,16,36,0.7); border:1px solid rgba(56,189,248,.22);
+  color:rgba(56,189,248,.75); font-size:13px;
+  display:none; align-items:center; justify-content:center;
+  cursor:pointer; transition:all .2s; backdrop-filter:blur(8px);
+}
+#pauseBtn.visible { display:flex; }
+#pauseBtn:hover { background:rgba(56,189,248,.12); border-color:rgba(56,189,248,.45); color:#fff; }
+
+/* ════════════════════════════════════════════
    MUTE BUTTON (global, fixed top-right)
 ════════════════════════════════════════════ */
 #muteBtn {
@@ -850,8 +883,18 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
   </div>
 </div>
 
+<!-- GLOBAL PAUSE BUTTON (shown only during active gameplay) -->
+<button id="pauseBtn" onclick="togglePause()" title="Pause / Resume (P)" aria-label="Pause game">⏸</button>
+
+<!-- PAUSE OVERLAY -->
+<div id="pauseOverlay" role="dialog" aria-modal="true" aria-label="Game paused">
+  <div class="pause-title">⏸ &nbsp;PAUSED</div>
+  <div class="pause-sub">Press P or click Resume to continue</div>
+  <button class="pause-resume-btn" onclick="togglePause()">▶ &nbsp;RESUME</button>
+</div>
+
 <!-- GLOBAL MUTE BUTTON -->
-<button id="muteBtn" onclick="toggleMute()" title="Toggle audio" aria-label="Toggle audio mute">🔊</button>
+<button id="muteBtn" onclick="toggleMute()" title="Toggle audio (M)" aria-label="Toggle audio mute">🔊</button>
 
 <!-- DEV PANEL TOAST -->
 <div id="devPanel" style="position:fixed;bottom:16px;left:50%;transform:translateX(-50%);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:rgba(74,222,128,.9);background:rgba(6,16,36,.95);border:1px solid rgba(74,222,128,.3);border-radius:6px;padding:7px 18px;z-index:9999;opacity:0;transition:opacity .4s;pointer-events:none;text-transform:uppercase;"></div>
@@ -1894,6 +1937,7 @@ function s1Start() {
   const b=document.getElementById('s1briefing'); b.classList.add('hidden');
   setTimeout(()=>b.style.display='none',600);
   s1state.gameActive=true;
+  updatePauseBtn();
   // Delay drain start by 5s — give learners time to read first
   setTimeout(()=>{
     if(!s1state.gameActive) return;
@@ -1912,6 +1956,7 @@ function s1Start() {
 }
 function s1EndGame(reason) {
   if(!s1state.gameActive) return; s1state.gameActive=false;
+  updatePauseBtn();
   clearInterval(s1state.drainInt);
   const intFinal=Math.max(0,Math.round(s1state.integrity));
   const credLeft=S1_CAT_TOKENS.credential.filter(id=>!s1state.tokState[id].redacted).length;
@@ -2275,6 +2320,7 @@ function s2UpdateDiag(cat) {
 function s2Start() {
   const b=document.getElementById('s2briefing'); b.classList.add('hidden'); setTimeout(()=>b.style.display='none',600);
   s2state.gameActive=true;
+  updatePauseBtn();
   document.getElementById('s2iwDrain').textContent='reviewing…';
   document.getElementById('s2iwDrain').className='ib-drain-label';
   setTimeout(()=>{
@@ -2291,6 +2337,7 @@ function s2Submit() {
 }
 function s2EndGame(reason) {
   if(!s2state.gameActive) return; s2state.gameActive=false;
+  updatePauseBtn();
   clearInterval(s2state.drainInt);
   const intFinal=Math.max(0,Math.round(s2state.integrity));
   const pass=(reason!=='breach')&&s2state.flagsCorrect>=6;
@@ -2541,6 +2588,7 @@ function s3UpdateTimer() {
 function s3Start() {
   const b=document.getElementById('s3briefing'); b.classList.add('hidden'); setTimeout(()=>b.style.display='none',600);
   s3state.gameActive=true;
+  updatePauseBtn();
   s3LoadLevel(0);
 }
 
@@ -2749,6 +2797,7 @@ function s3Flag(isInjection) {
 
 function s3EndGame(reason) {
   if(!s3state.gameActive) return; s3state.gameActive=false;
+  updatePauseBtn();
   clearInterval(s3state.timerInt);
   const intFinal=Math.max(0,Math.round(s3state.integrity));
   const pass=(reason==='complete')&&s3state.integrity>0;
@@ -2935,6 +2984,91 @@ window.addEventListener('load', ()=>{
   updateMenuState();
   runSplashLoader();
   setTimeout(boot, 200);
+});
+
+// ════════════════════════════════════════════
+//  PAUSE / RESUME
+// ════════════════════════════════════════════
+let _paused = false;
+
+function _getActiveSection() {
+  if (s1state.gameActive) return 's1';
+  if (s2state.gameActive) return 's2';
+  if (s3state.gameActive) return 's3';
+  return null;
+}
+
+function togglePause() {
+  const sec = _getActiveSection();
+  if (!sec && !_paused) return; // nothing running, nothing to pause
+  _paused = !_paused;
+  const overlay = document.getElementById('pauseOverlay');
+  overlay.classList.toggle('show', _paused);
+
+  if (_paused) {
+    // Pause timers/drains for active section
+    if (sec === 's1') { clearInterval(s1state.drainInt); }
+    if (sec === 's3') { clearInterval(s3state.timerInt); }
+    // Mute audio while paused (without toggling the mute preference)
+    Object.values(SND).forEach(a => { if(a) a.muted = true; });
+    document.getElementById('pauseBtn').textContent = '▶';
+  } else {
+    // Resume
+    document.getElementById('pauseBtn').textContent = '⏸';
+    // Restore mute state
+    Object.values(SND).forEach(a => { if(a) a.muted = _muted; });
+    // Restart drain / timer for active section
+    if (sec === 's1' && s1state.gameActive && !s1AllSecured()) {
+      s1state.drainInt = setInterval(()=>{
+        if(!s1state.gameActive) return;
+        s1state.integrity = Math.max(0, s1state.integrity - s1GetDrain()*(100/1000));
+        document.getElementById('s1iwDrain').textContent = '▼ draining';
+        document.getElementById('s1iwDrain').className = 'ib-drain-label draining';
+        updateIntUI('s1', s1state.integrity, s1GetDrain(), S1_MAX_DRAIN);
+        if(s1state.integrity <= 0) s1EndGame('breach');
+      }, 100);
+    }
+    if (sec === 's3' && s3state.gameActive && s3state.levelActive) {
+      const lvl = S3_LEVELS[s3state.currentLevel];
+      if(lvl && lvl.timeLimit > 0) {
+        s3state.timerInt = setInterval(()=>{
+          if(!s3state.gameActive || !s3state.levelActive) { clearInterval(s3state.timerInt); return; }
+          s3state.timeLeft--;
+          s3UpdateTimer();
+          if(s3state.timeLeft <= 0) { clearInterval(s3state.timerInt); }
+        }, 1000);
+      }
+    }
+  }
+}
+
+// Show/hide pause button based on whether a mission is active
+function updatePauseBtn() {
+  const btn = document.getElementById('pauseBtn');
+  const active = _getActiveSection() !== null;
+  if(btn) btn.classList.toggle('visible', active);
+}
+
+// Keyboard shortcut: P to pause/resume, M to mute
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT') return;
+  if (e.key === 'p' || e.key === 'P') { if (_getActiveSection() || _paused) togglePause(); }
+  if (e.key === 'm' || e.key === 'M') toggleMute();
+});
+
+// Auto-pause when tab loses visibility (prevents drain/timer running in background)
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden && !_paused && _getActiveSection()) togglePause();
+});
+
+// ════════════════════════════════════════════
+//  BEFOREUNLOAD GUARD
+// ════════════════════════════════════════════
+window.addEventListener('beforeunload', e => {
+  if (_getActiveSection()) {
+    e.preventDefault();
+    e.returnValue = ''; // Required for Chrome to show the dialog
+  }
 });
 
 // ════════════════════════════════════════════
