@@ -745,6 +745,23 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
   border-radius:8px; cursor:pointer; transition:all .2s; animation:ctaPulse 1.4s ease infinite;
 }
 .pause-resume-btn:hover { background:rgba(56,189,248,.18); border-color:var(--blue); }
+.pause-quit-btn {
+  padding:10px 36px;
+  font-family:'DM Sans',sans-serif; font-size:12px; font-weight:500; letter-spacing:.06em;
+  background:transparent; border:1px solid rgba(200,220,255,.12); color:rgba(200,220,255,.35);
+  border-radius:8px; cursor:pointer; transition:all .2s;
+}
+.pause-quit-btn:hover { background:rgba(239,68,68,.07); border-color:rgba(239,68,68,.35); color:rgba(239,68,68,.7); }
+.pause-quit-warn { font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.1em; color:rgba(200,220,255,.2); text-transform:uppercase; margin-top:4px; }
+
+/* Briefing back button */
+.briefing-back-btn {
+  position:absolute; top:14px; left:16px; z-index:2;
+  font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.12em; text-transform:uppercase;
+  background:transparent; border:none; color:rgba(200,220,255,.3); cursor:pointer;
+  padding:4px 8px; transition:color .2s; display:flex; align-items:center; gap:5px;
+}
+.briefing-back-btn:hover { color:rgba(200,220,255,.7); }
 
 /* Pause button — sits left of mute button */
 #pauseBtn {
@@ -892,7 +909,6 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
             <path d="M18 22 L18 19 C18 16.8 26 16.8 26 19 L26 22" stroke="rgba(56,189,248,.9)" stroke-width="1.5" fill="none"/>
             <circle cx="22" cy="26.5" r="1.5" fill="rgba(56,189,248,.9)"/>
           </svg>
-          <div class="mc-domain">AI Risk Domain 1</div>
           <div class="mc-title">Sensitive Data Exposure</div>
           <div class="mc-desc">A colleague is about to send sensitive data to an AI tool. Classify and redact all dangerous tokens before the submission escapes the network.</div>
           <div class="mc-footer">
@@ -919,7 +935,6 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
             <circle cx="32" cy="30" r="8" fill="rgba(8,20,45,1)" stroke="rgba(56,189,248,.7)" stroke-width="1.5"/>
             <text x="32" y="34" text-anchor="middle" font-size="11" font-weight="bold" fill="rgba(56,189,248,.9)" font-family="monospace">?</text>
           </svg>
-          <div class="mc-domain">AI Risk Domain 2</div>
           <div class="mc-title">AI Hallucination Detection</div>
           <div class="mc-desc">An AI has generated a plausible-sounding report full of false citations, invented statistics, and fabricated legal clauses. Find them before they spread.</div>
           <div class="mc-footer">
@@ -947,7 +962,6 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
             <circle cx="36" cy="34" r="6" fill="rgba(239,68,68,.15)" stroke="rgba(239,68,68,.7)" stroke-width="1.5"/>
             <path d="M33 34 L37 34 M35 32 L35 36" stroke="rgba(239,68,68,.9)" stroke-width="1.5" stroke-linecap="round"/>
           </svg>
-          <div class="mc-domain">AI Risk Domain 3</div>
           <div class="mc-title">Prompt Injection Attacks</div>
           <div class="mc-desc">A document contains hidden instructions trying to hijack your AI tool. Under time pressure, find the injected command before the AI executes it.</div>
           <div class="mc-footer">
@@ -997,6 +1011,8 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
   <div class="pause-title">⏸ &nbsp;PAUSED</div>
   <div class="pause-sub">Press P or click Resume to continue</div>
   <button class="pause-resume-btn" onclick="togglePause()">▶ &nbsp;RESUME</button>
+  <button class="pause-quit-btn" onclick="pauseQuitToMenu()">← &nbsp;QUIT TO MENU</button>
+  <div class="pause-quit-warn">Progress on this mission will not be saved</div>
 </div>
 
 <!-- GLOBAL MUTE BUTTON -->
@@ -1014,6 +1030,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 <div class="briefing-overlay" id="s1briefing">
   <div class="briefing-card">
     <div class="briefing-top-bar m1"></div>
+    <button class="briefing-back-btn" onclick="goMenu()">← MENU</button>
     <div class="briefing-graphic" style="background:linear-gradient(180deg,rgba(56,189,248,.06) 0%,transparent 100%)">
       <div class="b-ring"></div><div class="b-ring b-ring2"></div>
       <svg class="b-shield" viewBox="0 0 40 40" fill="none">
@@ -1186,6 +1203,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 <div class="briefing-overlay" id="s2briefing">
   <div class="briefing-card">
     <div class="briefing-top-bar m2"></div>
+    <button class="briefing-back-btn" onclick="goMenu()">← MENU</button>
     <div class="briefing-graphic" style="background:linear-gradient(180deg,rgba(56,189,248,.06) 0%,transparent 100%)">
       <div class="b-ring"></div>
       <div class="b-ring b-ring2"></div>
@@ -1350,6 +1368,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 <div class="briefing-overlay" id="s3briefing">
   <div class="briefing-card">
     <div class="briefing-top-bar m3"></div>
+    <button class="briefing-back-btn" onclick="goMenu()">← MENU</button>
     <div class="briefing-graphic" style="background:linear-gradient(180deg,rgba(56,189,248,.06) 0%,transparent 100%)">
       <div class="b-ring"></div>
       <div class="b-ring b-ring2"></div>
@@ -3196,6 +3215,12 @@ function togglePause() {
       }
     }
   }
+}
+
+function pauseQuitToMenu() {
+  _paused = false;
+  document.getElementById('pauseOverlay').classList.remove('show');
+  goMenu();
 }
 
 // Show/hide pause button based on whether a mission is active
