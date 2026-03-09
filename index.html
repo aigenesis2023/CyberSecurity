@@ -891,7 +891,6 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
     <div class="mission-header">
       <div class="mission-eyebrow">Mission Select</div>
       <div class="mission-title">Choose Your Mission</div>
-      <div class="mission-subtitle">You've been designated as your team's AI safety contact. Marcus is about to send something he shouldn't. A legal report needs checking before it goes upstairs. And something arrived from outside that no one read before forwarding it to the queue.</div>
     </div>
 
     <div class="mission-cards">
@@ -1612,7 +1611,7 @@ function pBleep()    { if(!audioReady||!SND.bleep)   return; const a=SND.bleep.c
 // ════════════════════════════════════════════
 //  COURSE PROGRESS
 // ════════════════════════════════════════════
-let courseProgress = { s1done:false, s2done:false, s3done:false, s1score:null, s2score:null, s3score:null };
+let courseProgress = { s1done:false, s2done:false, s3done:false, s1score:null, s2score:null, s3score:null, certShown:false };
 
 function saveProgress() {
   try { localStorage.setItem('adg_progress', JSON.stringify(courseProgress)); } catch(e){}
@@ -1628,6 +1627,7 @@ function loadProgress() {
       if(p.s1score != null) courseProgress.s1score = p.s1score;
       if(p.s2score != null) courseProgress.s2score = p.s2score;
       if(p.s3score != null) courseProgress.s3score = p.s3score;
+      if(p.certShown) courseProgress.certShown = true;
     }
   } catch(e){}
 }
@@ -1747,6 +1747,11 @@ function goMenu() {
   });
   updateMenuState();
   showScreen('screenMenu');
+  if (courseProgress.s1done && courseProgress.s2done && courseProgress.s3done && !courseProgress.certShown) {
+    courseProgress.certShown = true;
+    saveProgress();
+    setTimeout(showCertificate, 600);
+  }
 }
 function launchSection(n) {
   pBleep();
@@ -2955,10 +2960,6 @@ function s3EndGame(reason) {
   if(pass){ pSuccess(); courseProgress.s3done=true; saveProgress(); }
   else pError();
   scormReport(intFinal, pass, 's3');
-  // Show certificate when all missions complete after final mission
-  if (pass && courseProgress.s1done && courseProgress.s2done) {
-    setTimeout(showCertificate, 2800);
-  }
   const sg=document.getElementById('s3vSuccess'), fg=document.getElementById('s3vFail');
   sg.style.display='none'; fg.style.display='none'; sg.classList.remove('animate');
   if(pass){ sg.style.display='flex'; setTimeout(()=>sg.classList.add('animate'),50); setTimeout(()=>sg.querySelectorAll('.ring').forEach(r=>r.classList.add('frozen')),2000); }
