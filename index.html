@@ -75,6 +75,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 }
 .splash.hidden { opacity:0; pointer-events:none; }
 .splash::before { content:''; position:absolute; width:600px; height:600px; border-radius:50%; background:radial-gradient(circle, rgba(56,189,248,.06) 0%, transparent 70%); top:50%; left:50%; transform:translate(-50%,-60%); pointer-events:none; }
+.splash-hero { width:76px; height:76px; margin-bottom:22px; opacity:.85; filter:drop-shadow(0 0 20px rgba(56,189,248,.4)); }
 .splash-eyebrow { font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.2em; color:rgba(56,189,248,.35); text-transform:uppercase; margin-bottom:18px; display:flex; align-items:center; gap:12px; width:480px; max-width:90vw; }
 .splash-eyebrow::before, .splash-eyebrow::after { content:''; flex:1; height:1px; background:rgba(56,189,248,.15); }
 .splash-title { font-family:'Orbitron',monospace; font-size:52px; font-weight:900; letter-spacing:.04em; color:#ffffff; text-align:center; line-height:1.1; margin-bottom:12px; text-shadow: 0 0 80px rgba(56,189,248,.2), 0 2px 4px rgba(0,0,0,.9); }
@@ -140,11 +141,12 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 
 .mc-badge { font-family:'JetBrains Mono',monospace; font-size:8px; letter-spacing:.1em; text-transform:uppercase; padding:3px 10px; border-radius:20px; background:rgba(56,189,248,.08); color:rgba(56,189,248,.7); border:1px solid rgba(56,189,248,.22); }
 .mc-badge.threat-high, .mc-badge.threat-medium, .mc-badge.threat-critical { background:rgba(56,189,248,.08); color:rgba(56,189,248,.7); border:1px solid rgba(56,189,248,.22); }
-.mc-top-row { display:flex; justify-content:flex-start; align-items:center; margin-bottom:0; }
+.mc-top-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:0; }
 .mc-domain { font-family:'JetBrains Mono',monospace; font-size:8px; letter-spacing:.12em; text-transform:uppercase; color:rgba(200,220,255,.3); margin-bottom:6px; }
 
 .mc-body { padding:24px 22px 22px; }
 .mc-num { font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.2em; color:rgba(200,220,255,.3); margin-bottom:10px; }
+.mc-stars { font-size:13px; color:rgba(250,204,21,.75); letter-spacing:1px; text-shadow:0 0 8px rgba(250,204,21,.4); margin-bottom:10px; }
 .mc-icon { width:44px; height:44px; margin-bottom:14px; }
 .mc-title { font-family:'Orbitron',monospace; font-size:15px; font-weight:700; color:#fff; letter-spacing:.04em; margin-bottom:8px; }
 .mc-desc { font-family:'DM Sans',sans-serif; font-size:12px; font-weight:300; color:rgba(200,220,255,.55); line-height:1.6; margin-bottom:16px; }
@@ -182,9 +184,9 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 
 /* Mastery meter */
 .mastery-wrap { display:flex; flex-direction:column; align-items:center; gap:8px; }
-.mastery-label { font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.18em; color:rgba(200,220,255,.35); text-transform:uppercase; }
-.mastery-bar { display:flex; gap:6px; align-items:center; }
-.mastery-seg { width:48px; height:6px; border-radius:3px; background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.1); transition:all .5s ease; }
+.mastery-label { font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.18em; color:rgba(200,220,255,.5); text-transform:uppercase; }
+.mastery-bar { display:flex; gap:8px; align-items:center; }
+.mastery-seg { width:64px; height:10px; border-radius:5px; background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.1); transition:all .5s ease; }
 .mastery-seg.filled { background:var(--green); border-color:rgba(74,222,128,.4); box-shadow:0 0 8px rgba(74,222,128,.45); }
 .mastery-seg.filled.s1 { background:rgba(74,222,128,.7); }
 .mastery-seg.filled.s2 { background:rgba(74,222,128,.85); }
@@ -372,9 +374,11 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 .briefing-overlay { position:fixed; inset:0; z-index:300; background:#040a14; display:flex; align-items:center; justify-content:center; transition:opacity .5s ease; overflow:hidden; }
 .briefing-overlay.hidden { opacity:0; pointer-events:none; }
 .briefing-card { width:540px; max-width:calc(100vw - 32px); background:rgba(8,20,45,0.55); border:1px solid rgba(255,255,255,.18); border-radius:14px; overflow:hidden; backdrop-filter:blur(32px); box-shadow:0 40px 80px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.07); animation:verdictIn .5s cubic-bezier(.34,1.56,.64,1) both; position:relative; z-index:1; }
+.briefing-card::after { content:''; position:absolute; inset:0; background-image:radial-gradient(rgba(56,189,248,.045) 1.5px, transparent 1.5px); background-size:22px 22px; pointer-events:none; z-index:0; }
 .briefing-top-bar { height:3px; display:block; background:linear-gradient(90deg, transparent, rgba(56,189,248,.8) 30%, rgba(56,189,248,.5) 70%, transparent); }
-.briefing-top-bar.red, .briefing-top-bar.orange, .briefing-top-bar.yellow,
-.briefing-top-bar.m1, .briefing-top-bar.m2, .briefing-top-bar.m3 { background:linear-gradient(90deg, transparent, rgba(56,189,248,.8) 30%, rgba(56,189,248,.5) 70%, transparent); }
+.briefing-top-bar.m1 { background:linear-gradient(90deg, transparent, rgba(56,189,248,.9) 30%, rgba(56,189,248,.6) 70%, transparent); }
+.briefing-top-bar.m2 { background:linear-gradient(90deg, transparent, rgba(139,92,246,.9) 30%, rgba(139,92,246,.6) 70%, transparent); }
+.briefing-top-bar.m3 { background:linear-gradient(90deg, transparent, rgba(251,146,60,.9) 30%, rgba(251,146,60,.6) 70%, transparent); }
 .briefing-graphic { position:relative; height:120px; display:flex; align-items:center; justify-content:center; border-bottom:1px solid rgba(255,255,255,.08); overflow:hidden; }
 .briefing-graphic .b-ring { position:absolute; width:110px; height:110px; border-radius:50%; border:1px solid rgba(56,189,248,.25); animation:ringPulse 2s ease-out infinite; }
 .briefing-graphic .b-ring2 { animation-delay:.7s; }
@@ -407,6 +411,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 .verdict-overlay { position:fixed; inset:0; z-index:200; background:#040a14; display:flex; align-items:flex-start; justify-content:center; opacity:0; pointer-events:none; transition:opacity .45s ease; overflow-y:auto; padding:24px 16px 40px; }
 .verdict-overlay.show { opacity:1; pointer-events:all; }
 .verdict-card { background:rgba(8,20,45,0.55); border:1px solid rgba(255,255,255,.18); border-radius:14px; width:480px; max-width:100%; backdrop-filter:blur(32px); box-shadow:0 40px 80px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.07); overflow:hidden; animation:verdictIn .5s cubic-bezier(.34,1.56,.64,1) both; position:relative; z-index:1; flex-shrink:0; }
+.verdict-card::after { content:''; position:absolute; inset:0; background-image:radial-gradient(rgba(56,189,248,.04) 1.5px, transparent 1.5px); background-size:22px 22px; pointer-events:none; z-index:0; }
 .v-bar { height:3px; }
 .v-bar.pass    { background:linear-gradient(90deg,transparent,var(--green),transparent); }
 .v-bar.fail    { background:linear-gradient(90deg,transparent,var(--red),transparent); }
@@ -783,6 +788,16 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
      SPLASH SCREEN
 ══════════════════════════════════════════════ -->
 <div class="splash" id="splashScreen">
+  <svg class="splash-hero" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M36 6 L60 17 L60 37 C60 51 49.5 61.5 36 66 C22.5 61.5 12 51 12 37 L12 17 Z" stroke="rgba(56,189,248,.55)" stroke-width="1.5" fill="rgba(56,189,248,.04)"/>
+    <path d="M36 6 L60 17 L60 37 C60 51 49.5 61.5 36 66 C22.5 61.5 12 51 12 37 L12 17 Z" stroke="rgba(56,189,248,.12)" stroke-width="6" fill="none"/>
+    <circle cx="36" cy="38" r="12" stroke="rgba(56,189,248,.55)" stroke-width="1.5" fill="rgba(56,189,248,.06)"/>
+    <circle cx="36" cy="38" r="5" fill="rgba(56,189,248,.55)"/>
+    <line x1="36" y1="26" x2="36" y2="32" stroke="rgba(56,189,248,.35)" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="36" y1="44" x2="36" y2="50" stroke="rgba(56,189,248,.35)" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="24" y1="38" x2="30" y2="38" stroke="rgba(56,189,248,.35)" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="42" y1="38" x2="48" y2="38" stroke="rgba(56,189,248,.35)" stroke-width="1.5" stroke-linecap="round"/>
+  </svg>
   <div class="splash-eyebrow">Cybersecurity Awareness Training</div>
   <div class="splash-title">AI Data<br>Guardian</div>
   <div class="splash-subtitle">Three missions. Real threats. Learn to protect your AI interactions.</div>
@@ -853,11 +868,13 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
         <div class="mc-body">
           <div class="mc-top-row">
             <div class="mc-num">// MISSION 01</div>
+            <div class="mc-stars" id="m1stars"></div>
           </div>
           <svg class="mc-icon" viewBox="0 0 44 44" fill="none">
             <path d="M22 4 L38 11 L38 25 C38 33.5 31 39.5 22 42 C13 39.5 6 33.5 6 25 L6 11 Z" stroke="rgba(56,189,248,.7)" stroke-width="1.5" fill="rgba(56,189,248,.05)"/>
-            <line x1="16" y1="16" x2="28" y2="28" stroke="rgba(56,189,248,.9)" stroke-width="2" stroke-linecap="round"/>
-            <line x1="28" y1="16" x2="16" y2="28" stroke="rgba(56,189,248,.9)" stroke-width="2" stroke-linecap="round"/>
+            <rect x="16" y="22" width="12" height="9" rx="2" stroke="rgba(56,189,248,.9)" stroke-width="1.5" fill="rgba(56,189,248,.12)"/>
+            <path d="M18 22 L18 19 C18 16.8 26 16.8 26 19 L26 22" stroke="rgba(56,189,248,.9)" stroke-width="1.5" fill="none"/>
+            <circle cx="22" cy="26.5" r="1.5" fill="rgba(56,189,248,.9)"/>
           </svg>
           <div class="mc-domain">AI Risk Domain 1</div>
           <div class="mc-title">Sensitive Data Exposure</div>
@@ -876,12 +893,15 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
         <div class="mc-body">
           <div class="mc-top-row">
             <div class="mc-num">// MISSION 02</div>
+            <div class="mc-stars" id="m2stars"></div>
           </div>
           <svg class="mc-icon" viewBox="0 0 44 44" fill="none">
-            <circle cx="22" cy="22" r="16" stroke="rgba(56,189,248,.7)" stroke-width="1.5" fill="rgba(56,189,248,.05)"/>
-            <path d="M22 13 L22 24" stroke="rgba(56,189,248,.9)" stroke-width="2.5" stroke-linecap="round"/>
-            <circle cx="22" cy="30" r="1.8" fill="rgba(56,189,248,.9)"/>
-            <path d="M15 10 Q22 6 29 10" stroke="rgba(56,189,248,.25)" stroke-width="1" fill="none" stroke-dasharray="2 2"/>
+            <rect x="9" y="7" width="22" height="30" rx="2" stroke="rgba(56,189,248,.7)" stroke-width="1.5" fill="rgba(56,189,248,.05)"/>
+            <line x1="13" y1="14" x2="27" y2="14" stroke="rgba(56,189,248,.5)" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="13" y1="19" x2="27" y2="19" stroke="rgba(56,189,248,.35)" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="13" y1="24" x2="21" y2="24" stroke="rgba(56,189,248,.25)" stroke-width="1.5" stroke-linecap="round"/>
+            <circle cx="32" cy="30" r="8" fill="rgba(8,20,45,1)" stroke="rgba(56,189,248,.7)" stroke-width="1.5"/>
+            <text x="32" y="34" text-anchor="middle" font-size="11" font-weight="bold" fill="rgba(56,189,248,.9)" font-family="monospace">?</text>
           </svg>
           <div class="mc-domain">AI Risk Domain 2</div>
           <div class="mc-title">AI Hallucination Detection</div>
@@ -900,15 +920,16 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
         <div class="mc-body">
           <div class="mc-top-row">
             <div class="mc-num">// MISSION 03</div>
+            <div class="mc-stars" id="m3stars"></div>
           </div>
           <svg class="mc-icon" viewBox="0 0 44 44" fill="none">
-            <rect x="8" y="14" width="28" height="20" rx="3" stroke="rgba(56,189,248,.7)" stroke-width="1.5" fill="rgba(56,189,248,.05)"/>
-            <path d="M8 20 L36 20" stroke="rgba(56,189,248,.3)" stroke-width="1"/>
-            <circle cx="12" cy="17" r="1.5" fill="rgba(56,189,248,.45)"/>
-            <circle cx="17" cy="17" r="1.5" fill="rgba(56,189,248,.3)"/>
-            <circle cx="22" cy="17" r="1.5" fill="rgba(56,189,248,.2)"/>
-            <path d="M14 28 L22 28 M14 32 L30 32" stroke="rgba(56,189,248,.35)" stroke-width="1.5" stroke-linecap="round"/>
-            <path d="M26 26 L36 36 M32 26 L36 30" stroke="rgba(56,189,248,.9)" stroke-width="2" stroke-linecap="round"/>
+            <rect x="13" y="12" width="20" height="20" rx="3" stroke="rgba(56,189,248,.7)" stroke-width="1.5" fill="rgba(56,189,248,.05)"/>
+            <line x1="17" y1="19" x2="27" y2="19" stroke="rgba(56,189,248,.4)" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="17" y1="23" x2="23" y2="23" stroke="rgba(56,189,248,.25)" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M3 22 L13 22" stroke="rgba(56,189,248,.9)" stroke-width="2" stroke-linecap="round"/>
+            <path d="M9 18 L14 22 L9 26" stroke="rgba(56,189,248,.9)" stroke-width="2" stroke-linejoin="round" fill="none"/>
+            <circle cx="36" cy="34" r="6" fill="rgba(239,68,68,.15)" stroke="rgba(239,68,68,.7)" stroke-width="1.5"/>
+            <path d="M33 34 L37 34 M35 32 L35 36" stroke="rgba(239,68,68,.9)" stroke-width="1.5" stroke-linecap="round"/>
           </svg>
           <div class="mc-domain">AI Risk Domain 3</div>
           <div class="mc-title">Prompt Injection Attacks</div>
@@ -1554,7 +1575,7 @@ function pBleep()    { if(!audioReady||!SND.bleep)   return; const a=SND.bleep.c
 // ════════════════════════════════════════════
 //  COURSE PROGRESS
 // ════════════════════════════════════════════
-let courseProgress = { s1done:false, s2done:false, s3done:false };
+let courseProgress = { s1done:false, s2done:false, s3done:false, s1score:null, s2score:null, s3score:null };
 
 function saveProgress() {
   try { localStorage.setItem('adg_progress', JSON.stringify(courseProgress)); } catch(e){}
@@ -1567,6 +1588,9 @@ function loadProgress() {
       if(p.s1done) courseProgress.s1done = true;
       if(p.s2done) courseProgress.s2done = true;
       if(p.s3done) courseProgress.s3done = true;
+      if(p.s1score != null) courseProgress.s1score = p.s1score;
+      if(p.s2score != null) courseProgress.s2score = p.s2score;
+      if(p.s3score != null) courseProgress.s3score = p.s3score;
     }
   } catch(e){}
 }
@@ -1636,6 +1660,16 @@ function updateMenuState() {
   });
   const mc=document.getElementById('masteryCount');
   if(mc){ mc.textContent=lvlCount+' / 3'; mc.className='mastery-count'+(lvlCount>=3?' complete':''); }
+  // Star ratings on mission cards
+  ['1','2','3'].forEach(n => {
+    const starsEl = document.getElementById('m'+n+'stars');
+    if (!starsEl) return;
+    const score = courseProgress['s'+n+'score'];
+    if (!courseProgress['s'+n+'done'] || score == null) { starsEl.textContent = ''; return; }
+    const starCount = score >= 80 ? 3 : score >= 50 ? 2 : 1;
+    starsEl.textContent = '★'.repeat(starCount) + '☆'.repeat(3 - starCount);
+    starsEl.title = 'Score: ' + score + '%';
+  });
   const clearanceNames=['AI Operator','AI Reviewer','AI Security Guardian','AI Data Guardian'];
   const cl=document.getElementById('clearanceLabel');
   if(cl){
@@ -2993,6 +3027,12 @@ function scormReport(score, passed, missionId) {
   if (window._scormScores) Object.assign(scores, window._scormScores);
   scores[missionId] = score;
   window._scormScores = scores;
+  // Persist best score for star-rating display across reloads
+  const scoreKey = missionId + 'score';
+  if (courseProgress[scoreKey] == null || score > courseProgress[scoreKey]) {
+    courseProgress[scoreKey] = score;
+    saveProgress();
+  }
   const completed = Object.values(scores).filter(v => v !== null);
   const avgScore = completed.length ? Math.round(completed.reduce((a,b)=>a+b,0) / completed.length) : score;
   const allPassed = courseProgress.s1done && courseProgress.s2done && courseProgress.s3done;
