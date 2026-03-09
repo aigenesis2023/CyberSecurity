@@ -930,27 +930,67 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 #muteBtn.muted .ctrl-lbl { color:rgba(200,220,255,.18); }
 
 /* ════════════════════════════════════════════
-   RESPONSIVE
+   RESPONSIVE  (inline overrides — see also css/responsive.css)
 ════════════════════════════════════════════ */
+
+/* Desktop: hide the mobile panel toggle */
+.diag-toggle { display:none; }
+
+/* Mobile timer display inside toggle (M3 only) */
+.diag-toggle-row { display:flex; align-items:center; gap:10px; }
+.diag-toggle-timer {
+  font-family:'Orbitron',monospace; font-size:14px; font-weight:900;
+  letter-spacing:-.02em; color:rgba(56,189,248,.8); line-height:1;
+}
+.diag-toggle-timer.warn     { color:var(--orange); }
+.diag-toggle-timer.critical { color:var(--red); animation:pulse .5s ease infinite; }
+
 @media (max-width: 768px) {
-  .int-banner { grid-template-columns:1fr; margin:0 12px; }
+  /* Banner: stack, clear ctrl buttons on the right */
+  .int-banner { grid-template-columns:1fr; margin:0 12px; overflow:visible; }
   #gameCtrlBar { height:auto; top:14px; gap:5px; }
-  .ib-brand { padding:10px 16px 8px; border-right:none; border-bottom:1px solid rgba(56,189,248,.1); }
+  .ib-brand { padding:10px 112px 8px 16px; border-right:none; border-bottom:1px solid rgba(56,189,248,.1); overflow:visible; }
+  .h-title { white-space:normal; line-height:1.3; }
   .ib-center { padding:10px 16px; gap:14px; }
   .ib-num { font-size:32px; }
-  .shell { grid-template-columns:1fr; grid-template-rows:auto auto; padding:8px 12px 12px; min-height:unset; }
-  .diag { grid-column:1; position:static; height:auto; max-height:none; overflow:visible; }
+  /* Shell: single column, bottom padding for fixed diag drawer */
+  .shell { grid-template-columns:1fr; grid-template-rows:1fr; padding:8px 12px calc(64px + 12px) 12px; min-height:unset; gap:8px; }
+  /* Diag: fixed bottom drawer panel */
+  .diag { grid-column:1; position:fixed !important; bottom:0 !important; left:0 !important; right:0 !important; top:auto !important; height:64px; max-height:74vh; z-index:50; border-radius:16px 16px 0 0; transition:height .32s cubic-bezier(.4,0,.2,1); overflow:hidden; box-sizing:border-box; padding:0 !important; gap:10px; }
+  .diag.panel-open { height:74vh; overflow-y:auto; overflow-x:hidden; }
+  /* Toggle handle */
+  .diag-toggle { display:flex !important; flex-direction:column; align-items:center; justify-content:center; gap:6px; width:100%; min-height:64px; height:64px; cursor:pointer; background:none; border:none; border-bottom:1px solid rgba(56,189,248,.08); flex-shrink:0; box-sizing:border-box; touch-action:manipulation; padding:0; }
+  .diag.panel-open .diag-toggle { border-bottom:1px solid rgba(56,189,248,.14); }
+  .diag-toggle-handle { width:36px; height:3px; background:rgba(56,189,248,.3); border-radius:2px; }
+  .diag-toggle-lbl { font-family:'Orbitron',monospace; font-size:7px; letter-spacing:.2em; text-transform:uppercase; color:rgba(56,189,248,.5); line-height:1; }
+  /* Panel content padding when open */
+  .diag.panel-open > *:not(.diag-toggle) { padding-left:15px; padding-right:15px; box-sizing:border-box; }
+  .diag.panel-open .diag-title { padding-top:14px; }
+  .diag.panel-open > *:last-child { padding-bottom:20px; }
+  /* Cat popup above the diag panel */
+  .cat-popup { z-index:502 !important; transform:none !important; }
+  /* Mission cards */
   .mission-cards { gap:16px; }
   .mission-card { width:calc(100vw - 48px); max-width:340px; }
   .mission-title { font-size:28px; }
 }
+
+/* M3: same collapsed height as others — timer shown in toggle handle */
+
 @media (max-width: 480px) {
-  .shell { display:flex; flex-direction:column; padding:6px 8px 10px; gap:8px; }
+  .int-banner { margin:8px 8px 0; }
+  .ib-brand { padding:8px 112px 7px 12px; }
+  .h-title { font-size:9px; letter-spacing:.12em; }
+  .shell { display:flex; flex-direction:column; padding:6px 8px calc(64px + 8px) 8px; gap:8px; }
   .shell-scan-row { display:block; margin:0 8px; }
   .ib-num { font-size:26px; }
   .splash-title { font-size:32px; }
   .splash-subtitle { padding:0 20px; }
+  .mission-screen { padding:56px 16px 40px; justify-content:flex-start; }
+  .mission-header { margin-bottom:24px; }
   .mission-title { font-size:22px; }
+  .mission-subtitle { font-size:12px; }
+  .mission-card { width:calc(100vw - 32px); max-width:unset; }
 }
 </style>
 </head>
@@ -1307,6 +1347,10 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
     <div class="payload" id="s1payload"></div>
   </div>
   <div class="card diag" id="s1diag">
+    <button class="diag-toggle" onclick="toggleDiag(this)">
+      <span class="diag-toggle-handle"></span>
+      <span class="diag-toggle-lbl">▲&nbsp; VULNERABILITY DIAGNOSTICS</span>
+    </button>
     <div class="diag-title">// Vulnerability Diagnostics</div>
     <div id="s1scanBtnWrap" style="flex-shrink:0;padding-bottom:12px;border-bottom:1px solid rgba(56,189,248,.08);margin-bottom:2px;">
       <button class="btn btn-scan" id="s1btnScan" onclick="s1Scan()">◎ &nbsp;Analysis Panel</button>
@@ -1467,6 +1511,10 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
     <div class="payload" id="s2payload"></div>
   </div>
   <div class="card diag" id="s2diag">
+    <button class="diag-toggle" onclick="toggleDiag(this)">
+      <span class="diag-toggle-handle"></span>
+      <span class="diag-toggle-lbl">▲&nbsp; HALLUCINATION DETECTOR</span>
+    </button>
     <div class="diag-title">// Hallucination Detector</div>
     <div class="hal-flag-counter">
       <div class="hal-fc-lbl">Hallucinations Flagged</div>
@@ -1633,6 +1681,13 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
     <div class="payload" id="s3payload"></div>
   </div>
   <div class="card diag" id="s3diag">
+    <button class="diag-toggle" onclick="toggleDiag(this)">
+      <span class="diag-toggle-handle"></span>
+      <div class="diag-toggle-row">
+        <span class="diag-toggle-lbl">▲&nbsp; INJECTION SCANNER</span>
+        <span class="diag-toggle-timer" id="s3mobileTimer"></span>
+      </div>
+    </button>
     <div class="diag-title">// Injection Scanner</div>
     <div class="sb-timer" id="s3timerBox">
       <div>
@@ -1914,6 +1969,12 @@ function showScreen(id) {
 function goMenu() {
   dismissToast();
   clearAllTimers();
+  // Close any open mobile diag panels
+  document.querySelectorAll('.diag.panel-open').forEach(d => {
+    d.classList.remove('panel-open');
+    const lbl = d.querySelector('.diag-toggle-lbl');
+    if(lbl) lbl.textContent = lbl.textContent.replace('▼','▲').replace('CLOSE PANEL','ANALYSIS PANEL');
+  });
   ['s1verdict','s2verdict','s3verdict'].forEach(id => {
     const el = document.getElementById(id);
     if(el) el.classList.remove('show');
@@ -2228,6 +2289,15 @@ function s1Classify(chosen) {
     document.getElementById('s1diagSecured').style.display='flex';
     document.getElementById('s1ibSubmitCta').style.display='flex';
     document.getElementById('s1ibSeverity').style.opacity='0';
+    // Auto-open the diag panel on mobile so submit button is visible
+    if(window.innerWidth<=768) {
+      const diag=document.getElementById('s1diag');
+      if(diag&&!diag.classList.contains('panel-open')) {
+        diag.classList.add('panel-open');
+        const lbl=diag.querySelector('.diag-toggle-lbl');
+        if(lbl) lbl.textContent='▼  CLOSE PANEL';
+      }
+    }
   }
 }
 function s1FlashToken(id, color) {
@@ -2650,6 +2720,15 @@ function s2Classify(chosen) {
     document.getElementById('s2diagSecured').style.display='flex';
     document.getElementById('s2iwDrain').textContent='✓ report verified';
     document.getElementById('s2iwDrain').className='ib-drain-label secured';
+    // Auto-open the diag panel on mobile so submit button is visible
+    if(window.innerWidth<=768) {
+      const diag=document.getElementById('s2diag');
+      if(diag&&!diag.classList.contains('panel-open')) {
+        diag.classList.add('panel-open');
+        const lbl=diag.querySelector('.diag-toggle-lbl');
+        if(lbl) lbl.textContent='▼  CLOSE PANEL';
+      }
+    }
   }
 }
 function s2FlashTok(id,color) {
@@ -2946,6 +3025,13 @@ function s3UpdateTimer() {
   if(s3state.timeLeft <= 10) timerVal.className = 'sb-timer-val critical';
   else if(s3state.timeLeft <= 20) timerVal.className = 'sb-timer-val warn';
   else timerVal.className = 'sb-timer-val';
+  // Mirror in mobile toggle handle
+  const mt = document.getElementById('s3mobileTimer');
+  if(mt) {
+    mt.textContent = s3state.timeLeft > 0 ? s3state.timeLeft + 's' : '';
+    mt.className = 'diag-toggle-timer' +
+      (s3state.timeLeft <= 10 ? ' critical' : s3state.timeLeft <= 20 ? ' warn' : '');
+  }
 }
 
 function s3Start() {
@@ -2969,6 +3055,7 @@ function s3LoadLevel(lvl) {
   const timerBox=document.getElementById('s3timerBox');
   const timerVal=document.getElementById('s3timerVal');
 
+  const mt=document.getElementById('s3mobileTimer');
   if(S3_LEVELS[lvl].timeLimit===0) {
     // No timer — teaching level
     timerVal.textContent='—';
@@ -2976,12 +3063,14 @@ function s3LoadLevel(lvl) {
     timerBox.style.opacity='0.3';
     document.getElementById('s3iwDrain').textContent='no time limit';
     document.getElementById('s3iwDrain').className='ib-drain-label';
+    if(mt){ mt.textContent=''; mt.className='diag-toggle-timer'; }
   } else {
     timerBox.style.opacity='1';
     timerVal.textContent=s3state.timeLeft;
     timerVal.className='sb-timer-val ok';
     document.getElementById('s3iwDrain').textContent='▼ time pressure';
     document.getElementById('s3iwDrain').className='ib-drain-label draining';
+    if(mt){ mt.textContent=s3state.timeLeft+'s'; mt.className='diag-toggle-timer'; }
   }
 
   // Build payload — FP levels pass null injId
@@ -3007,6 +3096,8 @@ function s3LoadLevel(lvl) {
       if(s3state.timeLeft<=10) timerVal.className='sb-timer-val critical';
       else if(s3state.timeLeft<=20) timerVal.className='sb-timer-val warn';
       else timerVal.className='sb-timer-val ok';
+      const mt2=document.getElementById('s3mobileTimer');
+      if(mt2){ mt2.textContent=s3state.timeLeft+'s'; mt2.className='diag-toggle-timer'+(s3state.timeLeft<=10?' critical':s3state.timeLeft<=20?' warn':''); }
       // Drain only from timer (no separate drain interval)
       s3state.integrity=Math.max(0,s3state.integrity-0.3);
       updateIntUI('s3',s3state.integrity,0.8,S1_MAX_DRAIN);
@@ -3382,6 +3473,16 @@ window.addEventListener('load', ()=>{
   runSplashLoader();
   setTimeout(boot, 200);
 });
+
+// ════════════════════════════════════════════
+//  MOBILE DIAG PANEL TOGGLE
+// ════════════════════════════════════════════
+function toggleDiag(btn) {
+  const diag = btn.closest('.diag');
+  const isOpen = diag.classList.toggle('panel-open');
+  const lbl = btn.querySelector('.diag-toggle-lbl');
+  if (lbl) lbl.textContent = isOpen ? '▼  CLOSE PANEL' : '▲  ANALYSIS PANEL';
+}
 
 // ════════════════════════════════════════════
 //  PAUSE / RESUME

@@ -2,51 +2,122 @@
    RESPONSIVE — Tablet (≤768px) and Mobile (≤480px)
    ══════════════════════════════════════════════════════════════ */
 
-/* ── TABLET ≤768px ── */
+/* ── TABLET + MOBILE ≤768px ── */
 @media (max-width: 768px) {
 
-  /* Banner: stack vertically, tighter */
+  /* Banner: stack vertically; right-pad brand row to clear the
+     fixed PAUSE + SOUND buttons (18px right margin + 42+6+42px) */
   .int-banner {
     grid-template-columns: 1fr;
     grid-template-rows: auto auto;
     min-height: auto;
     margin: 10px 12px 0;
     gap: 0;
+    overflow: visible; /* allow title to wrap instead of clip */
   }
   .ib-brand {
-    padding: 10px 16px 8px;
+    padding: 10px 112px 8px 16px; /* 112px clears the ctrl buttons */
     border-right: none;
     border-bottom: 1px solid rgba(56,189,248,.1);
+    overflow: visible;
+  }
+  .h-title {
+    white-space: normal; /* allow wrapping on narrow widths */
+    line-height: 1.3;
   }
   .ib-center {
     padding: 10px 16px;
     gap: 14px;
   }
-  .ib-num { font-size: 32px; }
+  .ib-num  { font-size: 32px; }
   .ib-unit { font-size: 14px; }
   .ib-bar-track { height: 8px; }
 
-  /* Shell: stack console above, sidebar below */
+  /* Shell: single column, leave space at bottom for the fixed diag drawer */
   .shell {
     grid-template-columns: 1fr;
-    grid-template-rows: auto auto;
-    padding: 8px 12px 12px;
+    grid-template-rows: 1fr;
+    padding: 8px 12px calc(64px + 12px) 12px;
     min-height: unset;
+    gap: 8px;
   }
 
-  /* Sidebar: full width, not sticky */
+  /* ── DIAG: fixed bottom-drawer panel ───────────────────────── */
   .diag {
-    grid-column: 1;
-    position: static;
-    height: auto;
-    max-height: none;
-    overflow: visible;
-  }  .diag-cats { gap: 8px; }
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    top: auto !important;
+    height: 64px;           /* collapsed: shows only the toggle handle */
+    max-height: 74vh;
+    z-index: 50;
+    border-radius: 16px 16px 0 0;
+    transition: height .32s cubic-bezier(.4,0,.2,1);
+    overflow: hidden;
+    box-sizing: border-box;
+    padding: 0 !important;
+    gap: 10px;
+  }
 
-  /* Category panels: compact */
-  .diag-cat { padding: 9px 10px; }
+  .diag.panel-open {
+    height: 74vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
 
-  /* Cat popup: full width, anchored to bottom of screen */
+  /* Toggle handle: fills the entire collapsed state */
+  .diag-toggle {
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    min-height: 64px;
+    height: 64px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    border-bottom: 1px solid rgba(56,189,248,.08);
+    flex-shrink: 0;
+    box-sizing: border-box;
+    touch-action: manipulation;
+    padding: 0;
+  }
+  .diag.panel-open .diag-toggle {
+    border-bottom: 1px solid rgba(56,189,248,.14);
+  }
+  .diag-toggle-handle {
+    width: 36px; height: 3px;
+    background: rgba(56,189,248,.3);
+    border-radius: 2px;
+    transition: background .2s;
+  }
+  .diag-toggle:hover .diag-toggle-handle,
+  .diag-toggle:active .diag-toggle-handle { background: rgba(56,189,248,.6); }
+  .diag-toggle-lbl {
+    font-family: 'Orbitron', monospace;
+    font-size: 7px; letter-spacing: .2em;
+    text-transform: uppercase;
+    color: rgba(56,189,248,.5);
+    line-height: 1;
+  }
+
+  /* Panel content: padding when open */
+  .diag.panel-open > *:not(.diag-toggle) {
+    padding-left: 15px;
+    padding-right: 15px;
+    box-sizing: border-box;
+  }
+  .diag.panel-open .diag-title { padding-top: 14px; }
+  .diag.panel-open > *:last-child { padding-bottom: 20px; }
+
+  /* Sidebar category panels: compact */
+  .diag-cats { gap: 8px; }
+  .diag-cat  { padding: 9px 10px; }
+
+  /* Cat popup: bottom sheet, above diag panel */
   .cat-popup {
     position: fixed;
     bottom: 0; left: 0; right: 0;
@@ -54,22 +125,19 @@
     min-width: unset;
     width: 100%;
     border-radius: 16px 16px 0 0;
-    padding: 16px;
-    z-index: 500;
+    padding: 16px 16px 32px;
+    z-index: 502;           /* above the diag panel (z:50) */
+    transform: none !important;
   }
   .cat-btns { gap: 8px; }
-  .cat-btn { padding: 12px 6px; font-size: 10px; }
+  .cat-btn  { padding: 14px 6px; font-size: 10px; }
 
   /* Briefing card */
   .briefing-card {
     width: calc(100vw - 32px);
-    max-width: 660px;
+    max-width: 600px;
     margin: 16px;
-    grid-template-columns: 160px 1fr;
   }
-  .briefing-body { padding: 0; }
-  .briefing-title { font-size: 17px; }
-  .briefing-right { padding: 22px 20px 18px; }
 
   /* Verdict card */
   .verdict-card {
@@ -78,94 +146,106 @@
     margin: 16px;
   }
   .v-body { padding: 18px 16px 16px; }
+  .v-row  { flex-wrap: wrap; gap: 4px; }
 
-  /* Verdict report rows */
-  .v-row { flex-wrap: wrap; gap: 4px; }
-
-  /* Code panel font size */
+  /* Code panel font */
   .code-line { font-size: 11px; }
+
+  /* Mission select: cards full-ish width, smaller gap */
+  .mission-cards { gap: 16px; }
+  .mission-card  { width: calc(100vw - 48px); max-width: 340px; }
+  .mission-title { font-size: 28px; }
 }
+
 
 /* ── MOBILE ≤480px ── */
 @media (max-width: 480px) {
 
-  /* Tighter banner */
+  /* Tighter banner, same right-pad for ctrl buttons */
   .int-banner { margin: 8px 8px 0; }
-  .ib-brand { padding: 8px 12px 7px; }
-  .h-title { font-size: 9px; letter-spacing: .15em; }
-  .ib-center { padding: 8px 12px; gap: 10px; }
-  .ib-num { font-size: 26px; }
-  .ib-unit { font-size: 12px; }
-  .ib-lbl { font-size: 7px; }
-  .ib-bar-track { height: 7px; }
-  .ib-seg { width: 4px; }
+  .ib-brand   { padding: 8px 112px 7px 12px; }
+  .h-title    { font-size: 9px; letter-spacing: .12em; }
+  .ib-center  { padding: 8px 12px; gap: 10px; }
+  .ib-num     { font-size: 26px; }
+  .ib-unit    { font-size: 13px; }
+  .ib-lbl     { font-size: 7px; }
+  .ib-bar-track  { height: 7px; }
+  .ib-seg        { width: 4px; }
   .ib-drain-label { font-size: 9px; }
 
-  /* Shell tighter */
-  .shell { padding: 6px 8px 10px; gap: 8px; }
+  /* Shell: tighter, keep bottom padding for fixed diag */
+  .shell { padding: 6px 8px calc(64px + 8px) 8px; gap: 8px; }
+  /* M1 scan row: surface above content on mobile */
+  .shell-scan-row { display: block; margin: 0 8px; }
 
   /* Console */
-  .console { min-height: 300px; }
+  .console { min-height: 280px; }
 
   /* Email */
   .email-header { padding: 10px 12px; gap: 8px; }
   .email-avatar { width: 30px; height: 30px; font-size: 10px; }
-  .email-body { padding: 12px 14px; font-size: 12px; }
+  .email-body   { padding: 12px 14px; font-size: 12px; }
 
   /* Code */
   .code-line { font-size: 10px; }
-  .line-num { font-size: 9px; min-width: 18px; }
+  .line-num  { font-size: 9px; min-width: 18px; }
 
-  /* Tokens — larger touch targets, inherit font size from parent */
-  .tok {
-    padding: 3px 8px;
-    font-size: inherit;
-  }
+  /* Tokens: bigger touch targets */
+  .tok.clickable { padding: 3px 6px; }
 
-  /* Category popup: bottom sheet with bigger buttons */
-  .cat-popup { padding: 14px 12px 20px; }
-  .cat-popup-lbl { font-size: 10px; margin-bottom: 10px; }
-  .cat-btns { gap: 6px; }
-  .cat-btn { padding: 14px 4px; font-size: 9px; letter-spacing: .08em; }
+  /* Category popup bottom sheet */
+  .cat-popup      { padding: 14px 12px 32px; }
+  .cat-popup-lbl  { font-size: 10px; margin-bottom: 10px; }
+  .cat-btns       { gap: 6px; }
+  .cat-btn        { padding: 15px 4px; font-size: 9px; letter-spacing: .08em; }
 
   /* Briefing */
-  .briefing-card { width: calc(100vw - 16px); margin: 8px; grid-template-columns: 1fr; }
-  .briefing-left { padding: 20px; flex-direction: row; justify-content: flex-start; gap: 12px; }
-  .briefing-left-stats { flex-direction: row; margin-top: 0; }
-  .briefing-right { padding: 18px 14px 16px; }
-  .briefing-body { padding: 0; }
-  .briefing-title { font-size: 15px; }
-  .briefing-stats { grid-template-columns: 1fr 1fr; gap: 6px; }
-  .b-stat { padding: 10px 8px; }
-  .b-stat-val { font-size: 11px; }
-  .briefing-start-btn { padding: 13px 24px; font-size: 11px; }
+  .briefing-card       { width: calc(100vw - 16px); margin: 8px; }
+  .briefing-body       { padding: 20px 18px 20px; }
+  .briefing-stat-strip { grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+  .bss-item  { padding: 9px 10px; }
+  .bss-lbl   { font-size: 7px; }
+  .bss-val   { font-size: 11px; }
+  .briefing-text      { font-size: 11px; }
+  .briefing-start-btn { padding: 13px 24px; font-size: 10px; }
 
   /* Verdict */
   .verdict-card { width: calc(100vw - 16px); margin: 8px; }
-  .v-body { padding: 14px 12px 12px; }
-  .v-eyebrow { font-size: 7px; }
-  .v-headline { font-size: 22px; }
-  .v-reset { font-size: 10px; padding: 10px; }
+  .v-body       { padding: 14px 12px 12px; }
+  .v-eyebrow    { font-size: 7px; }
+  .v-headline   { font-size: 22px; }
+  .v-reset      { font-size: 10px; padding: 10px; }
 
-  /* Diag sidebar */
-  .diag { padding: 12px 10px; gap: 8px; }
+  /* Mission select: prevent header from being pushed off-screen */
+  .mission-screen  { padding: 56px 16px 40px; justify-content: flex-start; }
+  .mission-header  { margin-bottom: 24px; }
+  .mission-title   { font-size: 22px; }
+  .mission-subtitle { font-size: 12px; }
+  .mission-card    { width: calc(100vw - 32px); max-width: unset; }
+  .mc-body         { padding: 18px 18px 16px; }
+  .mc-desc         { font-size: 11px; }
+
+  /* Splash */
+  .splash-title    { font-size: 32px; }
+  .splash-subtitle { padding: 0 20px; font-size: 13px; }
+  .splash-load-track { width: 200px; }
+
+  /* Sidebar */
   .diag-title { font-size: 7px; }
-  .dc-name { font-size: 8px; }
+  .dc-name    { font-size: 8px; }
 
   /* Scan button */
   .btn-scan { font-size: 11px; padding: 10px 14px; }
 
   /* Banner submit CTA */
   .ib-submit-cta { font-size: 9px; padding: 5px 10px; letter-spacing: .12em; }
-
-  /* Splash */
-  .splash-title { font-size: 16px; }
-  .splash-load-track { width: 180px; }
 }
 
 /* ── Very small phones ≤360px ── */
 @media (max-width: 360px) {
-  .ib-num { font-size: 22px; }
-  .briefing-stats { grid-template-columns: 1fr; }
+  .ib-num  { font-size: 22px; }
+  .h-title { font-size: 8px; }
+  .briefing-stat-strip { grid-template-columns: 1fr 1fr; }
+  .bss-item:last-child { grid-column: 1 / -1; }
   .cat-btn { font-size: 8px; padding: 12px 2px; }
 }
