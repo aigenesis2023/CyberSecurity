@@ -1839,6 +1839,7 @@ function s1EndGame(reason) {
   const precisionPass = pass && s1state.classifyErrors===0;
   if(pass){ pSuccess(); courseProgress.s1done=true; saveProgress(); }
   else pError();
+  scormReport(intFinal, pass, 's1');
   const sg=document.getElementById('s1vSuccess'), fg=document.getElementById('s1vFail');
   sg.style.display='none'; fg.style.display='none'; sg.classList.remove('animate');
   if(pass){ sg.style.display='flex'; setTimeout(()=>sg.classList.add('animate'),50); setTimeout(()=>sg.querySelectorAll('.ring').forEach(r=>r.classList.add('frozen')),2000); }
@@ -2213,6 +2214,7 @@ function s2EndGame(reason) {
   const precisionPass = pass && s2state.flagsWrong===0;
   if(pass){ pSuccess(); courseProgress.s2done=true; saveProgress(); }
   else pError();
+  scormReport(intFinal, pass, 's2');
   const sg=document.getElementById('s2vSuccess'), fg=document.getElementById('s2vFail');
   sg.style.display='none'; fg.style.display='none'; sg.classList.remove('animate');
   if(pass){ sg.style.display='flex'; setTimeout(()=>sg.classList.add('animate'),50); setTimeout(()=>sg.querySelectorAll('.ring').forEach(r=>r.classList.add('frozen')),2000); }
@@ -2670,6 +2672,7 @@ function s3EndGame(reason) {
   const precisionPass = pass && s3state.falseAlarms===0 && s3state.timeouts===0;
   if(pass){ pSuccess(); courseProgress.s3done=true; saveProgress(); }
   else pError();
+  scormReport(intFinal, pass, 's3');
   const sg=document.getElementById('s3vSuccess'), fg=document.getElementById('s3vFail');
   sg.style.display='none'; fg.style.display='none'; sg.classList.remove('animate');
   if(pass){ sg.style.display='flex'; setTimeout(()=>sg.classList.add('animate'),50); setTimeout(()=>sg.querySelectorAll('.ring').forEach(r=>r.classList.add('frozen')),2000); }
@@ -2698,6 +2701,67 @@ function s3EndGame(reason) {
   }
   const mb3=document.getElementById('s3menuBtn'); mb3.textContent=pass?'▶ MISSION SELECT':'← MISSION SELECT';
   setTimeout(()=>document.getElementById('s3verdict').classList.add('show'),400);
+}
+
+// ════════════════════════════════════════════
+//  SCORM 1.2 WRAPPER
+//  No-op in standalone/browser mode.
+//  Auto-initialises; finishes on unload.
+// ════════════════════════════════════════════
+const SCORM = (() => {
+  let _api = null, _init = false, _sessionTime = 0, _sessionStart = Date.now();
+  function _findAPI(w) {
+    let n = 0;
+    while (!w.API && w.parent && w.parent !== w) { if(++n > 7) return null; w = w.parent; }
+    return w.API || null;
+  }
+  function _getAPI() {
+    if (_api) return _api;
+    _api = _findAPI(window);
+    if (!_api && window.opener) _api = _findAPI(window.opener);
+    return _api;
+  }
+  function initialize() {
+    const api = _getAPI(); if (!api) return false;
+    const r = api.LMSInitialize('');
+    _init = (r === 'true' || r === true);
+    _sessionStart = Date.now();
+    return _init;
+  }
+  function finish() {
+    const api = _getAPI(); if (!api || !_init) return;
+    // Report session time in hh:mm:ss
+    const secs = Math.round((Date.now() - _sessionStart) / 1000);
+    const hh = String(Math.floor(secs/3600)).padStart(2,'0');
+    const mm = String(Math.floor((secs%3600)/60)).padStart(2,'0');
+    const ss = String(secs%60).padStart(2,'0');
+    api.LMSSetValue('cmi.core.session_time', `${hh}:${mm}:${ss}`);
+    api.LMSCommit(''); api.LMSFinish(''); _init = false;
+  }
+  function set(el, val) { const api=_getAPI(); if(!api||!_init) return; api.LMSSetValue(el, String(val)); api.LMSCommit(''); }
+  function get(el)       { const api=_getAPI(); if(!api||!_init) return ''; return api.LMSGetValue(el); }
+  function setScore(raw, min=0, max=100) { set('cmi.core.score.raw',raw); set('cmi.core.score.min',min); set('cmi.core.score.max',max); }
+  function setStatus(passed) { set('cmi.core.lesson_status', passed ? 'passed' : 'failed'); }
+  function setBookmark(obj)  { try { set('cmi.suspend_data', JSON.stringify(obj)); } catch(e){} }
+  function getBookmark()     { try { const r=get('cmi.suspend_data'); return r ? JSON.parse(r) : null; } catch(e){ return null; } }
+  initialize();
+  window.addEventListener('beforeunload', finish);
+  return { initialize, finish, set, get, setScore, setStatus, setBookmark, getBookmark };
+})();
+
+// ── Called by each mission's endGame to report to LMS ──────────────────
+function scormReport(score, passed, missionId) {
+  // Composite score: average of all completed missions
+  const scores = { s1: null, s2: null, s3: null };
+  if (window._scormScores) Object.assign(scores, window._scormScores);
+  scores[missionId] = score;
+  window._scormScores = scores;
+  const completed = Object.values(scores).filter(v => v !== null);
+  const avgScore = completed.length ? Math.round(completed.reduce((a,b)=>a+b,0) / completed.length) : score;
+  const allPassed = courseProgress.s1done && courseProgress.s2done && courseProgress.s3done;
+  SCORM.setScore(avgScore, 0, 100);
+  SCORM.setStatus(allPassed ? true : passed);
+  SCORM.setBookmark({ progress: courseProgress, scores });
 }
 
 // ════════════════════════════════════════════
@@ -2748,6 +2812,14 @@ function boot() {
 window.addEventListener('load', ()=>{
   preloadAudio();
   loadProgress();
+  // Restore SCORM bookmark (merges with localStorage progress)
+  const bm = SCORM.getBookmark();
+  if (bm && bm.progress) {
+    if(bm.progress.s1done) courseProgress.s1done = true;
+    if(bm.progress.s2done) courseProgress.s2done = true;
+    if(bm.progress.s3done) courseProgress.s3done = true;
+  }
+  if (bm && bm.scores) window._scormScores = bm.scores;
   loadMuteState();
   updateMenuState();
   runSplashLoader();
