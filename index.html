@@ -168,6 +168,8 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 }
 .mc-launch-btn:hover { background:rgba(56,189,248,.14); border-color:rgba(56,189,248,.6); box-shadow:0 0 16px rgba(56,189,248,.15); }
 .mc-launch-btn.locked-btn { opacity:.3; cursor:not-allowed; pointer-events:none; }
+.mc-launch-btn.replay-btn { border-color:rgba(74,222,128,.4); color:rgba(74,222,128,.9); }
+.mc-launch-btn.replay-btn:hover { background:rgba(74,222,128,.08); border-color:rgba(74,222,128,.6); }
 
 .mission-progress { margin-top:40px; animation:fadeUp .6s ease .3s both; display:flex; flex-direction:column; align-items:center; gap:0; }
 .mp-label { font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.16em; color:rgba(200,220,255,.3); text-transform:uppercase; text-align:center; margin-bottom:10px; }
@@ -186,6 +188,8 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 .mastery-seg.filled.s1 { background:rgba(74,222,128,.7); }
 .mastery-seg.filled.s2 { background:rgba(74,222,128,.85); }
 .mastery-seg.filled.s3 { background:var(--green); box-shadow:0 0 12px rgba(74,222,128,.6); }
+.mastery-seg.active { background:rgba(56,189,248,.25); border-color:rgba(56,189,248,.5); box-shadow:0 0 6px rgba(56,189,248,.3); animation:segPulse 2s ease-in-out infinite; }
+@keyframes segPulse { 0%,100%{opacity:.6} 50%{opacity:1} }
 .mastery-count { font-family:'Orbitron',monospace; font-size:11px; font-weight:700; letter-spacing:.1em; color:rgba(56,189,248,.55); margin-left:6px; transition:color .4s; }
 .mastery-count.complete { color:var(--green); text-shadow:0 0 10px rgba(74,222,128,.5); }
 .clearance-label { font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.14em; color:rgba(200,220,255,.4); text-transform:uppercase; margin-top:4px; transition:color .4s; }
@@ -663,7 +667,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
             <span class="mc-status unlocked-s" id="m1status"><span class="mc-dot-s green" id="m1dot"></span><span id="m1statuslbl">UNLOCKED</span></span>
           </div>
         </div>
-        <button class="mc-launch-btn">▶ &nbsp; LAUNCH MISSION</button>
+        <button class="mc-launch-btn" id="m1btn">▶ &nbsp; LAUNCH MISSION</button>
       </div>
 
       <!-- MISSION 2 — AI Hallucination -->
@@ -1335,6 +1339,12 @@ function updateMenuState() {
     if(lbl && done) { lbl.textContent = 'COMPLETE'; }
     if(dot && done) { dot.className = 'mc-dot-s green'; }
   });
+  // M1 button — replay if complete
+  const b1 = document.getElementById('m1btn');
+  if(b1) {
+    if(courseProgress.s1done) { b1.textContent = '↺  REPLAY MISSION'; b1.classList.add('replay-btn'); }
+    else { b1.textContent = '▶  LAUNCH MISSION'; b1.classList.remove('replay-btn'); }
+  }
   // Mission 2
   if (courseProgress.s1done) {
     document.getElementById('mcard2').classList.remove('locked');
@@ -1366,7 +1376,9 @@ function updateMenuState() {
   const lvlCount = (courseProgress.s1done?1:0)+(courseProgress.s2done?1:0)+(courseProgress.s3done?1:0);
   ['mseg1','mseg2','mseg3'].forEach((id,i) => {
     const el=document.getElementById(id); if(!el) return;
-    el.className = 'mastery-seg' + (lvlCount>i ? ' filled s'+(i+1) : '');
+    if(lvlCount>i) el.className='mastery-seg filled s'+(i+1);
+    else if(lvlCount===i) el.className='mastery-seg active';
+    else el.className='mastery-seg';
   });
   const mc=document.getElementById('masteryCount');
   if(mc){ mc.textContent=lvlCount+' / 3'; mc.className='mastery-count'+(lvlCount>=3?' complete':''); }
