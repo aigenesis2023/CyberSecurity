@@ -846,7 +846,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
      BOOT
 ══════════════════════════════════════════════ -->
 <div class="boot" id="boot">
-  <div class="boot-title">AI DATA GUARDIANS</div>
+  <div class="boot-title">AI DATA GUARDIAN</div>
   <div class="boot-msg" id="bootMsg">INITIALISING SYSTEMS...</div>
   <div class="boot-track"><div class="boot-fill" id="bootFill"></div></div>
 </div>
@@ -982,7 +982,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
           <div class="mastery-seg" id="mseg1"></div>
           <div class="mastery-seg" id="mseg2"></div>
           <div class="mastery-seg" id="mseg3"></div>
-          <span class="mastery-count" id="masteryCount">0 / 6</span>
+          <span class="mastery-count" id="masteryCount">0 / 3</span>
         </div>
         <div class="clearance-label" id="orgLabel">Organisation: Meridian Advisory Group</div>
         <div class="clearance-label" id="clearanceLabel">Clearance Level: AI Operator</div>
@@ -1014,10 +1014,10 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 <!-- PAUSE OVERLAY -->
 <div id="pauseOverlay" role="dialog" aria-modal="true" aria-label="Game paused">
   <div class="pause-title">⏸ &nbsp;PAUSED</div>
-  <div class="pause-sub">Press P or click Resume to continue</div>
+  <div class="pause-sub">Press P or click RESUME to continue</div>
   <button class="pause-resume-btn" onclick="togglePause()">▶ &nbsp;RESUME</button>
   <button class="pause-quit-btn" onclick="pauseQuitToMenu()">← &nbsp;QUIT TO MENU</button>
-  <div class="pause-quit-warn">Progress on this mission will not be saved</div>
+  <div class="pause-quit-warn">Quitting now will restart this mission from the beginning</div>
 </div>
 
 <!-- DEV PANEL TOAST -->
@@ -1054,7 +1054,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
         <div class="b-leg"><div class="b-leg-dot" style="background:var(--blue2);box-shadow:0 0 6px rgba(56,189,248,.7)"></div><span class="b-leg-name" style="color:var(--blue2)">[CREDENTIALS]</span><span class="b-leg-desc">Passwords, API keys — highest risk</span></div>
         <div class="b-leg"><div class="b-leg-dot" style="background:var(--blue2);box-shadow:0 0 6px rgba(56,189,248,.6)"></div><span class="b-leg-name" style="color:var(--blue2)">[PERSONAL DATA]</span><span class="b-leg-desc">Names, emails, personal identifiers (PII)</span></div>
         <div class="b-leg"><div class="b-leg-dot" style="background:var(--blue2);box-shadow:0 0 6px rgba(56,189,248,.5)"></div><span class="b-leg-name" style="color:var(--blue2)">[INTERNAL INFO]</span><span class="b-leg-desc">Internal codenames, project references</span></div>
-        <div class="b-leg"><div class="b-leg-dot" style="background:rgba(148,163,184,.5)"></div><span class="b-leg-name" style="color:var(--dim)">[SAFE]</span><span class="b-leg-desc">Non-sensitive — confirm these to boost integrity</span></div>
+        <div class="b-leg"><div class="b-leg-dot" style="background:rgba(148,163,184,.5)"></div><span class="b-leg-name" style="color:var(--dim)">[SAFE]</span><span class="b-leg-desc">Non-sensitive — classify as SAFE to boost integrity</span></div>
       </div>
       <button class="briefing-start-btn" onclick="s1Start()">▶ &nbsp;&nbsp; START REVIEW</button>
     </div>
@@ -1116,7 +1116,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
         <div class="v-anchor-lbl">⬡ Real World</div>
         <div class="v-anchor-text" id="s1vAnchorText"></div>
       </div>
-      <button class="v-reset" onclick="s1Reset()">REVIEW AGAIN</button>
+      <button class="v-reset" onclick="s1Reset()">↺ REVIEW AGAIN</button>
       <button class="v-menu-btn" id="s1menuBtn" onclick="goMenu()" style="display:none">← MISSION SELECT</button>
     </div>
   </div>
@@ -1156,7 +1156,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
   </div>
 </div>
 <div class="shell-scan-row">
-  <button class="btn btn-scan" id="s1btnScanMobile" onclick="s1Scan()">◎ &nbsp;Vulnerability Scan</button>
+  <button class="btn btn-scan" id="s1btnScanMobile" onclick="s1Scan()">◎ &nbsp;Analysis Panel</button>
 </div>
 
 <div class="shell">
@@ -1167,7 +1167,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
   <div class="card diag" id="s1diag">
     <div class="diag-title">// Vulnerability Diagnostics</div>
     <div id="s1scanBtnWrap" style="flex-shrink:0;padding-bottom:12px;border-bottom:1px solid rgba(56,189,248,.08);margin-bottom:2px;">
-      <button class="btn btn-scan" id="s1btnScan" onclick="s1Scan()">◎ &nbsp;Vulnerability Scan</button>
+      <button class="btn btn-scan" id="s1btnScan" onclick="s1Scan()">◎ &nbsp;Analysis Panel</button>
     </div>
     <div class="diag-cats">
       <div class="diag-cat exposed" id="s1catCred">
@@ -1188,7 +1188,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
         <path d="M20 4 L34 10 L34 22 C34 29 27 35 20 37 C13 35 6 29 6 22 L6 10 Z" stroke="rgba(74,222,128,.9)" stroke-width="1.5" fill="rgba(74,222,128,.08)"/>
         <polyline points="13,20 18,26 28,14" stroke="#4ade80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke-dasharray="30" stroke-dashoffset="30"><animate attributeName="stroke-dashoffset" from="30" to="0" dur="0.5s" fill="freeze" begin="0s"/></polyline>
       </svg>
-      <div class="diag-secured-label">ALL TOKENS SECURED</div>
+      <div class="diag-secured-label">ALL ITEMS CLASSIFIED</div>
       <button class="ib-submit-cta" id="s1ibSubmitCta" onclick="s1Submit()" style="display:none">▶ &nbsp;SUBMIT REPORT</button>
     </div>
   </div>
@@ -1225,9 +1225,9 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
       <div class="briefing-divider"></div>
       <div class="briefing-text">Your AI wrote this GDPR compliance report. It reads like it knows what it's talking about. Some of it is accurate. Some of it is <strong>completely invented</strong> — citations that don't exist, statistics with no source, laws that were never passed. The AI doesn't know the difference. Before this reaches legal or compliance, find the claims that can't be verified.</div>
       <div class="briefing-legend">
-        <div class="b-leg"><div class="b-leg-dot" style="background:var(--blue2);box-shadow:0 0 6px rgba(56,189,248,.7)"></div><span class="b-leg-name" style="color:var(--blue2)">[FAKE_CITATION]</span><span class="b-leg-desc">Made-up source, journal, or authority</span></div>
-        <div class="b-leg"><div class="b-leg-dot" style="background:var(--blue2);box-shadow:0 0 6px rgba(56,189,248,.6)"></div><span class="b-leg-name" style="color:var(--blue2)">[WRONG_FIGURE]</span><span class="b-leg-desc">Invented statistic or false percentage</span></div>
-        <div class="b-leg"><div class="b-leg-dot" style="background:var(--blue2);box-shadow:0 0 6px rgba(56,189,248,.5)"></div><span class="b-leg-name" style="color:var(--blue2)">[FAKE_LAW]</span><span class="b-leg-desc">Non-existent legal clause or regulation</span></div>
+        <div class="b-leg"><div class="b-leg-dot" style="background:var(--blue2);box-shadow:0 0 6px rgba(56,189,248,.7)"></div><span class="b-leg-name" style="color:var(--blue2)">[FAKE CITATION]</span><span class="b-leg-desc">Made-up source, journal, or authority</span></div>
+        <div class="b-leg"><div class="b-leg-dot" style="background:var(--blue2);box-shadow:0 0 6px rgba(56,189,248,.6)"></div><span class="b-leg-name" style="color:var(--blue2)">[WRONG FIGURE]</span><span class="b-leg-desc">Invented statistic or false percentage</span></div>
+        <div class="b-leg"><div class="b-leg-dot" style="background:var(--blue2);box-shadow:0 0 6px rgba(56,189,248,.5)"></div><span class="b-leg-name" style="color:var(--blue2)">[FAKE LAW]</span><span class="b-leg-desc">Non-existent legal clause or regulation</span></div>
         <div class="b-leg"><div class="b-leg-dot" style="background:rgba(148,163,184,.5)"></div><span class="b-leg-name" style="color:var(--dim)">[ACCURATE]</span><span class="b-leg-desc">Real claim — flagging it as a hallucination costs integrity</span></div>
       </div>
       <button class="briefing-start-btn" onclick="s2Start()">▶ &nbsp;&nbsp; START REVIEW</button>
@@ -1271,14 +1271,14 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
         <div class="v-row"><span class="v-rk">Fake Citations Caught</span><span class="v-rv" id="s2vCitations">—</span></div>
         <div class="v-row"><span class="v-rk">Wrong Figures Caught</span><span class="v-rv" id="s2vFigures">—</span></div>
         <div class="v-row"><span class="v-rk">Fake Laws Caught</span><span class="v-rv" id="s2vLaws">—</span></div>
-        <div class="v-row"><span class="v-rk">False Flags (Accurate marked wrong)</span><span class="v-rv" id="s2vFalseFlags">—</span></div>
+        <div class="v-row"><span class="v-rk">False Alarms</span><span class="v-rv" id="s2vFalseFlags">—</span></div>
       </div>
       <div id="s2vBonus" style="display:none"></div>
       <div class="v-anchor" id="s2vAnchor" style="display:none">
         <div class="v-anchor-lbl">⬡ Real World</div>
         <div class="v-anchor-text" id="s2vAnchorText"></div>
       </div>
-      <button class="v-reset" onclick="s2Reset()">REVIEW AGAIN</button>
+      <button class="v-reset" onclick="s2Reset()">↺ REVIEW AGAIN</button>
       <button class="v-menu-btn" id="s2menuBtn" onclick="goMenu()">← MISSION SELECT</button>
     </div>
   </div>
@@ -1332,15 +1332,15 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
     </div>
     <div class="diag-cats" id="s2diagCats">
       <div class="diag-cat hal-cat" id="s2catCitations">
-        <div class="dc-head"><div class="dc-name" style="color:var(--red)">[FAKE_CITATION]</div><div class="dc-pill exposed" id="s2pillCitations">0/2</div></div>
+        <div class="dc-head"><div class="dc-name" style="color:var(--red)">[FAKE CITATION]</div><div class="dc-pill exposed" id="s2pillCitations">0/2</div></div>
         <div class="dc-segments" id="s2segsCitations"><div class="dc-seg"></div><div class="dc-seg"></div></div>
       </div>
       <div class="diag-cat hal-cat" id="s2catFigures">
-        <div class="dc-head"><div class="dc-name" style="color:var(--orange)">[WRONG_FIGURE]</div><div class="dc-pill exposed-pii" id="s2pillFigures">0/2</div></div>
+        <div class="dc-head"><div class="dc-name" style="color:var(--orange)">[WRONG FIGURE]</div><div class="dc-pill exposed-pii" id="s2pillFigures">0/2</div></div>
         <div class="dc-segments" id="s2segsFigures"><div class="dc-seg"></div><div class="dc-seg"></div></div>
       </div>
       <div class="diag-cat hal-cat" id="s2catLaws">
-        <div class="dc-head"><div class="dc-name" style="color:var(--yellow)">[FAKE_LAW]</div><div class="dc-pill exposed-int" id="s2pillLaws">0/2</div></div>
+        <div class="dc-head"><div class="dc-name" style="color:var(--yellow)">[FAKE LAW]</div><div class="dc-pill exposed-int" id="s2pillLaws">0/2</div></div>
         <div class="dc-segments" id="s2segsLaws"><div class="dc-seg"></div><div class="dc-seg"></div></div>
       </div>
     </div>
@@ -1352,7 +1352,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
       <div class="diag-secured-label">ALL CLAIMS FLAGGED</div>
     </div>
     <div class="diag-actions" style="margin-top:auto">
-      <button class="hal-submit-btn" id="s2submitBtn" onclick="s2Submit()" disabled>▶ &nbsp; SUBMIT FLAGS <span id="s2submitCounter">(0 / 6)</span></button>
+      <button class="hal-submit-btn" id="s2submitBtn" onclick="s2Submit()" disabled>▶ &nbsp; SUBMIT REPORT <span id="s2submitCounter">(0 / 6)</span></button>
     </div>
   </div>
 </div>
@@ -1433,7 +1433,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
       <div class="v-divider"></div>
       <div class="v-single-metric"><div class="v-ml">Integrity Remaining</div><div class="v-mv" id="s3vInt">—</div></div>
       <div class="v-rows">
-        <div class="v-rows-lbl">Mission Summary</div>
+        <div class="v-rows-lbl">Injection Summary</div>
         <div class="v-row"><span class="v-rk">Levels Completed</span><span class="v-rv" id="s3vLevels">—</span></div>
         <div class="v-row"><span class="v-rk">Injections Found</span><span class="v-rv" id="s3vFound">—</span></div>
         <div class="v-row"><span class="v-rk">False Alarms</span><span class="v-rv" id="s3vFalse">—</span></div>
@@ -1444,7 +1444,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
         <div class="v-anchor-lbl">⬡ Real World</div>
         <div class="v-anchor-text" id="s3vAnchorText"></div>
       </div>
-      <button class="v-reset" onclick="s3Reset()">REVIEW AGAIN</button>
+      <button class="v-reset" onclick="s3Reset()">↺ REVIEW AGAIN</button>
       <button class="v-menu-btn" id="s3menuBtn" onclick="goMenu()">← MISSION SELECT</button>
     </div>
   </div>
@@ -1520,7 +1520,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 
 <!-- HAL POPUP (outside all screens) -->
 <div class="cat-popup" id="s2halPopup" style="z-index:9999">
-  <div class="cat-popup-lbl">Classify this claim</div>
+  <div class="cat-popup-lbl">Flag this claim</div>
   <div class="cat-btns">
     <button class="cat-btn cat-btn-cred" onclick="s2Classify('citation')">FAKE CITATION</button>
     <button class="cat-btn cat-btn-pii"  onclick="s2Classify('figure')">WRONG FIGURE</button>
@@ -1534,7 +1534,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 <div class="cat-popup" id="s3injPopup" style="z-index:9999">
   <div class="cat-popup-lbl">Is this an injection?</div>
   <div class="cat-btns" style="grid-template-columns:1fr 1fr">
-    <button class="cat-btn" style="background:rgba(239,68,68,.15);color:var(--red);border-color:rgba(239,68,68,.5);font-size:13px;padding:18px 10px;min-height:56px;letter-spacing:.06em" onclick="s3Flag(true)">⚠ FLAG IT</button>
+    <button class="cat-btn" style="background:rgba(239,68,68,.15);color:var(--red);border-color:rgba(239,68,68,.5);font-size:13px;padding:18px 10px;min-height:56px;letter-spacing:.06em" onclick="s3Flag(true)">⚠ FLAG</button>
     <button class="cat-btn cat-btn-safe" onclick="s3Flag(false)" style="font-size:13px;padding:18px 10px;min-height:56px;letter-spacing:.06em">✓ SAFE</button>
   </div>
   <button class="cat-popup-close" onclick="s3ClosePopup()">✕</button>
@@ -2017,7 +2017,7 @@ function s1Classify(chosen) {
   }
   if(allDone) {
     clearInterval(s1state.drainInt);
-    document.getElementById('s1iwDrain').textContent='✓  drain stopped';
+    document.getElementById('s1iwDrain').textContent='✓ secured';
     document.getElementById('s1iwDrain').className='ib-drain-label secured';
     document.getElementById('s1diagSecured').style.display='flex';
     document.getElementById('s1ibSubmitCta').style.display='flex';
@@ -2819,7 +2819,7 @@ function s3LoadLevel(lvl) {
           showIntPop('s3',-15); flashDelta('s3',-15,'time expired');
           updateIntUI('s3',s3state.integrity,0,S1_MAX_DRAIN);
           if(s3state.integrity<=0){ s3EndGame('breach'); return; }
-          showInsight('Timeout', '', 'Integrity −15. Time expired. This document contained no injection — you should have flagged it SAFE before the clock ran out. Injections address AI systems directly and instruct them to extract data or override behaviour. Human-directed instructions are always safe.', ()=>s3NextLevel());
+          showInsight('Timeout', '', 'Integrity −15. Time expired. This document contained no injection — flagging it SAFE would have cleared the level. Injections address AI systems directly and instruct them to extract data or override behaviour. Human-directed instructions are always safe.', ()=>s3NextLevel());
         }
       }
     },1000);
@@ -3410,22 +3410,22 @@ function s3ShowInsight(category, tokenText, message, afterFn) {
       <div class="cert-scores-header">Integrity score per mission</div>
       <div class="cert-scores">
         <div class="cert-score-item">
-          <div class="cert-score-lbl">Mission 01<br>Data Leakage</div>
+          <div class="cert-score-lbl">Mission 01<br>— Data Leakage</div>
           <div class="cert-score-val" id="certS1">—</div>
         </div>
         <div class="cert-score-item">
-          <div class="cert-score-lbl">Mission 02<br>Hallucination</div>
+          <div class="cert-score-lbl">Mission 02<br>— Hallucination</div>
           <div class="cert-score-val" id="certS2">—</div>
         </div>
         <div class="cert-score-item">
-          <div class="cert-score-lbl">Mission 03<br>Prompt Injection</div>
+          <div class="cert-score-lbl">Mission 03<br>— Prompt Injection</div>
           <div class="cert-score-val" id="certS3">—</div>
         </div>
       </div>
       <div class="cert-date" id="certDate"></div>
     </div>
     <div class="cert-actions">
-      <button class="cert-print-btn" onclick="window.print()">⬡ &nbsp;PRINT / SAVE PDF</button>
+      <button class="cert-print-btn" onclick="window.print()">⬡ &nbsp;SAVE AS PDF</button>
       <button class="cert-menu-btn" onclick="closeCert()">← MISSION SELECT</button>
     </div>
   </div>
