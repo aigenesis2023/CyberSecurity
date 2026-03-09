@@ -946,6 +946,8 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 .diag-toggle-timer.critical { color:var(--red); animation:pulse .5s ease infinite; }
 
 @media (max-width: 768px) {
+  /* Sticky header: solid background so content doesn't bleed through */
+  .sticky-header { background:#020610; }
   /* Banner: stack, clear ctrl buttons on the right */
   .int-banner { grid-template-columns:1fr; margin:0 12px; overflow:visible; }
   #gameCtrlBar { height:auto; top:14px; gap:5px; }
@@ -953,22 +955,18 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
   .h-title { white-space:normal; line-height:1.3; }
   .ib-center { padding:10px 16px; gap:14px; }
   .ib-num { font-size:32px; }
-  /* Shell: single column, bottom padding for fixed diag drawer */
-  .shell { grid-template-columns:1fr; grid-template-rows:1fr; padding:8px 12px calc(64px + 12px) 12px; min-height:unset; gap:8px; }
-  /* Diag: fixed bottom drawer panel */
-  .diag { grid-column:1; position:fixed !important; bottom:0 !important; left:0 !important; right:0 !important; top:auto !important; height:64px; max-height:74vh; z-index:50; border-radius:16px 16px 0 0; transition:height .32s cubic-bezier(.4,0,.2,1); overflow:hidden; box-sizing:border-box; padding:0 !important; gap:10px; }
-  .diag.panel-open { height:74vh; overflow-y:auto; overflow-x:hidden; }
-  /* Toggle handle */
-  .diag-toggle { display:flex !important; flex-direction:column; align-items:center; justify-content:center; gap:6px; width:100%; min-height:64px; height:64px; cursor:pointer; background:none; border:none; border-bottom:1px solid rgba(56,189,248,.08); flex-shrink:0; box-sizing:border-box; touch-action:manipulation; padding:0; }
-  .diag.panel-open .diag-toggle { border-bottom:1px solid rgba(56,189,248,.14); }
-  .diag-toggle-handle { width:36px; height:3px; background:rgba(56,189,248,.3); border-radius:2px; }
-  .diag-toggle-lbl { font-family:'Orbitron',monospace; font-size:7px; letter-spacing:.2em; text-transform:uppercase; color:rgba(56,189,248,.5); line-height:1; }
-  /* Panel content padding when open */
-  .diag.panel-open > *:not(.diag-toggle) { padding-left:15px; padding-right:15px; box-sizing:border-box; }
-  .diag.panel-open .diag-title { padding-top:14px; }
-  .diag.panel-open > *:last-child { padding-bottom:20px; }
-  /* Cat popup above the diag panel */
-  .cat-popup { z-index:502 !important; transform:none !important; }
+  /* Scan items row: visible on all mobile sizes */
+  .shell-scan-row { display:block; margin:0 12px 8px; }
+  /* Shell: single column, no reserved space for fixed drawer */
+  .shell { grid-template-columns:1fr; grid-template-rows:1fr; padding:8px 12px 12px 12px; min-height:unset; gap:8px; }
+  /* Diag: static, always visible at bottom of content */
+  .diag { grid-column:1 / -1 !important; position:static !important; height:auto !important; max-height:none !important; overflow:visible !important; border-radius:8px !important; padding:16px 15px !important; top:auto !important; bottom:auto !important; left:auto !important; right:auto !important; z-index:1 !important; transition:none !important; }
+  /* Cat popup: compact sticky footer, single row of classification buttons */
+  .cat-popup { position:fixed !important; bottom:0 !important; left:0 !important; right:0 !important; top:auto !important; min-width:unset; width:100%; border-radius:16px 16px 0 0; padding:10px 12px 20px; z-index:502 !important; transform:none !important; }
+  .cat-popup-lbl { display:none; }
+  .cat-popup-close { display:none; }
+  .cat-btns { display:flex !important; flex-direction:row; flex-wrap:nowrap; gap:6px; }
+  .cat-btn { padding:14px 6px !important; font-size:9px !important; min-height:unset !important; flex:1; letter-spacing:.08em !important; }
   /* Mission cards */
   .mission-cards { gap:16px; }
   .mission-card { width:calc(100vw - 48px); max-width:340px; }
@@ -981,7 +979,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
   .int-banner { margin:8px 8px 0; }
   .ib-brand { padding:8px 112px 7px 12px; }
   .h-title { font-size:9px; letter-spacing:.12em; }
-  .shell { display:flex; flex-direction:column; padding:6px 8px calc(64px + 8px) 8px; gap:8px; }
+  .shell { display:flex; flex-direction:column; padding:6px 8px 8px 8px; gap:8px; }
   .shell-scan-row { display:block; margin:0 8px; }
   .ib-num { font-size:26px; }
   .splash-title { font-size:32px; }
@@ -1305,6 +1303,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 </div>
 
 <div class="page-wrap">
+<div class="sticky-header">
 <div class="card int-banner" id="s1intBanner">
   <div class="ib-brand">
     <div class="h-dot" style="background:var(--m1)"></div>
@@ -1338,7 +1337,8 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
   </div>
 </div>
 <div class="shell-scan-row">
-  <button class="btn btn-scan" id="s1btnScanMobile" onclick="s1Scan()">◎ &nbsp;Analysis Panel</button>
+  <button class="btn btn-scan" id="s1btnScanMobile" onclick="s1Scan()">◎ &nbsp;Scan Items</button>
+</div>
 </div>
 
 <div class="shell">
@@ -1352,9 +1352,6 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
       <span class="diag-toggle-lbl">▲&nbsp; VULNERABILITY DIAGNOSTICS</span>
     </button>
     <div class="diag-title">// Vulnerability Diagnostics</div>
-    <div id="s1scanBtnWrap" style="flex-shrink:0;padding-bottom:12px;border-bottom:1px solid rgba(56,189,248,.08);margin-bottom:2px;">
-      <button class="btn btn-scan" id="s1btnScan" onclick="s1Scan()">◎ &nbsp;Analysis Panel</button>
-    </div>
     <div class="diag-cats">
       <div class="diag-cat exposed" id="s1catCred">
         <div class="dc-head"><div class="dc-name" style="color:var(--red)">[CREDENTIALS]</div><div class="dc-pill exposed" id="s1pillCred">EXPOSED</div></div>
@@ -1472,6 +1469,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 </div>
 
 <div class="page-wrap">
+<div class="sticky-header">
 <div class="card int-banner" id="s2intBanner">
   <div class="ib-brand">
     <div class="h-dot" style="background:var(--blue)"></div>
@@ -1503,6 +1501,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
       <div class="ib-bar-sub" style="margin-top:3px"><span class="teach-flash" id="s2iwTeach"></span></div>
     </div>
   </div>
+</div>
 </div>
 
 <div class="shell">
@@ -1643,6 +1642,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 </div>
 
 <div class="page-wrap">
+<div class="sticky-header">
 <div class="card int-banner" id="s3intBanner">
   <div class="ib-brand">
     <div class="h-dot" style="background:var(--blue);animation:none;box-shadow:0 0 0 3px rgba(56,189,248,.2)"></div>
@@ -1673,6 +1673,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
       <div class="ib-bar-sub"><span class="ib-delta" id="s3iwDelta"></span></div>
     </div>
   </div>
+</div>
 </div>
 
 <div class="shell">
@@ -2289,15 +2290,6 @@ function s1Classify(chosen) {
     document.getElementById('s1diagSecured').style.display='flex';
     document.getElementById('s1ibSubmitCta').style.display='flex';
     document.getElementById('s1ibSeverity').style.opacity='0';
-    // Auto-open the diag panel on mobile so submit button is visible
-    if(window.innerWidth<=768) {
-      const diag=document.getElementById('s1diag');
-      if(diag&&!diag.classList.contains('panel-open')) {
-        diag.classList.add('panel-open');
-        const lbl=diag.querySelector('.diag-toggle-lbl');
-        if(lbl) lbl.textContent='▼  CLOSE PANEL';
-      }
-    }
   }
 }
 function s1FlashToken(id, color) {
@@ -2720,15 +2712,6 @@ function s2Classify(chosen) {
     document.getElementById('s2diagSecured').style.display='flex';
     document.getElementById('s2iwDrain').textContent='✓ report verified';
     document.getElementById('s2iwDrain').className='ib-drain-label secured';
-    // Auto-open the diag panel on mobile so submit button is visible
-    if(window.innerWidth<=768) {
-      const diag=document.getElementById('s2diag');
-      if(diag&&!diag.classList.contains('panel-open')) {
-        diag.classList.add('panel-open');
-        const lbl=diag.querySelector('.diag-toggle-lbl');
-        if(lbl) lbl.textContent='▼  CLOSE PANEL';
-      }
-    }
   }
 }
 function s2FlashTok(id,color) {
