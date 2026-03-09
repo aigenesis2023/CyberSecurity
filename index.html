@@ -1631,8 +1631,8 @@ function updateMenuState() {
     document.getElementById('m2dot').className = 'mc-dot-s green';
     if (!courseProgress.s2done) document.getElementById('m2statuslbl').textContent = 'UNLOCKED';
     const b2 = document.getElementById('m2btn');
-    b2.textContent = '▶  LAUNCH MISSION';
-    b2.classList.remove('locked-btn');
+    if (courseProgress.s2done) { b2.textContent = '↺  REPLAY MISSION'; b2.classList.add('replay-btn'); }
+    else { b2.textContent = '▶  LAUNCH MISSION'; b2.classList.remove('locked-btn'); }
   }
   // Mission 3
   if (courseProgress.s2done) {
@@ -1642,8 +1642,8 @@ function updateMenuState() {
     document.getElementById('m3dot').className = 'mc-dot-s green';
     if (!courseProgress.s3done) document.getElementById('m3statuslbl').textContent = 'UNLOCKED';
     const b3 = document.getElementById('m3btn');
-    b3.textContent = '▶  LAUNCH MISSION';
-    b3.classList.remove('locked-btn');
+    if (courseProgress.s3done) { b3.textContent = '↺  REPLAY MISSION'; b3.classList.add('replay-btn'); }
+    else { b3.textContent = '▶  LAUNCH MISSION'; b3.classList.remove('locked-btn'); }
   }
   // Progress dots (legacy — hidden, kept for compat)
   const d1=document.getElementById('pdot1'), d2=document.getElementById('pdot2'), d3=document.getElementById('pdot3');
