@@ -1866,7 +1866,7 @@ function s1BuildPayload() {
         <div class="gpt-title-text">AI Assistant</div>
         <div class="gpt-model-pill">Enterprise Model v2</div>
       </div>
-      <div class="gpt-warning-bar">⚠&nbsp; Sensitive data detected — redact all tokens before sending</div>
+      <div class="gpt-warning-bar">⚠&nbsp; Sensitive data detected — identify and classify before sending</div>
       <div class="gpt-chat-area">
         <div class="gpt-user-msg">
           <div style="max-width:92%">
@@ -2564,27 +2564,27 @@ const S3_LEVELS = [
         </div>
       </div>`
   },
-  // ── LEVEL 2 (false positive) — sprint retro notes, no timer ──
+  // ── LEVEL 2 (false positive) — client services team review, no timer ──
   {
     timeLimit: 0, isInjection: false, injectionId: null,
-    hint: 'Project management language is directive and imperative — but it\'s addressed to people on a team, not to an AI system. Ask: would this instruction make sense as something a manager sends to their team? If yes, it\'s not an injection.',
+    hint: 'Operational meeting language is directive and imperative — but it\'s addressed to people, not to an AI system. Ask: would this instruction make sense in a briefing from a manager to their staff? If yes, it\'s not an injection.',
     timeoutNote: null,
     content: () => `
       <div class="ai-response-window">
         <div class="ai-response-header">
           <div class="ai-logo">🗂️</div>
-          <div class="ai-response-title">Sprint 14 Retrospective — Notes Export</div>
-          <div class="ai-model-badge">NOTION EXPORT</div>
+          <div class="ai-response-title">Monthly Team Review — Notes Export</div>
+          <div class="ai-model-badge">TEAMS EXPORT</div>
         </div>
-        <div class="ai-warning-strip">⚠ Shared via project channel — confirm scope before AI summarisation</div>
+        <div class="ai-warning-strip">⚠ Shared via team channel — confirm scope before AI summarisation</div>
         <div class="ai-response-body">
-          <h4>SPRINT 14 RETROSPECTIVE — 28 FEB 2026</h4>
-          <p>Attendees: Maya R, Tom K, Priya S, James O (Dev Lead), Sarah C (PM) &nbsp;|&nbsp; Duration: 55 min</p>
-          <p><strong>What went well.</strong> Feature delivery hit 94% of story points. Design handoff improved after new Figma component library was adopted mid-sprint. No critical bugs shipped to production.</p>
-          <p><strong>What needs work.</strong> Three tickets were blocked for over 48 hours with no escalation. Daily standup is running 20+ minutes — should be capped at 12. QA involvement in planning needs to start earlier.</p>
-          <p><strong>Action items.</strong> <span class="tok safe-decoy" data-id="fp1">James to review all open tickets every Tuesday and flag anything stalled beyond 24 hours. Sarah to circulate the updated sprint template before next kick-off. All engineers must update Jira task status by end of day each Friday — required for accurate velocity reporting and sprint forecasting.</span></p>
-          <p><strong>Team health.</strong> Morale rated 3.8/5. Proposal to reinstate monthly team lunch was approved unanimously.</p>
-          <p style="font-size:10px;color:rgba(200,220,255,.3);margin-top:16px;font-family:'JetBrains Mono',monospace">Exported by Sarah C · Notion · Sprint 14 · 28 Feb 2026</p>
+          <h4>CLIENT SERVICES REVIEW — MARCH 2026</h4>
+          <p>Attendees: Diane H, Marcus T, Priya S, Rachel O (Team Lead), Sarah C (Ops Manager) &nbsp;|&nbsp; Duration: 50 min</p>
+          <p><strong>What went well.</strong> First-contact resolution rate reached 91% — highest this quarter. Client satisfaction scores improved following the revised callback procedure. No SLA breaches recorded in February.</p>
+          <p><strong>What needs work.</strong> Three complaints sat unacknowledged for over 48 hours last month. Weekly summary reports are still being submitted late by several advisers. Handover notes between shifts are inconsistent.</p>
+          <p><strong>Action items.</strong> <span class="tok safe-decoy" data-id="fp1">All advisers must submit their weekly client interaction logs by 5pm every Friday — required for accurate reporting and audit compliance. Sarah to distribute the updated escalation procedure to all team members before the next briefing. Any client complaint unresolved beyond 48 hours must be escalated to the team lead immediately and flagged in the shared tracker.</span></p>
+          <p><strong>Team update.</strong> Morale rated 4.1/5. Proposal to introduce a monthly recognition award was approved by the group.</p>
+          <p style="font-size:10px;color:rgba(200,220,255,.3);margin-top:16px;font-family:'JetBrains Mono',monospace">Exported by Sarah C · Teams · Client Services · March 2026</p>
         </div>
       </div>`
   },
@@ -2870,7 +2870,7 @@ function s3Flag(isInjection) {
       updateIntUI('s3',s3state.integrity,0.8,S1_MAX_DRAIN);
       if(s3state.integrity<=0){ s3EndGame('breach'); return; }
       const fpFeedback = {
-        fp1: 'This is a legitimate sprint retrospective action item directing team members — not an AI. Project management language is directive but it addresses humans, not an AI system. An injection specifically tells an AI how to process or output data.',
+        fp1: 'This is a legitimate meeting action item directing team members — not an AI. Operational language is directive by design but it addresses people, not an AI system. An injection specifically tells an AI how to process or output data.',
         fp2: 'This is standard CRM next-steps guidance for a human sales rep. It names a specific person (Dan) and describes real-world tasks — an injection tells an AI system how to behave or extract data, not what a salesperson should do.',
         fp3: 'These are genuine brand editorial guidelines for human writers. They guide a writer\'s style and voice, not an AI\'s data processing behaviour. Injections hijack AI output; style guides shape human writing.',
       };
@@ -2891,7 +2891,7 @@ function s3Flag(isInjection) {
       document.getElementById('s3iwDrain').textContent='✓ document cleared';
       document.getElementById('s3iwDrain').className='ib-drain-label secured';
       const fpCorrectMsg = {
-        fp1: 'Good judgement. This is a legitimate sprint retrospective action item addressed to team members, not an AI. Project management language is directive by nature — but it tells humans what to do, not an AI how to behave or what to output.',
+        fp1: 'Good judgement. These are standard meeting action items directed at named team members. The language is imperative by design — managers write to staff this way. An injection tells an AI how to process data or override prior context, not what a person should do before Friday.',
         fp2: 'Well read. These are standard CRM next-steps for a human sales rep. The instructions name a specific person (Dan) and describe real-world tasks. An injection tells an AI system how to process data or override prior context — not what a salesperson should do before a demo.',
         fp3: 'Correct. These are editorial formatting rules for human writers — they guide tone, sentence structure, and style. They say nothing about discarding prior context, extracting sensitive data, or altering AI output behaviour. Injections hijack AI systems; style guides shape human writing.',
       };
