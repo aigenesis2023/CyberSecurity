@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Data Guardians</title>
+<title>AI Data Guardian</title>
+<noscript><style>body{display:flex;align-items:center;justify-content:center;min-height:100vh;background:#020610;font-family:sans-serif;color:#ddeeff;text-align:center;padding:20px}.ns-msg{max-width:400px}.ns-msg h1{font-size:1.4rem;margin-bottom:12px}.ns-msg p{opacity:.65;font-size:.9rem;line-height:1.6}</style><div class="ns-msg"><h1>JavaScript Required</h1><p>This training module requires JavaScript to run. Please enable JavaScript in your browser and reload the page.</p></div></noscript>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
@@ -1276,17 +1277,39 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 const SND = {};
 let audioReady = false;
 
+// ── Audio path helper — resolves relative to the HTML file ──────────────
+// AUDIO_BASE is relative so it works in LMS iframes, local servers, and
+// GitHub Pages without hard-coded absolute URLs. Add new filenames to
+// AUDIO_FILES and they will be preloaded and fall back silently if absent.
+const AUDIO_BASE = 'assets/audio/';
+const AUDIO_FILES = {
+  bg:       { file:'SunoBG.mp3',              loop:true,  volume:0.325 },
+  bleep:    { file:'bleep_p8nRzd6T.mp3',      volume:0.325 },
+  success:  { file:'success_avrPRnht.mp3',    volume:1.0 },
+  error:    { file:'error.mp3',               volume:1.0 },
+  selected: { file:'selected_wbItGBcM.mp3',   volume:0.8 },
+  click:    { file:'click.mp3',               volume:0.35 },
+  wrong:    { file:'wronganswer.mp3',         volume:0.8 },
+  hover:    { file:'Hover.mp3',              volume:0.6 },
+};
+
+function _makeAudio(key, def) {
+  try {
+    const a = new Audio(AUDIO_BASE + def.file);
+    a.volume = def.volume ?? 1.0;
+    if (def.loop) a.loop = true;
+    a.preload = 'auto';
+    // Silent fallback: if file 404s or can't decode, mark as unavailable
+    a.addEventListener('error', () => { SND[key] = null; }, { once:true });
+    return a;
+  } catch(e) { return null; }
+}
+
 function preloadAudio() {
-  const base = 'https://aigenesis2023.github.io/CyberSecurity/assets/audio/';
-  SND.bg      = new Audio(base+'SunoBG.mp3'); SND.bg.loop=true; SND.bg.volume=0.325;
-  SND.bleep   = new Audio(base+'bleep_p8nRzd6T.mp3'); SND.bleep.volume=0.325;
-  SND.success = new Audio(base+'success_avrPRnht.mp3'); SND.success.volume=1.0;
-  SND.error   = new Audio(base+'error.mp3'); SND.error.volume=1.0;
-  SND.selected= new Audio(base+'selected_wbItGBcM.mp3'); SND.selected.volume=0.8;
-  SND.click   = new Audio(base+'click.mp3'); SND.click.volume=0.35;
-  SND.wrong   = new Audio(base+'wronganswer.mp3'); SND.wrong.volume=0.8;
-  SND.hover   = new Audio(base+'hover.mp3'); SND.hover.volume=0.6;
-  Object.values(SND).forEach(a => a.load());
+  Object.entries(AUDIO_FILES).forEach(([key, def]) => {
+    SND[key] = _makeAudio(key, def);
+  });
+  Object.values(SND).forEach(a => { if(a) try { a.load(); } catch(e){} });
 }
 function startAudio() {
   if (audioReady) return; audioReady=true;
@@ -2647,7 +2670,9 @@ function s3EndGame(reason) {
 //  SPLASH SCREEN
 // ════════════════════════════════════════════
 function splashBegin() {
-  pBleep(); startAudio();
+  // Play bleep directly on user gesture — audio context requires this
+  try { const b=_makeAudio('_bleep',AUDIO_FILES.bleep); if(b){b.volume=0.325;b.play().catch(()=>{});} } catch(e){}
+  startAudio();
   const el=document.getElementById('splashScreen');
   el.classList.add('hidden'); setTimeout(()=>el.style.display='none',800);
 }
