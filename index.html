@@ -168,27 +168,13 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 }
 .mission-card.unlocked:hover::before { left:130%; }
 
-/* Common hover — subtle lift + scale */
+/* Hover — subtle lift + scale + unified cyan glow for all missions */
 .mission-card.unlocked:hover {
   transform:translateY(-3px) scale(1.015);
   transition:transform .22s cubic-bezier(.34,1.56,.64,1), box-shadow .22s, border-color .22s, background .22s;
-}
-
-/* Per-mission colour glow on hover */
-.mission-card.unlocked#mcard1:hover {
   border-color:var(--m1-border);
   background:rgba(6,22,48,0.88);
   box-shadow:0 18px 44px rgba(0,0,0,.65), 0 0 32px rgba(56,189,248,.16), 0 0 0 1px rgba(56,189,248,.18), inset 0 1px 0 rgba(56,189,248,.14);
-}
-.mission-card.unlocked#mcard2:hover {
-  border-color:var(--m2-border);
-  background:rgba(12,10,38,0.88);
-  box-shadow:0 18px 44px rgba(0,0,0,.65), 0 0 32px rgba(167,139,250,.14), 0 0 0 1px rgba(167,139,250,.2), inset 0 1px 0 rgba(167,139,250,.12);
-}
-.mission-card.unlocked#mcard3:hover {
-  border-color:var(--m3-border);
-  background:rgba(18,14,6,0.88);
-  box-shadow:0 18px 44px rgba(0,0,0,.65), 0 0 32px rgba(245,158,11,.12), 0 0 0 1px rgba(245,158,11,.18), inset 0 1px 0 rgba(245,158,11,.1);
 }
 
 .mission-card.locked { opacity:.45; filter:grayscale(.5); cursor:default; }
@@ -3039,11 +3025,13 @@ function s3Flag(isInjection) {
     if(s3state.integrity<=0){ s3EndGame('breach'); return; }
     s3ShowInsight('False Alarm', '', 'That is legitimate document content. The real injection gives instructions to an AI system — not information to a human reader. Keep scanning carefully.');
   } else {
-    // Marked safe — small penalty, stay on level
+    // Marked safe — small penalty, stay on level (injection still undetected)
     pWrong();
     s3state.integrity=Math.max(0,s3state.integrity-5);
     showIntPop('s3',-5); flashDelta('s3',-5,'keep scanning');
     updateIntUI('s3',s3state.integrity,0.8,S1_MAX_DRAIN);
+    if(s3state.integrity<=0){ s3EndGame('breach'); return; }
+    s3ShowInsight('False Alarm', '', 'There is an injection in this document — marking it safe leaves it active. The real injection directly instructs an AI system to change its behaviour or extract data. Keep scanning carefully.');
   }
 }
 
@@ -3575,48 +3563,35 @@ function s3ShowInsight(category, tokenText, message, afterFn) {
   to   { transform:scale(1) translateY(0); opacity:1; }
 }
 
-/* ── ERROR STAMP BAND ── */
-.insight-error-band {
-  display:none;
-  align-items:center; gap:14px;
-  padding:16px 22px 14px;
-  background:rgba(239,68,68,.08);
-  border-bottom:1px solid rgba(239,68,68,.18);
-}
-.insight-card.error-mode .insight-error-band { display:flex; }
-.insight-error-x {
-  width:34px; height:34px; border-radius:50%; flex-shrink:0;
-  background:rgba(239,68,68,.15); border:1.5px solid rgba(239,68,68,.5);
-  display:flex; align-items:center; justify-content:center;
-  font-size:15px; font-weight:700; color:rgba(239,68,68,.9);
-  animation:xPop .3s cubic-bezier(.34,1.56,.64,1) .25s both;
-}
-@keyframes xPop {
-  from { transform:scale(0) rotate(-45deg); opacity:0; }
-  to   { transform:scale(1) rotate(0deg); opacity:1; }
-}
-.insight-error-label {
-  font-family:'Orbitron',monospace; font-size:12px; font-weight:700;
-  letter-spacing:.18em; text-transform:uppercase; color:rgba(239,68,68,.85);
-}
-.insight-error-sub {
-  font-family:'DM Sans',sans-serif; font-size:10px;
-  color:rgba(239,68,68,.5); letter-spacing:.03em; margin-top:1px;
-}
+/* ── ERROR STAMP BAND — no longer used (replaced by compact tag above header) ── */
+.insight-error-band { display:none !important; }
+.insight-error-x { display:none; }
+.insight-error-label { display:none; }
+.insight-error-sub { display:none; }
 
-/* ── NEUTRAL TOP BAR (non-error) ── */
+/* ── NEUTRAL TOP BAR (non-error) / RED ACCENT BAR (error) ── */
 .insight-top-bar {
   height:3px;
   background:linear-gradient(90deg,transparent,rgba(56,189,248,.6),transparent);
 }
-.insight-card.error-mode .insight-top-bar { display:none; }
+.insight-card.error-mode .insight-top-bar {
+  background:linear-gradient(90deg,transparent,rgba(239,68,68,.65),transparent);
+}
+
+/* ── "// INCORRECT" micro-label — only in error mode ── */
+.insight-error-tag {
+  display:none;
+  font-family:'JetBrains Mono',monospace; font-size:8px; font-weight:700;
+  letter-spacing:.22em; text-transform:uppercase; color:rgba(239,68,68,.4);
+  margin-bottom:12px;
+}
+.insight-card.error-mode .insight-error-tag { display:block; }
 
 /* ── BODY ── */
 .insight-body { padding:20px 24px 18px; }
 .insight-card.error-mode .insight-body { padding:18px 24px 16px; }
 
 .insight-header { display:flex; align-items:center; gap:12px; margin-bottom:14px; }
-.insight-card.error-mode .insight-header { display:none; }
 
 .insight-icon {
   width:36px; height:36px; border-radius:9px;
@@ -3635,14 +3610,8 @@ function s3ShowInsight(category, tokenText, message, afterFn) {
 .insight-cat-flag  { background:rgba(167,139,250,.1);  color:#c4b5fd; border:1px solid rgba(167,139,250,.3); }
 .insight-cat-ok    { background:rgba(74,222,128,.1);   color:#86efac; border:1px solid rgba(74,222,128,.3); }
 
-/* Error-mode category pill (shown inside body, after the band) */
-.insight-error-cat {
-  display:none; font-family:'JetBrains Mono',monospace; font-size:8px; font-weight:700;
-  letter-spacing:.14em; text-transform:uppercase; padding:2px 9px; border-radius:20px;
-  background:rgba(239,68,68,.1); color:#fca5a5; border:1px solid rgba(239,68,68,.25);
-  margin-bottom:10px; width:fit-content;
-}
-.insight-card.error-mode .insight-error-cat { display:block; }
+/* Error-mode secondary category pill — hidden; main header handles the category */
+.insight-error-cat { display:none !important; }
 
 .insight-divider { height:1px; background:rgba(255,255,255,.06); margin:0 0 14px; }
 
@@ -3673,10 +3642,10 @@ function s3ShowInsight(category, tokenText, message, afterFn) {
 .insight-btn:hover { background:rgba(56,189,248,.15); border-color:rgba(56,189,248,.5); box-shadow:0 0 14px rgba(56,189,248,.18); }
 .insight-btn:focus { outline:none; box-shadow:0 0 0 2px rgba(56,189,248,.35); }
 .insight-card.error-mode .insight-btn {
-  background:rgba(255,255,255,.06); border-color:rgba(255,255,255,.18); color:rgba(255,255,255,.85);
+  background:rgba(239,68,68,.06); border-color:rgba(239,68,68,.25); color:rgba(255,180,180,.8);
 }
 .insight-card.error-mode .insight-btn:hover {
-  background:rgba(255,255,255,.1); border-color:rgba(255,255,255,.35); box-shadow:none;
+  background:rgba(239,68,68,.12); border-color:rgba(239,68,68,.45); box-shadow:0 0 12px rgba(239,68,68,.1);
 }
 </style>
 
@@ -3693,7 +3662,9 @@ function s3ShowInsight(category, tokenText, message, afterFn) {
     <!-- Neutral top bar (only visible on non-error) -->
     <div class="insight-top-bar"></div>
     <div class="insight-body">
-      <!-- Normal (non-error) header: icon + category pill -->
+      <!-- Error-mode tag (only visible on wrong answers) -->
+      <div class="insight-error-tag">// INCORRECT</div>
+      <!-- icon + category pill — always visible -->
       <div class="insight-header">
         <div class="insight-icon insight-icon-warn" id="insightIcon">⚠</div>
         <span class="insight-cat insight-cat-warn" id="insightCat">Risk</span>
