@@ -500,6 +500,8 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 .ai-response-title { font-family:'DM Sans',sans-serif; font-size:12px; font-weight:600; color:var(--text); flex:1; }
 .ai-model-badge { font-family:'JetBrains Mono',monospace; font-size:8px; padding:3px 8px; border-radius:20px; background:rgba(99,102,241,.15); color:rgba(147,149,251,1); border:1px solid rgba(99,102,241,.3); }
 .ai-warning-strip { background:rgba(56,189,248,.04); border-bottom:1px solid rgba(56,189,248,.15); padding:7px 16px; font-family:'DM Sans',sans-serif; font-size:10px; color:rgba(56,189,248,.65); display:flex; align-items:center; gap:6px; }
+.ai-scenario-frame { background:rgba(99,102,241,.07); border-bottom:1px solid rgba(99,102,241,.2); padding:9px 16px; font-family:'DM Sans',sans-serif; font-size:11px; color:rgba(200,210,255,.75); line-height:1.5; }
+.ai-scenario-frame strong { color:rgba(147,149,251,.9); }
 .ai-response-body { padding:18px; color:var(--text); font-family:'DM Sans',sans-serif; font-size:12.5px; line-height:1.85; }
 .ai-response-body h4 { font-family:'Orbitron',monospace; font-size:11px; letter-spacing:.06em; color:var(--blue2); margin:14px 0 8px; }
 .ai-response-body .cite { font-family:'JetBrains Mono',monospace; font-size:10px; color:rgba(200,220,255,.45); display:block; margin:6px 0; padding-left:12px; border-left:2px solid rgba(56,189,248,.2); }
@@ -1474,8 +1476,8 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 <div class="cat-popup" id="s3injPopup" style="z-index:9999">
   <div class="cat-popup-lbl">Is this an injection?</div>
   <div class="cat-btns" style="grid-template-columns:1fr 1fr">
-    <button class="cat-btn" style="background:rgba(239,68,68,.15);color:var(--red);border-color:rgba(239,68,68,.5);font-size:10px;padding:11px 6px" onclick="s3Flag(true)">⚠ FLAG IT</button>
-    <button class="cat-btn cat-btn-safe" onclick="s3Flag(false)" style="font-size:10px;padding:11px 6px">✓ SAFE</button>
+    <button class="cat-btn" style="background:rgba(239,68,68,.15);color:var(--red);border-color:rgba(239,68,68,.5);font-size:13px;padding:18px 10px;min-height:56px;letter-spacing:.06em" onclick="s3Flag(true)">⚠ FLAG IT</button>
+    <button class="cat-btn cat-btn-safe" onclick="s3Flag(false)" style="font-size:13px;padding:18px 10px;min-height:56px;letter-spacing:.06em">✓ SAFE</button>
   </div>
   <button class="cat-popup-close" onclick="s3ClosePopup()">✕</button>
 </div>
@@ -2198,6 +2200,7 @@ function s2BuildPayload() {
         <div class="ai-response-title">AI Assistant — GDPR Compliance Report</div>
         <div class="ai-model-badge">Enterprise AI</div>
       </div>
+      <div class="ai-scenario-frame">📋 <strong>Your task:</strong> The legal team used an AI assistant to draft this GDPR compliance brief. Before it reaches senior management, <strong>you must flag every fabricated claim</strong>. Hallucinations carry the same confident tone as facts — there is no internal signal.</div>
       <div class="ai-warning-strip">⚠ Unverified AI output — flag fabricated claims before forwarding to legal or compliance</div>
       <div class="ai-response-body" id="s2docBody">${sectionHTML}</div>
     </div>`;
@@ -2388,8 +2391,15 @@ function s2Start() {
   const b=document.getElementById('s2briefing'); b.classList.add('hidden'); setTimeout(()=>b.style.display='none',600);
   s2state.gameActive=true;
   updatePauseBtn();
-  document.getElementById('s2iwDrain').textContent='reviewing…';
-  document.getElementById('s2iwDrain').className='ib-drain-label';
+  document.getElementById('s2iwDrain').textContent='active drain';
+  document.getElementById('s2iwDrain').className='ib-drain-label draining';
+  // Gentle drain: 0.3%/min = 0.005%/s — creates light time pressure without punishing careful readers
+  s2state.drainInt = setInterval(()=>{
+    if(!s2state.gameActive) return;
+    s2state.integrity = Math.max(0, s2state.integrity - 0.0005);
+    updateIntUI('s2', s2state.integrity, 0, S1_MAX_DRAIN);
+    if(s2state.integrity<=0) s2EndGame('breach');
+  }, 100);
   setTimeout(()=>{
     const sl=document.getElementById('s2scanline'); sl.classList.remove('run'); void sl.offsetWidth; sl.classList.add('run');
     // Scan only currently visible hallucination tokens
@@ -3038,7 +3048,7 @@ function dismissObjectives() {
 // ════════════════════════════════════════════
 //  BOOT
 // ════════════════════════════════════════════
-const BOOT_STEPS=['LOADING DETECTION MODULES...','TOKENISATION ENGINE READY...','SCANNING MISSION DATABASE...','CALIBRATING INTEGRITY MONITORS...','ALL SYSTEMS ONLINE.','READY.'];
+const BOOT_STEPS=['LOADING DATA PROTECTION MODULES...','TOKENISATION ENGINE INITIALISED...','THREE-THREAT SCENARIO LOADED...','INTEGRITY MONITOR CALIBRATED...','BRIEFING ASSETS DECRYPTED...','AGENT — YOU ARE CLEARED.'];
 function boot() {
   const msgEl=document.getElementById('bootMsg');
   const fillEl=document.getElementById('bootFill');
