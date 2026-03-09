@@ -668,6 +668,41 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 }
 
 /* ════════════════════════════════════════════
+   LEARNING OBJECTIVES INTERSTITIAL
+════════════════════════════════════════════ */
+.obj-overlay {
+  position:fixed; inset:0; z-index:350;
+  background:rgba(4,10,20,0.96);
+  display:flex; align-items:center; justify-content:center;
+  opacity:0; pointer-events:none;
+  transition:opacity .5s ease;
+}
+.obj-overlay.show { opacity:1; pointer-events:all; }
+.obj-card {
+  width:500px; max-width:calc(100vw - 32px);
+  background:rgba(8,20,45,0.55);
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:14px; overflow:hidden;
+  backdrop-filter:blur(32px);
+  box-shadow:0 40px 80px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.07);
+  animation:verdictIn .55s cubic-bezier(.34,1.56,.64,1) both;
+}
+.obj-top { height:3px; background:linear-gradient(90deg,transparent,rgba(56,189,248,.7) 30%,rgba(56,189,248,.4) 70%,transparent); }
+.obj-body { padding:28px 30px 24px; }
+.obj-eyebrow { font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.2em; text-transform:uppercase; color:rgba(56,189,248,.45); margin-bottom:10px; }
+.obj-title  { font-family:'Orbitron',monospace; font-size:18px; font-weight:900; color:#fff; margin-bottom:8px; letter-spacing:.04em; }
+.obj-intro  { font-family:'DM Sans',sans-serif; font-size:12px; color:rgba(200,220,255,.6); line-height:1.75; font-weight:300; margin-bottom:20px; }
+.obj-list   { display:flex; flex-direction:column; gap:10px; margin-bottom:24px; }
+.obj-item   { display:flex; align-items:flex-start; gap:12px; }
+.obj-num    { font-family:'Orbitron',monospace; font-size:10px; font-weight:700; color:rgba(56,189,248,.7); background:rgba(56,189,248,.08); border:1px solid rgba(56,189,248,.2); border-radius:5px; padding:3px 8px; flex-shrink:0; margin-top:1px; }
+.obj-text   { font-family:'DM Sans',sans-serif; font-size:12px; color:rgba(200,220,255,.75); line-height:1.6; font-weight:300; }
+.obj-text strong { color:#fff; font-weight:500; }
+.obj-footer { padding:0 30px 26px; }
+.obj-cta    { width:100%; padding:13px; font-family:'Orbitron',monospace; font-size:11px; font-weight:700; letter-spacing:.2em; text-transform:uppercase; background:transparent; border:1px solid rgba(255,255,255,.22); color:rgba(255,255,255,.85); border-radius:8px; cursor:pointer; transition:all .2s; animation:ctaPulse 1.4s ease 1s infinite; }
+.obj-cta:hover { background:rgba(255,255,255,.05); border-color:rgba(255,255,255,.45); }
+/* First-time flag — shown only once per device */
+
+/* ════════════════════════════════════════════
    PAUSE OVERLAY
 ════════════════════════════════════════════ */
 #pauseOverlay {
@@ -763,6 +798,38 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
   <div class="boot-title">AI DATA GUARDIANS</div>
   <div class="boot-msg" id="bootMsg">INITIALISING SYSTEMS...</div>
   <div class="boot-track"><div class="boot-fill" id="bootFill"></div></div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     LEARNING OBJECTIVES INTERSTITIAL
+     Shown once (on first visit). Skipped on return.
+══════════════════════════════════════════════ -->
+<div class="obj-overlay" id="objOverlay">
+  <div class="obj-card">
+    <div class="obj-top"></div>
+    <div class="obj-body">
+      <div class="obj-eyebrow">AI Safety Training · Learning Objectives</div>
+      <div class="obj-title">What You Will Learn</div>
+      <div class="obj-intro">This module trains you to identify the three most common AI-related security risks in the workplace. By the end, you will be able to:</div>
+      <div class="obj-list">
+        <div class="obj-item">
+          <div class="obj-num">01</div>
+          <div class="obj-text"><strong>Identify and classify sensitive data</strong> in AI prompts — including credentials, personal data, and internal information — before it leaves your organisation.</div>
+        </div>
+        <div class="obj-item">
+          <div class="obj-num">02</div>
+          <div class="obj-text"><strong>Spot AI hallucinations</strong> in generated reports — fabricated citations, invented statistics, and non-existent legal provisions — before they reach decision-makers.</div>
+        </div>
+        <div class="obj-item">
+          <div class="obj-num">03</div>
+          <div class="obj-text"><strong>Detect prompt injection attacks</strong> hidden inside documents — adversarial instructions that attempt to hijack your AI tool's behaviour.</div>
+        </div>
+      </div>
+    </div>
+    <div class="obj-footer">
+      <button class="obj-cta" onclick="dismissObjectives()">▶ &nbsp;&nbsp;BEGIN TRAINING</button>
+    </div>
+  </div>
 </div>
 
 <!-- ══════════════════════════════════════════════
@@ -1269,7 +1336,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
         <div class="b-mech">Click any text that looks like an instruction aimed at an AI, not a human</div>
         <div class="b-mech">Wrong selections −15%. Missing the injection −30% + reveal</div>
       </div>
-      <button class="briefing-start-btn" onclick="s3Start()">▶ &nbsp;&nbsp; START SCAN</button>
+      <button class="briefing-start-btn" onclick="s3Start()">▶ &nbsp;&nbsp; START REVIEW</button>
     </div>
   </div>
 </div>
@@ -1982,7 +2049,7 @@ function s1EndGame(reason) {
     if(credLeft>0) missed.push('credentials (API key / password)');
     if(piiLeft>0) missed.push('personal data (name / email)');
     if(intLeft>0) missed.push('internal codenames');
-    vMsg = `Data transmitted. ${totalLeft} sensitive token${totalLeft>1?'s':''} reached the AI assistant — including ${missed.join(' and ')}. In a real incident, this would be a reportable breach under GDPR. The AI tool now holds data it was never meant to see.`;
+    vMsg = `Data transmitted. ${totalLeft} sensitive token${totalLeft>1?'s':''} reached the AI assistant — including ${missed.join(' and ')}. In a real incident, this would be a reportable breach under GDPR. The AI tool now holds data it was never meant to see.\n\nTip: Open the attachment early — it contains the most sensitive credentials. Classify credentials first (red) as they drain integrity the fastest.`;
   }
   document.getElementById('s1vMsg').textContent = vMsg;
   document.getElementById('s1vInt').textContent=intFinal+'%';
@@ -2352,7 +2419,7 @@ function s2EndGame(reason) {
   document.getElementById('s2vBar').className='v-bar '+(pass?'pass':'fail');
   const vMsg = pass
     ? 'Report quarantined. You found all 6 fabricated claims — including a fake legal framework, invented enforcement statistics, and a non-existent exemption clause. AI models generate false information with the same confident tone as accurate information. There is no internal signal for uncertainty. Verification is always on the human.'
-    : `The report reached legal with ${6-s2state.flagsCorrect} fabricated claim${6-s2state.flagsCorrect!==1?'s':''} still inside. In a real scenario, your legal team would act on invented regulations, false statistics, and non-existent GDPR clauses — potentially exposing the organisation to real risk.`;
+    : `The report reached legal with ${6-s2state.flagsCorrect} fabricated claim${6-s2state.flagsCorrect!==1?'s':''} still inside. In a real scenario, your legal team would act on invented regulations, false statistics, and non-existent GDPR clauses — potentially exposing the organisation to real risk.\n\nTip: Focus on any claim that cites a specific document, regulation, or statistic — these are the hallucination hotspots. Real GDPR article numbers and percentages are verifiable; invented ones sound authoritative but can't be found in primary sources.`;
   document.getElementById('s2vMsg').textContent = vMsg;
   document.getElementById('s2vInt').textContent=intFinal+'%';
   document.getElementById('s2vInt').className='v-mv '+(intFinal>60?'green':intFinal>30?'orange':'red');
@@ -2726,7 +2793,7 @@ function s3Flag(isInjection) {
         fp2: 'This is standard CRM next-steps guidance for a human sales rep. It names a specific person (Dan) and describes real-world tasks — an injection tells an AI system how to behave or extract data, not what a salesperson should do.',
         fp3: 'These are genuine brand editorial guidelines for human writers. They guide a writer\'s style and voice, not an AI\'s data processing behaviour. Injections hijack AI output; style guides shape human writing.',
       };
-      const msg = 'Wrong — Integrity −15. ' + (fpFeedback[id] || 'This is legitimate document content, not an injection. Injections specifically instruct an AI system to change its behaviour, extract data, or override prior instructions.');
+      const msg = fpFeedback[id] || 'This is legitimate document content, not an injection. Injections specifically instruct an AI system to change its behaviour, extract data, or override prior instructions.';
       const el=document.querySelector(`#s3payload .tok[data-id="${id}"]`);
       if(el){ el.style.background='rgba(239,68,68,.22)'; setTimeout(()=>el.style.background='',900); }
       s3ShowInsight('False Alarm', '', msg);
@@ -2816,7 +2883,7 @@ function s3EndGame(reason) {
   document.getElementById('s3vBar').className='v-bar '+(pass?'pass':'fail');
   const vMsg = pass
     ? 'All injection attempts neutralised. You identified adversarial instructions hidden inside legitimate-looking documents — including a camouflaged formatting note and an invisible HTML comment. Always read external documents before pasting them into an AI tool. The document is the attack surface.'
-    : `One or more prompt injections were not identified. Attackers deliberately embed instructions in innocent-looking documents because they know people scan rather than read. If an AI produces unexpected output after processing an external document, a prompt injection may be why.`;
+    : `One or more prompt injections were not identified. Attackers deliberately embed instructions in innocent-looking documents because they know people scan rather than read. If an AI produces unexpected output after processing an external document, a prompt injection may be why.\n\nTip: Ask yourself "is this addressed to a human or to an AI system?" Injections give instructions about how the AI should process data, what to output first, or how to handle "prior context" — no legitimate document section does that.`;
   document.getElementById('s3vMsg').textContent = vMsg;
   document.getElementById('s3vInt').textContent=intFinal+'%';
   document.getElementById('s3vInt').className='v-mv '+(intFinal>60?'green':intFinal>30?'orange':'red');
@@ -2951,6 +3018,24 @@ function runSplashLoader() {
 }
 
 // ════════════════════════════════════════════
+//  LEARNING OBJECTIVES INTERSTITIAL
+// ════════════════════════════════════════════
+function showObjectivesIfNeeded() {
+  try {
+    const seen = localStorage.getItem('adg_objectives_seen');
+    if (!seen) {
+      document.getElementById('objOverlay').classList.add('show');
+      return;
+    }
+  } catch(e) {}
+  // Already seen — go straight to menu
+}
+function dismissObjectives() {
+  document.getElementById('objOverlay').classList.remove('show');
+  try { localStorage.setItem('adg_objectives_seen', '1'); } catch(e){}
+}
+
+// ════════════════════════════════════════════
 //  BOOT
 // ════════════════════════════════════════════
 const BOOT_STEPS=['LOADING DETECTION MODULES...','TOKENISATION ENGINE READY...','SCANNING MISSION DATABASE...','CALIBRATING INTEGRITY MONITORS...','ALL SYSTEMS ONLINE.','READY.'];
@@ -2959,7 +3044,12 @@ function boot() {
   const fillEl=document.getElementById('bootFill');
   let step=0;
   const iv=setInterval(()=>{
-    if(step>=BOOT_STEPS.length){ clearInterval(iv); document.getElementById('boot').classList.add('hidden'); setTimeout(()=>document.getElementById('boot').style.display='none',900); return; }
+    if(step>=BOOT_STEPS.length){
+      clearInterval(iv);
+      document.getElementById('boot').classList.add('hidden');
+      setTimeout(()=>{ document.getElementById('boot').style.display='none'; showObjectivesIfNeeded(); },900);
+      return;
+    }
     msgEl.textContent=BOOT_STEPS[step];
     fillEl.style.width=((step+1)/BOOT_STEPS.length*100)+'%';
     step++;
