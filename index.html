@@ -374,11 +374,10 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 .briefing-overlay { position:fixed; inset:0; z-index:300; background:#040a14; display:flex; align-items:center; justify-content:center; transition:opacity .5s ease; overflow:hidden; }
 .briefing-overlay.hidden { opacity:0; pointer-events:none; }
 .briefing-card { width:540px; max-width:calc(100vw - 32px); background:rgba(8,20,45,0.55); border:1px solid rgba(255,255,255,.18); border-radius:14px; overflow:hidden; backdrop-filter:blur(32px); box-shadow:0 40px 80px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.07); animation:verdictIn .5s cubic-bezier(.34,1.56,.64,1) both; position:relative; z-index:1; }
-.briefing-card::after { content:''; position:absolute; inset:0; background-image:radial-gradient(rgba(56,189,248,.045) 1.5px, transparent 1.5px); background-size:22px 22px; pointer-events:none; z-index:0; }
 .briefing-top-bar { height:3px; display:block; background:linear-gradient(90deg, transparent, rgba(56,189,248,.8) 30%, rgba(56,189,248,.5) 70%, transparent); }
 .briefing-top-bar.m1 { background:linear-gradient(90deg, transparent, rgba(56,189,248,.9) 30%, rgba(56,189,248,.6) 70%, transparent); }
-.briefing-top-bar.m2 { background:linear-gradient(90deg, transparent, rgba(139,92,246,.9) 30%, rgba(139,92,246,.6) 70%, transparent); }
-.briefing-top-bar.m3 { background:linear-gradient(90deg, transparent, rgba(251,146,60,.9) 30%, rgba(251,146,60,.6) 70%, transparent); }
+.briefing-top-bar.m2 { background:linear-gradient(90deg, transparent, rgba(56,189,248,.9) 30%, rgba(56,189,248,.6) 70%, transparent); }
+.briefing-top-bar.m3 { background:linear-gradient(90deg, transparent, rgba(56,189,248,.9) 30%, rgba(56,189,248,.6) 70%, transparent); }
 .briefing-graphic { position:relative; height:120px; display:flex; align-items:center; justify-content:center; border-bottom:1px solid rgba(255,255,255,.08); overflow:hidden; }
 .briefing-graphic .b-ring { position:absolute; width:110px; height:110px; border-radius:50%; border:1px solid rgba(56,189,248,.25); animation:ringPulse 2s ease-out infinite; }
 .briefing-graphic .b-ring2 { animation-delay:.7s; }
@@ -687,7 +686,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
   .cert-score-val.red { color:#dc2626 !important; }
   .cert-date { color:#6b7280 !important; border-top-color:#e2eaf2 !important; }
   .cert-actions { display:none !important; }
-  #muteBtn, #pauseBtn { display:none !important; }
+  #gameCtrlBar { display:none !important; }
 }
 
 /* ════════════════════════════════════════════
@@ -763,31 +762,34 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 }
 .briefing-back-btn:hover { color:rgba(200,220,255,.7); }
 
-/* Pause button — sits left of mute button */
+/* ════════════════════════════════════════════
+   GAME CONTROLS BAR (pause + mute, top-right)
+════════════════════════════════════════════ */
+#gameCtrlBar {
+  position:fixed; top:14px; right:16px; z-index:9000;
+  display:flex; align-items:center; gap:4px;
+  background:rgba(6,16,36,0.75); border:1px solid rgba(56,189,248,.22);
+  border-radius:40px; padding:4px;
+  backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+}
 #pauseBtn {
-  position:fixed; top:14px; right:58px; z-index:9000;
   width:34px; height:34px; border-radius:50%;
-  background:rgba(6,16,36,0.7); border:1px solid rgba(56,189,248,.22);
+  background:transparent; border:1px solid rgba(56,189,248,.15);
   color:rgba(56,189,248,.75); font-size:13px;
   display:none; align-items:center; justify-content:center;
-  cursor:pointer; transition:all .2s; backdrop-filter:blur(8px);
+  cursor:pointer; transition:all .2s;
 }
 #pauseBtn.visible { display:flex; }
 #pauseBtn:hover { background:rgba(56,189,248,.12); border-color:rgba(56,189,248,.45); color:#fff; }
-
-/* ════════════════════════════════════════════
-   MUTE BUTTON (global, fixed top-right)
-════════════════════════════════════════════ */
 #muteBtn {
-  position:fixed; top:14px; right:16px; z-index:9000;
   width:34px; height:34px; border-radius:50%;
-  background:rgba(6,16,36,0.7); border:1px solid rgba(56,189,248,.22);
+  background:transparent; border:1px solid rgba(56,189,248,.15);
   color:rgba(56,189,248,.75); font-size:14px;
   display:flex; align-items:center; justify-content:center;
-  cursor:pointer; transition:all .2s; backdrop-filter:blur(8px);
+  cursor:pointer; transition:all .2s;
 }
 #muteBtn:hover { background:rgba(56,189,248,.12); border-color:rgba(56,189,248,.45); color:#fff; }
-#muteBtn.muted { color:rgba(200,220,255,.35); border-color:rgba(200,220,255,.15); background:rgba(6,16,36,0.55); }
+#muteBtn.muted { color:rgba(200,220,255,.35); border-color:rgba(200,220,255,.15); }
 
 /* ════════════════════════════════════════════
    RESPONSIVE
@@ -1003,8 +1005,11 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
   </div>
 </div>
 
-<!-- GLOBAL PAUSE BUTTON (shown only during active gameplay) -->
-<button id="pauseBtn" onclick="togglePause()" title="Pause / Resume (P)" aria-label="Pause game">⏸</button>
+<!-- GLOBAL GAME CONTROLS (pause + mute, shown top-right during gameplay) -->
+<div id="gameCtrlBar">
+  <button id="pauseBtn" onclick="togglePause()" title="Pause / Resume (P)" aria-label="Pause game">⏸</button>
+  <button id="muteBtn" onclick="toggleMute()" title="Toggle audio (M)" aria-label="Toggle audio mute">🔊</button>
+</div>
 
 <!-- PAUSE OVERLAY -->
 <div id="pauseOverlay" role="dialog" aria-modal="true" aria-label="Game paused">
@@ -1014,9 +1019,6 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
   <button class="pause-quit-btn" onclick="pauseQuitToMenu()">← &nbsp;QUIT TO MENU</button>
   <div class="pause-quit-warn">Progress on this mission will not be saved</div>
 </div>
-
-<!-- GLOBAL MUTE BUTTON -->
-<button id="muteBtn" onclick="toggleMute()" title="Toggle audio (M)" aria-label="Toggle audio mute">🔊</button>
 
 <!-- DEV PANEL TOAST -->
 <div id="devPanel" style="position:fixed;bottom:16px;left:50%;transform:translateX(-50%);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:rgba(74,222,128,.9);background:rgba(6,16,36,.95);border:1px solid rgba(74,222,128,.3);border-radius:6px;padding:7px 18px;z-index:9999;opacity:0;transition:opacity .4s;pointer-events:none;text-transform:uppercase;"></div>
@@ -1049,9 +1051,9 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
       <div class="briefing-divider"></div>
       <div class="briefing-text">Marcus is about to paste a work prompt into an AI assistant. Once it's sent, you can't take it back — anything in that prompt could be stored, logged, or used to train external models. Read the prompt. Find anything that shouldn't leave the organisation. Redact it before it goes.</div>
       <div class="briefing-legend">
-        <div class="b-leg"><div class="b-leg-dot" style="background:var(--red);box-shadow:0 0 6px rgba(239,68,68,.7)"></div><span class="b-leg-name" style="color:var(--red)">[CREDENTIALS]</span><span class="b-leg-desc">Passwords, API keys — highest risk</span></div>
-        <div class="b-leg"><div class="b-leg-dot" style="background:var(--orange);box-shadow:0 0 6px rgba(251,146,60,.6)"></div><span class="b-leg-name" style="color:var(--orange)">[PII]</span><span class="b-leg-desc">Names, emails, personal identifiers</span></div>
-        <div class="b-leg"><div class="b-leg-dot" style="background:var(--yellow);box-shadow:0 0 6px rgba(250,204,21,.5)"></div><span class="b-leg-name" style="color:var(--yellow)">[INTERNAL_INTEL]</span><span class="b-leg-desc">Internal codenames, project references</span></div>
+        <div class="b-leg"><div class="b-leg-dot" style="background:var(--blue2);box-shadow:0 0 6px rgba(56,189,248,.7)"></div><span class="b-leg-name" style="color:var(--blue2)">[CREDENTIALS]</span><span class="b-leg-desc">Passwords, API keys — highest risk</span></div>
+        <div class="b-leg"><div class="b-leg-dot" style="background:var(--blue2);box-shadow:0 0 6px rgba(56,189,248,.6)"></div><span class="b-leg-name" style="color:var(--blue2)">[PII]</span><span class="b-leg-desc">Names, emails, personal identifiers</span></div>
+        <div class="b-leg"><div class="b-leg-dot" style="background:var(--blue2);box-shadow:0 0 6px rgba(56,189,248,.5)"></div><span class="b-leg-name" style="color:var(--blue2)">[INTERNAL_INTEL]</span><span class="b-leg-desc">Internal codenames, project references</span></div>
         <div class="b-leg"><div class="b-leg-dot" style="background:rgba(148,163,184,.5)"></div><span class="b-leg-name" style="color:var(--dim)">[SAFE]</span><span class="b-leg-desc">Non-sensitive — confirm these to boost integrity</span></div>
       </div>
       <button class="briefing-start-btn" onclick="s1Start()">▶ &nbsp;&nbsp; START REVIEW</button>
@@ -1223,9 +1225,9 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
       <div class="briefing-divider"></div>
       <div class="briefing-text">Your AI wrote this GDPR compliance report. It reads like it knows what it's talking about. Some of it is accurate. Some of it is <strong>completely invented</strong> — citations that don't exist, statistics with no source, laws that were never passed. The AI doesn't know the difference. Before this reaches legal or compliance, find the claims that can't be verified.</div>
       <div class="briefing-legend">
-        <div class="b-leg"><div class="b-leg-dot" style="background:var(--red);box-shadow:0 0 6px rgba(239,68,68,.7)"></div><span class="b-leg-name" style="color:var(--red)">[FAKE_CITATION]</span><span class="b-leg-desc">Made-up source, journal, or authority</span></div>
-        <div class="b-leg"><div class="b-leg-dot" style="background:var(--orange);box-shadow:0 0 6px rgba(251,146,60,.6)"></div><span class="b-leg-name" style="color:var(--orange)">[WRONG_FIGURE]</span><span class="b-leg-desc">Invented statistic or false percentage</span></div>
-        <div class="b-leg"><div class="b-leg-dot" style="background:var(--yellow);box-shadow:0 0 6px rgba(250,204,21,.5)"></div><span class="b-leg-name" style="color:var(--yellow)">[FAKE_LAW]</span><span class="b-leg-desc">Non-existent legal clause or regulation</span></div>
+        <div class="b-leg"><div class="b-leg-dot" style="background:var(--blue2);box-shadow:0 0 6px rgba(56,189,248,.7)"></div><span class="b-leg-name" style="color:var(--blue2)">[FAKE_CITATION]</span><span class="b-leg-desc">Made-up source, journal, or authority</span></div>
+        <div class="b-leg"><div class="b-leg-dot" style="background:var(--blue2);box-shadow:0 0 6px rgba(56,189,248,.6)"></div><span class="b-leg-name" style="color:var(--blue2)">[WRONG_FIGURE]</span><span class="b-leg-desc">Invented statistic or false percentage</span></div>
+        <div class="b-leg"><div class="b-leg-dot" style="background:var(--blue2);box-shadow:0 0 6px rgba(56,189,248,.5)"></div><span class="b-leg-name" style="color:var(--blue2)">[FAKE_LAW]</span><span class="b-leg-desc">Non-existent legal clause or regulation</span></div>
         <div class="b-leg"><div class="b-leg-dot" style="background:rgba(148,163,184,.5)"></div><span class="b-leg-name" style="color:var(--dim)">[ACCURATE]</span><span class="b-leg-desc">Real claim — flagging it as a hallucination costs integrity</span></div>
       </div>
       <button class="briefing-start-btn" onclick="s2Start()">▶ &nbsp;&nbsp; START REVIEW</button>
