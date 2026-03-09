@@ -874,7 +874,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
         </div>
         <div class="obj-item">
           <div class="obj-num">03</div>
-          <div class="obj-text"><strong>Detect prompt injection attacks</strong> hidden inside documents — adversarial instructions that attempt to hijack your AI tool's behaviour.</div>
+          <div class="obj-text"><strong>Detect prompt injection attacks</strong> hidden inside documents — instructions designed to trick your AI tool into doing something it shouldn't.</div>
         </div>
       </div>
     </div>
@@ -912,7 +912,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
             <circle cx="22" cy="26.5" r="1.5" fill="rgba(56,189,248,.9)"/>
           </svg>
           <div class="mc-title">Sensitive Data Exposure</div>
-          <div class="mc-desc">A colleague is about to send sensitive data to an AI tool. Classify and redact all dangerous tokens before the submission escapes the network.</div>
+          <div class="mc-desc">A colleague is about to send sensitive data to an AI tool. Find and redact sensitive data before it gets sent outside your organisation.</div>
           <div class="mc-footer">
             <span class="mc-badge threat-high">⬡ Data Leakage</span>
             <span class="mc-status unlocked-s" id="m1status"><span class="mc-dot-s green" id="m1dot"></span><span id="m1statuslbl">UNLOCKED</span></span>
@@ -965,7 +965,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
             <path d="M33 34 L37 34 M35 32 L35 36" stroke="rgba(239,68,68,.9)" stroke-width="1.5" stroke-linecap="round"/>
           </svg>
           <div class="mc-title">Prompt Injection Attacks</div>
-          <div class="mc-desc">A document contains hidden instructions trying to hijack your AI tool. Under time pressure, find the injected command before the AI executes it.</div>
+          <div class="mc-desc">A document contains a hidden instruction designed to trick your AI tool. Under time pressure, find it before the AI acts on it.</div>
           <div class="mc-footer">
             <span class="mc-badge threat-critical">⬡ Prompt Injection</span>
             <span class="mc-status locked-s" id="m3status"><span class="mc-dot-s grey" id="m3dot"></span><span id="m3statuslbl">LOCKED</span></span>
@@ -990,7 +990,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
       <div class="title-unlock" id="titleUnlock">
         <div class="title-unlock-eyebrow">⬡ All Missions Complete — Title Unlocked</div>
         <div class="title-unlock-name">AI DATA GUARDIAN</div>
-        <div class="title-unlock-sub">You identified sensitive data leaks, AI hallucinations, and prompt injection attacks. You are cleared to work safely with AI tools.</div>
+        <div class="title-unlock-sub">You identified sensitive data leaks, AI hallucinations, and prompt injection attacks. You have demonstrated awareness of the key AI safety risks in the workplace.</div>
         <button onclick="showCertificate()" style="margin-top:12px;padding:9px 28px;font-family:'Orbitron',monospace;font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.4);color:var(--green);border-radius:6px;cursor:pointer;transition:all .2s">▶ VIEW CERTIFICATE</button>
       </div>
       <!-- legacy dots kept for JS compat, hidden by CSS -->
@@ -1052,8 +1052,8 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
       <div class="briefing-text">Marcus is about to paste a work prompt into an AI assistant. Once it's sent, you can't take it back — anything in that prompt could be stored, logged, or used to train external models. Read the prompt. Find anything that shouldn't leave the organisation. Redact it before it goes.</div>
       <div class="briefing-legend">
         <div class="b-leg"><div class="b-leg-dot" style="background:var(--blue2);box-shadow:0 0 6px rgba(56,189,248,.7)"></div><span class="b-leg-name" style="color:var(--blue2)">[CREDENTIALS]</span><span class="b-leg-desc">Passwords, API keys — highest risk</span></div>
-        <div class="b-leg"><div class="b-leg-dot" style="background:var(--blue2);box-shadow:0 0 6px rgba(56,189,248,.6)"></div><span class="b-leg-name" style="color:var(--blue2)">[PII]</span><span class="b-leg-desc">Names, emails, personal identifiers</span></div>
-        <div class="b-leg"><div class="b-leg-dot" style="background:var(--blue2);box-shadow:0 0 6px rgba(56,189,248,.5)"></div><span class="b-leg-name" style="color:var(--blue2)">[INTERNAL_INTEL]</span><span class="b-leg-desc">Internal codenames, project references</span></div>
+        <div class="b-leg"><div class="b-leg-dot" style="background:var(--blue2);box-shadow:0 0 6px rgba(56,189,248,.6)"></div><span class="b-leg-name" style="color:var(--blue2)">[PERSONAL DATA]</span><span class="b-leg-desc">Names, emails, personal identifiers (PII)</span></div>
+        <div class="b-leg"><div class="b-leg-dot" style="background:var(--blue2);box-shadow:0 0 6px rgba(56,189,248,.5)"></div><span class="b-leg-name" style="color:var(--blue2)">[INTERNAL INFO]</span><span class="b-leg-desc">Internal codenames, project references</span></div>
         <div class="b-leg"><div class="b-leg-dot" style="background:rgba(148,163,184,.5)"></div><span class="b-leg-name" style="color:var(--dim)">[SAFE]</span><span class="b-leg-desc">Non-sensitive — confirm these to boost integrity</span></div>
       </div>
       <button class="briefing-start-btn" onclick="s1Start()">▶ &nbsp;&nbsp; START REVIEW</button>
@@ -1063,7 +1063,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 
 <!-- CAT POPUP (S1) -->
 <div class="cat-popup" id="s1catPopup">
-  <div class="cat-popup-lbl">Classify this token</div>
+  <div class="cat-popup-lbl">Classify this item</div>
   <div class="cat-btns">
     <button class="cat-btn cat-btn-cred" onclick="s1Classify('credential')">CRED</button>
     <button class="cat-btn cat-btn-pii"  onclick="s1Classify('pii')">PII</button>
@@ -1107,8 +1107,8 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
       <div class="v-rows">
         <div class="v-rows-lbl">Exposure Analysis</div>
         <div class="v-row"><span class="v-rk">[CREDENTIALS]</span><span class="v-rv" id="s1vCred">—</span></div>
-        <div class="v-row"><span class="v-rk">[PII]</span><span class="v-rv" id="s1vPii">—</span></div>
-        <div class="v-row"><span class="v-rk">[INTERNAL_INTEL]</span><span class="v-rv" id="s1vIntel">—</span></div>
+        <div class="v-row"><span class="v-rk">[PERSONAL DATA]</span><span class="v-rv" id="s1vPii">—</span></div>
+        <div class="v-row"><span class="v-rk">[INTERNAL INFO]</span><span class="v-rv" id="s1vIntel">—</span></div>
         <div class="v-row"><span class="v-rk">Classification Errors</span><span class="v-rv" id="s1vErrors">—</span></div>
       </div>
       <div id="s1vBonus" style="display:none"></div>
@@ -1175,11 +1175,11 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
         <div class="dc-segments" id="s1segsCred"></div>
       </div>
       <div class="diag-cat exposed-pii" id="s1catPii">
-        <div class="dc-head"><div class="dc-name" style="color:var(--orange)">[PII]</div><div class="dc-pill exposed-pii" id="s1pillPii">EXPOSED</div></div>
+        <div class="dc-head"><div class="dc-name" style="color:var(--orange)">[PERSONAL DATA]</div><div class="dc-pill exposed-pii" id="s1pillPii">EXPOSED</div></div>
         <div class="dc-segments" id="s1segsPii"></div>
       </div>
       <div class="diag-cat exposed-int" id="s1catInt">
-        <div class="dc-head"><div class="dc-name" style="color:var(--yellow)">[INTERNAL_INTEL]</div><div class="dc-pill exposed-int" id="s1pillInt">EXPOSED</div></div>
+        <div class="dc-head"><div class="dc-name" style="color:var(--yellow)">[INTERNAL INFO]</div><div class="dc-pill exposed-int" id="s1pillInt">EXPOSED</div></div>
         <div class="dc-segments" id="s1segsInt"></div>
       </div>
     </div>
@@ -1392,9 +1392,9 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
       <div class="briefing-text">Someone has sent you a document to summarise using your AI assistant. Before you paste it in — <span class="hl">read it</span>. Documents from external sources can contain hidden instructions that tell your AI to ignore your request and do something else entirely. This is a <strong>prompt injection attack</strong>. Find the hidden instruction before you submit.</div>
       <div class="briefing-mechanics">
         <div class="b-mech">Level 1 has no timer — read carefully and learn the pattern</div>
-        <div class="b-mech">Levels 2 and 3 add time pressure as injections become harder to spot</div>
+        <div class="b-mech">Later levels add time pressure as injections get harder to spot</div>
         <div class="b-mech">Click any text that looks like an instruction aimed at an AI, not a human</div>
-        <div class="b-mech">Wrong selections −15%. Missing the injection −30% + reveal</div>
+        <div class="b-mech">Wrong selections lose integrity — missing an injection loses more</div>
       </div>
       <button class="briefing-start-btn" onclick="s3Start()">▶ &nbsp;&nbsp; START REVIEW</button>
     </div>
@@ -1948,16 +1948,16 @@ document.addEventListener('mousedown', e => {
 
 // Per-token teach messages for M1
 const S1_TEACH = {
-  apikey:   { correct: 'API keys in prompts are one of the most common AI data breach vectors. Even inactive keys can expose system architecture.',
-              wrong:   'This is an API key — classify as CREDENTIALS. Keys grant programmatic access; anyone who sees this can use it.' },
+  apikey:   { correct: 'API keys give direct access to company systems. AI tools can log everything you type — if a key appears in a prompt, anyone who accesses that log has the same access you do. Even old keys can reveal how your systems are set up.',
+              wrong:   'This is an API key — classify as CREDENTIALS. Keys grant direct access to systems; anyone who sees this can use it.' },
   password: { correct: 'Passwords in prompts are high-risk. AI tools log inputs — a logged password is a compromised password.',
               wrong:   'This is a password — classify as CREDENTIALS. Passwords should never appear in any text sent to an external service.' },
-  email:    { correct: 'Email addresses are PII under GDPR and most data protection laws. They identify real people and enable targeting.',
-              wrong:   'This is a personal email address — classify as PII. Sharing it with external AI tools may breach data protection policy.' },
-  name:     { correct: 'Personal names are PII. Combined with context (role, company), they create an identifiable profile in AI training data.',
-              wrong:   'This is a person\'s name — classify as PII. Names are personal identifiers even without additional data.' },
+  email:    { correct: 'Email addresses are personal data under GDPR. They identify a real person and could be used for phishing or social engineering if they end up in the wrong hands.',
+              wrong:   'This is a personal email address — classify as PERSONAL DATA. Sharing it with external AI tools may breach data protection policy.' },
+  name:     { correct: 'Personal names are protected data under GDPR. Combined with someone\'s role and company name, an AI tool could store enough to identify a real person — data your colleague never consented to share.',
+              wrong:   'This is a person\'s name — classify as PERSONAL DATA. Names are personal identifiers even without additional data.' },
   project:  { correct: 'Internal codenames reveal organisational structure and active work to external services. Competitors pay attention.',
-              wrong:   'This is an internal project codename — classify as INTERNAL_INTEL. Codenames signal active initiatives to external parties.' },
+              wrong:   'This is an internal project codename — classify as INTERNAL INFO. Codenames signal active initiatives to external parties.' },
 };
 
 function s1Classify(chosen) {
@@ -1980,7 +1980,7 @@ function s1Classify(chosen) {
       if(s1state.integrity<=0) { s1EndGame('breach'); return; }
       updateIntUI('s1',s1state.integrity,s1GetDrain(),S1_MAX_DRAIN);
       if(S1_TEACH[id]) {
-        const catLabel={'credential':'Credential Risk','pii':'PII Risk','internal':'Internal Intel'}[token.cat]||'Wrong Category';
+        const catLabel={'credential':'Credential Risk','pii':'Personal Data Risk','internal':'Internal Info'}[token.cat]||'Wrong Category';
         s1ShowInsight(catLabel, tokText, S1_TEACH[id].wrong);
       }
     }
@@ -1999,7 +1999,7 @@ function s1Classify(chosen) {
     const catEl=document.getElementById('s1cat'+key);
     catEl.style.animation='none'; void catEl.offsetWidth; catEl.style.animation='wrongShake .4s ease';
     if(S1_TEACH[id]) {
-      const catLabel={'credential':'Credential Risk','pii':'PII Risk','internal':'Internal Intel'}[token.cat]||'Wrong Category';
+      const catLabel={'credential':'Credential Risk','pii':'Personal Data Risk','internal':'Internal Info'}[token.cat]||'Wrong Category';
       s1ShowInsight(catLabel, tokText, S1_TEACH[id].wrong);
     }
     return;
@@ -2008,11 +2008,11 @@ function s1Classify(chosen) {
   pSelected();
   s1Redact(id,token.cat);
   s1UpdateDiag(token.cat,id);
-  flashDelta('s1',0,'Token secured');
+  flashDelta('s1',0,'Item secured');
   updateIntUI('s1',s1state.integrity,s1GetDrain(),S1_MAX_DRAIN);
   const allDone = s1AllSecured();
   if(S1_TEACH[id]) {
-    const catLabel={'credential':'Credential Risk','pii':'PII Risk','internal':'Internal Intel'}[token.cat]||'Secured';
+    const catLabel={'credential':'Credential Risk','pii':'Personal Data Risk','internal':'Internal Info'}[token.cat]||'Secured';
     showToast(catLabel, S1_TEACH[id].correct);
   }
   if(allDone) {
@@ -2116,13 +2116,13 @@ function s1EndGame(reason) {
   // Dynamic verdict message
   let vMsg;
   if(pass) {
-    vMsg = 'Transmission blocked. You identified every sensitive token before it reached an external server. In practice: AI tools retain and may use everything you submit. Treat every prompt like an email to a stranger.';
+    vMsg = 'Transmission blocked. You identified every piece of sensitive data before it reached an external server. In practice: AI tools retain and may use everything you submit. Treat every prompt like an email to a stranger.';
   } else {
     const missed=[];
     if(credLeft>0) missed.push('credentials (API key / password)');
     if(piiLeft>0) missed.push('personal data (name / email)');
     if(intLeft>0) missed.push('internal codenames');
-    vMsg = `Data transmitted. ${totalLeft} sensitive token${totalLeft>1?'s':''} reached the AI assistant — including ${missed.join(' and ')}. In a real incident, this would be a reportable breach under GDPR. The AI tool now holds data it was never meant to see.\n\nTip: Open the attachment early — it contains the most sensitive credentials. Classify credentials first (red) as they drain integrity the fastest.`;
+    vMsg = `Data transmitted. ${totalLeft} piece${totalLeft>1?'s':''} of sensitive data reached the AI assistant — including ${missed.join(' and ')}. In a real incident, this would be a reportable breach under GDPR. The AI tool now holds data it was never meant to see.\n\nTip: Open the attachment early — it contains the most sensitive credentials. Classify credentials first — they drain integrity the fastest.`;
   }
   document.getElementById('s1vMsg').textContent = vMsg;
   document.getElementById('s1vInt').textContent=intFinal+'%';
@@ -2271,7 +2271,7 @@ function s2BuildPayload() {
         <div class="ai-response-title">AI Assistant — GDPR Compliance Report</div>
         <div class="ai-model-badge">Enterprise AI</div>
       </div>
-      <div class="ai-scenario-frame">📋 <strong>Your task:</strong> The legal team used an AI assistant to draft this GDPR compliance brief. Before it reaches senior management, <strong>you must flag every fabricated claim</strong>. Hallucinations carry the same confident tone as facts — there is no internal signal.</div>
+      <div class="ai-scenario-frame">📋 <strong>Your task:</strong> The legal team used an AI assistant to draft this GDPR compliance brief and sent it to you for a second pair of eyes before it goes to senior management. <strong>Flag every fabricated claim</strong> — hallucinations carry the same confident tone as facts, and there is no internal signal.</div>
       <div class="ai-warning-strip">⚠ Unverified AI output — flag fabricated claims before forwarding to legal or compliance</div>
       <div class="ai-response-body" id="s2docBody">${sectionHTML}</div>
     </div>`;
@@ -2397,7 +2397,7 @@ function s2Classify(chosen) {
   if(!tok.isHal) {
     pWrong(); s2state.integrity=Math.max(0,s2state.integrity-10); s2state.flagsWrong++;
     s2state.cooldownUntil = Date.now() + 1800;
-    showIntPop('s2',-10); flashDelta('s2',-10,'false flag — accurate claim');
+    showIntPop('s2',-10); flashDelta('s2',-10,'false alarm — accurate claim');
     s2FlashTok(id,'red');
     updateIntUI('s2',s2state.integrity,0,S1_MAX_DRAIN);
     if(s2state.integrity<=0) { s2EndGame('breach'); return; }
@@ -2462,7 +2462,7 @@ function s2Start() {
   const b=document.getElementById('s2briefing'); b.classList.add('hidden'); setTimeout(()=>b.style.display='none',600);
   s2state.gameActive=true;
   updatePauseBtn();
-  document.getElementById('s2iwDrain').textContent='active drain';
+  document.getElementById('s2iwDrain').textContent='under review';
   document.getElementById('s2iwDrain').className='ib-drain-label draining';
   // Gentle drain: 0.3%/min = 0.005%/s — creates light time pressure without punishing careful readers
   s2state.drainInt = setInterval(()=>{
@@ -2517,7 +2517,7 @@ function s2EndGame(reason) {
     const anchorText=document.getElementById('s2vAnchorText');
     anchor.style.display='block';
     anchorText.innerHTML = 'A 2023 study found that 47% of professionals who received AI-generated legal summaries could not identify factual errors without independent verification. AI hallucinations in compliance contexts have led to lawyers citing non-existent cases in court filings — a trend judges have begun sanctioning.' + '<br><br><span style="font-family:\'JetBrains Mono\',monospace;font-size:9px;letter-spacing:.12em;color:rgba(56,189,248,.5);text-transform:uppercase;">Key Behaviours</span><br><span style="font-size:11px;line-height:1.9;color:rgba(200,220,255,.65);">→ Verify AI-generated statistics and citations against primary sources before sharing<br>→ Never forward an AI output directly to legal, compliance, or clients without review<br>→ AI confidence is not the same as accuracy — always check the source</span>';
-    if(precisionPass){ const b=document.getElementById('s2vBonus'); b.style.display='block'; b.innerHTML='<div class="v-bonus-wrap"><span class="v-precision-bonus">⬡ PRECISION BONUS — Zero false flags</span></div>'; }
+    if(precisionPass){ const b=document.getElementById('s2vBonus'); b.style.display='block'; b.innerHTML='<div class="v-bonus-wrap"><span class="v-precision-bonus">⬡ PRECISION BONUS — Zero false alarms</span></div>'; }
   }
   const mb2=document.getElementById('s2menuBtn'); mb2.textContent=pass?'▶ MISSION SELECT':'← MISSION SELECT';
   setTimeout(()=>document.getElementById('s2verdict').classList.add('show'),400);
@@ -2963,7 +2963,7 @@ function s3EndGame(reason) {
   else fg.style.display='flex';
   document.getElementById('s3vBar').className='v-bar '+(pass?'pass':'fail');
   const vMsg = pass
-    ? 'All injection attempts neutralised. You identified adversarial instructions hidden inside legitimate-looking documents — including a camouflaged formatting note and an invisible HTML comment. Always read external documents before pasting them into an AI tool. The document is the attack surface.'
+    ? 'All injection attempts neutralised. You identified hidden instructions inside legitimate-looking documents — including a formatting instruction disguised as part of a brief, a fake document schema hidden in a contract, and a data-extraction directive buried in a translator\'s note. Always read external documents before pasting them into an AI tool. The document is the attack surface.'
     : `One or more prompt injections were not identified. Attackers deliberately embed instructions in innocent-looking documents because they know people scan rather than read. If an AI produces unexpected output after processing an external document, a prompt injection may be why.\n\nTip: Ask yourself "is this addressed to a human or to an AI system?" Injections give instructions about how the AI should process data, what to output first, or how to handle "prior context" — no legitimate document section does that.`;
   document.getElementById('s3vMsg').textContent = vMsg;
   document.getElementById('s3vInt').textContent=intFinal+'%';
@@ -2980,7 +2980,7 @@ function s3EndGame(reason) {
     const anchor=document.getElementById('s3vAnchor');
     const anchorText=document.getElementById('s3vAnchorText');
     anchor.style.display='block';
-    anchorText.innerHTML = 'Prompt injection attacks on AI-integrated business tools are documented in the wild. In 2024, researchers demonstrated attacks where malicious documents caused AI email assistants to forward confidential messages to attackers — by embedding instructions invisible to human readers but processed by the AI.' + '<br><br><span style="font-family:\'JetBrains Mono\',monospace;font-size:9px;letter-spacing:.12em;color:rgba(56,189,248,.5);text-transform:uppercase;">Key Behaviours</span><br><span style="font-size:11px;line-height:1.9;color:rgba(200,220,255,.65);">→ Read external documents carefully before pasting them into any AI tool<br>→ Unexpected AI output after processing an external file is a red flag<br>→ The document is the attack surface — treat it as untrusted input</span>';
+    anchorText.innerHTML = 'Prompt injection attacks on AI-integrated business tools are documented in the wild. In 2024, researchers demonstrated attacks where malicious documents caused AI email assistants to forward confidential messages to attackers — by embedding instructions invisible to human readers but processed by the AI. In this training, the injections were visible so you could learn to spot the pattern — but in the real world, they can also be hidden in white-on-white text, metadata fields, or encoded characters that humans cannot see at all. The skill is the same: always review AI output for unexpected behaviour after processing external documents.' + '<br><br><span style="font-family:\'JetBrains Mono\',monospace;font-size:9px;letter-spacing:.12em;color:rgba(56,189,248,.5);text-transform:uppercase;">Key Behaviours</span><br><span style="font-size:11px;line-height:1.9;color:rgba(200,220,255,.65);">→ Read external documents carefully before pasting them into any AI tool<br>→ Unexpected AI output after processing an external file is a red flag<br>→ The document is the attack surface — treat it as untrusted input</span>';
     if(precisionPass){ const b=document.getElementById('s3vBonus'); b.style.display='block'; b.innerHTML='<div class="v-bonus-wrap"><span class="v-precision-bonus">⬡ PRECISION BONUS — No false alarms, no timeouts</span></div>'; }
   }
   const mb3=document.getElementById('s3menuBtn'); mb3.textContent=pass?'▶ MISSION SELECT':'← MISSION SELECT';
@@ -3125,7 +3125,7 @@ function dismissObjectives() {
 // ════════════════════════════════════════════
 //  BOOT
 // ════════════════════════════════════════════
-const BOOT_STEPS=['LOADING DATA PROTECTION MODULES...','TOKENISATION ENGINE INITIALISED...','THREE-THREAT SCENARIO LOADED...','INTEGRITY MONITOR CALIBRATED...','BRIEFING ASSETS DECRYPTED...','AGENT — YOU ARE CLEARED.'];
+const BOOT_STEPS=['LOADING DATA PROTECTION MODULES...','TEXT ANALYSIS ENGINE INITIALISED...','THREE-THREAT SCENARIO LOADED...','INTEGRITY MONITOR CALIBRATED...','BRIEFING ASSETS DECRYPTED...','AGENT — YOU ARE CLEARED.'];
 function boot() {
   const msgEl=document.getElementById('bootMsg');
   const fillEl=document.getElementById('bootFill');
@@ -3276,13 +3276,13 @@ window.addEventListener('keydown', e => {
 ═══════════════════════════════════════════════════════════ */
 const INSIGHT_ICONS = {
   'Credential Risk':  '🔑',
-  'PII Risk':         '👤',
-  'Internal Intel':   '🏢',
+  'Personal Data Risk': '👤',
+  'Internal Info':    '🏢',
   'Fake Citation':    '📄',
   'Wrong Figure':     '📊',
   'Fake Law':         '⚖️',
   'Accurate Claim':   '✓',
-  'Safe Token':       '✓',
+  'Safe Item':        '✓',
   'Injection Found':  '⚡',
   'False Alarm':      '⚠',
   'Wrong Category':   '↩',
@@ -3290,10 +3290,10 @@ const INSIGHT_ICONS = {
   'Timeout':          '⏱',
 };
 const INSIGHT_TONE = {
-  'Credential Risk': 'warn', 'PII Risk': 'warn', 'Internal Intel': 'warn',
+  'Credential Risk': 'warn', 'Personal Data Risk': 'warn', 'Internal Info': 'warn',
   'Wrong Category': 'warn', 'False Alarm': 'warn', 'Missed': 'warn', 'Timeout': 'warn',
   'Fake Citation': 'warn', 'Wrong Figure': 'warn', 'Fake Law': 'warn',
-  'Accurate Claim': 'ok', 'Safe Token': 'ok', 'Injection Found': 'ok',
+  'Accurate Claim': 'ok', 'Safe Item': 'ok', 'Injection Found': 'ok',
 };
 
 let _insightCallback = null;
@@ -3399,7 +3399,7 @@ function s3ShowInsight(category, tokenText, message, afterFn) {
     <div class="cert-body">
       <div class="cert-eyebrow">Certificate of Completion</div>
       <div class="cert-title">AI Data Guardian</div>
-      <div class="cert-subtitle">You have successfully completed all three AI safety missions — identifying sensitive data exposure, AI hallucinations, and prompt injection attacks. You are cleared to work safely with AI tools in your organisation.</div>
+      <div class="cert-subtitle">You have successfully completed all three AI safety missions — identifying sensitive data exposure, AI hallucinations, and prompt injection attacks. You have demonstrated awareness of the key AI safety risks in the workplace and are better equipped to use AI tools responsibly.</div>
       <div class="cert-scores-header">Integrity score per mission</div>
       <div class="cert-scores">
         <div class="cert-score-item">
