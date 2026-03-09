@@ -1770,44 +1770,68 @@ function devResetAll() {
 }
 function updateMenuState() {
   loadProgress();
-  // Completion ticks + status labels
-  ['1','2','3'].forEach(n => {
-    const tick = document.getElementById('mcheck'+n);
-    const done = courseProgress['s'+n+'done'];
-    if(tick) tick.className = 'mc-complete-tick' + (done ? ' show' : '');
-    const lbl = document.getElementById('m'+n+'statuslbl');
-    const dot = document.getElementById('m'+n+'dot');
-    if(lbl && done) { lbl.textContent = 'COMPLETE'; }
-    if(dot && done) { dot.className = 'mc-dot-s green'; }
-  });
-  // M1 button — replay if complete
+
+  // ── M1 (always available — only state changes are AVAILABLE ↔ COMPLETE) ──
   const b1 = document.getElementById('m1btn');
-  if(b1) {
-    if(courseProgress.s1done) { b1.textContent = '↺  REPLAY MISSION'; b1.classList.add('replay-btn'); }
-    else { b1.textContent = '▶  LAUNCH MISSION'; b1.classList.remove('replay-btn'); }
-  }
-  // Mission 2
+  const m1status = document.getElementById('m1status');
+  const m1dot = document.getElementById('m1dot');
+  const m1lbl = document.getElementById('m1statuslbl');
   if (courseProgress.s1done) {
-    document.getElementById('mcard2').classList.remove('locked');
-    document.getElementById('mcard2').classList.add('unlocked');
+    if(m1lbl) m1lbl.textContent = 'COMPLETE';
+    if(m1dot) m1dot.className = 'mc-dot-s green';
+    if(m1status) m1status.className = 'mc-status unlocked-s';
+    if(b1) { b1.textContent = '↺  REPLAY MISSION'; b1.classList.add('replay-btn'); b1.classList.remove('locked-btn'); }
+  } else {
+    if(m1lbl) m1lbl.textContent = 'AVAILABLE';
+    if(m1dot) m1dot.className = 'mc-dot-s green';
+    if(m1status) m1status.className = 'mc-status unlocked-s';
+    if(b1) { b1.textContent = '▶  LAUNCH MISSION'; b1.classList.remove('replay-btn'); b1.classList.remove('locked-btn'); }
+  }
+
+  // ── M2 — locked until M1 done ──
+  const mcard2 = document.getElementById('mcard2');
+  const b2 = document.getElementById('m2btn');
+  if (courseProgress.s1done) {
+    mcard2.classList.remove('locked'); mcard2.classList.add('unlocked');
     document.getElementById('m2status').className = 'mc-status unlocked-s';
     document.getElementById('m2dot').className = 'mc-dot-s green';
-    if (!courseProgress.s2done) document.getElementById('m2statuslbl').textContent = 'AVAILABLE';
-    const b2 = document.getElementById('m2btn');
-    if (courseProgress.s2done) { b2.textContent = '↺  REPLAY MISSION'; b2.classList.add('replay-btn'); b2.classList.remove('locked-btn'); }
-    else { b2.textContent = '▶  LAUNCH MISSION'; b2.classList.remove('locked-btn'); }
+    if (courseProgress.s2done) {
+      document.getElementById('m2statuslbl').textContent = 'COMPLETE';
+      if(b2) { b2.textContent = '↺  REPLAY MISSION'; b2.classList.add('replay-btn'); b2.classList.remove('locked-btn'); }
+    } else {
+      document.getElementById('m2statuslbl').textContent = 'AVAILABLE';
+      if(b2) { b2.textContent = '▶  LAUNCH MISSION'; b2.classList.remove('replay-btn'); b2.classList.remove('locked-btn'); }
+    }
+  } else {
+    mcard2.classList.add('locked'); mcard2.classList.remove('unlocked');
+    document.getElementById('m2status').className = 'mc-status locked-s';
+    document.getElementById('m2dot').className = 'mc-dot-s grey';
+    document.getElementById('m2statuslbl').textContent = 'LOCKED';
+    if(b2) { b2.textContent = '— COMPLETE MISSION 01 FIRST'; b2.classList.add('locked-btn'); b2.classList.remove('replay-btn'); }
   }
-  // Mission 3
+
+  // ── M3 — locked until M2 done ──
+  const mcard3 = document.getElementById('mcard3');
+  const b3 = document.getElementById('m3btn');
   if (courseProgress.s2done) {
-    document.getElementById('mcard3').classList.remove('locked');
-    document.getElementById('mcard3').classList.add('unlocked');
+    mcard3.classList.remove('locked'); mcard3.classList.add('unlocked');
     document.getElementById('m3status').className = 'mc-status unlocked-s';
     document.getElementById('m3dot').className = 'mc-dot-s green';
-    if (!courseProgress.s3done) document.getElementById('m3statuslbl').textContent = 'AVAILABLE';
-    const b3 = document.getElementById('m3btn');
-    if (courseProgress.s3done) { b3.textContent = '↺  REPLAY MISSION'; b3.classList.add('replay-btn'); b3.classList.remove('locked-btn'); }
-    else { b3.textContent = '▶  LAUNCH MISSION'; b3.classList.remove('locked-btn'); }
+    if (courseProgress.s3done) {
+      document.getElementById('m3statuslbl').textContent = 'COMPLETE';
+      if(b3) { b3.textContent = '↺  REPLAY MISSION'; b3.classList.add('replay-btn'); b3.classList.remove('locked-btn'); }
+    } else {
+      document.getElementById('m3statuslbl').textContent = 'AVAILABLE';
+      if(b3) { b3.textContent = '▶  LAUNCH MISSION'; b3.classList.remove('replay-btn'); b3.classList.remove('locked-btn'); }
+    }
+  } else {
+    mcard3.classList.add('locked'); mcard3.classList.remove('unlocked');
+    document.getElementById('m3status').className = 'mc-status locked-s';
+    document.getElementById('m3dot').className = 'mc-dot-s grey';
+    document.getElementById('m3statuslbl').textContent = 'LOCKED';
+    if(b3) { b3.textContent = '— COMPLETE MISSION 02 FIRST'; b3.classList.add('locked-btn'); b3.classList.remove('replay-btn'); }
   }
+
   // Progress dots (legacy — hidden, kept for compat)
   const d1=document.getElementById('pdot1'), d2=document.getElementById('pdot2'), d3=document.getElementById('pdot3');
   d1.className = courseProgress.s1done ? 'mp-dot done' : 'mp-dot active';
