@@ -82,7 +82,8 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 @keyframes intPenalty { 0%{transform:scale(1)} 30%{transform:scale(1.08)} 100%{transform:scale(1)} }
 @keyframes timerWarn { 0%,100%{box-shadow:0 0 0 rgba(239,68,68,0)} 50%{box-shadow:0 0 18px rgba(239,68,68,.35)} }
 @keyframes cardGlow { 0%,100%{box-shadow:0 0 0 rgba(56,189,248,0)} 50%{box-shadow:0 0 30px rgba(56,189,248,.15)} }
-@keyframes chipPulse { 0%,100%{box-shadow:none;border-color:#d4d4d4} 50%{box-shadow:0 0 0 3px rgba(99,102,241,.1);border-color:#a5b4fc} }
+@keyframes chipGlow { 0%,100%{box-shadow:none;border-color:rgba(56,189,248,.4);background:rgba(56,189,248,.07)} 50%{box-shadow:0 0 0 5px rgba(56,189,248,.18),0 0 22px rgba(56,189,248,.32);border-color:rgba(56,189,248,.85);background:rgba(56,189,248,.15)} }
+@keyframes chipArrowBounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(4px)} }
 @keyframes missionUnlock { 0%{transform:scale(1.05);opacity:.6} 100%{transform:scale(1);opacity:1} }
 
 /* ════════════════════════════════════════════
@@ -554,13 +555,15 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 .gpt-user-bubble .tok.clickable { color:#1a1a1a; }
 .gpt-user-bubble .tok.clickable:hover { background:rgba(0,0,0,.08); border-radius:3px; }
 .gpt-attach-row { margin-top:12px; }
-.gpt-attach-chip { display:inline-flex; align-items:center; gap:6px; padding:6px 12px; background:#f0f0f0; border:1px solid #d4d4d4; border-radius:8px; cursor:pointer; transition:background .15s, border-color .15s, box-shadow .15s; font-size:11px; animation:chipPulse 3.5s ease-in-out infinite; }
-.gpt-attach-chip:hover { background:#e8e8e8; border-color:#a5b4fc; box-shadow:0 0 0 3px rgba(99,102,241,.1); animation:none; }
-.gpt-attach-chip.opened { animation:none; border-color:#d4d4d4; box-shadow:none; }
-/* nudge class kept for compat but no longer added — zoom effect removed */
-.gpt-attach-chip.nudge { animation:chipPulse 3.5s ease-in-out infinite; }
+.gpt-attach-chip { display:inline-flex; align-items:center; gap:6px; padding:7px 14px; background:rgba(56,189,248,.07); border:1px solid rgba(56,189,248,.4); border-radius:8px; cursor:pointer; transition:background .15s, border-color .15s, box-shadow .15s; font-size:11px; animation:chipGlow 2s ease-in-out infinite; }
+.gpt-attach-chip:hover { background:rgba(56,189,248,.18); border-color:rgba(56,189,248,.85); box-shadow:0 0 0 4px rgba(56,189,248,.18),0 0 18px rgba(56,189,248,.28); animation:none; }
+.gpt-attach-chip.opened { animation:none; border-color:#d4d4d4; background:#f0f0f0; box-shadow:none; }
+.gpt-attach-chip.nudge { animation:chipGlow 2s ease-in-out infinite; }
+.chip-callout { display:flex; align-items:center; gap:5px; font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:rgba(56,189,248,.8); margin-bottom:5px; }
+.chip-callout-arrow { animation:chipArrowBounce 1.2s ease-in-out infinite; display:inline-block; font-size:11px; }
+.chip-callout.hidden { display:none; }
 .chip-icon { font-size:14px; }
-.chip-name { font-family:'DM Sans',sans-serif; font-size:11px; font-weight:500; color:#333; }
+.chip-name { font-family:'DM Sans',sans-serif; font-size:11px; font-weight:600; color:rgba(10,30,60,0.9); }
 .chip-arrow { font-size:9px; color:#888; }
 .word-doc-overlay { display:none; margin-top:10px; background:#fff; border:1px solid #d0d0d0; border-radius:8px; overflow:hidden; box-shadow:0 4px 16px rgba(0,0,0,.12); }
 .word-doc-overlay.open { display:block; }
@@ -2008,6 +2011,11 @@ function s1Init() {
   document.getElementById('s1pillPii').className='dc-pill exposed-pii'; document.getElementById('s1pillPii').textContent='EXPOSED';
   document.getElementById('s1pillInt').className='dc-pill exposed-int'; document.getElementById('s1pillInt').textContent='EXPOSED';
   document.getElementById('s1verdict').classList.remove('show');
+  // Reset attachment chip state
+  const chip=document.querySelector('.gpt-attach-chip'); if(chip) chip.classList.remove('opened');
+  const arr=document.getElementById('s1chipArrow'); if(arr) arr.textContent='▼';
+  const cc=document.getElementById('s1chipCallout'); if(cc) cc.classList.remove('hidden');
+  const ad=document.getElementById('s1attachDoc'); if(ad) ad.classList.remove('open');
   // Show briefing
   const b=document.getElementById('s1briefing');
   b.style.display=''; b.classList.remove('hidden');
@@ -2047,6 +2055,7 @@ function s1BuildPayload() {
               The engagement is called <span class="tok clickable" data-id="project">Project Cobalt-Seven</span> — that's our internal codename so don't include it in the output. My client contact is <span class="tok clickable" data-id="name">James Okafor</span> at <span class="tok clickable" data-id="email">j.okafor@pinnacle-group.com</span>.<br><br>
               This is a <span class="tok clickable noise" data-id="version">Q4 review</span> covering <span class="tok clickable noise" data-id="turbine">3 workstreams</span>. I've attached my briefing notes doc — the summary should be formal and about one page.
               <div class="gpt-attach-row">
+                <div class="chip-callout" id="s1chipCallout"><span class="chip-callout-arrow">↓</span> Review attached document before proceeding</div>
                 <div class="gpt-attach-chip" onclick="s1ToggleAttach()">
                   <span class="chip-icon">📄</span>
                   <span class="chip-name">client_briefing_notes.docx</span>
@@ -2088,7 +2097,7 @@ function s1ToggleAttach() {
   const chip=document.querySelector('.gpt-attach-chip');
   const open=doc.classList.toggle('open');
   if(arr) arr.textContent=open?'▲':'▼';
-  if(open&&chip) chip.classList.add('opened'); // stop pulse once attachment reviewed
+  if(open&&chip) { chip.classList.add('opened'); const cc=document.getElementById('s1chipCallout'); if(cc) cc.classList.add('hidden'); }
 }
 function s1TokenClick(e) {
   if(!s1state.gameActive) return;
@@ -2152,7 +2161,9 @@ function s1Classify(chosen) {
       updateIntUI('s1',s1state.integrity,s1GetDrain(),S1_MAX_DRAIN);
       if(S1_TEACH[id]) {
         const catLabel={'credential':'Credential Risk','pii':'Personal Data Risk','internal':'Internal Info'}[token.cat]||'Wrong Category';
-        s1ShowInsight(catLabel, tokText, S1_TEACH[id].wrong);
+        const catCls={credential:'cat-credential',pii:'cat-pii',internal:'cat-internal'}[token.cat]||'';
+        const g1=`<span class="tok ${catCls}" style="cursor:default;font-family:'JetBrains Mono',monospace;font-size:11px;border-radius:4px;padding:2px 7px">${tokText}</span>`;
+        s1ShowInsight(catLabel, tokText, S1_TEACH[id].wrong, null, g1);
       }
     }
     updateIntUI('s1',s1state.integrity,s1GetDrain(),S1_MAX_DRAIN); return;
@@ -2175,7 +2186,9 @@ function s1Classify(chosen) {
     catEl.style.animation='none'; void catEl.offsetWidth; catEl.style.animation='wrongShake .4s ease';
     if(S1_TEACH[id]) {
       const catLabel={'credential':'Credential Risk','pii':'Personal Data Risk','internal':'Internal Info'}[token.cat]||'Wrong Category';
-      s1ShowInsight(catLabel, tokText, S1_TEACH[id].wrong);
+      const catCls={credential:'cat-credential',pii:'cat-pii',internal:'cat-internal'}[token.cat]||'';
+      const g2=`<span class="tok ${catCls}" style="cursor:default;font-family:'JetBrains Mono',monospace;font-size:11px;border-radius:4px;padding:2px 7px">${tokText}</span>`;
+      s1ShowInsight(catLabel, tokText, S1_TEACH[id].wrong, null, g2);
     }
     if(s1state.integrity<=0) { s1EndGame('breach'); return; }
     return;
@@ -2567,7 +2580,7 @@ function s2Classify(chosen) {
       if(s2state.integrity<=0) { s2EndGame('breach'); return; }
       const catLabel={'citation':'Fake Citation','figure':'Wrong Figure','law':'Fake Law'}[tok.cat]||'Missed';
       const msg = S2_TEACH[id]?.wrongtype || (S2_TEACH[id]?.correct ? 'Missed: '+S2_TEACH[id].correct : '');
-      if(msg) s2ShowInsight(catLabel, tokText2, msg);
+      if(msg) { const gm=`<span class="tok hallucination" style="cursor:default;font-size:11px">${tokText2.slice(0,90)+(tokText2.length>90?'…':'')}</span>`; s2ShowInsight(catLabel, tokText2, msg, null, gm); }
     }
     return;
   }
@@ -2581,7 +2594,8 @@ function s2Classify(chosen) {
     updateIntUI('s2',s2state.integrity,0,S1_MAX_DRAIN);
     if(s2state.integrity<=0) { s2EndGame('breach'); return; }
     const msg = S2_TEACH[id]?.falseflag || 'This is an accurate claim — flagging it damages your credibility with legal teams.';
-    s2ShowInsight('False Alarm', tokText2, msg);
+    const gfa=`<span class="tok" style="cursor:default;font-size:11px;background:rgba(148,163,184,.12);color:rgba(148,163,184,.85);border:1px solid rgba(148,163,184,.25);border-radius:3px;padding:1px 5px">${tokText2.slice(0,90)+(tokText2.length>90?'…':'')}</span>`;
+    s2ShowInsight('False Alarm', tokText2, msg, null, gfa);
     return;
   }
   if(chosen!==tok.cat) {
@@ -2593,7 +2607,7 @@ function s2Classify(chosen) {
     updateIntUI('s2',s2state.integrity,0,S1_MAX_DRAIN);
     if(s2state.integrity<=0) { s2EndGame('breach'); return; }
     const correctLabel={'citation':'Fake Citation','figure':'Wrong Figure','law':'Fake Law'}[tok.cat]||'Wrong Category';
-    if(S2_TEACH[id]?.wrongtype) s2ShowInsight(correctLabel, tokText2, S2_TEACH[id].wrongtype);
+    if(S2_TEACH[id]?.wrongtype) { const gwt=`<span class="tok hallucination" style="cursor:default;font-size:11px">${tokText2.slice(0,90)+(tokText2.length>90?'…':'')}</span>`; s2ShowInsight(correctLabel, tokText2, S2_TEACH[id].wrongtype, null, gwt); }
     return;
   }
   // Correct flag!
@@ -3061,7 +3075,9 @@ function s3Flag(isInjection) {
       const msg = fpFeedback[id] || 'This is legitimate document content, not an injection. Injections specifically instruct an AI system to change its behaviour, extract data, or override prior instructions.';
       const el=document.querySelector(`#s3payload .tok[data-id="${id}"]`);
       if(el){ el.style.background='rgba(239,68,68,.22)'; setTimeout(()=>el.style.background='',900); }
-      s3ShowInsight('False Alarm', '', msg);
+      const fpTxt = el ? el.textContent.trim() : '';
+      const gfp = fpTxt ? `<span class="tok safe-decoy" style="cursor:default;font-size:11px;pointer-events:none;line-height:1.6;display:inline-block">${fpTxt.slice(0,120)+(fpTxt.length>120?'…':'')}</span>` : null;
+      s3ShowInsight('False Alarm', '', msg, null, gfp);
     } else {
       // Correct: correctly identified content as safe, advance
       pSelected(); s3state.levelActive=false; clearInterval(s3state.timerInt);
@@ -3485,7 +3501,7 @@ const INSIGHT_TONE = {
 
 let _insightCallback = null;
 
-function showInsight(category, tokenText, message, onDismiss) {
+function showInsight(category, tokenText, message, onDismiss, graphicHtml) {
   const overlay  = document.getElementById('insightOverlay');
   const catEl    = document.getElementById('insightCat');
   const iconEl   = document.getElementById('insightIcon');
@@ -3517,6 +3533,21 @@ function showInsight(category, tokenText, message, onDismiss) {
     tokenEl.style.display = 'none';
   }
 
+  // Graphic preview
+  const gEl = document.getElementById('insightGraphic');
+  const gContent = document.getElementById('insightGraphicContent');
+  const gLabel = document.getElementById('insightGraphicLabel');
+  if(gEl && gContent) {
+    if(graphicHtml) {
+      gContent.innerHTML = graphicHtml;
+      if(gLabel) gLabel.textContent = 'Flagged element:';
+      gEl.classList.add('show');
+    } else {
+      gEl.classList.remove('show');
+      gContent.innerHTML = '';
+    }
+  }
+
   _insightCallback = onDismiss || null;
   overlay.classList.add('show');
   setTimeout(()=>{ const btn=document.getElementById('insightBtn'); if(btn) btn.focus(); }, 120);
@@ -3535,7 +3566,7 @@ function forceCloseInsight() {
 }
 
 // ── M1: teach with drain pause ──────────────────────────────
-function s1ShowInsight(category, tokenText, message, afterFn) {
+function s1ShowInsight(category, tokenText, message, afterFn, graphicHtml) {
   clearInterval(s1state.drainInt); // pause drain
   showInsight(category, tokenText, message, () => {
     if(afterFn) afterFn();
@@ -3551,16 +3582,16 @@ function s1ShowInsight(category, tokenText, message, afterFn) {
         if(s1state.integrity <= 0) s1EndGame('breach');
       }, 100);
     }
-  });
+  }, graphicHtml || null);
 }
 
 // ── M2: teach (no timer to pause) ──────────────────────────
-function s2ShowInsight(category, tokenText, message, afterFn) {
-  showInsight(category, tokenText, message, afterFn || null);
+function s2ShowInsight(category, tokenText, message, afterFn, graphicHtml) {
+  showInsight(category, tokenText, message, afterFn || null, graphicHtml || null);
 }
 
 // ── M3: teach with timer pause ──────────────────────────────
-function s3ShowInsight(category, tokenText, message, afterFn) {
+function s3ShowInsight(category, tokenText, message, afterFn, graphicHtml) {
   clearInterval(s3state.timerInt); // pause timer
   showInsight(category, tokenText, message, () => {
     if(afterFn) afterFn();
@@ -3574,7 +3605,7 @@ function s3ShowInsight(category, tokenText, message, afterFn) {
         if(s3state.timeLeft <= 0) { clearInterval(s3state.timerInt); s3EndGame('timeout'); }
       }, 1000);
     }
-  });
+  }, graphicHtml || null);
 }
 </script>
 
@@ -3719,6 +3750,19 @@ function s3ShowInsight(category, tokenText, message, afterFn) {
   border-color:rgba(239,68,68,.15); background:rgba(239,68,68,.04);
 }
 
+/* ── GRAPHIC PREVIEW — token/element visual for wrong-answer recall ── */
+.insight-graphic {
+  display:none; margin-bottom:14px;
+  padding:10px 12px; border-radius:7px;
+  background:rgba(0,0,0,.18); border:1px solid rgba(255,255,255,.07);
+}
+.insight-graphic-label {
+  font-family:'JetBrains Mono',monospace; font-size:8px; font-weight:700;
+  letter-spacing:.16em; text-transform:uppercase; color:rgba(200,220,255,.35);
+  margin-bottom:7px;
+}
+.insight-graphic.show { display:block; }
+
 .insight-msg {
   font-family:'DM Sans',sans-serif; font-size:13px; font-weight:400;
   color:rgba(220,235,255,.85); line-height:1.75;
@@ -3766,6 +3810,10 @@ function s3ShowInsight(category, tokenText, message, afterFn) {
       <!-- Error-mode: category pill only (band handles the INCORRECT label) -->
       <div class="insight-error-cat" id="insightErrCat">Category</div>
       <div class="insight-divider"></div>
+      <div class="insight-graphic" id="insightGraphic">
+        <div class="insight-graphic-label" id="insightGraphicLabel"></div>
+        <div id="insightGraphicContent"></div>
+      </div>
       <div class="insight-token" id="insightToken"></div>
       <div class="insight-msg" id="insightMsg"></div>
     </div>
@@ -3803,12 +3851,12 @@ function s3ShowInsight(category, tokenText, message, afterFn) {
   line-height:1.5;
 }
 .toast-close {
-  flex-shrink:0; background:none; border:none; cursor:pointer;
-  color:rgba(255,255,255,.3); font-size:14px; line-height:1;
-  padding:2px 4px; border-radius:4px; transition:color .15s;
+  flex-shrink:0; background:none; border:1px solid rgba(255,255,255,.12); cursor:pointer;
+  color:rgba(255,255,255,.5); font-size:12px; line-height:1;
+  padding:3px 6px; border-radius:4px; transition:color .15s, border-color .15s;
   margin-top:-1px;
 }
-.toast-close:hover { color:rgba(255,255,255,.65); }
+.toast-close:hover { color:rgba(255,255,255,.85); border-color:rgba(255,255,255,.3); }
 </style>
 <div id="successToast">
   <div class="toast-inner">
@@ -3831,7 +3879,6 @@ function showToast(label, message) {
   el.classList.remove('show');
   void el.offsetWidth;
   el.classList.add('show');
-  _toastTimer = setTimeout(() => el.classList.remove('show'), 5000);
 }
 function dismissToast() {
   clearTimeout(_toastTimer);
