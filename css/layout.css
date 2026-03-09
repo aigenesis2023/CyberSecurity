@@ -1,0 +1,46 @@
+/* ── PAGE WRAPPER ── */
+.page-wrap {
+  display:flex; flex-direction:column;
+  min-height:100%;
+}
+
+/* ── SHELL — content area below banner ── */
+.shell {
+  position:relative; z-index:1;
+  display:grid;
+  grid-template-columns:1fr 272px;
+  grid-template-rows:1fr;
+  flex:1;
+  padding:10px 18px 14px;
+  gap:10px;
+  box-sizing:border-box;
+  min-height:560px;
+}
+
+/* ── BACKGROUND — deep dark, two subtle glows only ── */
+.bg {
+  position:fixed; inset:0; z-index:0;
+  background:#020c1a;
+  overflow:hidden;
+}
+.bg::before {
+  content:''; position:absolute; inset:0;
+  background:
+    radial-gradient(ellipse 55% 50% at 15% 20%, rgba(56,189,248,0.09) 0%, transparent 60%),
+    radial-gradient(ellipse 45% 55% at 85% 80%, rgba(56,189,248,0.07) 0%, transparent 60%);
+}
+.bg::after { display:none; }
+
+.bg-shapes, .bg-panel-1, .bg-panel-2, .bg-panel-3,
+.bg-ring, .bg-ring-2, .bg-grid, .bg-streak, .bg-streak-2 { display:none; }
+
+#bgCanvas { display:none; }
+
+/* ── SHARED CARD ── */
+.card {
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:10px;
+  backdrop-filter:blur(16px);
+  box-shadow:0 0 0 1px rgba(56,189,248,.03), inset 0 1px 0 rgba(56,189,248,.07), 0 14px 36px rgba(0,0,0,.45);
+}

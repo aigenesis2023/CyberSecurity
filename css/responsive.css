@@ -1,0 +1,171 @@
+/* ══════════════════════════════════════════════════════════════
+   RESPONSIVE — Tablet (≤768px) and Mobile (≤480px)
+   ══════════════════════════════════════════════════════════════ */
+
+/* ── TABLET ≤768px ── */
+@media (max-width: 768px) {
+
+  /* Banner: stack vertically, tighter */
+  .int-banner {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    min-height: auto;
+    margin: 10px 12px 0;
+    gap: 0;
+  }
+  .ib-brand {
+    padding: 10px 16px 8px;
+    border-right: none;
+    border-bottom: 1px solid rgba(56,189,248,.1);
+  }
+  .ib-center {
+    padding: 10px 16px;
+    gap: 14px;
+  }
+  .ib-num { font-size: 32px; }
+  .ib-unit { font-size: 14px; }
+  .ib-bar-track { height: 8px; }
+
+  /* Shell: stack console above, sidebar below */
+  .shell {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    padding: 8px 12px 12px;
+    min-height: unset;
+  }
+
+  /* Sidebar: full width, not sticky */
+  .diag {
+    grid-column: 1;
+    position: static;
+    height: auto;
+    max-height: none;
+    overflow: visible;
+  }  .diag-cats { gap: 8px; }
+
+  /* Category panels: compact */
+  .diag-cat { padding: 9px 10px; }
+
+  /* Cat popup: full width, anchored to bottom of screen */
+  .cat-popup {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    top: auto;
+    min-width: unset;
+    width: 100%;
+    border-radius: 16px 16px 0 0;
+    padding: 16px;
+    z-index: 500;
+  }
+  .cat-btns { gap: 8px; }
+  .cat-btn { padding: 12px 6px; font-size: 10px; }
+
+  /* Briefing card */
+  .briefing-card {
+    width: calc(100vw - 32px);
+    max-width: 660px;
+    margin: 16px;
+    grid-template-columns: 160px 1fr;
+  }
+  .briefing-body { padding: 0; }
+  .briefing-title { font-size: 17px; }
+  .briefing-right { padding: 22px 20px 18px; }
+
+  /* Verdict card */
+  .verdict-card {
+    width: calc(100vw - 32px);
+    max-width: 480px;
+    margin: 16px;
+  }
+  .v-body { padding: 18px 16px 16px; }
+
+  /* Verdict report rows */
+  .v-row { flex-wrap: wrap; gap: 4px; }
+
+  /* Code panel font size */
+  .code-line { font-size: 11px; }
+}
+
+/* ── MOBILE ≤480px ── */
+@media (max-width: 480px) {
+
+  /* Tighter banner */
+  .int-banner { margin: 8px 8px 0; }
+  .ib-brand { padding: 8px 12px 7px; }
+  .h-title { font-size: 9px; letter-spacing: .15em; }
+  .ib-center { padding: 8px 12px; gap: 10px; }
+  .ib-num { font-size: 26px; }
+  .ib-unit { font-size: 12px; }
+  .ib-lbl { font-size: 7px; }
+  .ib-bar-track { height: 7px; }
+  .ib-seg { width: 4px; }
+  .ib-drain-label { font-size: 9px; }
+
+  /* Shell tighter */
+  .shell { padding: 6px 8px 10px; gap: 8px; }
+
+  /* Console */
+  .console { min-height: 300px; }
+
+  /* Email */
+  .email-header { padding: 10px 12px; gap: 8px; }
+  .email-avatar { width: 30px; height: 30px; font-size: 10px; }
+  .email-body { padding: 12px 14px; font-size: 12px; }
+
+  /* Code */
+  .code-line { font-size: 10px; }
+  .line-num { font-size: 9px; min-width: 18px; }
+
+  /* Tokens — larger touch targets, inherit font size from parent */
+  .tok {
+    padding: 3px 8px;
+    font-size: inherit;
+  }
+
+  /* Category popup: bottom sheet with bigger buttons */
+  .cat-popup { padding: 14px 12px 20px; }
+  .cat-popup-lbl { font-size: 10px; margin-bottom: 10px; }
+  .cat-btns { gap: 6px; }
+  .cat-btn { padding: 14px 4px; font-size: 9px; letter-spacing: .08em; }
+
+  /* Briefing */
+  .briefing-card { width: calc(100vw - 16px); margin: 8px; grid-template-columns: 1fr; }
+  .briefing-left { padding: 20px; flex-direction: row; justify-content: flex-start; gap: 12px; }
+  .briefing-left-stats { flex-direction: row; margin-top: 0; }
+  .briefing-right { padding: 18px 14px 16px; }
+  .briefing-body { padding: 0; }
+  .briefing-title { font-size: 15px; }
+  .briefing-stats { grid-template-columns: 1fr 1fr; gap: 6px; }
+  .b-stat { padding: 10px 8px; }
+  .b-stat-val { font-size: 11px; }
+  .briefing-start-btn { padding: 13px 24px; font-size: 11px; }
+
+  /* Verdict */
+  .verdict-card { width: calc(100vw - 16px); margin: 8px; }
+  .v-body { padding: 14px 12px 12px; }
+  .v-eyebrow { font-size: 7px; }
+  .v-headline { font-size: 22px; }
+  .v-reset { font-size: 10px; padding: 10px; }
+
+  /* Diag sidebar */
+  .diag { padding: 12px 10px; gap: 8px; }
+  .diag-title { font-size: 7px; }
+  .dc-name { font-size: 8px; }
+
+  /* Scan button */
+  .btn-scan { font-size: 11px; padding: 10px 14px; }
+
+  /* Banner submit CTA */
+  .ib-submit-cta { font-size: 9px; padding: 5px 10px; letter-spacing: .12em; }
+
+  /* Splash */
+  .splash-title { font-size: 16px; }
+  .splash-load-track { width: 180px; }
+}
+
+/* ── Very small phones ≤360px ── */
+@media (max-width: 360px) {
+  .ib-num { font-size: 22px; }
+  .briefing-stats { grid-template-columns: 1fr; }
+  .cat-btn { font-size: 8px; padding: 12px 2px; }
+}
