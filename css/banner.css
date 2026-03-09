@@ -1,0 +1,146 @@
+/* ── STICKY INTEGRITY BANNER ── */
+.int-banner {
+  position:sticky; top:0; z-index:10;
+  margin:14px 18px 0;
+  display:grid;
+  grid-template-columns: auto 1fr;
+  align-items:stretch;
+  min-height:70px;
+  animation:fadeUp .5s ease both;
+  overflow:hidden;
+}
+
+.int-banner > * + * { border-left:1px solid rgba(56,189,248,.12); }
+
+/* LEFT: branding */
+.ib-brand {
+  display:flex; align-items:center; gap:12px;
+  padding:0 26px 0 20px; flex-shrink:0;
+}
+.h-dot {
+  width:9px; height:9px; border-radius:50%; flex-shrink:0;
+  background:var(--green); animation:statusDot 2.4s ease infinite;
+}
+.h-title {
+  font-family:'Orbitron',monospace; font-size:11px; font-weight:700;
+  letter-spacing:.2em; text-transform:uppercase; color:var(--text);
+}
+
+/* CENTRE: integrity number + bar */
+.ib-center {
+  display:flex; align-items:center; gap:24px;
+  padding:0 32px;
+}
+.ib-lbl {
+  font-size:8px; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--dim); margin-bottom:5px;
+}
+.ib-num-wrap { display:flex; align-items:baseline; gap:3px; }
+
+/* +N integrity pop — bursts upward from integrity number */
+.ib-int-pop {
+  position:absolute; top:0; left:50%;
+  font-family:'Orbitron',monospace; font-size:16px; font-weight:900;
+  letter-spacing:.04em; opacity:0; pointer-events:none; white-space:nowrap; z-index:20;
+}
+.ib-int-pop.pop { animation:intPopAnim 1.2s ease forwards; }
+.ib-int-pop.gain    { color:var(--green); text-shadow:0 0 16px rgba(74,222,128,1); }
+.ib-int-pop.penalty { color:var(--red);   text-shadow:0 0 16px rgba(239,68,68,1); }
+
+.ib-num {
+  font-family:'Orbitron',monospace; font-size:40px; font-weight:900;
+  letter-spacing:-.03em; line-height:1;
+  transition:color .35s, text-shadow .35s;
+  color:var(--green); text-shadow:0 0 28px rgba(74,222,128,.5);
+}
+.ib-num.orange { color:var(--orange); text-shadow:0 0 22px rgba(251,146,60,.4); }
+.ib-num.red    { color:var(--red);    text-shadow:0 0 22px rgba(239,68,68,.55); animation:pulse .6s ease infinite; }
+.ib-unit { font-family:'Orbitron',monospace; font-size:18px; color:var(--dim); }
+
+/* Integrity bar — fills remaining centre space */
+.ib-bar-wrap { flex:1; display:flex; flex-direction:column; justify-content:center; gap:6px; }
+.ib-bar-track {
+  height:10px; background:rgba(255,255,255,.05);
+  border-radius:5px; overflow:hidden;
+  border:1px solid rgba(255,255,255,.07);
+}
+.ib-bar-fill {
+  height:100%; width:100%; border-radius:5px;
+  transition:width .6s ease, background-color .6s ease;
+  background:var(--green);
+  box-shadow:0 0 12px rgba(74,222,128,.4);
+}
+.ib-bar-fill.orange { background:var(--orange); box-shadow:0 0 12px rgba(251,146,60,.35); }
+.ib-bar-fill.red    { background:var(--red);    box-shadow:0 0 12px rgba(239,68,68,.4); }
+/* Drain severity blocks + rate text row */
+.ib-bar-sub {
+  display:flex; align-items:center; gap:12px; margin-top:6px;
+}
+/* Drain severity — 10-bar signal meter, finer granularity */
+.ib-severity {
+  display:flex; gap:2px; align-items:flex-end; flex-shrink:0; height:18px;
+}
+.ib-seg {
+  border-radius:2px 2px 0 0;
+  background:rgba(255,255,255,.08);
+  transition:background .4s ease, box-shadow .4s ease;
+  width:5px;
+}
+.ib-seg:nth-child(1)  { height:4px; }
+.ib-seg:nth-child(2)  { height:5px; }
+.ib-seg:nth-child(3)  { height:7px; }
+.ib-seg:nth-child(4)  { height:8px; }
+.ib-seg:nth-child(5)  { height:10px; }
+.ib-seg:nth-child(6)  { height:11px; }
+.ib-seg:nth-child(7)  { height:13px; }
+.ib-seg:nth-child(8)  { height:14px; }
+.ib-seg:nth-child(9)  { height:16px; }
+.ib-seg:nth-child(10) { height:18px; }
+
+/* Colour by position: green → lime → yellow → orange → red */
+.ib-seg.s1  { background:rgba(74,222,128,.9);  box-shadow:0 0 5px rgba(74,222,128,.5); }
+.ib-seg.s2  { background:rgba(74,222,128,.9);  box-shadow:0 0 5px rgba(74,222,128,.5); }
+.ib-seg.s3  { background:rgba(134,239,172,.9); box-shadow:0 0 5px rgba(134,239,172,.4); }
+.ib-seg.s4  { background:rgba(163,230,53,.9);  box-shadow:0 0 5px rgba(163,230,53,.4); }
+.ib-seg.s5  { background:rgba(202,211,41,.9);  box-shadow:0 0 5px rgba(202,211,41,.4); }
+.ib-seg.s6  { background:rgba(250,204,21,.9);  box-shadow:0 0 5px rgba(250,204,21,.4); }
+.ib-seg.s7  { background:rgba(251,176,60,.9);  box-shadow:0 0 5px rgba(251,176,60,.4); }
+.ib-seg.s8  { background:rgba(251,146,60,.9);  box-shadow:0 0 5px rgba(251,146,60,.4); }
+.ib-seg.s9  { background:rgba(248,100,50,.9);  box-shadow:0 0 5px rgba(248,100,50,.4); }
+.ib-seg.s10 { background:rgba(239,68,68,1);    box-shadow:0 0 8px rgba(239,68,68,.65); animation:pulse .5s ease infinite; }
+
+.ib-drain-label {
+  font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:500;
+  letter-spacing:.06em; text-transform:uppercase;
+  color:var(--dim); white-space:nowrap; transition:color .4s;
+  align-self:center; margin-left:2px;
+}
+.ib-drain-label.draining { color:rgba(239,68,68,.75); }
+.ib-drain-label.secured  { color:rgba(74,222,128,.85); }
+.ib-drain-label.flash-up   { animation:drainFlash .5s ease; color:rgba(239,68,68,.95) !important; }
+.ib-drain-label.flash-down { animation:drainFlash .5s ease; color:rgba(74,222,128,.95) !important; }
+
+.ib-submit-cta {
+  font-family:'Orbitron',monospace; font-size:11px; font-weight:700;
+  letter-spacing:.18em; text-transform:uppercase;
+  color:var(--green); background:rgba(74,222,128,.1);
+  border:1px solid rgba(74,222,128,.5); border-radius:4px;
+  padding:8px 14px; cursor:pointer; width:80%; margin-top:14px;
+  text-align:center; justify-content:center;
+  animation:ctaPulse 1.2s ease infinite;
+  transition:background .2s, box-shadow .2s;
+}
+.ib-submit-cta:hover {
+  background:rgba(74,222,128,.2);
+  box-shadow:0 0 18px rgba(74,222,128,.35);
+}
+
+.ib-delta {
+  font-family:'Orbitron',monospace; font-size:13px; font-weight:700;
+  letter-spacing:.05em; opacity:0;
+  transition:opacity .2s, transform .25s;
+  transform:translateY(4px); white-space:nowrap;
+}
+.ib-delta.visible  { opacity:1; transform:translateY(0); }
+.ib-delta.gain    { color:var(--green); text-shadow:0 0 10px rgba(74,222,128,.6); }
+.ib-delta.penalty { color:var(--red);   text-shadow:0 0 10px rgba(239,68,68,.6); }
