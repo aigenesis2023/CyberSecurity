@@ -139,14 +139,24 @@
     margin: 16px;
   }
 
+  /* Verdict overlay: scrollable on mobile so nav buttons are always reachable */
+  .verdict-overlay {
+    overflow-y: auto;
+    align-items: flex-start;
+    padding: 16px;
+  }
+
   /* Verdict card */
   .verdict-card {
     width: calc(100vw - 32px);
     max-width: 480px;
-    margin: 16px;
+    margin: 0 auto;
   }
   .v-body { padding: 18px 16px 16px; }
   .v-row  { flex-wrap: wrap; gap: 4px; }
+
+  /* Scroll hint: visible on mobile */
+  .v-scroll-hint { display: block; }
 
   /* Code panel font */
   .code-line { font-size: 11px; }

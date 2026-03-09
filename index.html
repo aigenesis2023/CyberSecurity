@@ -398,14 +398,14 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 .tok.cat-internal   { background:var(--cat-int-bg);  color:var(--cat-int);  border:1px solid rgba(250,204,21,.3); }
 .tok.cat-safe       { background:rgba(148,163,184,.12); color:rgba(148,163,184,.8); border:1px solid rgba(148,163,184,.2); }
 /* Hallucination section token styles */
-.tok.safe-decoy { cursor:pointer; border-radius:3px; padding:1px 3px; transition:background .12s; }
+.tok.safe-decoy { cursor:pointer; border-radius:3px; padding:1px 3px; transition:background .12s; text-decoration:underline; text-decoration-color:var(--blue); text-decoration-thickness:1px; text-underline-offset:2px; }
 .tok.safe-decoy:hover { background:rgba(56,189,248,.12); }
-.tok.hallucination  { cursor:pointer; border-radius:3px; padding:1px 3px; transition:background .12s; }
+.tok.hallucination  { cursor:pointer; border-radius:3px; padding:1px 3px; transition:background .12s; text-decoration:underline; text-decoration-color:var(--blue); text-decoration-thickness:1px; text-underline-offset:2px; }
 .tok.hallucination:hover { background:rgba(251,146,60,.15); }
 .tok.flagged-correct { background:rgba(239,68,68,.2); color:var(--red); border:1px solid rgba(239,68,68,.4); cursor:default; border-bottom:none; padding:2px 7px; border-radius:4px; }
 .tok.flagged-wrong   { background:rgba(74,222,128,.12); color:var(--green); border:1px solid rgba(74,222,128,.3); cursor:default; border-bottom:none; padding:2px 7px; border-radius:4px; }
 /* Injection section */
-.tok.injection { background:rgba(250,204,21,.08); border-bottom:1px dashed rgba(250,204,21,.5); cursor:pointer; }
+.tok.injection { background:rgba(250,204,21,.08); text-decoration:underline; text-decoration-color:var(--blue); text-decoration-thickness:1px; text-underline-offset:2px; cursor:pointer; }
 .tok.injection:hover { background:rgba(250,204,21,.18); }
 .tok.injection-flagged { background:rgba(239,68,68,.2); color:var(--red); border:1px solid rgba(239,68,68,.4); cursor:default; border-bottom:none; padding:2px 7px; border-radius:4px; }
 
@@ -537,6 +537,9 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 .v-reset:hover { background:rgba(255,255,255,.05); border-color:rgba(255,255,255,.4); }
 .v-menu-btn { width:100%; padding:12px; background:rgba(56,189,248,.06); border:1px solid rgba(56,189,248,.3); border-radius:8px; color:var(--blue2); font-family:'DM Sans',sans-serif; font-size:11px; font-weight:500; letter-spacing:.06em; cursor:pointer; transition:all .2s; margin-top:8px; }
 .v-menu-btn:hover { background:rgba(56,189,248,.14); border-color:rgba(56,189,248,.6); }
+.v-next-btn { width:100%; padding:12px; margin-top:16px; font-family:'Orbitron',monospace; font-size:11px; font-weight:700; letter-spacing:.2em; text-transform:uppercase; background:rgba(56,189,248,.08); border:1px solid rgba(56,189,248,.25); border-radius:8px; color:rgba(56,189,248,.9); cursor:pointer; transition:all .2s; }
+.v-next-btn:hover { background:rgba(56,189,248,.14); border-color:rgba(56,189,248,.45); box-shadow:0 0 16px rgba(56,189,248,.14); }
+.v-scroll-hint { display:none; text-align:center; padding:10px 0 8px; color:rgba(56,189,248,.4); font-size:18px; animation:pulse 2s ease infinite; }
 
 /* ════════════════════════════════════════════
    CHATGPT UI (Section 1 payload)
@@ -667,7 +670,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 /* ════════════════════════════════════════════
    M2 ACCURATE TOKEN (neutral visual at start)
 ════════════════════════════════════════════ */
-.tok.accurate-claim { cursor:pointer; border-radius:3px; padding:1px 3px; transition:background .12s; }
+.tok.accurate-claim { cursor:pointer; border-radius:3px; padding:1px 3px; transition:background .12s; text-decoration:underline; text-decoration-color:var(--blue); text-decoration-thickness:1px; text-underline-offset:2px; }
 .tok.accurate-claim:hover { background:rgba(200,220,255,.08); }
 
 /* ════════════════════════════════════════════
@@ -1256,49 +1259,66 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 <div class="verdict-overlay" id="s1verdict">
   <div class="verdict-card">
     <div class="v-bar" id="s1vBar"></div>
-    <div class="v-success-graphic" id="s1vSuccess" style="display:none">
-      <div class="ring"></div><div class="ring ring2"></div><div class="ring ring3"></div>
-      <div class="particle"></div><div class="particle"></div><div class="particle"></div>
-      <div class="particle"></div><div class="particle"></div><div class="particle"></div>
-      <div class="shield-wrap">
-        <svg class="shield" viewBox="0 0 80 80" fill="none">
-          <path d="M40 8 L68 20 L68 44 C68 58 54 70 40 74 C26 70 12 58 12 44 L12 20 Z" fill="rgba(74,222,128,0.12)" stroke="rgba(74,222,128,0.8)" stroke-width="2"/>
-          <polyline points="27,40 36,50 54,32" stroke="rgba(74,222,128,1)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke-dasharray="60" stroke-dashoffset="60" style="animation:checkDraw .5s ease .5s forwards"/>
-        </svg>
+    <!-- Step 1: Graphic + Stats -->
+    <div class="v-step" id="s1vStep1">
+      <div class="v-success-graphic" id="s1vSuccess" style="display:none">
+        <div class="ring"></div><div class="ring ring2"></div><div class="ring ring3"></div>
+        <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+        <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+        <div class="shield-wrap">
+          <svg class="shield" viewBox="0 0 80 80" fill="none">
+            <path d="M40 8 L68 20 L68 44 C68 58 54 70 40 74 C26 70 12 58 12 44 L12 20 Z" fill="rgba(74,222,128,0.12)" stroke="rgba(74,222,128,0.8)" stroke-width="2"/>
+            <polyline points="27,40 36,50 54,32" stroke="rgba(74,222,128,1)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke-dasharray="60" stroke-dashoffset="60" style="animation:checkDraw .5s ease .5s forwards"/>
+          </svg>
+        </div>
+        <div class="success-lbl">Transmission Secured</div>
       </div>
-      <div class="success-lbl">Transmission Secured</div>
+      <div class="v-fail-graphic" id="s1vFail" style="display:none">
+        <div class="v-fail-scan-line"></div>
+        <div class="v-fail-shield-wrap">
+          <svg viewBox="0 0 80 80" fill="none">
+            <path d="M40 8 L68 20 L68 44 C68 58 54 70 40 74 C26 70 12 58 12 44 L12 20 Z" fill="rgba(239,68,68,0.1)" stroke="rgba(239,68,68,0.75)" stroke-width="2"/>
+            <polyline points="43,12 37,30 47,38 33,68" stroke="rgba(239,68,68,1)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke-dasharray="90" stroke-dashoffset="90" style="animation:checkDraw .8s ease .2s forwards"/>
+          </svg>
+        </div>
+        <div class="v-fail-lbl">Data Breach Detected</div>
+      </div>
+      <div class="v-body">
+        <div class="v-eyebrow">SECURITY INCIDENT REPORT</div>
+        <div class="v-divider"></div>
+        <div class="v-single-metric"><div class="v-ml">Integrity Remaining</div><div class="v-mv" id="s1vInt">—</div></div>
+        <div class="v-rows">
+          <div class="v-rows-lbl">Exposure Analysis</div>
+          <div class="v-row"><span class="v-rk">[CREDENTIALS]</span><span class="v-rv" id="s1vCred">—</span></div>
+          <div class="v-row"><span class="v-rk">[PERSONAL DATA]</span><span class="v-rv" id="s1vPii">—</span></div>
+          <div class="v-row"><span class="v-rk">[INTERNAL INFO]</span><span class="v-rv" id="s1vIntel">—</span></div>
+          <div class="v-row"><span class="v-rk">Classification Errors</span><span class="v-rv" id="s1vErrors">—</span></div>
+        </div>
+        <div id="s1vBonus" style="display:none"></div>
+        <button class="v-next-btn" onclick="vAdvance('s1',2)">NEXT &nbsp;→</button>
+      </div>
     </div>
-    <div class="v-fail-graphic" id="s1vFail" style="display:none">
-      <div class="v-fail-scan-line"></div>
-      <div class="v-fail-shield-wrap">
-        <svg viewBox="0 0 80 80" fill="none">
-          <path d="M40 8 L68 20 L68 44 C68 58 54 70 40 74 C26 70 12 58 12 44 L12 20 Z" fill="rgba(239,68,68,0.1)" stroke="rgba(239,68,68,0.75)" stroke-width="2"/>
-          <polyline points="43,12 37,30 47,38 33,68" stroke="rgba(239,68,68,1)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke-dasharray="90" stroke-dashoffset="90" style="animation:checkDraw .8s ease .2s forwards"/>
-        </svg>
+    <!-- Step 2: Mission Report -->
+    <div class="v-step" id="s1vStep2" style="display:none">
+      <div class="v-body">
+        <div class="v-eyebrow">MISSION REPORT</div>
+        <div class="v-divider"></div>
+        <div class="v-verdict-msg" id="s1vMsg"></div>
+        <button class="v-next-btn" onclick="vAdvance('s1',3)">NEXT &nbsp;→</button>
       </div>
-      <div class="v-fail-lbl">Data Breach Detected</div>
     </div>
-    <div class="v-body">
-      <div class="v-eyebrow">SECURITY INCIDENT REPORT</div>
-      <div class="v-verdict-msg" id="s1vMsg"></div>
-      <div class="v-divider"></div>
-      <div class="v-single-metric"><div class="v-ml">Integrity Remaining</div><div class="v-mv" id="s1vInt">—</div></div>
-      <div class="v-rows">
-        <div class="v-rows-lbl">Exposure Analysis</div>
-        <div class="v-row"><span class="v-rk">[CREDENTIALS]</span><span class="v-rv" id="s1vCred">—</span></div>
-        <div class="v-row"><span class="v-rk">[PERSONAL DATA]</span><span class="v-rv" id="s1vPii">—</span></div>
-        <div class="v-row"><span class="v-rk">[INTERNAL INFO]</span><span class="v-rv" id="s1vIntel">—</span></div>
-        <div class="v-row"><span class="v-rk">Classification Errors</span><span class="v-rv" id="s1vErrors">—</span></div>
+    <!-- Step 3: Real World + nav buttons -->
+    <div class="v-step" id="s1vStep3" style="display:none">
+      <div class="v-body">
+        <div class="v-anchor" id="s1vAnchor">
+          <div class="v-anchor-lbl">⬡ Real World</div>
+          <div class="v-anchor-text" id="s1vAnchorText"></div>
+        </div>
+        <button class="v-reset" onclick="s1Reset()">↺ REVIEW AGAIN</button>
+        <button class="v-menu-btn" id="s1menuBtn" onclick="goMenu()">← MISSION SELECT</button>
       </div>
-      <div id="s1vBonus" style="display:none"></div>
-      <div class="v-anchor" id="s1vAnchor" style="display:none">
-        <div class="v-anchor-lbl">⬡ Real World</div>
-        <div class="v-anchor-text" id="s1vAnchorText"></div>
-      </div>
-
-      <button class="v-reset" onclick="s1Reset()">↺ REVIEW AGAIN</button>
-      <button class="v-menu-btn" id="s1menuBtn" onclick="goMenu()">← MISSION SELECT</button>
     </div>
+    <div class="v-scroll-hint">↓</div>
   </div>
 </div>
 
@@ -1422,49 +1442,66 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 <div class="verdict-overlay" id="s2verdict">
   <div class="verdict-card">
     <div class="v-bar" id="s2vBar"></div>
-    <div class="v-success-graphic" id="s2vSuccess" style="display:none">
-      <div class="ring"></div><div class="ring ring2"></div><div class="ring ring3"></div>
-      <div class="particle"></div><div class="particle"></div><div class="particle"></div>
-      <div class="particle"></div><div class="particle"></div><div class="particle"></div>
-      <div class="shield-wrap">
-        <svg class="shield" viewBox="0 0 80 80" fill="none">
-          <path d="M40 8 L68 20 L68 44 C68 58 54 70 40 74 C26 70 12 58 12 44 L12 20 Z" fill="rgba(74,222,128,0.12)" stroke="rgba(74,222,128,0.8)" stroke-width="2"/>
-          <polyline points="27,40 36,50 54,32" stroke="rgba(74,222,128,1)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke-dasharray="60" stroke-dashoffset="60" style="animation:checkDraw .5s ease .5s forwards"/>
-        </svg>
+    <!-- Step 1: Graphic + Stats -->
+    <div class="v-step" id="s2vStep1">
+      <div class="v-success-graphic" id="s2vSuccess" style="display:none">
+        <div class="ring"></div><div class="ring ring2"></div><div class="ring ring3"></div>
+        <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+        <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+        <div class="shield-wrap">
+          <svg class="shield" viewBox="0 0 80 80" fill="none">
+            <path d="M40 8 L68 20 L68 44 C68 58 54 70 40 74 C26 70 12 58 12 44 L12 20 Z" fill="rgba(74,222,128,0.12)" stroke="rgba(74,222,128,0.8)" stroke-width="2"/>
+            <polyline points="27,40 36,50 54,32" stroke="rgba(74,222,128,1)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke-dasharray="60" stroke-dashoffset="60" style="animation:checkDraw .5s ease .5s forwards"/>
+          </svg>
+        </div>
+        <div class="success-lbl">Hallucinations Flagged</div>
       </div>
-      <div class="success-lbl">Hallucinations Flagged</div>
+      <div class="v-fail-graphic" id="s2vFail" style="display:none">
+        <div class="v-fail-scan-line"></div>
+        <div class="v-fail-shield-wrap">
+          <svg viewBox="0 0 80 80" fill="none">
+            <path d="M40 8 L68 20 L68 44 C68 58 54 70 40 74 C26 70 12 58 12 44 L12 20 Z" fill="rgba(239,68,68,0.1)" stroke="rgba(239,68,68,0.75)" stroke-width="2"/>
+            <polyline points="43,12 37,30 47,38 33,68" stroke="rgba(239,68,68,1)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke-dasharray="90" stroke-dashoffset="90" style="animation:checkDraw .8s ease .2s forwards"/>
+          </svg>
+        </div>
+        <div class="v-fail-lbl">Misinformation Spread</div>
+      </div>
+      <div class="v-body">
+        <div class="v-eyebrow">HALLUCINATION ANALYSIS REPORT</div>
+        <div class="v-divider"></div>
+        <div class="v-single-metric"><div class="v-ml">Integrity Remaining</div><div class="v-mv" id="s2vInt">—</div></div>
+        <div class="v-rows">
+          <div class="v-rows-lbl">Hallucination Summary</div>
+          <div class="v-row"><span class="v-rk">Fake Citations Caught</span><span class="v-rv" id="s2vCitations">—</span></div>
+          <div class="v-row"><span class="v-rk">Wrong Figures Caught</span><span class="v-rv" id="s2vFigures">—</span></div>
+          <div class="v-row"><span class="v-rk">Fake Laws Caught</span><span class="v-rv" id="s2vLaws">—</span></div>
+          <div class="v-row"><span class="v-rk">False Alarms</span><span class="v-rv" id="s2vFalseFlags">—</span></div>
+        </div>
+        <div id="s2vBonus" style="display:none"></div>
+        <button class="v-next-btn" onclick="vAdvance('s2',2)">NEXT &nbsp;→</button>
+      </div>
     </div>
-    <div class="v-fail-graphic" id="s2vFail" style="display:none">
-      <div class="v-fail-scan-line"></div>
-      <div class="v-fail-shield-wrap">
-        <svg viewBox="0 0 80 80" fill="none">
-          <path d="M40 8 L68 20 L68 44 C68 58 54 70 40 74 C26 70 12 58 12 44 L12 20 Z" fill="rgba(239,68,68,0.1)" stroke="rgba(239,68,68,0.75)" stroke-width="2"/>
-          <polyline points="43,12 37,30 47,38 33,68" stroke="rgba(239,68,68,1)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke-dasharray="90" stroke-dashoffset="90" style="animation:checkDraw .8s ease .2s forwards"/>
-        </svg>
+    <!-- Step 2: Mission Report -->
+    <div class="v-step" id="s2vStep2" style="display:none">
+      <div class="v-body">
+        <div class="v-eyebrow">MISSION REPORT</div>
+        <div class="v-divider"></div>
+        <div class="v-verdict-msg" id="s2vMsg"></div>
+        <button class="v-next-btn" onclick="vAdvance('s2',3)">NEXT &nbsp;→</button>
       </div>
-      <div class="v-fail-lbl">Misinformation Spread</div>
     </div>
-    <div class="v-body">
-      <div class="v-eyebrow">HALLUCINATION ANALYSIS REPORT</div>
-      <div class="v-verdict-msg" id="s2vMsg"></div>
-      <div class="v-divider"></div>
-      <div class="v-single-metric"><div class="v-ml">Integrity Remaining</div><div class="v-mv" id="s2vInt">—</div></div>
-      <div class="v-rows">
-        <div class="v-rows-lbl">Hallucination Summary</div>
-        <div class="v-row"><span class="v-rk">Fake Citations Caught</span><span class="v-rv" id="s2vCitations">—</span></div>
-        <div class="v-row"><span class="v-rk">Wrong Figures Caught</span><span class="v-rv" id="s2vFigures">—</span></div>
-        <div class="v-row"><span class="v-rk">Fake Laws Caught</span><span class="v-rv" id="s2vLaws">—</span></div>
-        <div class="v-row"><span class="v-rk">False Alarms</span><span class="v-rv" id="s2vFalseFlags">—</span></div>
+    <!-- Step 3: Real World + nav buttons -->
+    <div class="v-step" id="s2vStep3" style="display:none">
+      <div class="v-body">
+        <div class="v-anchor" id="s2vAnchor">
+          <div class="v-anchor-lbl">⬡ Real World</div>
+          <div class="v-anchor-text" id="s2vAnchorText"></div>
+        </div>
+        <button class="v-reset" onclick="s2Reset()">↺ REVIEW AGAIN</button>
+        <button class="v-menu-btn" id="s2menuBtn" onclick="goMenu()">← MISSION SELECT</button>
       </div>
-      <div id="s2vBonus" style="display:none"></div>
-      <div class="v-anchor" id="s2vAnchor" style="display:none">
-        <div class="v-anchor-lbl">⬡ Real World</div>
-        <div class="v-anchor-text" id="s2vAnchorText"></div>
-      </div>
-
-      <button class="v-reset" onclick="s2Reset()">↺ REVIEW AGAIN</button>
-      <button class="v-menu-btn" id="s2menuBtn" onclick="goMenu()">← MISSION SELECT</button>
     </div>
+    <div class="v-scroll-hint">↓</div>
   </div>
 </div>
 
@@ -1595,49 +1632,66 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 <div class="verdict-overlay" id="s3verdict">
   <div class="verdict-card">
     <div class="v-bar" id="s3vBar"></div>
-    <div class="v-success-graphic" id="s3vSuccess" style="display:none">
-      <div class="ring"></div><div class="ring ring2"></div><div class="ring ring3"></div>
-      <div class="particle"></div><div class="particle"></div><div class="particle"></div>
-      <div class="particle"></div><div class="particle"></div><div class="particle"></div>
-      <div class="shield-wrap">
-        <svg class="shield" viewBox="0 0 80 80" fill="none">
-          <path d="M40 8 L68 20 L68 44 C68 58 54 70 40 74 C26 70 12 58 12 44 L12 20 Z" fill="rgba(74,222,128,0.12)" stroke="rgba(74,222,128,0.8)" stroke-width="2"/>
-          <polyline points="27,40 36,50 54,32" stroke="rgba(74,222,128,1)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke-dasharray="60" stroke-dashoffset="60" style="animation:checkDraw .5s ease .5s forwards"/>
-        </svg>
+    <!-- Step 1: Graphic + Stats -->
+    <div class="v-step" id="s3vStep1">
+      <div class="v-success-graphic" id="s3vSuccess" style="display:none">
+        <div class="ring"></div><div class="ring ring2"></div><div class="ring ring3"></div>
+        <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+        <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+        <div class="shield-wrap">
+          <svg class="shield" viewBox="0 0 80 80" fill="none">
+            <path d="M40 8 L68 20 L68 44 C68 58 54 70 40 74 C26 70 12 58 12 44 L12 20 Z" fill="rgba(74,222,128,0.12)" stroke="rgba(74,222,128,0.8)" stroke-width="2"/>
+            <polyline points="27,40 36,50 54,32" stroke="rgba(74,222,128,1)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke-dasharray="60" stroke-dashoffset="60" style="animation:checkDraw .5s ease .5s forwards"/>
+          </svg>
+        </div>
+        <div class="success-lbl">Injection Neutralised</div>
       </div>
-      <div class="success-lbl">Injection Neutralised</div>
+      <div class="v-fail-graphic" id="s3vFail" style="display:none">
+        <div class="v-fail-scan-line"></div>
+        <div class="v-fail-shield-wrap">
+          <svg viewBox="0 0 80 80" fill="none">
+            <path d="M40 8 L68 20 L68 44 C68 58 54 70 40 74 C26 70 12 58 12 44 L12 20 Z" fill="rgba(239,68,68,0.1)" stroke="rgba(239,68,68,0.75)" stroke-width="2"/>
+            <polyline points="43,12 37,30 47,38 33,68" stroke="rgba(239,68,68,1)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke-dasharray="90" stroke-dashoffset="90" style="animation:checkDraw .8s ease .2s forwards"/>
+          </svg>
+        </div>
+        <div class="v-fail-lbl">AI Hijacked</div>
+      </div>
+      <div class="v-body">
+        <div class="v-eyebrow">INJECTION NEUTRALISATION REPORT</div>
+        <div class="v-divider"></div>
+        <div class="v-single-metric"><div class="v-ml">Integrity Remaining</div><div class="v-mv" id="s3vInt">—</div></div>
+        <div class="v-rows">
+          <div class="v-rows-lbl">Injection Summary</div>
+          <div class="v-row"><span class="v-rk">Levels Completed</span><span class="v-rv" id="s3vLevels">—</span></div>
+          <div class="v-row"><span class="v-rk">Injections Found</span><span class="v-rv" id="s3vFound">—</span></div>
+          <div class="v-row"><span class="v-rk">False Alarms</span><span class="v-rv" id="s3vFalse">—</span></div>
+          <div class="v-row"><span class="v-rk">Timeouts</span><span class="v-rv" id="s3vTimeouts">—</span></div>
+        </div>
+        <div id="s3vBonus" style="display:none"></div>
+        <button class="v-next-btn" onclick="vAdvance('s3',2)">NEXT &nbsp;→</button>
+      </div>
     </div>
-    <div class="v-fail-graphic" id="s3vFail" style="display:none">
-      <div class="v-fail-scan-line"></div>
-      <div class="v-fail-shield-wrap">
-        <svg viewBox="0 0 80 80" fill="none">
-          <path d="M40 8 L68 20 L68 44 C68 58 54 70 40 74 C26 70 12 58 12 44 L12 20 Z" fill="rgba(239,68,68,0.1)" stroke="rgba(239,68,68,0.75)" stroke-width="2"/>
-          <polyline points="43,12 37,30 47,38 33,68" stroke="rgba(239,68,68,1)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke-dasharray="90" stroke-dashoffset="90" style="animation:checkDraw .8s ease .2s forwards"/>
-        </svg>
+    <!-- Step 2: Mission Report -->
+    <div class="v-step" id="s3vStep2" style="display:none">
+      <div class="v-body">
+        <div class="v-eyebrow">MISSION REPORT</div>
+        <div class="v-divider"></div>
+        <div class="v-verdict-msg" id="s3vMsg"></div>
+        <button class="v-next-btn" onclick="vAdvance('s3',3)">NEXT &nbsp;→</button>
       </div>
-      <div class="v-fail-lbl">AI Hijacked</div>
     </div>
-    <div class="v-body">
-      <div class="v-eyebrow">INJECTION NEUTRALISATION REPORT</div>
-      <div class="v-verdict-msg" id="s3vMsg"></div>
-      <div class="v-divider"></div>
-      <div class="v-single-metric"><div class="v-ml">Integrity Remaining</div><div class="v-mv" id="s3vInt">—</div></div>
-      <div class="v-rows">
-        <div class="v-rows-lbl">Injection Summary</div>
-        <div class="v-row"><span class="v-rk">Levels Completed</span><span class="v-rv" id="s3vLevels">—</span></div>
-        <div class="v-row"><span class="v-rk">Injections Found</span><span class="v-rv" id="s3vFound">—</span></div>
-        <div class="v-row"><span class="v-rk">False Alarms</span><span class="v-rv" id="s3vFalse">—</span></div>
-        <div class="v-row"><span class="v-rk">Timeouts</span><span class="v-rv" id="s3vTimeouts">—</span></div>
+    <!-- Step 3: Real World + nav buttons -->
+    <div class="v-step" id="s3vStep3" style="display:none">
+      <div class="v-body">
+        <div class="v-anchor" id="s3vAnchor">
+          <div class="v-anchor-lbl">⬡ Real World</div>
+          <div class="v-anchor-text" id="s3vAnchorText"></div>
+        </div>
+        <button class="v-reset" onclick="s3Reset()">↺ REVIEW AGAIN</button>
+        <button class="v-menu-btn" id="s3menuBtn" onclick="goMenu()">← MISSION SELECT</button>
       </div>
-      <div id="s3vBonus" style="display:none"></div>
-      <div class="v-anchor" id="s3vAnchor" style="display:none">
-        <div class="v-anchor-lbl">⬡ Real World</div>
-        <div class="v-anchor-text" id="s3vAnchorText"></div>
-      </div>
-
-      <button class="v-reset" onclick="s3Reset()">↺ REVIEW AGAIN</button>
-      <button class="v-menu-btn" id="s3menuBtn" onclick="goMenu()">← MISSION SELECT</button>
     </div>
+    <div class="v-scroll-hint">↓</div>
   </div>
 </div>
 
@@ -2185,6 +2239,7 @@ function s1TokenClick(e) {
   const id=e.currentTarget.dataset.id;
   if(!s1state.tokState[id] || s1state.tokState[id].redacted) return;
   e.stopPropagation(); e.preventDefault(); pClick();
+  dismissToast();
   s1state.activeToken=id;
   const popup=document.getElementById('s1catPopup');
   popup._justOpened=true;
@@ -2290,6 +2345,17 @@ function s1Classify(chosen) {
     document.getElementById('s1diagSecured').style.display='flex';
     document.getElementById('s1ibSubmitCta').style.display='flex';
     document.getElementById('s1ibSeverity').style.opacity='0';
+    if(window.innerWidth <= 768) {
+      setTimeout(() => {
+        window.scrollTo({top: document.body.scrollHeight, behavior:'smooth'});
+        const diag = document.getElementById('s1diag');
+        if(diag && !diag.classList.contains('panel-open')) {
+          diag.classList.add('panel-open');
+          const lbl = diag.querySelector('.diag-toggle-lbl');
+          if(lbl) lbl.textContent = '▼  CLOSE PANEL';
+        }
+      }, 350);
+    }
   }
 }
 function s1FlashToken(id, color) {
@@ -2361,9 +2427,19 @@ function s1Start() {
   }, 5000);
   // (nudge/zoom removed — chip uses subtle breathing glow to indicate it's clickable)
 }
+function vAdvance(prefix, step) {
+  for(let i=1;i<=3;i++){
+    const el=document.getElementById(prefix+'vStep'+i);
+    if(el) el.style.display=(i===step)?'':'none';
+  }
+  const overlay=document.getElementById(prefix+'verdict');
+  if(overlay) overlay.scrollTop=0;
+}
 function s1EndGame(reason) {
   if(!s1state.gameActive) return; s1state.gameActive=false;
   dismissToast();
+  vAdvance('s1',1);
+  document.getElementById('s1vBonus').style.display='none';
   updatePauseBtn();
   clearInterval(s1state.drainInt);
   const intFinal=Math.max(0,Math.round(s1state.integrity));
@@ -2403,10 +2479,8 @@ function s1EndGame(reason) {
   document.getElementById('s1vIntel').className='v-rv '+(intLeft===0?'green':'yellow');
   document.getElementById('s1vErrors').textContent=s1state.classifyErrors===0?'None':s1state.classifyErrors+' Errors';
   document.getElementById('s1vErrors').className='v-rv '+(s1state.classifyErrors===0?'green':'red');
-  const mb1=document.getElementById('s1menuBtn'); mb1.style.display='block'; mb1.textContent=pass?'▶ MISSION SELECT':'← MISSION SELECT';
-  const anchor1=document.getElementById('s1vAnchor');
+  document.getElementById('s1menuBtn').textContent=pass?'▶ MISSION SELECT':'← MISSION SELECT';
   const anchorText1=document.getElementById('s1vAnchorText');
-  anchor1.style.display='block';
   if(pass) {
     anchorText1.innerHTML = 'In 2023, Samsung engineers accidentally submitted proprietary source code to ChatGPT for debugging help. The data was potentially retained by OpenAI and used in model training. Samsung subsequently banned AI tools company-wide.' + '<br><br><span style="font-family:\'JetBrains Mono\',monospace;font-size:9px;letter-spacing:.12em;color:rgba(56,189,248,.5);text-transform:uppercase;">What you now do differently</span><br><span style="font-size:11px;line-height:1.9;color:rgba(200,220,255,.65);">→ Never paste credentials, PII, or internal codenames into public AI tools<br>→ Treat every AI prompt like an email sent to a stranger<br>→ When in doubt, redact first — ask your manager before including sensitive data</span>';
     if(precisionPass){ const b=document.getElementById('s1vBonus'); b.style.display='block'; b.innerHTML='<div class="v-bonus-wrap"><span class="v-precision-bonus">⬡ PRECISION BONUS — Zero classification errors</span></div>'; }
@@ -2457,7 +2531,7 @@ function s2Init() {
   document.getElementById('s2diagSecured').style.display='none';
   document.getElementById('s2submitBtn').disabled=true;
   const s2icon=document.getElementById('s2submitIcon'); if(s2icon) s2icon.textContent='—';
-  document.getElementById('s2vAnchor').style.display='none'; document.getElementById('s2vBonus').style.display='none';
+  document.getElementById('s2vBonus').style.display='none';
   // Reset diag cats
   ['Citations','Figures','Laws'].forEach((k,i)=>{
     const baseClass=['exposed','exposed-pii','exposed-int'][i];
@@ -2588,6 +2662,7 @@ function s2TokenClick(e) {
   e.stopPropagation();
   e.preventDefault();
   pClick();
+  dismissToast();
   s2state.activeToken=id;
   const popup=document.getElementById('s2halPopup');
   popup._justOpened=true;
@@ -2712,6 +2787,17 @@ function s2Classify(chosen) {
     document.getElementById('s2diagSecured').style.display='flex';
     document.getElementById('s2iwDrain').textContent='✓ report verified';
     document.getElementById('s2iwDrain').className='ib-drain-label secured';
+    if(window.innerWidth <= 768) {
+      setTimeout(() => {
+        window.scrollTo({top: document.body.scrollHeight, behavior:'smooth'});
+        const diag = document.getElementById('s2diag');
+        if(diag && !diag.classList.contains('panel-open')) {
+          diag.classList.add('panel-open');
+          const lbl = diag.querySelector('.diag-toggle-lbl');
+          if(lbl) lbl.textContent = '▼  CLOSE PANEL';
+        }
+      }, 350);
+    }
   }
 }
 function s2FlashTok(id,color) {
@@ -2759,6 +2845,8 @@ function s2Submit() {
 function s2EndGame(reason) {
   if(!s2state.gameActive) return; s2state.gameActive=false;
   dismissToast();
+  vAdvance('s2',1);
+  document.getElementById('s2vBonus').style.display='none';
   updatePauseBtn();
   clearInterval(s2state.drainInt);
   const intFinal=Math.max(0,Math.round(s2state.integrity));
@@ -2786,9 +2874,7 @@ function s2EndGame(reason) {
   document.getElementById('s2vLaws').className='v-rv '+(s2state.catCount.law>=2?'green':'orange');
   document.getElementById('s2vFalseFlags').textContent=s2state.flagsWrong===0?'None':s2state.flagsWrong;
   document.getElementById('s2vFalseFlags').className='v-rv '+(s2state.flagsWrong===0?'green':'red');
-  const anchor2=document.getElementById('s2vAnchor');
   const anchorText2=document.getElementById('s2vAnchorText');
-  anchor2.style.display='block';
   if(pass) {
     anchorText2.innerHTML = 'Research consistently finds that most professionals cannot reliably spot errors in AI-generated legal summaries without independent verification. In the Mata v. Avianca case — documented in 2023 — lawyers submitted AI-generated case citations to a federal court. Every cited case was invented. The judge sanctioned the attorneys and noted that the AI had produced the fabrications with the same confident prose as genuine legal analysis.' + '<br><br><span style="font-family:\'JetBrains Mono\',monospace;font-size:9px;letter-spacing:.12em;color:rgba(56,189,248,.5);text-transform:uppercase;">What you now do differently</span><br><span style="font-size:11px;line-height:1.9;color:rgba(200,220,255,.65);">→ Verify AI-generated statistics and citations against primary sources before sharing<br>→ Never forward an AI output directly to legal, compliance, or clients without review<br>→ AI confidence is not the same as accuracy — always check the source</span>';
     if(precisionPass){ const b=document.getElementById('s2vBonus'); b.style.display='block'; b.innerHTML='<div class="v-bonus-wrap"><span class="v-precision-bonus">⬡ PRECISION BONUS — Zero false alarms</span></div>'; }
@@ -2996,7 +3082,7 @@ function s3Init() {
   document.getElementById('s3levelPill').className='dc-pill exposed-int'; document.getElementById('s3levelPill').textContent='READY';
   document.getElementById('s3hintText').textContent='Read carefully. Hidden instructions are designed to look like normal content.';
   document.getElementById('s3iwDrain').textContent=''; document.getElementById('s3iwDrain').className='ib-drain-label';
-  document.getElementById('s3vAnchor').style.display='none'; document.getElementById('s3vBonus').style.display='none';
+  document.getElementById('s3vBonus').style.display='none';
   const b=document.getElementById('s3briefing'); b.style.display=''; b.classList.remove('hidden');
 }
 function s3Reset() { document.getElementById('s3verdict').classList.remove('show'); s3Init(); }
@@ -3123,6 +3209,7 @@ function s3TokenClick(e) {
   if(!s3state.gameActive||!s3state.levelActive) return;
   const id=e.currentTarget.dataset.id;
   e.stopPropagation(); pClick();
+  dismissToast();
   s3state.activeToken=id;
   const popup=document.getElementById('s3injPopup');
   popup._justOpened=true;
@@ -3239,6 +3326,8 @@ function s3Flag(isInjection) {
 function s3EndGame(reason) {
   if(!s3state.gameActive) return; s3state.gameActive=false;
   dismissToast();
+  vAdvance('s3',1);
+  document.getElementById('s3vBonus').style.display='none';
   s3state.levelActive=false; // prevent any pending s3NextLevel callbacks from loading a new level after end
   updatePauseBtn();
   clearInterval(s3state.timerInt);
@@ -3267,9 +3356,7 @@ function s3EndGame(reason) {
   document.getElementById('s3vFalse').className='v-rv '+(s3state.falseAlarms===0?'green':'red');
   document.getElementById('s3vTimeouts').textContent=s3state.timeouts===0?'None':s3state.timeouts;
   document.getElementById('s3vTimeouts').className='v-rv '+(s3state.timeouts===0?'green':'orange');
-  const anchor3=document.getElementById('s3vAnchor');
   const anchorText3=document.getElementById('s3vAnchorText');
-  anchor3.style.display='block';
   if(pass) {
     anchorText3.innerHTML = 'Prompt injection attacks on AI-integrated business tools are documented in the wild. In 2024, researchers demonstrated attacks where malicious documents caused AI email assistants to forward confidential messages to attackers — by embedding instructions invisible to human readers but processed by the AI. In this training, the injections were visible so you could learn to spot the pattern — but in the real world, they can also be hidden in white-on-white text, metadata fields, or encoded characters that humans cannot see at all. The skill is the same: always review AI output for unexpected behaviour after processing external documents.' + '<br><br><span style="font-family:\'JetBrains Mono\',monospace;font-size:9px;letter-spacing:.12em;color:rgba(56,189,248,.5);text-transform:uppercase;">What a Guardian does before submitting any external document</span><br><span style="font-size:11px;line-height:1.9;color:rgba(200,220,255,.65);">→ Read external documents carefully before pasting them into any AI tool<br>→ Unexpected AI output after processing an external file is a red flag<br>→ The document is the attack surface — treat it as untrusted input</span>';
     if(precisionPass){ const b=document.getElementById('s3vBonus'); b.style.display='block'; b.innerHTML='<div class="v-bonus-wrap"><span class="v-precision-bonus">⬡ PRECISION BONUS — No false alarms, no timeouts</span></div>'; }
@@ -3822,17 +3909,7 @@ function s3ShowInsight(category, tokenText, message, afterFn, graphicHtml) {
 
 .insight-header { display:flex; align-items:center; gap:12px; margin-bottom:14px; }
 
-.insight-icon {
-  width:36px; height:36px; border-radius:9px;
-  display:flex; align-items:center; justify-content:center;
-  font-size:17px; flex-shrink:0;
-}
-.insight-icon-warn       { background:rgba(239,68,68,.12);  border:1px solid rgba(239,68,68,.25); }
-.insight-icon-flag       { background:rgba(167,139,250,.12); border:1px solid rgba(167,139,250,.25); }
-.insight-icon-ok         { background:rgba(74,222,128,.12);  border:1px solid rgba(74,222,128,.25); }
-.insight-icon-credential { background:rgba(239,68,68,.12);   border:1px solid rgba(239,68,68,.3); }
-.insight-icon-pii        { background:rgba(251,146,60,.12);  border:1px solid rgba(251,146,60,.3); }
-.insight-icon-internal   { background:rgba(250,204,21,.1);   border:1px solid rgba(250,204,21,.3); }
+.insight-icon { display:none !important; }
 
 .insight-cat {
   font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:700;
@@ -3968,7 +4045,7 @@ function s3ShowInsight(category, tokenText, message, afterFn, graphicHtml) {
 }
 .toast-close:hover { color:rgba(255,255,255,.85); border-color:rgba(255,255,255,.3); }
 </style>
-<div id="successToast">
+<div id="successToast" onclick="dismissToast()" style="cursor:pointer">
   <div class="toast-inner">
     <div class="toast-tick">✓</div>
     <div class="toast-body">
