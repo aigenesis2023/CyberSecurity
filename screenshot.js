@@ -67,6 +67,8 @@ async function main() {
   console.log('\n── Splash ──────────────────────────────');
   await page.goto(BASE_URL, { waitUntil: 'commit', timeout: 15000 });
   await wait(800); // let inline scripts parse and execute
+  // Wait for local fonts to be loaded by the browser
+  await page.evaluate(() => document.fonts.ready);
   await wait(400);
   await shot(page, 'splash-loading');
 
@@ -79,13 +81,24 @@ async function main() {
   await shot(page, 'splash-ready');
 
   // ─────────────────────────────────────────────────────────────────────────
-  // 2. MISSION SELECT (all locked / M1 only available)
+  // 2. MISSION SELECT + LEARNING OBJECTIVES INTERSTITIAL
   // ─────────────────────────────────────────────────────────────────────────
-  console.log('\n── Mission Select ──────────────────────');
+  console.log('\n── Mission Select + Objectives ─────────');
   await page.click('.splash-btn');
   await page.waitForSelector('#screenMenu.active', { timeout: 8000 });
   await wait(700);
+  // Mission select is visible here (objectives overlay not yet triggered)
   await shot(page, 'mission-select-start');
+
+  // Learning Objectives interstitial appears ~900ms after boot ends (z-index 350)
+  // Wait for it, capture it, then dismiss before gameplay can begin
+  await page.waitForFunction(() => {
+    const o = document.getElementById('objOverlay');
+    return o && o.classList.contains('show');
+  }, { timeout: 5000 });
+  await shot(page, 'objectives-interstitial');
+  await page.evaluate(() => dismissObjectives());
+  await wait(500);
 
   // ─────────────────────────────────────────────────────────────────────────
   // 3. MISSION 1 — DATA LEAKAGE
