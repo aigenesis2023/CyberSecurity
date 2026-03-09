@@ -273,12 +273,12 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 ════════════════════════════════════════════ */
 .page-wrap { display:flex; flex-direction:column; min-height:100%; }
 .sticky-header { position:sticky; top:0; z-index:10; padding-top:0; }
-.int-banner { position:relative; margin:0 18px 0; display:grid; grid-template-columns: auto 1fr; align-items:stretch; min-height:70px; animation:fadeUp .5s ease both; overflow:hidden; }
+.int-banner { position:relative; margin:0 124px 0 18px; display:grid; grid-template-columns: auto 1fr; align-items:stretch; min-height:70px; animation:fadeUp .5s ease both; overflow:hidden; }
 .int-banner > * + * { border-left:1px solid rgba(56,189,248,.12); }
 .ib-brand { display:flex; align-items:center; gap:12px; padding:0 26px 0 20px; flex-shrink:0; }
 .h-dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; background:var(--green); animation:statusDot 2.4s ease infinite; }
 .h-title { font-family:'Orbitron',monospace; font-size:11px; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:var(--text); }
-.ib-center { display:flex; align-items:center; gap:36px; padding:0 104px 0 32px; }
+.ib-center { display:flex; align-items:center; gap:36px; padding:0 28px 0 32px; }
 .ib-lbl { font-size:8px; letter-spacing:.16em; text-transform:uppercase; color:var(--dim); margin-bottom:5px; }
 .ib-num-wrap { display:flex; align-items:center; gap:8px; }
 .ib-num-col { display:flex; flex-direction:column; flex-shrink:0; }
@@ -892,39 +892,49 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 .briefing-back-btn:hover { color:rgba(200,220,255,.7); }
 
 /* ════════════════════════════════════════════
-   GAME CONTROLS BAR (pause + mute, top-right)
+   GAME CONTROLS (pause + mute — standalone HUD, top-right)
 ════════════════════════════════════════════ */
 #gameCtrlBar {
-  position:fixed; top:14px; right:16px; z-index:9000;
-  display:flex; align-items:center; gap:4px;
-  background:rgba(6,16,36,0.75); border:1px solid rgba(56,189,248,.22);
-  border-radius:40px; padding:4px;
-  backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+  position:fixed; top:0; right:18px; z-index:9000;
+  display:flex; align-items:center; gap:6px;
+  height:70px; /* visually aligns with int-banner min-height */
+  pointer-events:none;
 }
-#pauseBtn {
-  width:34px; height:34px; border-radius:50%;
-  background:transparent; border:1px solid rgba(56,189,248,.15);
-  color:rgba(56,189,248,.75); font-size:13px;
-  display:none; align-items:center; justify-content:center;
+#pauseBtn, #muteBtn {
+  pointer-events:all;
+  display:none; flex-direction:column; align-items:center; justify-content:center; gap:3px;
+  width:42px; height:42px; border-radius:8px;
+  background:rgba(4,10,26,0.96);
+  border:1px solid rgba(56,189,248,.22);
+  color:rgba(56,189,248,.65);
   cursor:pointer; transition:all .2s;
+  box-shadow:0 2px 12px rgba(0,0,0,.45), inset 0 1px 0 rgba(56,189,248,.07);
+  padding:0;
 }
+#pauseBtn { display:none; }
 #pauseBtn.visible { display:flex; }
-#pauseBtn:hover { background:rgba(56,189,248,.12); border-color:rgba(56,189,248,.45); color:#fff; }
-#muteBtn {
-  width:34px; height:34px; border-radius:50%;
-  background:transparent; border:1px solid rgba(56,189,248,.15);
-  color:rgba(56,189,248,.75); font-size:14px;
-  display:flex; align-items:center; justify-content:center;
-  cursor:pointer; transition:all .2s;
+#muteBtn { display:flex; }
+#pauseBtn:hover, #muteBtn:hover {
+  background:rgba(56,189,248,.1); border-color:rgba(56,189,248,.5);
+  color:rgba(200,235,255,.9); box-shadow:0 2px 12px rgba(0,0,0,.45), 0 0 14px rgba(56,189,248,.15), inset 0 1px 0 rgba(56,189,248,.12);
 }
-#muteBtn:hover { background:rgba(56,189,248,.12); border-color:rgba(56,189,248,.45); color:#fff; }
-#muteBtn.muted { color:rgba(200,220,255,.35); border-color:rgba(200,220,255,.15); }
+#pauseBtn:active, #muteBtn:active { transform:scale(.94); }
+.ctrl-icon { width:14px; height:14px; flex-shrink:0; }
+.ctrl-lbl {
+  font-family:'JetBrains Mono',monospace; font-size:6px; font-weight:700;
+  letter-spacing:.15em; text-transform:uppercase; color:rgba(56,189,248,.3);
+  line-height:1;
+}
+#pauseBtn:hover .ctrl-lbl, #muteBtn:hover .ctrl-lbl { color:rgba(56,189,248,.55); }
+#muteBtn.muted { color:rgba(200,220,255,.25); border-color:rgba(200,220,255,.12); background:rgba(4,10,26,0.96); }
+#muteBtn.muted .ctrl-lbl { color:rgba(200,220,255,.18); }
 
 /* ════════════════════════════════════════════
    RESPONSIVE
 ════════════════════════════════════════════ */
 @media (max-width: 768px) {
   .int-banner { grid-template-columns:1fr; margin:0 12px; }
+  #gameCtrlBar { height:auto; top:14px; gap:5px; }
   .ib-brand { padding:10px 16px 8px; border-right:none; border-bottom:1px solid rgba(56,189,248,.1); }
   .ib-center { padding:10px 16px; gap:14px; }
   .ib-num { font-size:32px; }
@@ -1132,8 +1142,14 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 
 <!-- GLOBAL GAME CONTROLS (pause + mute, shown top-right during gameplay) -->
 <div id="gameCtrlBar">
-  <button id="pauseBtn" onclick="togglePause()" title="Pause / Resume (P)" aria-label="Pause game">⏸</button>
-  <button id="muteBtn" onclick="toggleMute()" title="Toggle audio (M)" aria-label="Toggle audio mute">🔊</button>
+  <button id="pauseBtn" onclick="togglePause()" title="Pause / Resume (P)" aria-label="Pause game">
+    <svg id="pauseIcon" class="ctrl-icon" viewBox="0 0 16 16" fill="currentColor"><rect x="2" y="2" width="4" height="12" rx="1"/><rect x="10" y="2" width="4" height="12" rx="1"/></svg>
+    <span class="ctrl-lbl">PAUSE</span>
+  </button>
+  <button id="muteBtn" onclick="toggleMute()" title="Toggle audio (M)" aria-label="Toggle audio">
+    <svg id="muteIcon" class="ctrl-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M3 5.5v5h3l4 3V2.5l-4 3H3z"/><path id="muteX" d="M11.5 6.5 14 9m0-2.5-2.5 2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0"/></svg>
+    <span class="ctrl-lbl">SOUND</span>
+  </button>
 </div>
 
 <!-- PAUSE OVERLAY -->
@@ -1714,19 +1730,22 @@ function startAudio() {
   if (audioReady) return; audioReady=true;
   if (!_muted && SND.bg) SND.bg.play().catch(()=>{});
 }
+function _setMuteIcon(muted) {
+  const x = document.getElementById('muteX'); if(x) x.setAttribute('opacity', muted ? '1' : '0');
+  const lbl = document.querySelector('#muteBtn .ctrl-lbl'); if(lbl) lbl.textContent = muted ? 'MUTED' : 'SOUND';
+}
 function toggleMute() {
   _muted = !_muted;
   const btn = document.getElementById('muteBtn');
-  if(btn) { btn.textContent = _muted ? '🔇' : '🔊'; btn.classList.toggle('muted', _muted); }
-  // Apply to all active Audio objects
+  if(btn) btn.classList.toggle('muted', _muted);
+  _setMuteIcon(_muted);
   Object.values(SND).forEach(a => { if(a) a.muted = _muted; });
-  // Persist preference
   try { localStorage.setItem('adg_muted', _muted ? '1' : '0'); } catch(e){}
 }
 function loadMuteState() {
   try {
     const saved = localStorage.getItem('adg_muted');
-    if(saved === '1') { _muted = true; const btn=document.getElementById('muteBtn'); if(btn){btn.textContent='🔇';btn.classList.add('muted');} }
+    if(saved === '1') { _muted = true; const btn=document.getElementById('muteBtn'); if(btn) btn.classList.add('muted'); _setMuteIcon(true); }
   } catch(e){}
 }
 function _play(a) { if(a) { a.muted=_muted; a.play().catch(()=>{}); } }
@@ -3391,10 +3410,13 @@ function togglePause() {
     if (sec === 's3') { clearInterval(s3state.timerInt); }
     // Mute audio while paused (without toggling the mute preference)
     Object.values(SND).forEach(a => { if(a) a.muted = true; });
-    document.getElementById('pauseBtn').textContent = '▶';
+    // Switch to play icon
+    const pi=document.getElementById('pauseIcon'); if(pi) pi.innerHTML='<polygon points="4,2 14,8 4,14"/>';
+    const pl=document.querySelector('#pauseBtn .ctrl-lbl'); if(pl) pl.textContent='RESUME';
   } else {
-    // Resume
-    document.getElementById('pauseBtn').textContent = '⏸';
+    // Resume — switch back to pause icon
+    const pi=document.getElementById('pauseIcon'); if(pi) pi.innerHTML='<rect x="2" y="2" width="4" height="12" rx="1"/><rect x="10" y="2" width="4" height="12" rx="1"/>';
+    const pl=document.querySelector('#pauseBtn .ctrl-lbl'); if(pl) pl.textContent='PAUSE';
     // Restore mute state
     Object.values(SND).forEach(a => { if(a) a.muted = _muted; });
     // Restart drain / timer for active section
