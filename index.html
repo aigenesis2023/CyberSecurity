@@ -38,6 +38,22 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 .bg { position:fixed; inset:0; z-index:0; background:#020c1a; overflow:hidden; pointer-events:none; }
 .bg::before { content:''; position:absolute; inset:0; background: radial-gradient(ellipse 55% 50% at 15% 20%, rgba(56,189,248,0.09) 0%, transparent 60%), radial-gradient(ellipse 45% 55% at 85% 80%, rgba(56,189,248,0.07) 0%, transparent 60%); }
 
+/* ══ HEX GRID ATMOSPHERE — all full-screen surfaces ══ */
+.bg::after,
+.splash::after,
+.briefing-overlay::before,
+.verdict-overlay::before,
+.cert-overlay::before,
+.obj-overlay::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100'%3E%3Cpath d='M28 66L0 50V16L28 0l28 16v34L28 66zM28 100L0 84V50l28-16 28 16v34L28 100z' fill='none' stroke='%2338bdf8' stroke-opacity='0.045' stroke-width='1'/%3E%3C/svg%3E");
+  background-size: 56px 100px;
+  pointer-events: none;
+  z-index: 0;
+}
+
 /* ══ ANIMATIONS ══ */
 @keyframes fadeUp  { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
 @keyframes slideIn { from{opacity:0;transform:translateX(14px)} to{opacity:1;transform:translateX(0)} }
@@ -51,6 +67,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 @keyframes statusDot { 0%,100%{box-shadow:0 0 0 3px rgba(74,222,128,0.2)} 50%{box-shadow:0 0 0 6px rgba(74,222,128,0.08)} }
 @keyframes shieldPop  { 0%{transform:scale(0.4) rotate(-8deg);opacity:0} 70%{transform:scale(1.08) rotate(2deg);opacity:1} 100%{transform:scale(1) rotate(0deg);opacity:1} }
 @keyframes ringPulse  { 0%{transform:scale(.7);opacity:.9} 100%{transform:scale(2.2);opacity:0} }
+@keyframes hexGlow    { 0%,100%{filter:drop-shadow(0 0 10px rgba(74,222,128,.5)) drop-shadow(0 0 24px rgba(56,189,248,.18));} 50%{filter:drop-shadow(0 0 24px rgba(74,222,128,.95)) drop-shadow(0 0 48px rgba(56,189,248,.35));} }
 @keyframes checkDraw  { 0%{stroke-dashoffset:60} 100%{stroke-dashoffset:0} }
 @keyframes particleUp { 0%{transform:translateY(0) scale(1);opacity:1} 100%{transform:translateY(-70px) scale(0);opacity:0} }
 @keyframes scanReveal { 0%{opacity:0;transform:translateY(6px)} 100%{opacity:1;transform:translateY(0)} }
@@ -360,20 +377,42 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 /* ════════════════════════════════════════════
    CAT POPUP
 ════════════════════════════════════════════ */
-.cat-popup { position:fixed; z-index:500; background:rgba(6,14,32,0.96); border:1px solid rgba(56,189,248,.2); border-radius:10px; padding:12px 14px; box-shadow:0 8px 32px rgba(0,0,0,.6); min-width:224px; display:none; animation:popIn .15s ease; }
+.cat-popup {
+  position:fixed; z-index:500;
+  background:rgba(4,12,28,0.97);
+  border:1px solid rgba(56,189,248,.28);
+  border-radius:12px;
+  padding:16px 16px 14px;
+  box-shadow:0 16px 48px rgba(0,0,0,.75), 0 0 0 1px rgba(56,189,248,.07), 0 0 28px rgba(56,189,248,.06);
+  min-width:252px;
+  display:none;
+  animation:popIn .18s cubic-bezier(.34,1.56,.64,1);
+}
 .cat-popup.show { display:block; }
-.cat-popup-lbl { font-family:'JetBrains Mono',monospace; font-size:8px; letter-spacing:.14em; text-transform:uppercase; color:var(--dim); margin-bottom:10px; }
-.cat-btns { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
-.cat-btn { font-family:'Orbitron',monospace; font-size:9px; font-weight:700; letter-spacing:.1em; padding:9px 6px; border-radius:5px; cursor:pointer; transition:all .15s; border:1px solid transparent; }
+.cat-popup-lbl {
+  font-family:'JetBrains Mono',monospace; font-size:8px; letter-spacing:.18em; text-transform:uppercase;
+  color:rgba(56,189,248,.55);
+  margin-bottom:12px;
+  padding-bottom:10px;
+  border-bottom:1px solid rgba(56,189,248,.1);
+}
+.cat-btns { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.cat-btn {
+  font-family:'Orbitron',monospace; font-size:9px; font-weight:700; letter-spacing:.12em;
+  padding:13px 8px;
+  border-radius:7px;
+  cursor:pointer; transition:all .18s; border:1px solid transparent;
+  line-height:1.2;
+}
 .cat-btn-cred { background:var(--cat-cred-bg); color:var(--cat-cred); border-color:var(--cat-cred-border); }
-.cat-btn-cred:hover { background:rgba(239,68,68,.35); border-color:var(--red); }
+.cat-btn-cred:hover { background:rgba(239,68,68,.32); border-color:var(--red); box-shadow:0 0 18px rgba(239,68,68,.32), inset 0 1px 0 rgba(255,255,255,.06); }
 .cat-btn-pii  { background:var(--cat-pii-bg); color:var(--cat-pii); border-color:var(--cat-pii-border); }
-.cat-btn-pii:hover  { background:rgba(251,146,60,.35); border-color:var(--orange); }
+.cat-btn-pii:hover  { background:rgba(251,146,60,.32); border-color:var(--orange); box-shadow:0 0 18px rgba(251,146,60,.3), inset 0 1px 0 rgba(255,255,255,.06); }
 .cat-btn-int  { background:var(--cat-int-bg); color:var(--cat-int); border-color:var(--cat-int-border); }
-.cat-btn-int:hover  { background:rgba(250,204,21,.3); border-color:var(--yellow); }
-.cat-btn-safe { background:rgba(148,163,184,.18); color:rgba(148,163,184,1); border-color:rgba(148,163,184,.55); }
-.cat-btn-safe:hover { background:rgba(148,163,184,.3); border-color:rgba(148,163,184,.85); }
-.cat-popup-close { position:absolute; top:7px; right:9px; font-size:11px; color:var(--dim); cursor:pointer; line-height:1; background:none; border:none; }
+.cat-btn-int:hover  { background:rgba(250,204,21,.28); border-color:var(--yellow); box-shadow:0 0 16px rgba(250,204,21,.26), inset 0 1px 0 rgba(255,255,255,.06); }
+.cat-btn-safe { background:rgba(148,163,184,.1); color:rgba(200,215,235,.8); border-color:rgba(148,163,184,.38); }
+.cat-btn-safe:hover { background:rgba(148,163,184,.22); border-color:rgba(148,163,184,.72); box-shadow:0 0 12px rgba(148,163,184,.15), inset 0 1px 0 rgba(255,255,255,.06); }
+.cat-popup-close { position:absolute; top:9px; right:11px; font-size:11px; color:var(--dim); cursor:pointer; line-height:1; background:none; border:none; }
 .cat-popup-close:hover { color:var(--text); }
 
 /* ════════════════════════════════════════════
@@ -625,19 +664,19 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 }
 .cert-top-bar { height:3px; background:linear-gradient(90deg,transparent,var(--green) 30%,var(--blue2) 70%,transparent); }
 .cert-graphic {
-  position:relative; height:160px; overflow:hidden;
-  background:linear-gradient(180deg,rgba(74,222,128,.07) 0%,rgba(56,189,248,.04) 50%,transparent 100%);
+  position:relative; height:186px; overflow:hidden;
+  background:linear-gradient(180deg,rgba(74,222,128,.09) 0%,rgba(56,189,248,.05) 55%,transparent 100%);
   display:flex; align-items:center; justify-content:center;
-  border-bottom:1px solid rgba(74,222,128,.1);
+  border-bottom:1px solid rgba(74,222,128,.12);
 }
 .cert-ring { position:absolute; border-radius:50%; border:1.5px solid rgba(74,222,128,.35); animation:ringPulse 2s ease-out infinite; }
-.cert-ring.r1 { width:140px; height:140px; }
-.cert-ring.r2 { width:100px; height:100px; animation-delay:.7s; }
+.cert-ring.r1 { width:168px; height:168px; }
+.cert-ring.r2 { width:120px; height:120px; animation-delay:.7s; }
+.cert-ring.r3 { width:210px; height:210px; animation-delay:1.4s; border-color:rgba(56,189,248,.18); border-width:1px; }
 .cert-star {
   position:relative; z-index:2;
-  font-family:'Orbitron',monospace; font-size:44px;
-  filter:drop-shadow(0 0 24px rgba(74,222,128,.6));
-  animation:shieldPop .7s cubic-bezier(.34,1.56,.64,1) .1s both;
+  font-family:'Orbitron',monospace; font-size:66px;
+  animation:shieldPop .7s cubic-bezier(.34,1.56,.64,1) .1s both, hexGlow 2.8s ease 1s infinite;
 }
 .cert-badge {
   position:absolute; bottom:12px; left:0; right:0; text-align:center;
@@ -1073,9 +1112,9 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 <div class="cat-popup" id="s1catPopup">
   <div class="cat-popup-lbl">Classify this item</div>
   <div class="cat-btns">
-    <button class="cat-btn cat-btn-cred" onclick="s1Classify('credential')">CRED</button>
-    <button class="cat-btn cat-btn-pii"  onclick="s1Classify('pii')">DATA</button>
-    <button class="cat-btn cat-btn-int"  onclick="s1Classify('internal')">INFO</button>
+    <button class="cat-btn cat-btn-cred" onclick="s1Classify('credential')">CREDENTIALS</button>
+    <button class="cat-btn cat-btn-pii"  onclick="s1Classify('pii')">PERSONAL DATA</button>
+    <button class="cat-btn cat-btn-int"  onclick="s1Classify('internal')">INTERNAL INFO</button>
     <button class="cat-btn cat-btn-safe" onclick="s1Classify('safe')">SAFE</button>
   </div>
   <button class="cat-popup-close" onclick="s1ClosePopup()">✕</button>
@@ -1752,6 +1791,7 @@ function showScreen(id) {
   window.scrollTo(0,0);
 }
 function goMenu() {
+  dismissToast();
   clearAllTimers();
   ['s1verdict','s2verdict','s3verdict'].forEach(id => {
     const el = document.getElementById(id);
@@ -2120,6 +2160,7 @@ function s1Start() {
 }
 function s1EndGame(reason) {
   if(!s1state.gameActive) return; s1state.gameActive=false;
+  dismissToast();
   updatePauseBtn();
   clearInterval(s1state.drainInt);
   const intFinal=Math.max(0,Math.round(s1state.integrity));
@@ -2513,6 +2554,7 @@ function s2Submit() {
 }
 function s2EndGame(reason) {
   if(!s2state.gameActive) return; s2state.gameActive=false;
+  dismissToast();
   updatePauseBtn();
   clearInterval(s2state.drainInt);
   const intFinal=Math.max(0,Math.round(s2state.integrity));
@@ -2976,6 +3018,7 @@ function s3Flag(isInjection) {
 
 function s3EndGame(reason) {
   if(!s3state.gameActive) return; s3state.gameActive=false;
+  dismissToast();
   s3state.levelActive=false; // prevent any pending s3NextLevel callbacks from loading a new level after end
   updatePauseBtn();
   clearInterval(s3state.timerInt);
@@ -3427,7 +3470,7 @@ function s3ShowInsight(category, tokenText, message, afterFn) {
   <div class="cert-card">
     <div class="cert-top-bar"></div>
     <div class="cert-graphic">
-      <div class="cert-ring r1"></div><div class="cert-ring r2"></div>
+      <div class="cert-ring r1"></div><div class="cert-ring r2"></div><div class="cert-ring r3"></div>
       <div class="cert-star">⬡</div>
       <div class="cert-badge">All Missions Complete</div>
     </div>

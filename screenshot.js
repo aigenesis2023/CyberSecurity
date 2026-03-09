@@ -304,6 +304,14 @@ async function main() {
   // ─────────────────────────────────────────────────────────────────────────
   console.log('\n── Mission 3 ───────────────────────────');
 
+  // Force M2 marked complete so M3 unlocks (guards against M2 pass-threshold edge cases)
+  await page.evaluate(() => {
+    courseProgress.s2done = true;
+    saveProgress();
+    updateMenuState();
+  });
+  await wait(200);
+
   await page.evaluate(() => tryLaunch(3));
   await wait(500);
   await shot(page, 'm3-briefing');
