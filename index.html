@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Data Guardian</title>
+<title>AI Data Guardian — Cybersecurity Awareness Training</title>
 <noscript><style>body{display:flex;align-items:center;justify-content:center;min-height:100vh;background:#020610;font-family:sans-serif;color:#ddeeff;text-align:center;padding:20px}.ns-msg{max-width:400px}.ns-msg h1{font-size:1.4rem;margin-bottom:12px}.ns-msg p{opacity:.65;font-size:.9rem;line-height:1.6}</style><div class="ns-msg"><h1>JavaScript Required</h1><p>This training module requires JavaScript to run. Please enable JavaScript in your browser and reload the page.</p></div></noscript>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -618,7 +618,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 ══════════════════════════════════════════════ -->
 <div class="splash" id="splashScreen">
   <div class="splash-eyebrow">Cybersecurity Awareness Training</div>
-  <div class="splash-title">AI Data<br>Guardians</div>
+  <div class="splash-title">AI Data<br>Guardian</div>
   <div class="splash-subtitle">Three missions. Real threats. Learn to protect your AI interactions.</div>
   <div class="splash-load-wrap">
     <div class="splash-load-track"><div class="splash-load-fill" id="splashFill"></div></div>
@@ -776,12 +776,12 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
     </div>
     <div class="briefing-body">
       <div class="briefing-stat-strip">
-        <div class="bss-item"><div class="bss-lbl">Destination</div><div class="bss-val">ChatGPT</div></div>
+        <div class="bss-item"><div class="bss-lbl">Destination</div><div class="bss-val">AI Assistant</div></div>
         <div class="bss-item"><div class="bss-lbl">Submitted By</div><div class="bss-val">Marcus Webb</div></div>
         <div class="bss-item"><div class="bss-lbl">Risk Level</div><div class="bss-val" style="color:var(--blue2)">HIGH</div></div>
       </div>
       <div class="briefing-divider"></div>
-      <div class="briefing-text">Marcus is about to paste a work prompt into ChatGPT. Once it's sent, you can't take it back — anything in that prompt could be stored, logged, or used to train external models. Read the prompt. Find anything that shouldn't leave the organisation. Redact it before it goes.</div>
+      <div class="briefing-text">Marcus is about to paste a work prompt into an AI assistant. Once it's sent, you can't take it back — anything in that prompt could be stored, logged, or used to train external models. Read the prompt. Find anything that shouldn't leave the organisation. Redact it before it goes.</div>
       <div class="briefing-legend">
         <div class="b-leg"><div class="b-leg-dot" style="background:var(--red);box-shadow:0 0 6px rgba(239,68,68,.7)"></div><span class="b-leg-name" style="color:var(--red)">[CREDENTIALS]</span><span class="b-leg-desc">Passwords, API keys — highest risk</span></div>
         <div class="b-leg"><div class="b-leg-dot" style="background:var(--orange);box-shadow:0 0 6px rgba(251,146,60,.6)"></div><span class="b-leg-name" style="color:var(--orange)">[PII]</span><span class="b-leg-desc">Names, emails, personal identifiers</span></div>
@@ -1563,8 +1563,8 @@ function s1BuildPayload() {
     <div class="gpt-window">
       <div class="gpt-titlebar">
         <div class="gpt-logo">⬡</div>
-        <div class="gpt-title-text">ChatGPT</div>
-        <div class="gpt-model-pill">GPT-5.2 Instant</div>
+        <div class="gpt-title-text">AI Assistant</div>
+        <div class="gpt-model-pill">Enterprise Model v2</div>
       </div>
       <div class="gpt-warning-bar">⚠&nbsp; Sensitive data detected — redact all tokens before sending</div>
       <div class="gpt-chat-area">
@@ -1607,7 +1607,7 @@ function s1BuildPayload() {
         </div>
       </div>
       <div class="gpt-input-bar">
-        <div class="gpt-input-field"><span style="color:#bbb">Message ChatGPT…</span><div class="gpt-input-field-icons"><div class="gpt-input-icon">📎</div><div class="gpt-input-icon">↑</div></div></div>
+        <div class="gpt-input-field"><span style="color:#bbb">Message AI Assistant…</span></div><div class="gpt-input-field-icons"><div class="gpt-input-icon">📎</div><div class="gpt-input-icon">↑</div></div></div>
       </div>
     </div>`;
   document.querySelectorAll('#s1payload .tok.clickable').forEach(el => el.addEventListener('click', s1TokenClick));
@@ -1819,7 +1819,7 @@ function s1EndGame(reason) {
     if(credLeft>0) missed.push('credentials (API key / password)');
     if(piiLeft>0) missed.push('personal data (name / email)');
     if(intLeft>0) missed.push('internal codenames');
-    vMsg = `Data transmitted. ${totalLeft} sensitive token${totalLeft>1?'s':''} reached ChatGPT — including ${missed.join(' and ')}. In a real incident, this would be a reportable breach under GDPR. The AI tool now holds data it was never meant to see.`;
+    vMsg = `Data transmitted. ${totalLeft} sensitive token${totalLeft>1?'s':''} reached the AI assistant — including ${missed.join(' and ')}. In a real incident, this would be a reportable breach under GDPR. The AI tool now holds data it was never meant to see.`;
   }
   document.getElementById('s1vMsg').textContent = vMsg;
   document.getElementById('s1vInt').textContent=intFinal+'%';
@@ -1946,7 +1946,7 @@ function s2BuildPayload() {
       id:'s2sec4',
       html:`<h4>RECOMMENDED ACTIONS</h4>
         <p>Organisations should immediately audit their AI data processing workflows. ${at('acc4')} — your AI tools must honour deletion requests within 30 days of verification. Failure to comply exposes organisations to the full range of regulatory sanctions.</p>
-        <span class="cite">⬡ Generated by Claude Enterprise · Unverified · Review before use</span>`
+        <span class="cite">⬡ Generated by AI Assistant · Unverified · Review before use</span>`
     }
   ];
 
@@ -1966,7 +1966,7 @@ function s2BuildPayload() {
       <div class="ai-response-header">
         <div class="ai-logo">✦</div>
         <div class="ai-response-title">AI Assistant — GDPR Compliance Report</div>
-        <div class="ai-model-badge">Claude Enterprise</div>
+        <div class="ai-model-badge">Enterprise AI</div>
       </div>
       <div class="ai-warning-strip">⚠ Unverified AI output — flag fabricated claims before forwarding to legal or compliance</div>
       <div class="ai-response-body" id="s2docBody">${sectionHTML}</div>
