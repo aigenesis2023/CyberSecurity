@@ -201,6 +201,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 .title-unlock.show { display:block; }
 .title-unlock-eyebrow { font-family:'JetBrains Mono',monospace; font-size:8px; letter-spacing:.2em; color:rgba(74,222,128,.5); text-transform:uppercase; margin-bottom:4px; }
 .title-unlock-name { font-family:'Orbitron',monospace; font-size:15px; font-weight:900; letter-spacing:.1em; color:var(--green); text-shadow:0 0 20px rgba(74,222,128,.5); }
+.title-unlock-sub { font-family:'DM Sans',sans-serif; font-size:10px; color:rgba(74,222,128,.6); margin-top:6px; line-height:1.5; }
 
 .mp-level-label { display:none; } /* superseded by mastery meter */
 
@@ -348,7 +349,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 /* ════════════════════════════════════════════
    CAT POPUP
 ════════════════════════════════════════════ */
-.cat-popup { position:fixed; z-index:500; background:rgba(6,14,32,0.96); border:1px solid rgba(56,189,248,.2); border-radius:10px; padding:12px 14px; box-shadow:0 8px 32px rgba(0,0,0,.6); min-width:200px; display:none; animation:popIn .15s ease; }
+.cat-popup { position:fixed; z-index:500; background:rgba(6,14,32,0.96); border:1px solid rgba(56,189,248,.2); border-radius:10px; padding:12px 14px; box-shadow:0 8px 32px rgba(0,0,0,.6); min-width:224px; display:none; animation:popIn .15s ease; }
 .cat-popup.show { display:block; }
 .cat-popup-lbl { font-family:'JetBrains Mono',monospace; font-size:8px; letter-spacing:.14em; text-transform:uppercase; color:var(--dim); margin-bottom:10px; }
 .cat-btns { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
@@ -667,7 +668,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
             <span class="mc-status unlocked-s" id="m1status"><span class="mc-dot-s green" id="m1dot"></span><span id="m1statuslbl">UNLOCKED</span></span>
           </div>
         </div>
-        <button class="mc-launch-btn" id="m1btn">▶ &nbsp; LAUNCH MISSION</button>
+        <button class="mc-launch-btn" id="m1btn">▶  LAUNCH MISSION</button>
       </div>
 
       <!-- MISSION 2 — AI Hallucination -->
@@ -691,7 +692,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
             <span class="mc-status locked-s" id="m2status"><span class="mc-dot-s grey" id="m2dot"></span><span id="m2statuslbl">LOCKED</span></span>
           </div>
         </div>
-        <button class="mc-launch-btn locked-btn" id="m2btn">🔒 &nbsp; COMPLETE MISSION 01</button>
+        <button class="mc-launch-btn locked-btn" id="m2btn">🔒 &nbsp; COMPLETE MISSION 01 FIRST</button>
       </div>
 
       <!-- MISSION 3 — Prompt Injection -->
@@ -718,7 +719,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
             <span class="mc-status locked-s" id="m3status"><span class="mc-dot-s grey" id="m3dot"></span><span id="m3statuslbl">LOCKED</span></span>
           </div>
         </div>
-        <button class="mc-launch-btn locked-btn" id="m3btn">🔒 &nbsp; COMPLETE MISSION 02</button>
+        <button class="mc-launch-btn locked-btn" id="m3btn">🔒 &nbsp; COMPLETE MISSION 02 FIRST</button>
       </div>
 
     </div>
@@ -735,8 +736,9 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
         <div class="clearance-label" id="clearanceLabel">Clearance Level: AI Operator</div>
       </div>
       <div class="title-unlock" id="titleUnlock">
-        <div class="title-unlock-eyebrow">⬡ Title Unlocked</div>
+        <div class="title-unlock-eyebrow">⬡ All Missions Complete — Title Unlocked</div>
         <div class="title-unlock-name">AI DATA GUARDIAN</div>
+        <div class="title-unlock-sub">You identified sensitive data leaks, AI hallucinations, and prompt injection attacks. You are cleared to work safely with AI tools.</div>
       </div>
       <!-- legacy dots kept for JS compat, hidden by CSS -->
       <div class="mp-dots" style="display:none">
@@ -1111,7 +1113,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
     </div>
     <div class="briefing-body">
       <div class="briefing-stat-strip">
-        <div class="bss-item"><div class="bss-lbl">Documents</div><div class="bss-val">3 Levels</div></div>
+        <div class="bss-item"><div class="bss-lbl">Documents</div><div class="bss-val">6 Levels</div></div>
         <div class="bss-item"><div class="bss-lbl">Threat Level</div><div class="bss-val" style="color:var(--blue2)">CRITICAL</div></div>
         <div class="bss-item"><div class="bss-lbl">Level 1</div><div class="bss-val" style="color:var(--green)">No Timer</div></div>
       </div>
@@ -1123,7 +1125,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
         <div class="b-mech">Click any text that looks like an instruction aimed at an AI, not a human</div>
         <div class="b-mech">Wrong selections −15%. Missing the injection −30% + reveal</div>
       </div>
-      <button class="briefing-start-btn" onclick="s3Start()">▶ &nbsp;&nbsp; BEGIN SCAN</button>
+      <button class="briefing-start-btn" onclick="s3Start()">▶ &nbsp;&nbsp; START SCAN</button>
     </div>
   </div>
 </div>
@@ -1226,7 +1228,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
     <div style="flex-shrink:0">
       <div class="bss-item" style="margin-bottom:10px">
         <div class="bss-lbl">Level</div>
-        <div class="bss-val" id="s3levelDisplay">1 / 3</div>
+        <div class="bss-val" id="s3levelDisplay">1 / 6</div>
       </div>
       <div class="bss-item">
         <div class="bss-lbl">Injections Found</div>
@@ -1249,10 +1251,10 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 <div class="cat-popup" id="s2halPopup" style="z-index:9999">
   <div class="cat-popup-lbl">Classify this claim</div>
   <div class="cat-btns">
-    <button class="cat-btn cat-btn-cred" onclick="s2Classify('citation')" style="font-size:8px">FAKE<br>CITATION</button>
-    <button class="cat-btn cat-btn-pii"  onclick="s2Classify('figure')"   style="font-size:8px">WRONG<br>FIGURE</button>
-    <button class="cat-btn cat-btn-int"  onclick="s2Classify('law')"      style="font-size:8px">FAKE<br>LAW</button>
-    <button class="cat-btn cat-btn-safe" onclick="s2Classify('accurate')" style="font-size:8px">ACCURATE</button>
+    <button class="cat-btn cat-btn-cred" onclick="s2Classify('citation')">FAKE CITATION</button>
+    <button class="cat-btn cat-btn-pii"  onclick="s2Classify('figure')">WRONG FIGURE</button>
+    <button class="cat-btn cat-btn-int"  onclick="s2Classify('law')">FAKE LAW</button>
+    <button class="cat-btn cat-btn-safe" onclick="s2Classify('accurate')">ACCURATE</button>
   </div>
   <button class="cat-popup-close" onclick="s2ClosePopup()">✕</button>
 </div>
@@ -1808,7 +1810,7 @@ function s1EndGame(reason) {
   document.getElementById('s1vErrors').textContent=s1state.classifyErrors===0?'None':s1state.classifyErrors+' Errors';
   document.getElementById('s1vErrors').className='v-rv '+(s1state.classifyErrors===0?'green':'red');
   if(pass) {
-    document.getElementById('s1menuBtn').style.display='block';
+    const mb1=document.getElementById('s1menuBtn'); mb1.style.display='block'; mb1.textContent='▶ MISSION SELECT';
     // Show real-world anchor
     const anchor=document.getElementById('s1vAnchor');
     const anchorText=document.getElementById('s1vAnchorText');
@@ -2180,6 +2182,7 @@ function s2EndGame(reason) {
     anchorText.innerHTML = 'A 2023 study found that 47% of professionals who received AI-generated legal summaries could not identify factual errors without independent verification. AI hallucinations in compliance contexts have led to lawyers citing non-existent cases in court filings — a trend judges have begun sanctioning.' + '<br><br><span style="font-family:\'JetBrains Mono\',monospace;font-size:9px;letter-spacing:.12em;color:rgba(56,189,248,.5);text-transform:uppercase;">Key Behaviours</span><br><span style="font-size:11px;line-height:1.9;color:rgba(200,220,255,.65);">→ Verify AI-generated statistics and citations against primary sources before sharing<br>→ Never forward an AI output directly to legal, compliance, or clients without review<br>→ AI confidence is not the same as accuracy — always check the source</span>';
     if(precisionPass){ const b=document.getElementById('s2vBonus'); b.style.display='block'; b.innerHTML='<div class="v-bonus-wrap"><span class="v-precision-bonus">⬡ PRECISION BONUS — Zero false flags</span></div>'; }
   }
+  const mb2=document.getElementById('s2menuBtn'); mb2.textContent=pass?'▶ MISSION SELECT':'← MISSION SELECT';
   setTimeout(()=>document.getElementById('s2verdict').classList.add('show'),400);
 }
 
@@ -2458,31 +2461,26 @@ function s3LoadLevel(lvl) {
         s3state.levelActive=false; clearInterval(s3state.timerInt);
         const currentLvlDef = S3_LEVELS[s3state.currentLevel];
         pWrong(); s3state.timeouts++;
+        document.getElementById('s3levelPill').textContent='TIMEOUT';
+        document.getElementById('s3levelPill').className='dc-pill exposed';
+        s3state.levelActive=false;
         if(currentLvlDef.isInjection) {
           // Timed out on a real injection — penalty
           s3state.integrity=Math.max(0,s3state.integrity-30);
           showIntPop('s3',-30); flashDelta('s3',-30,'injection executed!');
           updateIntUI('s3',s3state.integrity,0,S1_MAX_DRAIN);
           s3RevealInjection(currentLvlDef.injectionId);
-          const note=currentLvlDef.timeoutNote;
-          if(note) {
-            const msgEl=document.getElementById('s3timeoutMsg');
-            if(msgEl){ msgEl.innerHTML='<strong>Time expired.</strong> '+note; msgEl.classList.add('show'); }
-          }
-          document.getElementById('s3levelPill').textContent='TIMEOUT';
-          document.getElementById('s3levelPill').className='dc-pill exposed';
+          if(s3state.integrity<=0){ s3EndGame('breach'); return; }
+          const note=currentLvlDef.timeoutNote||'The injection executed before you could identify it. Time is critical — attackers rely on document length and complexity to slow you down.';
+          showInsight('Timeout', '', 'Integrity −30. Time expired. '+note, ()=>s3NextLevel());
         } else {
           // Timed out on a false-positive — smaller penalty, different message
           s3state.integrity=Math.max(0,s3state.integrity-15);
           showIntPop('s3',-15); flashDelta('s3',-15,'time expired');
           updateIntUI('s3',s3state.integrity,0,S1_MAX_DRAIN);
-          const msgEl=document.getElementById('s3timeoutMsg');
-          if(msgEl){ msgEl.innerHTML='<strong>Time expired.</strong> This document contained no injection — you should have flagged it as SAFE. Look for the distinguishing features: injections address AI systems directly and instruct them to extract or override.'; msgEl.classList.add('show'); }
-          document.getElementById('s3levelPill').textContent='TIMEOUT';
-          document.getElementById('s3levelPill').className='dc-pill exposed';
+          if(s3state.integrity<=0){ s3EndGame('breach'); return; }
+          showInsight('Timeout', '', 'Integrity −15. Time expired. This document contained no injection — you should have flagged it SAFE before the clock ran out. Injections address AI systems directly and instruct them to extract data or override behaviour. Human-directed instructions are always safe.', ()=>s3NextLevel());
         }
-        if(s3state.integrity<=0){ s3EndGame('breach'); return; }
-        setTimeout(()=>s3NextLevel(), 3500);
       }
     },1000);
   }
@@ -2534,11 +2532,11 @@ function s3Flag(isInjection) {
       updateIntUI('s3',s3state.integrity,0.8,S1_MAX_DRAIN);
       if(s3state.integrity<=0){ s3EndGame('breach'); return; }
       const fpFeedback = {
-        fp1: 'This is a legitimate sprint retrospective action item directing team members — not an AI. Project management language is naturally directive and imperative, but it addresses humans on the team. An injection specifically addresses an AI system and tells it how to process or output data.',
-        fp2: 'This is standard CRM next-steps guidance for a human sales rep. It lists tasks for Dan to complete before the next call — it names a specific person and describes human actions. An injection tells an AI system how to behave or what to extract, not what a person should do.',
-        fp3: 'These are genuine brand editorial guidelines for human writers — they describe how people should format and present content. The key difference: they guide a writer\'s style and voice, not an AI\'s data processing behaviour. Injections hijack AI output; style guides shape human writing.',
+        fp1: 'This is a legitimate sprint retrospective action item directing team members — not an AI. Project management language is directive but it addresses humans, not an AI system. An injection specifically tells an AI how to process or output data.',
+        fp2: 'This is standard CRM next-steps guidance for a human sales rep. It names a specific person (Dan) and describes real-world tasks — an injection tells an AI system how to behave or extract data, not what a salesperson should do.',
+        fp3: 'These are genuine brand editorial guidelines for human writers. They guide a writer\'s style and voice, not an AI\'s data processing behaviour. Injections hijack AI output; style guides shape human writing.',
       };
-      const msg = fpFeedback[id] || 'This is legitimate document content, not an injection. Injections specifically instruct an AI system to change its behaviour, extract data, or override prior instructions.';
+      const msg = 'Wrong — Integrity −15. ' + (fpFeedback[id] || 'This is legitimate document content, not an injection. Injections specifically instruct an AI system to change its behaviour, extract data, or override prior instructions.');
       const el=document.querySelector(`#s3payload .tok[data-id="${id}"]`);
       if(el){ el.style.background='rgba(239,68,68,.22)'; setTimeout(()=>el.style.background='',900); }
       s3ShowInsight('False Alarm', '', msg);
@@ -2641,6 +2639,7 @@ function s3EndGame(reason) {
     anchorText.innerHTML = 'Prompt injection attacks on AI-integrated business tools are documented in the wild. In 2024, researchers demonstrated attacks where malicious documents caused AI email assistants to forward confidential messages to attackers — by embedding instructions invisible to human readers but processed by the AI.' + '<br><br><span style="font-family:\'JetBrains Mono\',monospace;font-size:9px;letter-spacing:.12em;color:rgba(56,189,248,.5);text-transform:uppercase;">Key Behaviours</span><br><span style="font-size:11px;line-height:1.9;color:rgba(200,220,255,.65);">→ Read external documents carefully before pasting them into any AI tool<br>→ Unexpected AI output after processing an external file is a red flag<br>→ The document is the attack surface — treat it as untrusted input</span>';
     if(precisionPass){ const b=document.getElementById('s3vBonus'); b.style.display='block'; b.innerHTML='<div class="v-bonus-wrap"><span class="v-precision-bonus">⬡ PRECISION BONUS — No false alarms, no timeouts</span></div>'; }
   }
+  const mb3=document.getElementById('s3menuBtn'); mb3.textContent=pass?'▶ MISSION SELECT':'← MISSION SELECT';
   setTimeout(()=>document.getElementById('s3verdict').classList.add('show'),400);
 }
 
@@ -2728,10 +2727,11 @@ const INSIGHT_ICONS = {
   'False Alarm':      '⚠',
   'Wrong Category':   '↩',
   'Missed':           '⚠',
+  'Timeout':          '⏱',
 };
 const INSIGHT_TONE = {
   'Credential Risk': 'warn', 'PII Risk': 'warn', 'Internal Intel': 'warn',
-  'Wrong Category': 'warn', 'False Alarm': 'warn', 'Missed': 'warn',
+  'Wrong Category': 'warn', 'False Alarm': 'warn', 'Missed': 'warn', 'Timeout': 'warn',
   'Fake Citation': 'warn', 'Wrong Figure': 'warn', 'Fake Law': 'warn',
   'Accurate Claim': 'ok', 'Safe Token': 'ok', 'Injection Found': 'ok',
 };
