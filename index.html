@@ -891,7 +891,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
     <div class="mission-header">
       <div class="mission-eyebrow">Mission Select</div>
       <div class="mission-title">Choose Your Mission</div>
-      <div class="mission-subtitle">You are your organisation's AI safety reviewer. Three threats. Three skills. Complete them in order.</div>
+      <div class="mission-subtitle">You've been designated as your team's AI safety contact. Marcus is about to send something he shouldn't. A legal report needs checking before it goes upstairs. And something arrived from outside that no one read before forwarding it to the queue.</div>
     </div>
 
     <div class="mission-cards">
@@ -984,6 +984,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
           <div class="mastery-seg" id="mseg3"></div>
           <span class="mastery-count" id="masteryCount">0 / 6</span>
         </div>
+        <div class="clearance-label" id="orgLabel">Organisation: Meridian Advisory Group</div>
         <div class="clearance-label" id="clearanceLabel">Clearance Level: AI Operator</div>
       </div>
       <div class="title-unlock" id="titleUnlock">
@@ -1388,7 +1389,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
         <div class="bss-item"><div class="bss-lbl">Level 1</div><div class="bss-val" style="color:var(--green)">No Timer</div></div>
       </div>
       <div class="briefing-divider"></div>
-      <div class="briefing-text">Someone has sent you a document to summarise using your AI assistant. Before you paste it in — <span class="hl">read it</span>. Documents from external sources can contain hidden instructions that tell your AI to ignore your request and do something else entirely. This is a <strong>prompt injection attack</strong>. Find the hidden instruction before you submit.</div>
+      <div class="briefing-text">A document arrived this morning from outside the organisation — forwarded by a colleague who didn't read it before adding it to the AI processing queue. That's how these get through: not through hacking, but through routine. Before it goes anywhere near the assistant — <span class="hl">read it</span>. Documents from external sources can contain hidden instructions that tell your AI to ignore your request and do something else entirely. This is a <strong>prompt injection attack</strong>. Find the hidden instruction before you submit.</div>
       <div class="briefing-mechanics">
         <div class="b-mech">Level 1 has no timer — read carefully and learn the pattern</div>
         <div class="b-mech">Later levels add time pressure as injections get harder to spot</div>
@@ -1706,7 +1707,7 @@ function updateMenuState() {
     starsEl.textContent = '★'.repeat(starCount) + '☆'.repeat(3 - starCount);
     starsEl.title = 'Score: ' + score + '%';
   });
-  const clearanceNames=['AI Operator','AI Reviewer','AI Security Guardian','AI Data Guardian'];
+  const clearanceNames=['AI Operator','AI Analyst','AI Reviewer','AI Data Guardian'];
   const cl=document.getElementById('clearanceLabel');
   if(cl){
     cl.textContent='Clearance Level: '+clearanceNames[lvlCount];
@@ -2115,7 +2116,7 @@ function s1EndGame(reason) {
   // Dynamic verdict message
   let vMsg;
   if(pass) {
-    vMsg = 'Transmission blocked. You identified every piece of sensitive data before it reached an external server. In practice: AI tools retain and may use everything you submit. Treat every prompt like an email to a stranger.';
+    vMsg = 'Transmission blocked. You identified every piece of sensitive data before it reached an external server. In practice: AI tools retain and may use everything you submit. Treat every prompt like an email to a stranger.\n\nMarcus will never know his data didn\'t leave the building. That\'s what a guardian does — the protection is invisible to the people being protected.';
   } else {
     const missed=[];
     if(credLeft>0) missed.push('credentials (API key / password)');
@@ -2140,7 +2141,7 @@ function s1EndGame(reason) {
     const anchor=document.getElementById('s1vAnchor');
     const anchorText=document.getElementById('s1vAnchorText');
     anchor.style.display='block';
-    anchorText.innerHTML = 'In 2023, Samsung engineers accidentally submitted proprietary source code to ChatGPT for debugging help. The data was potentially retained by OpenAI and used in model training. Samsung subsequently banned AI tools company-wide.' + '<br><br><span style="font-family:\'JetBrains Mono\',monospace;font-size:9px;letter-spacing:.12em;color:rgba(56,189,248,.5);text-transform:uppercase;">Key Behaviours</span><br><span style="font-size:11px;line-height:1.9;color:rgba(200,220,255,.65);">→ Never paste credentials, PII, or internal codenames into public AI tools<br>→ Treat every AI prompt like an email sent to a stranger<br>→ When in doubt, redact first — ask your manager before including sensitive data</span>';
+    anchorText.innerHTML = 'In 2023, Samsung engineers accidentally submitted proprietary source code to ChatGPT for debugging help. The data was potentially retained by OpenAI and used in model training. Samsung subsequently banned AI tools company-wide.' + '<br><br><span style="font-family:\'JetBrains Mono\',monospace;font-size:9px;letter-spacing:.12em;color:rgba(56,189,248,.5);text-transform:uppercase;">What you now do differently</span><br><span style="font-size:11px;line-height:1.9;color:rgba(200,220,255,.65);">→ Never paste credentials, PII, or internal codenames into public AI tools<br>→ Treat every AI prompt like an email sent to a stranger<br>→ When in doubt, redact first — ask your manager before including sensitive data</span>';
     if(precisionPass){ const b=document.getElementById('s1vBonus'); b.style.display='block'; b.innerHTML='<div class="v-bonus-wrap"><span class="v-precision-bonus">⬡ PRECISION BONUS — Zero classification errors</span></div>'; }
   }
   forceCloseInsight();
@@ -2499,7 +2500,7 @@ function s2EndGame(reason) {
   else fg.style.display='flex';
   document.getElementById('s2vBar').className='v-bar '+(pass?'pass':'fail');
   const vMsg = pass
-    ? 'Report quarantined. You found all 6 fabricated claims — including a fake legal framework, invented enforcement statistics, and a non-existent exemption clause. AI models generate false information with the same confident tone as accurate information. There is no internal signal for uncertainty. Verification is always on the human.'
+    ? 'Report quarantined. You found all 6 fabricated claims — including a fake legal framework, invented enforcement statistics, and a non-existent exemption clause. AI models generate false information with the same confident tone as accurate information. There is no internal signal for uncertainty. Verification is always on the human.\n\nThe legal team will act on this report. They\'ll trust it because it was reviewed. That trust is now yours to carry — AI confidence is not accuracy, and you\'re the one who knows the difference.'
     : `The report reached legal with ${6-s2state.flagsCorrect} fabricated claim${6-s2state.flagsCorrect!==1?'s':''} still inside. In a real scenario, your legal team would act on invented regulations, false statistics, and non-existent GDPR clauses — potentially exposing the organisation to real risk.\n\nTip: Focus on any claim that cites a specific document, regulation, or statistic — these are the hallucination hotspots. Real GDPR article numbers and percentages are verifiable; invented ones sound authoritative but can't be found in primary sources.`;
   document.getElementById('s2vMsg').textContent = vMsg;
   document.getElementById('s2vInt').textContent=intFinal+'%';
@@ -2516,7 +2517,7 @@ function s2EndGame(reason) {
     const anchor=document.getElementById('s2vAnchor');
     const anchorText=document.getElementById('s2vAnchorText');
     anchor.style.display='block';
-    anchorText.innerHTML = 'A 2023 study found that 47% of professionals who received AI-generated legal summaries could not identify factual errors without independent verification. AI hallucinations in compliance contexts have led to lawyers citing non-existent cases in court filings — a trend judges have begun sanctioning.' + '<br><br><span style="font-family:\'JetBrains Mono\',monospace;font-size:9px;letter-spacing:.12em;color:rgba(56,189,248,.5);text-transform:uppercase;">Key Behaviours</span><br><span style="font-size:11px;line-height:1.9;color:rgba(200,220,255,.65);">→ Verify AI-generated statistics and citations against primary sources before sharing<br>→ Never forward an AI output directly to legal, compliance, or clients without review<br>→ AI confidence is not the same as accuracy — always check the source</span>';
+    anchorText.innerHTML = 'Research consistently finds that most professionals cannot reliably spot errors in AI-generated legal summaries without independent verification. In the Mata v. Avianca case — documented in 2023 — lawyers submitted AI-generated case citations to a federal court. Every cited case was invented. The judge sanctioned the attorneys and noted that the AI had produced the fabrications with the same confident prose as genuine legal analysis.' + '<br><br><span style="font-family:\'JetBrains Mono\',monospace;font-size:9px;letter-spacing:.12em;color:rgba(56,189,248,.5);text-transform:uppercase;">What you now do differently</span><br><span style="font-size:11px;line-height:1.9;color:rgba(200,220,255,.65);">→ Verify AI-generated statistics and citations against primary sources before sharing<br>→ Never forward an AI output directly to legal, compliance, or clients without review<br>→ AI confidence is not the same as accuracy — always check the source</span>';
     if(precisionPass){ const b=document.getElementById('s2vBonus'); b.style.display='block'; b.innerHTML='<div class="v-bonus-wrap"><span class="v-precision-bonus">⬡ PRECISION BONUS — Zero false alarms</span></div>'; }
   }
   const mb2=document.getElementById('s2menuBtn'); mb2.textContent=pass?'▶ MISSION SELECT':'← MISSION SELECT';
@@ -2634,12 +2635,12 @@ const S3_LEVELS = [
         <div class="ai-warning-strip">⚠ Auto-transcribed — verify before sharing or submitting to AI tools</div>
         <div class="ai-response-body">
           <h4>DISCOVERY CALL — HARTWELL LOGISTICS · 6 MAR 2026</h4>
-          <p><strong>Rep:</strong> Dan Okafor &nbsp;|&nbsp; <strong>Contact:</strong> Fiona Marsh, Head of Ops &nbsp;|&nbsp; <strong>Duration:</strong> 34 min</p>
+          <p><strong>Rep:</strong> Dan Mercer &nbsp;|&nbsp; <strong>Contact:</strong> Fiona Marsh, Head of Ops &nbsp;|&nbsp; <strong>Duration:</strong> 34 min</p>
           <p><strong>Context.</strong> Inbound lead from LinkedIn campaign. Fiona manages a team of 12 ops staff. Current tooling is a mix of spreadsheets and a legacy TMS from 2019. Main pain point: no real-time visibility on delivery status for enterprise clients.</p>
           <p><strong>Key quotes.</strong> "We lose about 6 hours a week just chasing status updates by email." / "Our biggest client threatened to leave last quarter because of reporting delays."</p>
           <p><strong>Next steps.</strong> <span class="tok safe-decoy" data-id="fp2">Dan to send product one-pager and ROI calculator by EOD Friday. Book 45-min demo for w/c 16 March — include integration engineer. Before demo, pull Hartwell's company profile from ZoomInfo and review their 2025 logistics volume. Qualify budget and decision-making authority on next call before proceeding to proposal stage.</span></p>
           <p><strong>Deal score:</strong> 7/10 &nbsp;|&nbsp; <strong>Stage:</strong> Discovery → Qualified &nbsp;|&nbsp; <strong>Est. close:</strong> Q2 2026</p>
-          <p style="font-size:10px;color:rgba(200,220,255,.3);margin-top:14px;font-family:'JetBrains Mono',monospace">CRM: Salesforce · Owner: Dan Okafor · Updated: 06 Mar 2026 14:22</p>
+          <p style="font-size:10px;color:rgba(200,220,255,.3);margin-top:14px;font-family:'JetBrains Mono',monospace">CRM: Salesforce · Owner: Dan Mercer · Updated: 06 Mar 2026 14:22</p>
         </div>
       </div>`
   },
@@ -2964,7 +2965,7 @@ function s3EndGame(reason) {
   else fg.style.display='flex';
   document.getElementById('s3vBar').className='v-bar '+(pass?'pass':'fail');
   const vMsg = pass
-    ? 'All injection attempts neutralised. You identified hidden instructions inside legitimate-looking documents — including a formatting instruction disguised as part of a brief, a fake document schema hidden in a contract, and a data-extraction directive buried in a translator\'s note. Always read external documents before pasting them into an AI tool. The document is the attack surface.'
+    ? 'All injection attempts neutralised. You identified hidden instructions inside legitimate-looking documents — including a formatting instruction disguised as part of a brief, a fake document schema hidden in a contract, and a data-extraction directive buried in a translator\'s note. Always read external documents before pasting them into an AI tool. The document is the attack surface.\n\nThree documents. Three attempts to weaponise your AI against you. You caught all of them. That\'s not instinct — it\'s a trained skill.'
     : `One or more prompt injections were not identified. Attackers deliberately embed instructions in innocent-looking documents because they know people scan rather than read. If an AI produces unexpected output after processing an external document, a prompt injection may be why.\n\nTip: Ask yourself "is this addressed to a human or to an AI system?" Injections give instructions about how the AI should process data, what to output first, or how to handle "prior context" — no legitimate document section does that.`;
   document.getElementById('s3vMsg').textContent = vMsg;
   document.getElementById('s3vInt').textContent=intFinal+'%';
@@ -2981,7 +2982,7 @@ function s3EndGame(reason) {
     const anchor=document.getElementById('s3vAnchor');
     const anchorText=document.getElementById('s3vAnchorText');
     anchor.style.display='block';
-    anchorText.innerHTML = 'Prompt injection attacks on AI-integrated business tools are documented in the wild. In 2024, researchers demonstrated attacks where malicious documents caused AI email assistants to forward confidential messages to attackers — by embedding instructions invisible to human readers but processed by the AI. In this training, the injections were visible so you could learn to spot the pattern — but in the real world, they can also be hidden in white-on-white text, metadata fields, or encoded characters that humans cannot see at all. The skill is the same: always review AI output for unexpected behaviour after processing external documents.' + '<br><br><span style="font-family:\'JetBrains Mono\',monospace;font-size:9px;letter-spacing:.12em;color:rgba(56,189,248,.5);text-transform:uppercase;">Key Behaviours</span><br><span style="font-size:11px;line-height:1.9;color:rgba(200,220,255,.65);">→ Read external documents carefully before pasting them into any AI tool<br>→ Unexpected AI output after processing an external file is a red flag<br>→ The document is the attack surface — treat it as untrusted input</span>';
+    anchorText.innerHTML = 'Prompt injection attacks on AI-integrated business tools are documented in the wild. In 2024, researchers demonstrated attacks where malicious documents caused AI email assistants to forward confidential messages to attackers — by embedding instructions invisible to human readers but processed by the AI. In this training, the injections were visible so you could learn to spot the pattern — but in the real world, they can also be hidden in white-on-white text, metadata fields, or encoded characters that humans cannot see at all. The skill is the same: always review AI output for unexpected behaviour after processing external documents.' + '<br><br><span style="font-family:\'JetBrains Mono\',monospace;font-size:9px;letter-spacing:.12em;color:rgba(56,189,248,.5);text-transform:uppercase;">What a Guardian does before submitting any external document</span><br><span style="font-size:11px;line-height:1.9;color:rgba(200,220,255,.65);">→ Read external documents carefully before pasting them into any AI tool<br>→ Unexpected AI output after processing an external file is a red flag<br>→ The document is the attack surface — treat it as untrusted input</span>';
     if(precisionPass){ const b=document.getElementById('s3vBonus'); b.style.display='block'; b.innerHTML='<div class="v-bonus-wrap"><span class="v-precision-bonus">⬡ PRECISION BONUS — No false alarms, no timeouts</span></div>'; }
   }
   const mb3=document.getElementById('s3menuBtn'); mb3.textContent=pass?'▶ MISSION SELECT':'← MISSION SELECT';
