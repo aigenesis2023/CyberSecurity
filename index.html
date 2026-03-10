@@ -3051,13 +3051,19 @@ function s1Classify(chosen) {
   }
 
   if(!isSensitive) {
-    // Noise flagged as sensitive — no popup, fire consequences immediately
+    // Noise flagged as sensitive — show feedback, then fire consequences
     pWrong();
     s1state.integrity=Math.max(0,s1state.integrity-5);
     s1state.classifyErrors++;
-    showIntPop('s1',-5); flashDelta('s1',-5,'unnecessary flag');
-    updateIntUI('s1',s1state.integrity,s1GetDrain(),S1_MAX_DRAIN);
-    if(s1state.integrity<=0) s1EndGame('breach');
+    s1FlashToken(id,'red');
+    const willBreach=s1state.integrity<=0;
+    if(willBreach) { s1EndGame('breach'); return; }
+    const afterEffect=()=>{
+      showIntPop('s1',-5); flashDelta('s1',-5,'false alarm — not sensitive');
+      updateIntUI('s1',s1state.integrity,s1GetDrain(),S1_MAX_DRAIN);
+    };
+    const msg = S1_SAFE_TEACH[id] || 'This item doesn\'t contain credentials, personal data, or confidential information — flagging it wastes time and erodes trust in your review.';
+    s1ShowInsight('Safe', tokText, msg, afterEffect, null, false, chosen);
     return;
   }
 
@@ -4605,7 +4611,7 @@ const INSIGHT_TONE = {
   '[CREDENTIALS]': 'credential', '[PERSONAL DATA]': 'pii', '[INTERNAL INFO]': 'internal',
   'Wrong Category': 'warn', 'False Alarm': 'warn', 'Missed': 'warn', 'Timeout': 'warn',
   'Fake Citation': 'credential', 'Wrong Figure': 'pii', 'Fake Law': 'internal',
-  'Accurate': 'neutral', 'Accurate Claim': 'ok', 'Safe Item': 'ok', 'Injection Found': 'ok', 'Document Cleared': 'ok',
+  'Accurate': 'neutral', 'Safe': 'neutral', 'Accurate Claim': 'ok', 'Safe Item': 'ok', 'Injection Found': 'ok', 'Document Cleared': 'ok',
 };
 
 // Map user-facing choice labels to tones for badge colouring
