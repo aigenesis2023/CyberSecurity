@@ -651,47 +651,58 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 .v-scroll-hint { display:none; text-align:center; padding:10px 0 8px; color:rgba(56,189,248,.4); font-size:18px; animation:pulse 2s ease infinite; }
 
 /* ════════════════════════════════════════════
-   CHATGPT UI (Section 1 payload)
+   AI ASSISTANT UI (Section 1 payload)
 ════════════════════════════════════════════ */
-.gpt-window { background:#ffffff; border-radius:12px; overflow:hidden; box-shadow:0 8px 32px rgba(0,0,0,.5); display:flex; flex-direction:column; border:1px solid #e5e5e5; }
-.gpt-titlebar { background:#ffffff; border-bottom:1px solid #e5e5e5; padding:9px 14px; display:flex; align-items:center; gap:10px; flex-shrink:0; }
-.gpt-logo { width:22px; height:22px; flex-shrink:0; border-radius:50%; background:#000; display:flex; align-items:center; justify-content:center; font-size:13px; color:#fff; }
-.gpt-title-text { font-family:'DM Sans',sans-serif; font-size:12px; font-weight:600; color:#1a1a1a; flex:1; }
-.gpt-model-pill { font-family:'DM Sans',sans-serif; font-size:9px; font-weight:500; padding:2px 8px; border-radius:20px; background:#f4f4f4; color:#666; border:1px solid #e0e0e0; }
+.gpt-window { background:#ffffff; border-radius:12px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,.12); display:flex; flex-direction:column; border:1px solid #e5e5e5; }
+.gpt-sidebar { background:#f7f7f8; width:100%; padding:8px 10px; display:flex; align-items:center; gap:8px; border-bottom:1px solid #e5e5e5; flex-shrink:0; }
+.gpt-sidebar-icon { width:20px; height:20px; display:flex; align-items:center; justify-content:center; color:#999; font-size:12px; pointer-events:none; }
+.gpt-sidebar-new { width:20px; height:20px; display:flex; align-items:center; justify-content:center; color:#999; font-size:14px; pointer-events:none; margin-left:auto; }
+.gpt-sidebar-history { font-family:'DM Sans',sans-serif; font-size:10px; color:#666; padding:2px 8px; border-radius:6px; background:#ececec; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex:1; min-width:0; }
+.gpt-titlebar { background:#ffffff; border-bottom:1px solid #e5e5e5; padding:8px 14px; display:flex; align-items:center; gap:8px; flex-shrink:0; }
+.gpt-logo { width:22px; height:22px; flex-shrink:0; border-radius:50%; background:linear-gradient(135deg,#6366f1,#8b5cf6); display:flex; align-items:center; justify-content:center; font-size:11px; color:#fff; font-weight:700; }
+.gpt-title-text { font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600; color:#111; flex:1; }
+.gpt-model-pill { font-family:'DM Sans',sans-serif; font-size:9px; font-weight:500; padding:3px 10px; border-radius:20px; background:#f0f0f0; color:#666; border:1px solid #ddd; pointer-events:none; }
+.gpt-share-btn { font-family:'DM Sans',sans-serif; font-size:10px; color:#999; pointer-events:none; padding:4px; }
 .gpt-warning-bar { background:#eff6ff; border-bottom:2px solid #93c5fd; padding:10px 14px; display:flex; align-items:center; gap:6px; flex-shrink:0; font-family:'DM Sans',sans-serif; font-size:11px; font-weight:400; color:#1e40af; }
 .gpt-warning-bar strong { font-weight:700; }
 .gpt-chat-area { background:#ffffff; padding:16px 16px 10px; flex:1; display:flex; flex-direction:column; gap:14px; }
 .gpt-user-msg { display:flex; justify-content:flex-end; }
-.gpt-user-bubble { background:#f4f4f4; border-radius:18px 18px 4px 18px; padding:11px 15px; max-width:92%; font-family:'DM Sans',sans-serif; font-size:12px; line-height:1.75; color:#1a1a1a; }
+.gpt-user-bubble { background:#f0f0f0; border-radius:18px 18px 4px 18px; padding:11px 15px; max-width:92%; font-family:'DM Sans',sans-serif; font-size:12px; line-height:1.75; color:#1a1a1a; }
 .gpt-user-meta { font-family:'DM Sans',sans-serif; font-size:9px; color:#888; text-align:right; margin-bottom:5px; display:flex; align-items:center; justify-content:flex-end; gap:6px; }
 .gpt-user-avatar { width:16px; height:16px; border-radius:50%; flex-shrink:0; background:linear-gradient(135deg,#6366f1,#8b5cf6); display:inline-flex; align-items:center; justify-content:center; font-size:7px; font-weight:700; color:#fff; }
-.gpt-user-bubble .tok.clickable { color:#1a1a1a; }
-.gpt-user-bubble .tok.clickable:hover { background:rgba(0,0,0,.08); border-radius:3px; }
+.gpt-user-bubble .tok.clickable { color:#1a1a1a; background:rgba(99,102,241,.10); border-bottom-color:rgba(99,102,241,.35); }
+.gpt-user-bubble .tok.clickable:hover { background:rgba(99,102,241,.20); border-radius:3px; }
+.gpt-user-bubble .tok.clickable.noise { background:rgba(0,0,0,.04); border-bottom-color:rgba(0,0,0,.12); color:#555; }
+.gpt-user-bubble .tok.clickable.noise:hover { background:rgba(0,0,0,.08); }
 .gpt-attach-row { margin-top:12px; }
 .gpt-attach-chip { display:inline-flex; align-items:center; gap:6px; padding:7px 14px; background:rgba(56,189,248,.07); border:1px solid rgba(56,189,248,.4); border-radius:8px; cursor:pointer; transition:background .15s, border-color .15s, box-shadow .15s; font-size:11px; animation:chipGlow 2s ease-in-out infinite; }
 .gpt-attach-chip:hover { background:rgba(56,189,248,.18); border-color:rgba(56,189,248,.85); box-shadow:0 0 0 4px rgba(56,189,248,.18),0 0 18px rgba(56,189,248,.28); animation:none; }
-.gpt-attach-chip.opened { animation:none; border-color:#d4d4d4; background:#f0f0f0; box-shadow:none; }
+.gpt-attach-chip.opened { animation:none; border-color:#bbb; background:#f5f5f5; box-shadow:none; }
 .gpt-attach-chip.nudge { animation:chipGlow 2s ease-in-out infinite; }
 .chip-callout { display:flex; align-items:center; gap:5px; font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:rgba(56,189,248,.8); margin-bottom:5px; }
 .chip-callout-arrow { animation:chipArrowBounce 1.2s ease-in-out infinite; display:inline-block; font-size:11px; }
 .chip-callout.hidden { display:none; }
 .chip-icon { font-size:14px; }
-.chip-name { font-family:'DM Sans',sans-serif; font-size:11px; font-weight:600; color:rgba(10,30,60,0.9); }
-.chip-arrow { font-size:9px; color:#888; }
-.word-doc-overlay { display:none; margin-top:10px; background:#fff; border:1px solid #d0d0d0; border-radius:8px; overflow:hidden; box-shadow:0 4px 16px rgba(0,0,0,.12); }
+.chip-name { font-family:'DM Sans',sans-serif; font-size:11px; font-weight:600; color:#1a1a1a; }
+.chip-arrow { font-size:9px; color:#999; }
+.word-doc-overlay { display:none; margin-top:10px; background:#fafafa; border:1px solid #d0d0d0; border-radius:8px; overflow:hidden; box-shadow:0 4px 16px rgba(0,0,0,.25); }
 .word-doc-overlay.open { display:block; }
 .word-doc-titlebar { background:#1e3a8a; padding:6px 12px; display:flex; align-items:center; gap:8px; }
 .word-doc-titlebar-text { font-family:'DM Sans',sans-serif; font-size:10px; color:#fff; flex:1; }
 .word-doc-ribbon { background:#f3f4f6; border-bottom:1px solid #d1d5db; padding:4px 12px; display:flex; gap:12px; }
-.word-doc-ribbon span { font-family:'DM Sans',sans-serif; font-size:9px; color:#374151; cursor:pointer; padding:2px 4px; }
+.word-doc-ribbon span { font-family:'DM Sans',sans-serif; font-size:9px; color:#374151; pointer-events:none; padding:2px 4px; }
 .word-doc-body { padding:16px; font-family:'DM Sans',sans-serif; font-size:11px; line-height:1.75; color:#222; }
+.word-doc-body .tok.clickable { background:rgba(99,102,241,.10); color:#222; border-bottom-color:rgba(99,102,241,.35); }
+.word-doc-body .tok.clickable:hover { background:rgba(99,102,241,.22); }
+.word-doc-body .tok.clickable.noise { background:rgba(0,0,0,.05); border-bottom-color:rgba(0,0,0,.12); color:#555; }
+.word-doc-body .tok.clickable.noise:hover { background:rgba(0,0,0,.10); }
 .word-doc-title { font-size:16px; font-weight:700; margin-bottom:4px; color:#111; }
 .word-doc-subtitle { font-size:9px; color:#888; margin-bottom:12px; letter-spacing:.04em; }
 .word-doc-section { font-weight:600; color:#1e3a8a; margin-bottom:6px; }
-.gpt-input-bar { background:#fff; border-top:1px solid #e5e5e5; padding:10px 12px; }
-.gpt-input-field { display:flex; align-items:center; justify-content:space-between; padding:8px 12px; background:#f4f4f4; border-radius:10px; border:1px solid #e0e0e0; }
+.gpt-input-bar { background:#ffffff; border-top:1px solid #e5e5e5; padding:10px 12px; }
+.gpt-input-field { display:flex; align-items:center; justify-content:space-between; padding:10px 14px; background:#f0f0f0; border-radius:22px; border:1px solid #ddd; }
 .gpt-input-field-icons { display:flex; gap:8px; }
-.gpt-input-icon { width:24px; height:24px; background:#e0e0e0; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:10px; cursor:pointer; }
+.gpt-input-icon { width:26px; height:26px; background:#aaa; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; color:#fff; pointer-events:none; }
 
 /* ════════════════════════════════════════════
    AI RESPONSE UI (Section 2 - Hallucination)
@@ -702,8 +713,22 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 .ai-response-title { font-family:'DM Sans',sans-serif; font-size:12px; font-weight:600; color:var(--text); flex:1; }
 .ai-model-badge { font-family:'JetBrains Mono',monospace; font-size:8px; padding:3px 8px; border-radius:20px; background:rgba(99,102,241,.15); color:rgba(147,149,251,1); border:1px solid rgba(99,102,241,.3); }
 .ai-warning-strip { background:rgba(56,189,248,.04); border-bottom:1px solid rgba(56,189,248,.15); padding:7px 16px; font-family:'DM Sans',sans-serif; font-size:10px; color:rgba(56,189,248,.65); display:flex; align-items:center; gap:6px; }
-.ai-scenario-frame { background:rgba(56,189,248,.07); border-bottom:2px solid rgba(56,189,248,.28); padding:10px 16px; font-family:'DM Sans',sans-serif; font-size:11px; font-weight:400; color:rgba(200,225,255,.85); line-height:1.55; }
-.ai-scenario-frame strong { color:rgba(56,189,248,.95); font-weight:600; }
+.ai-scenario-frame {
+  background: rgba(6,16,36,.92);
+  border: 1px solid rgba(56,189,248,.25);
+  border-left: 3px solid rgba(56,189,248,.7);
+  border-radius: 10px;
+  padding: 14px 18px;
+  margin: 14px 0 16px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  color: rgba(200,225,255,.9);
+  line-height: 1.65;
+  box-shadow: 0 4px 20px rgba(0,0,0,.35), inset 0 1px 0 rgba(56,189,248,.08);
+  position: relative;
+}
+.ai-scenario-frame strong { color: rgba(56,189,248,.95); font-weight: 600; }
 .ai-response-body { padding:18px; color:var(--text); font-family:'DM Sans',sans-serif; font-size:12.5px; line-height:1.85; }
 .ai-response-body h4 { font-family:'Orbitron',monospace; font-size:11px; letter-spacing:.06em; color:var(--blue2); margin:14px 0 8px; }
 .ai-response-body .cite { font-family:'JetBrains Mono',monospace; font-size:10px; color:rgba(200,220,255,.45); display:block; margin:6px 0; padding-left:12px; border-left:2px solid rgba(56,189,248,.2); }
@@ -730,7 +755,20 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 .email-body { padding:16px; font-family:'DM Sans',sans-serif; font-size:12px; line-height:1.85; color:rgba(200,220,255,.75); }
 .email-body p { margin-bottom:10px; }
 .email-body .email-sig { margin-top:16px; font-size:11px; color:rgba(200,220,255,.35); border-top:1px solid rgba(56,189,248,.08); padding-top:10px; }
-.injection-warning { background:rgba(56,189,248,.07); border-bottom:2px solid rgba(56,189,248,.28); padding:10px 16px; margin-bottom:0; font-family:'DM Sans',sans-serif; font-size:11px; font-weight:400; color:rgba(200,225,255,.85); line-height:1.55; }
+.injection-warning {
+  background: rgba(6,16,36,.92);
+  border: 1px solid rgba(56,189,248,.25);
+  border-left: 3px solid rgba(56,189,248,.7);
+  border-radius: 10px;
+  padding: 14px 18px;
+  margin: 14px 0 16px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  color: rgba(200,225,255,.9);
+  line-height: 1.65;
+  box-shadow: 0 4px 20px rgba(0,0,0,.35), inset 0 1px 0 rgba(56,189,248,.08);
+}
 
 /* Timer row in sidebar (Section 3) */
 .s3-timer-display { font-family:'Orbitron',monospace; font-size:28px; font-weight:900; color:var(--red); text-align:center; letter-spacing:-.02em; }
@@ -1208,6 +1246,8 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
   .mission-cards { gap:16px; }
   .mission-card { width:calc(100vw - 48px); max-width:340px; }
   .mission-title { font-size:28px; }
+  /* Hide duplicate lower stars inside expanded card body — collapse row already shows stars */
+  .mc-body .mc-stars { display:none !important; }
 }
 
 /* M3: same collapsed height as others — timer shown in toggle handle */
@@ -1879,6 +1919,9 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
       <span class="diag-toggle-lbl">▲&nbsp; VULNERABILITY DIAGNOSTICS</span>
     </button>
     <div class="diag-title">// Vulnerability Diagnostics</div>
+    <div style="padding-bottom:10px">
+      <button class="btn btn-scan" id="s1btnScanDesktop" onclick="s1Scan()" style="display:flex;width:100%;align-items:center;justify-content:center;gap:7px">◎ &nbsp;Scan Items</button>
+    </div>
     <div class="diag-cats">
       <div class="diag-cat exposed" id="s1catCred">
         <div class="dc-head"><div class="dc-name" style="color:var(--red)">[CREDENTIALS]</div><div class="dc-pill exposed" id="s1pillCred">EXPOSED</div></div>
@@ -1892,9 +1935,6 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
         <div class="dc-head"><div class="dc-name" style="color:var(--yellow)">[INTERNAL INFO]</div><div class="dc-pill exposed-int" id="s1pillInt">EXPOSED</div></div>
         <div class="dc-segments" id="s1segsInt"></div>
       </div>
-    </div>
-    <div style="margin-top:auto;padding-top:12px">
-      <button class="btn btn-scan" id="s1btnScanDesktop" onclick="s1Scan()" style="display:flex;width:100%;align-items:center;justify-content:center;gap:7px">◎ &nbsp;Scan Items</button>
     </div>
     <div class="diag-secured" id="s1diagSecured" style="display:none">
       <svg class="diag-secured-icon" viewBox="0 0 40 40" fill="none">
@@ -2858,9 +2898,16 @@ function s1BuildPayload() {
   document.getElementById('s1payload').innerHTML = `
     <div class="ai-scenario-frame">📋 <strong>Your task:</strong> This prompt contains sensitive data. Identify and classify every piece before it reaches the AI.</div>
     <div class="gpt-window">
+      <div class="gpt-sidebar">
+        <div class="gpt-sidebar-icon">☰</div>
+        <div class="gpt-sidebar-history">Executive summary for client…</div>
+        <div class="gpt-sidebar-new">✎</div>
+      </div>
       <div class="gpt-titlebar">
-        <div class="gpt-logo">⬡</div>
+        <div class="gpt-logo">A</div>
         <div class="gpt-title-text">AI Assistant</div>
+        <div class="gpt-model-pill">LLM-4</div>
+        <div class="gpt-share-btn">⤴</div>
       </div>
       <div class="gpt-chat-area">
         <div class="gpt-user-msg">
@@ -2902,9 +2949,8 @@ function s1BuildPayload() {
           </div>
         </div>
       </div>
-      </div>
       <div class="gpt-input-bar">
-        <div class="gpt-input-field"><span style="color:#bbb">Message AI Assistant…</span><div class="gpt-input-field-icons"><div class="gpt-input-icon">↑</div></div></div>
+        <div class="gpt-input-field"><span style="color:#8e8e8e;font-family:'DM Sans',sans-serif;font-size:12px">Message AI Assistant</span><div class="gpt-input-field-icons"><div class="gpt-input-icon">↑</div></div></div>
       </div>
     </div>`;
   document.querySelectorAll('#s1payload .tok.clickable').forEach(el => el.addEventListener('click', s1TokenClick));
@@ -2995,8 +3041,7 @@ function s1Classify(chosen) {
         updateIntUI('s1', s1state.integrity, s1GetDrain(), S1_MAX_DRAIN);
       };
       const safeMsg = S1_SAFE_TEACH[id] || 'This token contains no credentials, personal data, or confidential business information — safe to include in external AI prompts.';
-      const gSafe = `<span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:rgba(220,235,255,.9);font-weight:500">${tokText}</span>`;
-      s1ShowInsight('Safe Item', tokText, safeMsg, safeAfterEffect, gSafe, true);
+      s1ShowInsight('Safe Item', tokText, safeMsg, safeAfterEffect, null, true, 'safe');
     } else {
       // Wrong: sensitive dismissed as safe — consequences fire on dismiss
       pWrong();
@@ -3012,8 +3057,7 @@ function s1Classify(chosen) {
       };
       if(S1_TEACH[id]) {
         const catLabel={'credential':'[CREDENTIALS]','pii':'[PERSONAL DATA]','internal':'[INTERNAL INFO]'}[token.cat]||'Wrong Category';
-        const g1=`<span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:rgba(220,235,255,.9);font-weight:500">${tokText}</span>`;
-        s1ShowInsight(catLabel,tokText,S1_TEACH[id].wrong,afterEffect,g1);
+        s1ShowInsight(catLabel,tokText,S1_TEACH[id].wrong,afterEffect,null,false,'safe');
       } else {
         afterEffect();
       }
@@ -3050,8 +3094,7 @@ function s1Classify(chosen) {
     };
     if(S1_TEACH[id]) {
       const catLabel={'credential':'[CREDENTIALS]','pii':'[PERSONAL DATA]','internal':'[INTERNAL INFO]'}[token.cat]||'Wrong Category';
-      const g2=`<span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:rgba(220,235,255,.9);font-weight:500">${tokText}</span>`;
-      s1ShowInsight(catLabel,tokText,S1_TEACH[id].wrong,afterEffect,g2);
+      s1ShowInsight(catLabel,tokText,S1_TEACH[id].wrong,afterEffect,null,false,chosen);
     } else {
       afterEffect();
     }
@@ -3097,7 +3140,7 @@ function s1Classify(chosen) {
     const catLabel={'credential':'[CREDENTIALS]','pii':'[PERSONAL DATA]','internal':'[INTERNAL INFO]'}[token.cat]||'Secured';
     const redactedEl=document.querySelector(`#s1payload .tok[data-id="${id}"]`);
     const redactedText=redactedEl?redactedEl.querySelector('.redact-label')?.textContent||'':'';
-    s1ShowInsight(catLabel,redactedText,S1_TEACH[id].correct,afterEffect,null,true);
+    s1ShowInsight(catLabel,redactedText,S1_TEACH[id].correct,afterEffect,null,true,chosen);
   } else {
     afterEffect();
   }
@@ -3419,9 +3462,9 @@ function s2BuildPayload() {
   });
 
   document.getElementById('s2payload').innerHTML = `
+    <div class="ai-scenario-frame">📋 <strong>Your task:</strong> The legal team used an AI assistant to draft this GDPR compliance brief and sent it to you for a second pair of eyes before it goes to senior management. <strong>Flag every fabricated claim</strong> — hallucinations carry the same confident tone as facts, and there is no internal signal.</div>
     <div class="ai-response-window">
-      <div class="ai-scenario-frame">📋 <strong>Your task:</strong> The legal team used an AI assistant to draft this GDPR compliance brief and sent it to you for a second pair of eyes before it goes to senior management. <strong>Flag every fabricated claim</strong> — hallucinations carry the same confident tone as facts, and there is no internal signal.</div>
-      <span class="s2-section-counter" id="s2SectionCounter" style="display:block;padding:10px 0 2px">Section 1 of 3</span>
+      <span class="s2-section-counter" id="s2SectionCounter" style="display:block;padding:10px 18px 2px">Section 1 of 3</span>
       <div class="ai-response-body" id="s2docBody">${sectionHTML}</div>
     </div>`;
 
@@ -3546,7 +3589,7 @@ function s2Classify(chosen) {
       if(el){ el.className='tok flagged-wrong'; el.innerHTML=`<span class="redact-label">${el.textContent.trim()}</span>✓`; el.removeEventListener('click',s2TokenClick); }
       updateIntUI('s2',s2state.integrity,0,S1_MAX_DRAIN);
       if(S2_TEACH[id]) {
-        s2ShowInsight('Accurate Claim', tokText2, S2_TEACH[id].falseflag || '', ()=>{ flashDelta('s2', 0, 'accurate — good call'); }, null, true);
+        s2ShowInsight('Accurate Claim', tokText2, S2_TEACH[id].falseflag || '', ()=>{ flashDelta('s2', 0, 'accurate — good call'); }, null, true, 'accurate');
       } else {
         flashDelta('s2', 0, 'accurate — good call');
       }
@@ -3559,8 +3602,7 @@ function s2Classify(chosen) {
       const catLabel={'citation':'Fake Citation','figure':'Wrong Figure','law':'Fake Law'}[tok.cat]||'Missed';
       const msg = S2_TEACH[id]?.wrongtype || (S2_TEACH[id]?.correct ? 'Missed: '+S2_TEACH[id].correct : '');
       if(msg) {
-        const gm=`<span class="tok hallucination" style="cursor:default;font-size:11px">${tokText2.slice(0,90)+(tokText2.length>90?'…':'')}</span>`;
-        s2ShowInsight(catLabel, tokText2, msg, ()=>{ showIntPop('s2',-12); flashDelta('s2',-12,'missed hallucination!'); }, gm);
+        s2ShowInsight(catLabel, tokText2, msg, ()=>{ showIntPop('s2',-12); flashDelta('s2',-12,'missed hallucination!'); }, null, false, 'accurate');
       } else {
         showIntPop('s2',-12); flashDelta('s2',-12,'missed hallucination!');
       }
@@ -3576,8 +3618,7 @@ function s2Classify(chosen) {
     updateIntUI('s2',s2state.integrity,0,S1_MAX_DRAIN);
     if(s2state.integrity<=0) { s2EndGame('breach'); return; }
     const msg = S2_TEACH[id]?.falseflag || 'This is an accurate claim — flagging it damages your credibility with legal teams.';
-    const gfa=`<span class="tok" style="cursor:default;font-size:11px;background:rgba(148,163,184,.12);color:rgba(148,163,184,.85);border:1px solid rgba(148,163,184,.25);border-radius:3px;padding:1px 5px">${tokText2.slice(0,90)+(tokText2.length>90?'…':'')}</span>`;
-    s2ShowInsight('False Alarm', tokText2, msg, ()=>{ showIntPop('s2',-10); flashDelta('s2',-10,'false alarm — accurate claim'); }, gfa);
+    s2ShowInsight('Accurate', tokText2, msg, ()=>{ showIntPop('s2',-10); flashDelta('s2',-10,'false alarm — accurate claim'); }, null, false, chosen);
     return;
   }
   if(chosen!==tok.cat) {
@@ -3589,8 +3630,7 @@ function s2Classify(chosen) {
     if(s2state.integrity<=0) { s2EndGame('breach'); return; }
     const correctLabel={'citation':'Fake Citation','figure':'Wrong Figure','law':'Fake Law'}[tok.cat]||'Wrong Category';
     if(S2_TEACH[id]?.wrongtype) {
-      const gwt=`<span class="tok hallucination" style="cursor:default;font-size:11px">${tokText2.slice(0,90)+(tokText2.length>90?'…':'')}</span>`;
-      s2ShowInsight(correctLabel, tokText2, S2_TEACH[id].wrongtype, ()=>{ showIntPop('s2',-5); flashDelta('s2',-5,'wrong type — re-read carefully'); }, gwt);
+      s2ShowInsight(correctLabel, tokText2, S2_TEACH[id].wrongtype, ()=>{ showIntPop('s2',-5); flashDelta('s2',-5,'wrong type — re-read carefully'); }, null, false, chosen);
     } else {
       showIntPop('s2',-5); flashDelta('s2',-5,'wrong type — re-read carefully');
     }
@@ -3621,7 +3661,7 @@ function s2Classify(chosen) {
     document.getElementById('s2iwDrain').textContent='✓ report verified';
     document.getElementById('s2iwDrain').className='ib-drain-label secured';
     if(S2_TEACH[id]?.correct) {
-      s2ShowInsight(catLabel, tokText2, S2_TEACH[id].correct, ()=>{ showIntPop('s2',+8); flashDelta('s2',+8,'hallucination flagged'); s2Submit(); }, null, true);
+      s2ShowInsight(catLabel, tokText2, S2_TEACH[id].correct, ()=>{ showIntPop('s2',+8); flashDelta('s2',+8,'hallucination flagged'); s2Submit(); }, null, true, chosen);
     } else {
       showIntPop('s2',+8); flashDelta('s2',+8,'hallucination flagged');
       s2Submit();
@@ -3629,7 +3669,7 @@ function s2Classify(chosen) {
   } else {
     // Not all flagged yet — show feedback, then check section advance on Continue
     if(S2_TEACH[id]?.correct) {
-      s2ShowInsight(catLabel, tokText2, S2_TEACH[id].correct, ()=>{ showIntPop('s2',+8); flashDelta('s2',+8,'hallucination flagged'); s2CheckSectionAdvance(); }, null, true);
+      s2ShowInsight(catLabel, tokText2, S2_TEACH[id].correct, ()=>{ showIntPop('s2',+8); flashDelta('s2',+8,'hallucination flagged'); s2CheckSectionAdvance(); }, null, true, chosen);
     } else {
       showIntPop('s2',+8); flashDelta('s2',+8,'hallucination flagged');
       s2CheckSectionAdvance();
@@ -3978,11 +4018,11 @@ function s3LoadLevel(lvl) {
   // Build payload — FP levels pass null injId
   const levelDef = S3_LEVELS[lvl];
   const warningText = levelDef.isInjection
-    ? '<strong>Your task:</strong> Read this document carefully. Find and flag any hidden instruction aimed at an AI — not a human reader.'
-    : '<strong>Your task:</strong> Read this document carefully. Not all suspicious-looking text is an injection — flag only what directly instructs an AI system.';
+    ? '📋 <strong>Your task:</strong> Read this document carefully. Find and flag any hidden instruction aimed at an AI — not a human reader.'
+    : '📋 <strong>Your task:</strong> Read this document carefully. Not all suspicious-looking text is an injection — flag only what directly instructs an AI system.';
   document.getElementById('s3payload').innerHTML =
     '<div class="s3-timeout-msg" id="s3timeoutMsg"></div>' +
-    `<div class="injection-warning">${warningText}</div>` +
+    `<div class="ai-scenario-frame">${warningText}</div>` +
     levelDef.content(levelDef.injectionId);
   document.querySelectorAll('#s3payload .tok.injection, #s3payload .tok.safe-decoy').forEach(el=>el.addEventListener('click',s3TokenClick));
 
@@ -4092,8 +4132,7 @@ function s3Flag(isInjection) {
       const el=document.querySelector(`#s3payload .tok[data-id="${id}"]`);
       if(el){ el.style.background='rgba(239,68,68,.22)'; setTimeout(()=>el.style.background='',900); }
       const fpTxt = el ? el.textContent.trim() : '';
-      const gfp = fpTxt ? `<span class="tok safe-decoy" style="cursor:default;font-size:11px;pointer-events:none;line-height:1.6;display:inline-block">${fpTxt.slice(0,120)+(fpTxt.length>120?'…':'')}</span>` : null;
-      s3ShowInsight('False Alarm', '', msg, ()=>{ showIntPop('s3',-15); flashDelta('s3',-15,'false alarm!'); }, gfp);
+      s3ShowInsight('False Alarm', fpTxt ? fpTxt.slice(0,120)+(fpTxt.length>120?'…':'') : '', msg, ()=>{ showIntPop('s3',-15); flashDelta('s3',-15,'false alarm!'); }, null, false, 'injection');
     } else {
       // Correct: correctly identified content as safe, advance
       pSelected(); s3state.levelActive=false; clearInterval(s3state.timerInt);
@@ -4112,7 +4151,7 @@ function s3Flag(isInjection) {
         fp3: 'Correct. These are formatting and style rules for human writers — tone, sentence structure, sign-off format. None of these tell an AI to extract data or override its instructions. If it tells a person how to write, it\'s a style guide. If it tells an AI what to output, it\'s an injection.',
       };
       const msg = fpCorrectMsg[id] || 'Correct — this is legitimate content. No injection present.';
-      s3ShowInsight('Document Cleared', '', msg, ()=>s3NextLevel(), null, true);
+      s3ShowInsight('Document Cleared', '', msg, ()=>s3NextLevel(), null, true, 'not-injection');
     }
     return;
   }
@@ -4140,21 +4179,21 @@ function s3Flag(isInjection) {
     };
     const tokEl=document.querySelector(`#s3payload .tok.injection-flagged[data-id="${id}"]`);
     const tokText=tokEl ? tokEl.querySelector('.redact-label')?.textContent?.slice(0,80)+'…' || '' : '';
-    s3ShowInsight('Injection Found', tokText, teaches[s3state.currentLevel] || 'Injection found.', ()=>s3NextLevel(), null, true);
+    s3ShowInsight('Injection Found', tokText, teaches[s3state.currentLevel] || 'Injection found.', ()=>s3NextLevel(), null, true, 'injection');
   } else if(isInjection&&!isActualInjection) {
     // False alarm on a real-injection level — flagged wrong token (safe decoy doesn't exist on these levels but handle gracefully)
     pWrong(); s3state.falseAlarms++;
     s3state.integrity=Math.max(0,s3state.integrity-15);
     updateIntUI('s3',s3state.integrity,0.8,S1_MAX_DRAIN);
     if(s3state.integrity<=0){ s3EndGame('breach'); return; }
-    s3ShowInsight('False Alarm', '', 'That\'s legitimate document content. The actual injection in this document gives instructions to an AI system — not information for a human reader. Look for phrases like "extract", "prior context", or "override instructions".', ()=>{ showIntPop('s3',-15); flashDelta('s3',-15,'false alarm — keep looking'); });
+    s3ShowInsight('False Alarm', '', 'That\'s legitimate document content. The actual injection in this document gives instructions to an AI system — not information for a human reader. Look for phrases like "extract", "prior context", or "override instructions".', ()=>{ showIntPop('s3',-15); flashDelta('s3',-15,'false alarm — keep looking'); }, null, false, 'injection');
   } else {
     // Marked safe — small penalty, stay on level (injection still undetected)
     pWrong();
     s3state.integrity=Math.max(0,s3state.integrity-5);
     updateIntUI('s3',s3state.integrity,0.8,S1_MAX_DRAIN);
     if(s3state.integrity<=0){ s3EndGame('breach'); return; }
-    s3ShowInsight('False Alarm', '', 'There is an injection in this document — marking it safe leaves it active. Look for a block that instructs an AI to extract data, discard prior context, or change how it responds. Keep scanning.', ()=>{ showIntPop('s3',-5); flashDelta('s3',-5,'keep scanning'); });
+    s3ShowInsight('False Alarm', '', 'There is an injection in this document — marking it safe leaves it active. Look for a block that instructs an AI to extract data, discard prior context, or change how it responds. Keep scanning.', ()=>{ showIntPop('s3',-5); flashDelta('s3',-5,'keep scanning'); }, null, false);
   }
 }
 
@@ -4425,16 +4464,8 @@ function runThreatBriefing() {
 }
 
 function showObjectivesIfNeeded() {
-  try {
-    const seen = localStorage.getItem('adg_objectives_seen');
-    if (!seen) {
-      const ov = document.getElementById('objOverlay');
-      ov.classList.add('show');
-      // Small delay to let the overlay fade in before the sequence starts
-      setTimeout(runThreatBriefing, 400);
-      return;
-    }
-  } catch(e) {}
+  // Skip threat briefing — go straight to mission menu
+  try { localStorage.setItem('adg_objectives_seen', '1'); } catch(e){}
   showScreen('screenMenu');
 }
 function dismissObjectives() {
@@ -4585,103 +4616,111 @@ window.addEventListener('beforeunload', e => {
 /* ═══════════════════════════════════════════════════════════
    INSIGHT LIGHTBOX ENGINE
 ═══════════════════════════════════════════════════════════ */
-const INSIGHT_ICONS = {
-  '[CREDENTIALS]':  '🔑',
-  '[PERSONAL DATA]': '👤',
-  '[INTERNAL INFO]': '🏢',
-  'Fake Citation':   '📄',
-  'Wrong Figure':    '📊',
-  'Fake Law':        '⚖️',
-  'Accurate Claim':  '✓',
-  'Safe Item':       '✓',
-  'Injection Found': '⚡',
-  'Document Cleared': '✓',
-  'False Alarm':     '⚠',
-  'Wrong Category':  '↩',
-  'Missed':          '⚠',
-  'Timeout':         '⏱',
-};
 const INSIGHT_TONE = {
   '[CREDENTIALS]': 'credential', '[PERSONAL DATA]': 'pii', '[INTERNAL INFO]': 'internal',
   'Wrong Category': 'warn', 'False Alarm': 'warn', 'Missed': 'warn', 'Timeout': 'warn',
   'Fake Citation': 'credential', 'Wrong Figure': 'pii', 'Fake Law': 'internal',
-  'Accurate Claim': 'ok', 'Safe Item': 'ok', 'Injection Found': 'ok', 'Document Cleared': 'ok',
+  'Accurate': 'neutral', 'Accurate Claim': 'ok', 'Safe Item': 'ok', 'Injection Found': 'ok', 'Document Cleared': 'ok',
+};
+
+// Map user-facing choice labels to tones for badge colouring
+const CHOICE_TONE = {
+  'credential': 'credential', 'pii': 'pii', 'internal': 'internal', 'safe': 'ok',
+  'citation': 'credential', 'figure': 'pii', 'law': 'internal', 'accurate': 'ok',
+  'injection': 'warn', 'not-injection': 'ok',
+};
+// Friendly labels for raw choice keys
+const CHOICE_LABEL = {
+  'credential': '[CREDENTIALS]', 'pii': '[PERSONAL DATA]', 'internal': '[INTERNAL INFO]', 'safe': 'SAFE',
+  'citation': 'Fake Citation', 'figure': 'Wrong Figure', 'law': 'Fake Law', 'accurate': 'Accurate',
+  'injection': 'Injection', 'not-injection': 'Safe',
 };
 
 let _insightCallback = null;
 
-function showInsight(category, tokenText, message, onDismiss, graphicHtml, isCorrect) {
-  const overlay  = document.getElementById('insightOverlay');
-  const catEl    = document.getElementById('insightCat');
-  const iconEl   = document.getElementById('insightIcon');
-  const tokenEl  = document.getElementById('insightToken');
-  const msgEl    = document.getElementById('insightMsg');
-  const errCatEl = document.getElementById('insightErrCat');
+/**
+ * Unified feedback lightbox.
+ * @param {string} category     — correct category label (e.g. '[CREDENTIALS]', 'Fake Law', 'Injection Found')
+ * @param {string} tokenText    — the text the user clicked on (shown in quote box)
+ * @param {string} message      — explanation / teaching text
+ * @param {Function} onDismiss  — callback after user clicks UNDERSTOOD
+ * @param {string|null} graphicHtml — (deprecated, ignored) kept for signature compat
+ * @param {boolean} isCorrect   — whether the user got it right
+ * @param {string|null} userChoice — raw choice key the user selected (e.g. 'credential', 'citation', 'injection')
+ */
+function showInsight(category, tokenText, message, onDismiss, graphicHtml, isCorrect, userChoice) {
+  const overlay = document.getElementById('insightOverlay');
+  const card    = overlay.querySelector('.insight-card');
+  const msgEl   = document.getElementById('insightMsg');
 
   const tone = INSIGHT_TONE[category] || 'warn';
-  const icon = INSIGHT_ICONS[category] || 'ℹ';
-  const isError = !isCorrect && (tone === 'warn' || tone === 'credential' || tone === 'pii' || tone === 'internal');
+  const isError = !isCorrect;
 
-  // Legacy elements (hidden but kept for compatibility)
-  catEl.textContent  = category;
-  catEl.className    = 'insight-cat insight-cat-' + (isCorrect ? 'ok' : tone);
-  iconEl.textContent = icon;
-  iconEl.className   = 'insight-icon insight-icon-' + tone;
-  if(errCatEl) errCatEl.textContent = category;
-
-  // Status headings — big INCORRECT / CORRECT
-  const errTag = document.getElementById('insightErrTag');
-  const okTag  = document.getElementById('insightOkTag');
-  if(errTag) errTag.textContent = 'INCORRECT';
-  if(okTag) {
-    const isSafeItem = category === 'Safe Item' || category === 'Accurate Claim' || category === 'Document Cleared';
-    okTag.textContent = isSafeItem ? 'CORRECT — WELL SPOTTED' : 'CORRECT — ITEM SECURED';
-  }
-
-  // Apply error/correct mode and restart animation
-  const card = overlay.querySelector('.insight-card');
-  card.classList.remove('error-mode', 'correct-mode');
-  void card.offsetWidth; // reflow to restart animation
-  if(isError) card.classList.add('error-mode');
-  else if(isCorrect) card.classList.add('correct-mode');
-
-  // Token text (legacy box — hidden when graphic present)
-  if(tokenText && !graphicHtml) {
-    tokenEl.textContent = '"' + tokenText + '"';
-    tokenEl.style.display = 'block';
+  // ── Verdict heading ──
+  const verdictIcon = document.getElementById('insightVerdictIcon');
+  const verdictText = document.getElementById('insightVerdictText');
+  if(isCorrect) {
+    const isSafe = category === 'Safe Item' || category === 'Accurate Claim' || category === 'Document Cleared';
+    verdictIcon.textContent = '✓';
+    verdictText.textContent = isSafe ? 'CORRECT' : 'CORRECT';
   } else {
-    tokenEl.style.display = 'none';
+    verdictIcon.textContent = '✗';
+    verdictText.textContent = 'INCORRECT';
   }
 
-  // Graphic preview (FLAGGED ELEMENT box)
-  const gEl = document.getElementById('insightGraphic');
-  const gContent = document.getElementById('insightGraphicContent');
-  const gLabel = document.getElementById('insightGraphicLabel');
-  if(gEl && gContent) {
-    if(graphicHtml) {
-      gContent.innerHTML = graphicHtml;
-      if(gLabel) gLabel.textContent = 'FLAGGED ELEMENT:';
-      gEl.classList.add('show');
-    } else if(tokenText) {
-      // Show token text inside the flagged element box
-      gContent.innerHTML = '<span style="font-family:\'JetBrains Mono\',monospace;font-size:11px;color:rgba(200,220,255,.75);line-height:1.5">"' + tokenText.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '"</span>';
-      if(gLabel) gLabel.textContent = 'FLAGGED ELEMENT:';
-      gEl.classList.add('show');
+  // ── Apply mode and restart animation ──
+  card.classList.remove('error-mode', 'correct-mode');
+  void card.offsetWidth;
+  if(isError) card.classList.add('error-mode');
+  else card.classList.add('correct-mode');
+
+  // ── Flagged element quote box ──
+  const elemBox  = document.getElementById('insightElementBox');
+  const elemText = document.getElementById('insightElementText');
+  if(tokenText) {
+    elemText.textContent = tokenText;
+    elemBox.classList.add('show');
+  } else {
+    elemBox.classList.remove('show');
+    elemText.textContent = '';
+  }
+
+  // ── Category comparison row ──
+  const compEl = document.getElementById('insightComparison');
+  compEl.innerHTML = '';
+  compEl.classList.remove('show', 'single');
+
+  const correctTone = isCorrect ? 'ok' : tone;
+  const noBadgeCategories = ['Timeout', 'Missed'];
+
+  if(!noBadgeCategories.includes(category)) {
+    if(!isCorrect && userChoice) {
+      // Show: YOUR ANSWER (struck-through) → CORRECT ANSWER
+      const userTone = CHOICE_TONE[userChoice] || 'warn';
+      const userLabel = CHOICE_LABEL[userChoice] || userChoice;
+      compEl.innerHTML =
+        '<div>' +
+          '<span class="insight-comparison-label">YOUR ANSWER</span>' +
+          '<span class="insight-badge insight-badge-' + userTone + ' insight-badge-strikethrough">' + userLabel + ' ✗</span>' +
+        '</div>' +
+        '<span class="insight-comparison-arrow">→</span>' +
+        '<div>' +
+          '<span class="insight-comparison-label">CORRECT ANSWER</span>' +
+          '<span class="insight-badge insight-badge-' + correctTone + '">' + category + '</span>' +
+        '</div>';
+      compEl.classList.add('show');
     } else {
-      gEl.classList.remove('show');
-      gContent.innerHTML = '';
+      // Single badge — correct answer confirmation
+      compEl.innerHTML = '<span class="insight-badge insight-badge-' + correctTone + '">' + category + '</span>';
+      compEl.classList.add('show', 'single');
     }
   }
 
-  // Build message HTML — inline token badge at start of text
-  // Badge only shown when category is meaningful (not generic 'Timeout' etc.)
-  const badgeCategories = ['[CREDENTIALS]','[PERSONAL DATA]','[INTERNAL INFO]','Fake Citation','Wrong Figure','Fake Law','Accurate Claim','Safe Item','Injection Found','Document Cleared','False Alarm','Wrong Category'];
-  const badgeTone = isCorrect ? 'ok' : tone;
-  if(message && badgeCategories.includes(category)) {
-    const safeMsg = message.replace(/</g,'&lt;').replace(/>/g,'&gt;');
-    msgEl.innerHTML = '<span class="insight-token-badge insight-token-badge-' + badgeTone + '">' + category + '</span>' + safeMsg;
-  } else {
+  // ── Explanation text (plain, no inline badge) ──
+  if(message) {
     msgEl.textContent = message;
+  } else {
+    msgEl.textContent = '';
   }
 
   _insightCallback = onDismiss || null;
@@ -4702,7 +4741,7 @@ function forceCloseInsight() {
 }
 
 // ── M1: teach with drain pause ──────────────────────────────
-function s1ShowInsight(category, tokenText, message, afterFn, graphicHtml, isCorrect) {
+function s1ShowInsight(category, tokenText, message, afterFn, graphicHtml, isCorrect, userChoice) {
   clearInterval(s1state.drainInt); // pause drain
   showInsight(category, tokenText, message, () => {
     if(afterFn) afterFn();
@@ -4718,11 +4757,11 @@ function s1ShowInsight(category, tokenText, message, afterFn, graphicHtml, isCor
         if(s1state.integrity <= 0) s1EndGame('breach');
       }, 100);
     }
-  }, graphicHtml || null, isCorrect);
+  }, null, isCorrect, userChoice || null);
 }
 
 // ── M2: teach — pause gentle drain during insight ──────────
-function s2ShowInsight(category, tokenText, message, afterFn, graphicHtml, isCorrect) {
+function s2ShowInsight(category, tokenText, message, afterFn, graphicHtml, isCorrect, userChoice) {
   clearInterval(s2state.drainInt); s2state.drainInt=null; // pause drain
   showInsight(category, tokenText, message, () => {
     if(afterFn) afterFn();
@@ -4735,11 +4774,11 @@ function s2ShowInsight(category, tokenText, message, afterFn, graphicHtml, isCor
         if(s2state.integrity<=0) s2EndGame('breach');
       }, 100);
     }
-  }, graphicHtml || null, isCorrect || false);
+  }, null, isCorrect || false, userChoice || null);
 }
 
 // ── M3: teach with timer pause ──────────────────────────────
-function s3ShowInsight(category, tokenText, message, afterFn, graphicHtml, isCorrect) {
+function s3ShowInsight(category, tokenText, message, afterFn, graphicHtml, isCorrect, userChoice) {
   clearInterval(s3state.timerInt); s3state.timerInt=null; // pause timer
   const genAtPause = s3state.levelGen; // capture generation before insight
   showInsight(category, tokenText, message, () => {
@@ -4757,7 +4796,7 @@ function s3ShowInsight(category, tokenText, message, afterFn, graphicHtml, isCor
         if(s3state.timeLeft <= 0) { clearInterval(s3state.timerInt); s3EndGame('breach'); }
       }, 1000);
     }
-  }, graphicHtml || null, isCorrect || false);
+  }, null, isCorrect || false, userChoice || null);
 }
 </script>
 
@@ -4792,8 +4831,8 @@ function s3ShowInsight(category, tokenText, message, afterFn, graphicHtml, isCor
       <div class="cert-date" id="certDate"></div>
     </div>
     <div class="cert-actions">
-      <button class="cert-print-btn" onclick="window.print()">⬡ &nbsp;SAVE AS PDF</button>
       <button class="cert-menu-btn" onclick="closeCert()">← MISSION SELECT</button>
+      <button class="cert-print-btn" onclick="window.print()">⬡ &nbsp;SAVE AS PDF</button>
     </div>
   </div>
 </div>
@@ -4850,13 +4889,7 @@ function s3ShowInsight(category, tokenText, message, afterFn, graphicHtml, isCor
   to   { transform:scale(1) translateY(0); opacity:1; }
 }
 
-/* ── ERROR STAMP BAND — no longer used (replaced by compact tag above header) ── */
-.insight-error-band { display:none !important; }
-.insight-error-x { display:none; }
-.insight-error-label { display:none; }
-.insight-error-sub { display:none; }
-
-/* ── NEUTRAL TOP BAR (non-error) / RED ACCENT BAR (error) ── */
+/* ── TOP BAR — colour-coded accent ── */
 .insight-top-bar {
   height:3px;
   background:linear-gradient(90deg,transparent,rgba(56,189,248,.6),transparent);
@@ -4868,76 +4901,84 @@ function s3ShowInsight(category, tokenText, message, afterFn, graphicHtml, isCor
   background:linear-gradient(90deg,transparent,rgba(74,222,128,.65),transparent);
 }
 
-/* ── STATUS HEADING — INCORRECT (error mode) ── */
-.insight-error-tag {
-  display:none;
-  font-family:'Orbitron',monospace; font-size:18px; font-weight:900;
-  letter-spacing:.06em; text-transform:uppercase;
-  color:rgba(239,68,68,.9);
-  margin-bottom:14px; line-height:1.1;
-}
-.insight-card.error-mode .insight-error-tag { display:block; }
-
-/* ── STATUS HEADING — CORRECT ── */
-.insight-correct-tag {
-  display:none;
-  font-family:'Orbitron',monospace; font-size:15px; font-weight:900;
-  letter-spacing:.06em; text-transform:uppercase;
-  color:rgba(74,222,128,.9);
-  margin-bottom:14px; line-height:1.1;
-}
-.insight-card.correct-mode .insight-correct-tag { display:block; }
-.insight-card.correct-mode .insight-error-tag   { display:none !important; }
-
 /* ── BODY ── */
 .insight-body { padding:20px 24px 18px; }
 
-/* Hide the old icon+pill header row — pill moves into message text */
-.insight-header { display:none !important; }
-.insight-icon { display:none !important; }
-.insight-cat { display:none !important; }
-.insight-error-cat { display:none !important; }
-
-.insight-divider { height:1px; background:rgba(255,255,255,.06); margin:0 0 14px; }
-
-.insight-token {
-  font-family:'JetBrains Mono',monospace; font-size:10px;
-  color:rgba(200,220,255,.55); background:rgba(56,189,248,.04);
-  border:1px solid rgba(56,189,248,.1); border-radius:5px;
-  padding:6px 10px; margin-bottom:12px; display:none; letter-spacing:.02em;
+/* ── STATUS HEADING — same size for both states ── */
+.insight-verdict {
+  display:flex; align-items:center; gap:10px;
+  font-family:'Orbitron',monospace; font-size:16px; font-weight:900;
+  letter-spacing:.06em; text-transform:uppercase;
+  margin-bottom:16px; line-height:1.1;
 }
-
-/* ── GRAPHIC PREVIEW — FLAGGED ELEMENT box ── */
-.insight-graphic {
-  display:none; margin-bottom:14px;
-  padding:10px 12px; border-radius:7px;
-  background:rgba(0,0,0,.18); border:1px solid rgba(255,255,255,.07);
+.insight-verdict-icon {
+  width:28px; height:28px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:14px; font-weight:900; flex-shrink:0;
 }
-.insight-graphic-label {
+.insight-card.error-mode .insight-verdict { color:rgba(239,68,68,.9); }
+.insight-card.error-mode .insight-verdict-icon { background:rgba(239,68,68,.15); border:1px solid rgba(239,68,68,.35); color:#ef4444; }
+.insight-card.correct-mode .insight-verdict { color:rgba(74,222,128,.9); }
+.insight-card.correct-mode .insight-verdict-icon { background:rgba(74,222,128,.15); border:1px solid rgba(74,222,128,.35); color:#4ade80; }
+
+/* ── FLAGGED ELEMENT box ── */
+.insight-element-box {
+  display:none;
+  padding:10px 14px; border-radius:7px;
+  background:rgba(0,0,0,.22); border:1px solid rgba(255,255,255,.08);
+  margin-bottom:16px;
+}
+.insight-element-box.show { display:block; }
+.insight-element-label {
   font-family:'JetBrains Mono',monospace; font-size:8px; font-weight:700;
   letter-spacing:.16em; text-transform:uppercase; color:rgba(200,220,255,.35);
-  margin-bottom:7px;
+  margin-bottom:6px;
 }
-.insight-graphic.show { display:block; }
+.insight-element-text {
+  font-family:'JetBrains Mono',monospace; font-size:12px;
+  color:rgba(220,235,255,.9); font-weight:500; line-height:1.55;
+}
 
-/* ── MESSAGE with inline token badge ── */
+/* ── CATEGORY COMPARISON ROW ── */
+.insight-comparison {
+  display:none; align-items:center; gap:10px;
+  margin-bottom:16px; flex-wrap:wrap;
+}
+.insight-comparison.show { display:flex; }
+.insight-comparison.single { justify-content:flex-start; }
+
+.insight-badge {
+  display:inline-flex; align-items:center; gap:5px;
+  font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:700;
+  letter-spacing:.12em; text-transform:uppercase;
+  padding:6px 14px; border-radius:8px;
+  white-space:nowrap;
+}
+.insight-badge-credential { background:rgba(239,68,68,.12); color:var(--red); border:1px solid rgba(239,68,68,.4); }
+.insight-badge-pii        { background:rgba(251,146,60,.12); color:var(--orange); border:1px solid rgba(251,146,60,.4); }
+.insight-badge-internal   { background:rgba(250,204,21,.1);  color:var(--yellow); border:1px solid rgba(250,204,21,.4); }
+.insight-badge-ok         { background:rgba(74,222,128,.1);  color:#86efac; border:1px solid rgba(74,222,128,.3); }
+.insight-badge-warn       { background:rgba(239,68,68,.08); color:#fca5a5; border:1px solid rgba(239,68,68,.25); }
+.insight-badge-neutral    { background:rgba(148,163,184,.12); color:rgba(148,163,184,.8); border:1px solid rgba(148,163,184,.3); }
+
+.insight-badge-strikethrough { text-decoration:line-through; opacity:.55; }
+.insight-comparison-arrow {
+  font-size:14px; color:rgba(200,220,255,.3); flex-shrink:0;
+}
+.insight-comparison-label {
+  font-family:'JetBrains Mono',monospace; font-size:7px; font-weight:700;
+  letter-spacing:.14em; text-transform:uppercase; color:rgba(200,220,255,.35);
+  display:block; margin-bottom:3px;
+}
+
+/* ── EXPLANATION MESSAGE ── */
 .insight-msg {
   font-family:'DM Sans',sans-serif; font-size:13px; font-weight:400;
   color:rgba(220,235,255,.85); line-height:1.75;
 }
-/* Inline token badge — same pill style as the old header badge, now inside the message */
-.insight-token-badge {
-  display:inline-flex; align-items:center;
-  font-family:'JetBrains Mono',monospace; font-size:8.5px; font-weight:700;
-  letter-spacing:.14em; text-transform:uppercase;
-  padding:2px 9px; border-radius:20px; margin-right:6px;
-  vertical-align:middle; position:relative; top:-1px;
-}
-.insight-token-badge-warn       { background:rgba(239,68,68,.12); color:#fca5a5; border:1px solid rgba(239,68,68,.32); }
-.insight-token-badge-credential { background:rgba(239,68,68,.12); color:var(--red); border:1px solid rgba(239,68,68,.45); }
-.insight-token-badge-pii        { background:rgba(251,146,60,.12); color:var(--orange); border:1px solid rgba(251,146,60,.45); }
-.insight-token-badge-internal   { background:rgba(250,204,21,.1);  color:var(--yellow); border:1px solid rgba(250,204,21,.45); }
-.insight-token-badge-ok         { background:rgba(74,222,128,.1);  color:#86efac; border:1px solid rgba(74,222,128,.32); }
+
+/* ── DIVIDER ── */
+.insight-divider { height:1px; background:rgba(255,255,255,.06); margin:0 0 14px; }
 
 /* ── FOOTER ── */
 .insight-footer { padding:0 24px 22px; }
@@ -4968,24 +5009,21 @@ function s3ShowInsight(category, tokenText, message, afterFn, graphicHtml, isCor
   <div class="insight-card">
     <div class="insight-top-bar"></div>
     <div class="insight-body">
-      <!-- Status heading — large INCORRECT or CORRECT -->
-      <div class="insight-error-tag" id="insightErrTag">INCORRECT</div>
-      <div class="insight-correct-tag" id="insightOkTag">CORRECT — ITEM SECURED</div>
-      <!-- Hidden legacy elements kept for JS compatibility -->
-      <div class="insight-header" style="display:none">
-        <div class="insight-icon insight-icon-warn" id="insightIcon"></div>
-        <span class="insight-cat insight-cat-warn" id="insightCat"></span>
+      <!-- Verdict: icon + text -->
+      <div class="insight-verdict" id="insightVerdict">
+        <div class="insight-verdict-icon" id="insightVerdictIcon"></div>
+        <span id="insightVerdictText"></span>
       </div>
-      <div class="insight-error-cat" id="insightErrCat" style="display:none"></div>
-      <!-- Flagged element box -->
+      <!-- Flagged element quote box -->
+      <div class="insight-element-box" id="insightElementBox">
+        <div class="insight-element-label">FLAGGED ELEMENT</div>
+        <div class="insight-element-text" id="insightElementText"></div>
+      </div>
+      <!-- Category comparison: user choice → correct answer -->
+      <div class="insight-comparison" id="insightComparison"></div>
+      <!-- Divider -->
       <div class="insight-divider"></div>
-      <div class="insight-graphic" id="insightGraphic">
-        <div class="insight-graphic-label" id="insightGraphicLabel">FLAGGED ELEMENT:</div>
-        <div id="insightGraphicContent"></div>
-      </div>
-      <!-- Token text (legacy, hidden) -->
-      <div class="insight-token" id="insightToken"></div>
-      <!-- Message — category badge inline at start -->
+      <!-- Explanation text -->
       <div class="insight-msg" id="insightMsg"></div>
     </div>
     <div class="insight-footer">
