@@ -178,7 +178,11 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
   box-shadow:0 18px 44px rgba(0,0,0,.65), 0 0 32px rgba(56,189,248,.16), 0 0 0 1px rgba(56,189,248,.18), inset 0 1px 0 rgba(56,189,248,.14);
 }
 
-.mission-card.locked { opacity:.45; filter:grayscale(.5); cursor:default; }
+.mission-card.locked { cursor: default; border-color: rgba(255,255,255,.05) !important; box-shadow: 0 4px 16px rgba(0,0,0,.3) !important; }
+.mission-card.locked:hover { transform: none !important; border-color: rgba(255,255,255,.05) !important; box-shadow: 0 4px 16px rgba(0,0,0,.3) !important; }
+.mission-card.locked .mc-body { opacity: 0.42; }
+.mission-card.locked .mc-icon { filter: grayscale(1) brightness(.5); }
+.mission-card.locked .mc-accent { opacity: 0.2; }
 
 .mc-accent { height:3px; background:linear-gradient(90deg,transparent,rgba(56,189,248,.8),transparent); }
 
@@ -213,7 +217,21 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
   border-radius:6px; cursor:pointer; transition:all .2s; text-align:center;
 }
 .mc-launch-btn:hover { background:rgba(56,189,248,.14); border-color:rgba(56,189,248,.6); box-shadow:0 0 16px rgba(56,189,248,.15); }
-.mc-launch-btn.locked-btn { opacity:.3; cursor:not-allowed; pointer-events:none; }
+.mc-launch-btn.locked-btn {
+  opacity: 1 !important;
+  cursor: default !important;
+  pointer-events: none !important;
+  background: transparent !important;
+  border: 1px solid rgba(255,255,255,.07) !important;
+  color: rgba(255,255,255,.2) !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  letter-spacing: .1em !important;
+  font-size: 9px !important;
+}
+.mc-launch-btn.locked-btn svg { flex-shrink: 0; }
 .mc-launch-btn.replay-btn { border-color:rgba(74,222,128,.4); color:rgba(74,222,128,.9); }
 .mc-launch-btn.replay-btn:hover { background:rgba(74,222,128,.08); border-color:rgba(74,222,128,.6); }
 
@@ -602,9 +620,10 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 .ai-response-body h4 { font-family:'Orbitron',monospace; font-size:11px; letter-spacing:.06em; color:var(--blue2); margin:14px 0 8px; }
 .ai-response-body .cite { font-family:'JetBrains Mono',monospace; font-size:10px; color:rgba(200,220,255,.45); display:block; margin:6px 0; padding-left:12px; border-left:2px solid rgba(56,189,248,.2); }
 .ai-response-body .num-stat { font-family:'Orbitron',monospace; font-size:13px; color:var(--yellow); }
-.s2-continue-wrap { padding:10px 0 4px; }
-.s2-continue-btn { width:100%; padding:9px 14px; background:rgba(56,189,248,.05); border:1px dashed rgba(56,189,248,.25); border-radius:6px; color:rgba(56,189,248,.6); font-family:'DM Sans',sans-serif; font-size:11px; cursor:pointer; transition:all .18s; letter-spacing:.02em; }
-.s2-continue-btn:hover { background:rgba(56,189,248,.1); border-color:rgba(56,189,248,.5); color:var(--blue2); }
+.s2-section-nav { display:flex; align-items:center; justify-content:space-between; padding:12px 0 4px; border-top:1px solid rgba(56,189,248,.1); margin-top:14px; }
+.s2-section-counter { font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:rgba(56,189,248,.4); }
+.s2-next-btn { font-family:'Orbitron',monospace; font-size:9px; font-weight:700; letter-spacing:.16em; text-transform:uppercase; padding:10px 18px; background:rgba(56,189,248,.07); border:1px solid rgba(56,189,248,.35); border-radius:6px; color:var(--blue2); cursor:pointer; transition:all .18s; }
+.s2-next-btn:hover { background:rgba(56,189,248,.14); border-color:rgba(56,189,248,.65); box-shadow:0 0 12px rgba(56,189,248,.15); }
 @keyframes s2FadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
 .ai-flag-instruction { background:rgba(56,189,248,.04); border:1px solid rgba(56,189,248,.15); border-radius:8px; padding:10px 14px; margin-bottom:12px; font-family:'JetBrains Mono',monospace; font-size:9px; color:rgba(56,189,248,.6); letter-spacing:.04em; display:flex; align-items:center; gap:8px; }
 
@@ -1094,6 +1113,37 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 .mission-card.collapsed { cursor: pointer; }
 .mission-card.expanded .mc-collapse-chevron { transform: rotate(90deg); }
 
+/* ══ DEV TOGGLE ══ */
+#devToggleBtn {
+  position: fixed; top: 12px; left: 12px; z-index: 9998;
+  display: flex; align-items: center; gap: 7px;
+  padding: 5px 9px 5px 8px;
+  background: rgba(6,16,36,.75); border: 1px solid rgba(255,255,255,.07);
+  border-radius: 20px; cursor: pointer;
+  opacity: 0.28; transition: opacity .25s;
+  backdrop-filter: blur(8px);
+}
+#devToggleBtn:hover { opacity: 0.72; }
+.dev-toggle-lbl {
+  font-family: 'JetBrains Mono', monospace; font-size: 8px;
+  letter-spacing: .16em; color: rgba(255,255,255,.45); text-transform: uppercase;
+}
+.dev-toggle-track {
+  width: 28px; height: 15px; border-radius: 8px;
+  background: rgba(239,68,68,.25); border: 1px solid rgba(239,68,68,.35);
+  position: relative; transition: background .25s, border-color .25s;
+  display: inline-block;
+}
+.dev-toggle-track.on { background: rgba(56,189,248,.25); border-color: rgba(56,189,248,.45); }
+.dev-toggle-thumb {
+  position: absolute; top: 2px; left: 2px;
+  width: 9px; height: 9px; border-radius: 50%;
+  background: rgba(239,68,68,.8); transition: transform .25s, background .25s;
+}
+.dev-toggle-track.on .dev-toggle-thumb {
+  transform: translateX(13px); background: rgba(56,189,248,.9);
+}
+
 /* ══ DESKTOP: ALWAYS SHOW FULL CARDS — ignore collapse ══ */
 @media (min-width: 769px) {
   .mission-card .mc-collapse-row { display: none !important; }
@@ -1348,12 +1398,6 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
       <div class="mp-level-label" id="mpLevelLabel"></div>
     </div>
 
-    <!-- DEV TOOLBAR -->
-    <div id="devToolbar" style="display:flex;align-items:center;gap:8px;justify-content:center;padding:16px 0 2px;opacity:0.45;">
-      <span style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.16em;color:rgba(255,255,255,.35);text-transform:uppercase;">DEV</span>
-      <button onclick="devResetAll();showDevToast('⬡ DEV: Progress reset')" style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:rgba(239,68,68,.65);background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.18);border-radius:4px;padding:4px 10px;cursor:pointer;">LOCK</button>
-      <button onclick="devUnlockAll();showDevToast('⬡ DEV: All missions unlocked')" style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:rgba(56,189,248,.65);background:rgba(56,189,248,.07);border:1px solid rgba(56,189,248,.18);border-radius:4px;padding:4px 10px;cursor:pointer;">UNLOCK ALL</button>
-    </div>
 
   </div>
 </div>
@@ -1381,6 +1425,14 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 
 <!-- DEV PANEL TOAST -->
 <div id="devPanel" style="position:fixed;bottom:16px;left:50%;transform:translateX(-50%);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:rgba(74,222,128,.9);background:rgba(6,16,36,.95);border:1px solid rgba(74,222,128,.3);border-radius:6px;padding:7px 18px;z-index:9999;opacity:0;transition:opacity .4s;pointer-events:none;text-transform:uppercase;"></div>
+
+<!-- DEV TOGGLE — fixed top-left, all views -->
+<button id="devToggleBtn" onclick="devToggle()" aria-label="Dev: toggle progress lock" title="DEV: toggle progress">
+  <span class="dev-toggle-lbl">DEV</span>
+  <span class="dev-toggle-track" id="devTrack">
+    <span class="dev-toggle-thumb" id="devThumb"></span>
+  </span>
+</button>
 
 <!-- ══════════════════════════════════════════════
      SECTION 1 — DATA LEAKAGE
@@ -2135,6 +2187,14 @@ function devResetAll() {
   updateMenuState();
   console.log('[DEV] Progress reset to zero.');
 }
+let _devOn = false;
+function devToggle() {
+  _devOn = !_devOn;
+  const track = document.getElementById('devTrack');
+  if (track) track.className = 'dev-toggle-track' + (_devOn ? ' on' : '');
+  if (_devOn) { devUnlockAll(); showDevToast('⬡ DEV: All missions unlocked'); }
+  else { devResetAll(); showDevToast('⬡ DEV: Progress reset'); }
+}
 function showDevToast(msg) {
   const panel = document.getElementById('devPanel');
   if(panel) { panel.textContent=msg; panel.style.opacity='1'; clearTimeout(panel._t); panel._t=setTimeout(()=>panel.style.opacity='0',2400); }
@@ -2178,7 +2238,7 @@ function updateMenuState() {
     document.getElementById('m2status').className = 'mc-status locked-s';
     document.getElementById('m2dot').className = 'mc-dot-s grey';
     document.getElementById('m2statuslbl').textContent = 'LOCKED';
-    if(b2) { b2.textContent = '— COMPLETE MISSION 01 FIRST'; b2.classList.add('locked-btn'); b2.classList.remove('replay-btn'); }
+    if(b2) { b2.innerHTML = '<svg width="11" height="13" viewBox="0 0 11 13" fill="none"><rect x="1" y="5.5" width="9" height="7" rx="1.5" stroke="rgba(255,255,255,.3)" stroke-width="1.2" fill="rgba(255,255,255,.04)"/><path d="M3 5.5V3.5a2.5 2.5 0 0 1 5 0v2" stroke="rgba(255,255,255,.3)" stroke-width="1.2" stroke-linecap="round" fill="none"/><circle cx="5.5" cy="9" r="1" fill="rgba(255,255,255,.25)"/></svg>COMPLETE MISSION 01 TO UNLOCK'; b2.classList.add('locked-btn'); b2.classList.remove('replay-btn'); }
   }
 
   // ── M3 — locked until M2 done ──
@@ -2200,7 +2260,7 @@ function updateMenuState() {
     document.getElementById('m3status').className = 'mc-status locked-s';
     document.getElementById('m3dot').className = 'mc-dot-s grey';
     document.getElementById('m3statuslbl').textContent = 'LOCKED';
-    if(b3) { b3.textContent = '— COMPLETE MISSION 02 FIRST'; b3.classList.add('locked-btn'); b3.classList.remove('replay-btn'); }
+    if(b3) { b3.innerHTML = '<svg width="11" height="13" viewBox="0 0 11 13" fill="none"><rect x="1" y="5.5" width="9" height="7" rx="1.5" stroke="rgba(255,255,255,.3)" stroke-width="1.2" fill="rgba(255,255,255,.04)"/><path d="M3 5.5V3.5a2.5 2.5 0 0 1 5 0v2" stroke="rgba(255,255,255,.3)" stroke-width="1.2" stroke-linecap="round" fill="none"/><circle cx="5.5" cy="9" r="1" fill="rgba(255,255,255,.25)"/></svg>COMPLETE MISSION 02 TO UNLOCK'; b3.classList.add('locked-btn'); b3.classList.remove('replay-btn'); }
   }
 
   // Progress dots (legacy — hidden, kept for compat)
@@ -2891,7 +2951,7 @@ const S2_TOKENS = [
 let s2state = {
   tokState:{}, integrity:100, gameActive:false, timerInt:null, drainInt:null,
   flagsCorrect:0, flagsWrong:0, catCount:{citation:0,figure:0,law:0}, activeToken:null,
-  cooldownUntil:0,
+  cooldownUntil:0, currentSection:1,
 };
 
 function s2Init() {
@@ -2987,15 +3047,12 @@ function s2BuildPayload() {
     }
   ];
 
+  // Track current section (1-indexed to match section IDs s2sec1…s2sec4)
+  s2state.currentSection = 1;
+
   let sectionHTML = '';
   sections.forEach((sec, i) => {
-    // All sections hidden except first; single continue button only shown for current section
     sectionHTML += `<div class="s2-section" id="${sec.id}" style="display:${i===0?'block':'none'}">${sec.html}</div>`;
-    if(i < sections.length - 1) {
-      sectionHTML += `<div class="s2-continue-wrap" id="s2cont${i+1}" style="display:${i===0?'block':'none'}">
-        <button class="s2-continue-btn" onclick="s2RevealSection(${i+1})">Continue reading ↓ <span style="opacity:.5;font-size:9px;margin-left:4px">section ${i+2} of ${sections.length}</span></button>
-      </div>`;
-    }
   });
 
   document.getElementById('s2payload').innerHTML = `
@@ -3008,29 +3065,56 @@ function s2BuildPayload() {
       <div class="ai-scenario-frame">📋 <strong>Your task:</strong> The legal team used an AI assistant to draft this GDPR compliance brief and sent it to you for a second pair of eyes before it goes to senior management. <strong>Flag every fabricated claim</strong> — hallucinations carry the same confident tone as facts, and there is no internal signal.</div>
       <div class="ai-warning-strip">⚠ Unverified AI output — flag fabricated claims before forwarding to legal or compliance</div>
       <div class="ai-response-body" id="s2docBody">${sectionHTML}</div>
+      <div class="s2-section-nav" id="s2SectionNav">
+        <span class="s2-section-counter" id="s2SectionCounter">Section 1 of ${sections.length}</span>
+        <button class="s2-next-btn" id="s2NextBtn" onclick="s2NextSection()">NEXT SECTION →</button>
+      </div>
     </div>`;
 
-  // Only attach listeners for tokens in visible section 1 initially
+  // Attach listeners for tokens in visible section 1
   s2AttachVisibleListeners();
 }
 
-function s2RevealSection(idx) {
-  const sec = document.getElementById('s2sec'+(idx+1));
-  const btn = document.getElementById('s2cont'+idx);
-  if(sec) { sec.style.display='block'; sec.style.animation='s2FadeIn .35s ease'; }
-  if(btn) btn.style.display='none';
-  // Show the next continue button if there is one
-  const nextBtn = document.getElementById('s2cont'+(idx+1));
-  if(nextBtn) nextBtn.style.display='block';
-  // Attach listeners to newly visible tokens
-  s2AttachVisibleListeners();
-  // Scan animation on newly revealed tokens
-  const newToks = sec ? sec.querySelectorAll('.tok.hallucination') : [];
-  newToks.forEach((el,i)=>{
-    setTimeout(()=>{ el.classList.add('hint-scan'); setTimeout(()=>el.classList.remove('hint-scan'),1500); },i*120+80);
-  });
-  // Scroll new section into view smoothly
-  if(sec) setTimeout(()=>sec.scrollIntoView({behavior:'smooth',block:'nearest'}),80);
+function s2NextSection() {
+  const totalSections = 4;
+  const current = s2state.currentSection;
+  if (current >= totalSections) return;
+
+  // Fade out current section
+  const currentEl = document.getElementById('s2sec' + current);
+  if (currentEl) {
+    currentEl.style.transition = 'opacity .22s';
+    currentEl.style.opacity = '0';
+    setTimeout(() => { currentEl.style.display = 'none'; currentEl.style.opacity = '1'; currentEl.style.transition = ''; }, 230);
+  }
+
+  const next = current + 1;
+  s2state.currentSection = next;
+
+  setTimeout(() => {
+    const nextEl = document.getElementById('s2sec' + next);
+    if (nextEl) {
+      nextEl.style.display = 'block';
+      nextEl.style.animation = 's2FadeIn .35s ease';
+      s2AttachVisibleListeners();
+      // Scan animation on hallucination tokens
+      nextEl.querySelectorAll('.tok.hallucination').forEach((el, i) => {
+        setTimeout(() => { el.classList.add('hint-scan'); setTimeout(() => el.classList.remove('hint-scan'), 1500); }, i * 120 + 80);
+      });
+    }
+    // Update section counter
+    const counter = document.getElementById('s2SectionCounter');
+    if (counter) counter.textContent = `Section ${next} of ${totalSections}`;
+    // Hide NEXT on last section
+    if (next >= totalSections) {
+      const btn = document.getElementById('s2NextBtn');
+      if (btn) btn.style.display = 'none';
+    }
+    // Scroll doc body to top
+    const body = document.getElementById('s2docBody');
+    if (body) body.scrollTop = 0;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, 240);
 }
 
 function s2AttachVisibleListeners() {
