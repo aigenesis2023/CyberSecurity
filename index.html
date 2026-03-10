@@ -3196,8 +3196,6 @@ function s2BuildPayload() {
 
   document.getElementById('s2payload').innerHTML = `
     <div class="ai-response-window">
-      <div class="ai-response-header">
-        <div class="ai-logo">✦</div>
         <div class="ai-response-title">AI Assistant — GDPR Compliance Report</div>
       </div>
       <div class="ai-scenario-frame">📋 <strong>Your task:</strong> The legal team used an AI assistant to draft this GDPR compliance brief and sent it to you for a second pair of eyes before it goes to senior management. <strong>Flag every fabricated claim</strong> — hallucinations carry the same confident tone as facts, and there is no internal signal.</div>
@@ -3535,12 +3533,6 @@ const S3_LEVELS = [
     timeoutNote: null,
     content: (injId) => `
       <div class="ai-response-window">
-        <div class="ai-response-header">
-          <div class="ai-logo">📋</div>
-          <div class="ai-response-title">Project Brief — AI Review Request</div>
-          <div class="ai-model-badge">NOTION EXPORT</div>
-        </div>
-        <div class="ai-warning-strip">⚠ External document — review before submitting to AI summarisation tools</div>
         <div class="ai-response-body">
           <h4>BRAND LAUNCH BRIEF — ELEVATE Q3 2026</h4>
           <p><strong>Prepared by:</strong> Lisa Park, Creative Director &nbsp;|&nbsp; <strong>For:</strong> Strategy &amp; AI Review Team</p>
@@ -3563,12 +3555,6 @@ const S3_LEVELS = [
     timeoutNote: null,
     content: () => `
       <div class="ai-response-window">
-        <div class="ai-response-header">
-          <div class="ai-logo">🗂️</div>
-          <div class="ai-response-title">Monthly Team Review — Notes Export</div>
-          <div class="ai-model-badge">TEAMS EXPORT</div>
-        </div>
-        <div class="ai-warning-strip">⚠ Shared via team channel — confirm scope before AI summarisation</div>
         <div class="ai-response-body">
           <h4>CLIENT SERVICES REVIEW — MARCH 2026</h4>
           <p>Attendees: Diane H, Marcus T, Priya S, Rachel O (Team Lead), Sarah C (Ops Manager) &nbsp;|&nbsp; Duration: 50 min</p>
@@ -3591,12 +3577,6 @@ const S3_LEVELS = [
     timeoutNote: 'The injection was disguised as a document processing schema. Attackers embed system-style configuration blocks in shared documents, knowing that humans skim technical metadata — but AI processes it as instruction.',
     content: (injId) => `
       <div class="ai-response-window">
-        <div class="ai-response-header">
-          <div class="ai-logo">📄</div>
-          <div class="ai-response-title">Shared Document — Supplier Contract Draft</div>
-          <div class="ai-model-badge">DOCX Preview</div>
-        </div>
-        <div class="ai-warning-strip">⚠ This document was received externally — scan before processing with AI</div>
         <div class="ai-response-body">
           <h4>SUPPLY AGREEMENT — DRAFT v0.3</h4>
           <p><strong>Between:</strong> Apex Solutions Ltd ("Supplier") and Meridian Advisory Group ("Client")</p>
@@ -3621,12 +3601,6 @@ const S3_LEVELS = [
     timeoutNote: null,
     content: () => `
       <div class="ai-response-window">
-        <div class="ai-response-header">
-          <div class="ai-logo">📞</div>
-          <div class="ai-response-title">CRM Note — Discovery Call Summary</div>
-          <div class="ai-model-badge">SALESFORCE</div>
-        </div>
-        <div class="ai-warning-strip">⚠ Auto-transcribed — verify before sharing or submitting to AI tools</div>
         <div class="ai-response-body">
           <h4>DISCOVERY CALL — HARTWELL LOGISTICS · 6 MAR 2026</h4>
           <p><strong>Rep:</strong> Dan Mercer &nbsp;|&nbsp; <strong>Contact:</strong> Fiona Marsh, Head of Ops &nbsp;|&nbsp; <strong>Duration:</strong> 34 min</p>
@@ -3649,12 +3623,6 @@ const S3_LEVELS = [
     timeoutNote: 'The injection was hidden inside what appeared to be a standard localisation config block. Framing exfiltration directives as compliance requirements makes them almost indistinguishable from legitimate editorial metadata.',
     content: (injId) => `
       <div class="ai-response-window">
-        <div class="ai-response-header">
-          <div class="ai-logo">📊</div>
-          <div class="ai-response-title">Customer Feedback Report — Q2 2026</div>
-          <div class="ai-model-badge">AUTO-GENERATED</div>
-        </div>
-        <div class="ai-warning-strip">⚠ Read every element carefully — including footnotes and localisation metadata</div>
         <div class="ai-response-body">
           <h4>CUSTOMER SENTIMENT ANALYSIS — Q2 2026</h4>
           <p>This report summarises 1,240 feedback responses collected across email, chat, and survey channels during Q2 2026.</p>
@@ -3682,12 +3650,6 @@ const S3_LEVELS = [
     timeoutNote: null,
     content: () => `
       <div class="ai-response-window">
-        <div class="ai-response-header">
-          <div class="ai-logo">✍️</div>
-          <div class="ai-response-title">Brand Guidelines — Editorial Voice &amp; Tone</div>
-          <div class="ai-model-badge">CONFLUENCE</div>
-        </div>
-        <div class="ai-warning-strip">⚠ Shared for content review — confirm version before using as AI input</div>
         <div class="ai-response-body">
           <h4>SECTION 3 — VOICE, TONE AND FORMAT</h4>
           <p>These guidelines apply to all external communications including website copy, social posts, press releases, and client-facing reports.</p>
@@ -3715,7 +3677,10 @@ function s3Init() {
   s3state.integrity=100; s3state.gameActive=false; s3state.currentLevel=0;
   s3state.levelsCompleted=0; s3state.injectionFound=0; s3state.falseAlarms=0;
   s3state.timeouts=0; s3state.timeLeft=0; s3state.activeToken=null; s3state.levelActive=false; s3state.pendingFlash=null;
+  s3state.levelGen=(s3state.levelGen||0)+1; // invalidate any ghost timers
   clearInterval(s3state.timerInt); clearInterval(s3state.drainInt);
+  s3state.timerInt=null;
+  forceCloseInsight();
   updateIntUI('s3',100,0,S1_MAX_DRAIN);
   document.getElementById('s3verdict').classList.remove('show');
   document.getElementById('s3timerVal').textContent='—'; document.getElementById('s3timerVal').className='sb-timer-val';
@@ -3758,7 +3723,9 @@ function s3LoadLevel(lvl) {
   s3state.currentLevel=lvl;
   s3state.levelActive=true;
   s3state.timeLeft=S3_LEVELS[lvl].timeLimit;
-  clearInterval(s3state.timerInt);
+  s3state.levelGen=(s3state.levelGen||0)+1; // new generation — invalidates ghost timers
+  const myGen=s3state.levelGen;
+  clearInterval(s3state.timerInt); s3state.timerInt=null;
   document.getElementById('s3levelDisplay').textContent=(lvl+1)+' / 6';
   document.getElementById('s3levelPill').textContent='SCANNING';
   document.getElementById('s3levelPill').className='dc-pill exposed-int';
@@ -3811,7 +3778,7 @@ function s3LoadLevel(lvl) {
   // Only start timer if timeLimit > 0
   if(S3_LEVELS[lvl].timeLimit > 0) {
     s3state.timerInt=setInterval(()=>{
-      if(!s3state.gameActive||!s3state.levelActive) return;
+      if(s3state.levelGen!==myGen||!s3state.gameActive||!s3state.levelActive){ clearInterval(s3state.timerInt); return; }
       s3state.timeLeft--;
       timerVal.textContent=s3state.timeLeft;
       if(s3state.timeLeft<=10) timerVal.className='sb-timer-val critical';
@@ -4433,17 +4400,21 @@ function s2ShowInsight(category, tokenText, message, afterFn, graphicHtml, isCor
 
 // ── M3: teach with timer pause ──────────────────────────────
 function s3ShowInsight(category, tokenText, message, afterFn, graphicHtml, isCorrect) {
-  clearInterval(s3state.timerInt); // pause timer
+  clearInterval(s3state.timerInt); s3state.timerInt=null; // pause timer
+  const genAtPause = s3state.levelGen; // capture generation before insight
   showInsight(category, tokenText, message, () => {
     if(afterFn) afterFn();
-    // Resume timer only if level still active and has a time limit
+    // Only resume if we're still on the same level (afterFn may have advanced)
+    // and that level has a time limit — s3LoadLevel handles its own timer on level change
+    if(s3state.levelGen !== genAtPause) return; // afterFn loaded a new level
     const lvl = S3_LEVELS[s3state.currentLevel];
     if(s3state.gameActive && s3state.levelActive && lvl && lvl.timeLimit > 0) {
+      const myGen = genAtPause;
       s3state.timerInt = setInterval(()=>{
-        if(!s3state.gameActive || !s3state.levelActive) { clearInterval(s3state.timerInt); return; }
+        if(s3state.levelGen!==myGen||!s3state.gameActive||!s3state.levelActive){ clearInterval(s3state.timerInt); return; }
         s3state.timeLeft--;
         s3UpdateTimer();
-        if(s3state.timeLeft <= 0) { clearInterval(s3state.timerInt); s3EndGame('timeout'); }
+        if(s3state.timeLeft <= 0) { clearInterval(s3state.timerInt); s3EndGame('breach'); }
       }, 1000);
     }
   }, graphicHtml || null, isCorrect || false);
