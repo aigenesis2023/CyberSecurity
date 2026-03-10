@@ -3762,12 +3762,19 @@ function s2UpdateDiag() {
 function s2Start() {
   var b=document.getElementById('s2briefing'); b.classList.add('hidden'); setTimeout(function(){ b.style.display='none'; },600);
   s2state.gameActive=true;
-  // Reset scroll so "Your task" block is visible below sticky header
+  // Reset scroll so task instruction is visible below sticky header
   window.scrollTo(0,0);
-  setTimeout(function(){ window.scrollTo(0,0); },300);
   setTimeout(function(){
-    var banner=document.getElementById('s2intBanner');
-    if(banner) banner.scrollIntoView({behavior:'smooth',block:'start'});
+    var payload=document.getElementById('s2payload');
+    if(payload) {
+      var rect=payload.getBoundingClientRect();
+      var sticky=document.getElementById('s2intBanner');
+      var stickyH=sticky?sticky.offsetHeight:0;
+      var notesBar=document.getElementById('s2notesBar');
+      var notesH=notesBar?notesBar.offsetHeight:0;
+      var offset=rect.top+window.pageYOffset-(stickyH+notesH+8);
+      window.scrollTo({top:Math.max(0,offset),behavior:'smooth'});
+    }
   },650);
   updatePauseBtn();
   document.getElementById('s2iwDrain').textContent='under review';
