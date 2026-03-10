@@ -3640,7 +3640,7 @@ function s2Classify(chosen) {
       if(el){ el.className='tok flagged-wrong'; el.innerHTML='<span class="redact-label">'+el.textContent.trim()+'</span>\u2713'; el.removeEventListener('click',s2TokenClick); }
       updateIntUI('s2',s2state.integrity,0,S1_MAX_DRAIN);
       if(S2_TEACH[id]&&S2_TEACH[id].falseflag) {
-        s2ShowInsight('Accurate Claim', tokText2, 'Correct \u2014 this claim is in the meeting notes.', function(){ flashDelta('s2', 0, 'accurate \u2014 good call'); }, null, true, 'accurate');
+        s2ShowInsight('LOOKS ACCURATE', tokText2, 'Correct \u2014 this claim is in the meeting notes.', function(){ flashDelta('s2', 0, 'accurate \u2014 good call'); }, null, true, 'accurate');
       } else {
         flashDelta('s2', 0, 'accurate \u2014 good call');
       }
@@ -3651,9 +3651,8 @@ function s2Classify(chosen) {
       s2FlashTok(id,'red');
       updateIntUI('s2',s2state.integrity,0,S1_MAX_DRAIN);
       if(s2state.integrity<=0) { s2EndGame('breach'); return; }
-      var missLabel = (S2_TEACH[id]&&S2_TEACH[id].label) || 'Missed';
       var missMsg = S2_TEACH[id] ? S2_TEACH[id].correct : '';
-      s2ShowInsight(missLabel, tokText2, missMsg, function(){ showIntPop('s2',-12); flashDelta('s2',-12,'missed hallucination!'); }, null, false, 'accurate');
+      s2ShowInsight('FLAG', tokText2, missMsg, function(){ showIntPop('s2',-12); flashDelta('s2',-12,'missed hallucination!'); }, null, false, 'accurate');
     }
     return;
   }
@@ -3667,7 +3666,7 @@ function s2Classify(chosen) {
     updateIntUI('s2',s2state.integrity,0,S1_MAX_DRAIN);
     if(s2state.integrity<=0) { s2EndGame('breach'); return; }
     var ffMsg = (S2_TEACH[id]&&S2_TEACH[id].falseflag) || 'This claim is in the meeting notes \u2014 flagging accurate content damages your credibility.';
-    s2ShowInsight('Accurate Claim', tokText2, ffMsg, function(){ showIntPop('s2',-10); flashDelta('s2',-10,'false alarm \u2014 accurate claim'); }, null, false, 'flag');
+    s2ShowInsight('LOOKS ACCURATE', tokText2, ffMsg, function(){ showIntPop('s2',-10); flashDelta('s2',-10,'false alarm \u2014 accurate claim'); }, null, false, 'flag');
     return;
   }
 
@@ -3684,7 +3683,6 @@ function s2Classify(chosen) {
   var s2mscU = document.getElementById('s2mobileSubmitCounter');
   if(s2mscU) s2mscU.textContent='('+total+' / '+S2_HAL_COUNT+')';
   var allFlagged = total>=S2_HAL_COUNT;
-  var teachLabel = (S2_TEACH[id]&&S2_TEACH[id].label) || 'Hallucination Flagged';
   if(allFlagged) {
     document.getElementById('s2flagStatus').textContent='All hallucinations flagged.';
     var s2sb=document.getElementById('s2submitBtn'); if(s2sb) s2sb.classList.add('ready');
@@ -3693,14 +3691,14 @@ function s2Classify(chosen) {
     document.getElementById('s2iwDrain').textContent='\u2713 report verified';
     document.getElementById('s2iwDrain').className='ib-drain-label secured';
     if(S2_TEACH[id]&&S2_TEACH[id].correct) {
-      s2ShowInsight(teachLabel, tokText2, S2_TEACH[id].correct, function(){ showIntPop('s2',+8); flashDelta('s2',+8,'hallucination flagged'); s2Submit(); }, null, true, 'flag');
+      s2ShowInsight('FLAG', tokText2, S2_TEACH[id].correct, function(){ showIntPop('s2',+8); flashDelta('s2',+8,'hallucination flagged'); s2Submit(); }, null, true, 'flag');
     } else {
       showIntPop('s2',+8); flashDelta('s2',+8,'hallucination flagged');
       s2Submit();
     }
   } else {
     if(S2_TEACH[id]&&S2_TEACH[id].correct) {
-      s2ShowInsight(teachLabel, tokText2, S2_TEACH[id].correct, function(){ showIntPop('s2',+8); flashDelta('s2',+8,'hallucination flagged'); s2CheckSectionAdvance(); }, null, true, 'flag');
+      s2ShowInsight('FLAG', tokText2, S2_TEACH[id].correct, function(){ showIntPop('s2',+8); flashDelta('s2',+8,'hallucination flagged'); s2CheckSectionAdvance(); }, null, true, 'flag');
     } else {
       showIntPop('s2',+8); flashDelta('s2',+8,'hallucination flagged');
       s2CheckSectionAdvance();
@@ -4653,6 +4651,7 @@ const INSIGHT_TONE = {
   'Fake Citation': 'credential', 'Wrong Figure': 'pii', 'Fake Law': 'internal',
   'Invented Detail': 'internal', 'Unsupported Claim': 'credential',
   'Accurate': 'neutral', 'Safe': 'neutral', 'Accurate Claim': 'ok', 'Safe Item': 'ok', 'Injection Found': 'ok', 'Document Cleared': 'ok',
+  'FLAG': 'warn', 'LOOKS ACCURATE': 'ok',
 };
 
 // Map user-facing choice labels to tones for badge colouring
@@ -4664,8 +4663,8 @@ const CHOICE_TONE = {
 // Friendly labels for raw choice keys
 const CHOICE_LABEL = {
   'credential': '[CREDENTIALS]', 'pii': '[PERSONAL DATA]', 'internal': '[INTERNAL INFO]', 'safe': 'SAFE',
-  'citation': 'Fake Citation', 'figure': 'Wrong Figure', 'law': 'Fake Law', 'accurate': 'Accurate',
-  'flag': 'FLAG', 'injection': 'Injection', 'not-injection': 'Safe',
+  'citation': 'Fake Citation', 'figure': 'Wrong Figure', 'law': 'Fake Law',
+  'flag': 'FLAG', 'accurate': 'LOOKS ACCURATE', 'injection': 'Injection', 'not-injection': 'Safe',
 };
 
 let _insightCallback = null;
