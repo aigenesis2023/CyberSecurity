@@ -3731,8 +3731,9 @@ function s2UpdateDiag() {
 function s2Start() {
   var b=document.getElementById('s2briefing'); b.classList.add('hidden'); setTimeout(function(){ b.style.display='none'; },600);
   s2state.gameActive=true;
-  // Scroll so "Your task" block is visible below sticky header
-  setTimeout(function(){ window.scrollTo({top:0,behavior:'smooth'}); },650);
+  // Reset scroll so "Your task" block is visible below sticky header
+  window.scrollTo(0,0);
+  setTimeout(function(){ window.scrollTo(0,0); },620);
   updatePauseBtn();
   document.getElementById('s2iwDrain').textContent='under review';
   document.getElementById('s2iwDrain').className='ib-drain-label draining';
