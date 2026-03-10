@@ -2734,6 +2734,8 @@ function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   window.scrollTo(0,0);
+  document.documentElement.scrollTop = 0;
+  document.body.scrollTop = 0;
   const devBtn = document.getElementById('devToggleBtn');
   if(devBtn) devBtn.style.display = (id === 'screenMenu') ? 'flex' : 'none';
 }
@@ -3765,10 +3767,18 @@ function s2UpdateDiag() {
 function s2Start() {
   var b=document.getElementById('s2briefing'); b.classList.add('hidden'); setTimeout(function(){ b.style.display='none'; },600);
   s2state.gameActive=true;
-  window.scrollTo(0,0);
-  // Payload is its own scroll container (console has overflow:hidden) — must reset separately
-  document.getElementById('s2payload').scrollTop = 0;
-  setTimeout(function(){ window.scrollTo(0,0); document.getElementById('s2payload').scrollTop = 0; },650);
+  // Reset all scroll positions — page and payload
+  var s2ResetScroll = function(){
+    window.scrollTo(0,0);
+    document.getElementById('s2payload').scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  };
+  s2ResetScroll();
+  // After briefing display:none, re-settle layout
+  setTimeout(s2ResetScroll, 650);
+  // Final reset after scan animation to catch any layout shifts
+  setTimeout(s2ResetScroll, 1050);
   updatePauseBtn();
   document.getElementById('s2iwDrain').textContent='under review';
   document.getElementById('s2iwDrain').className='ib-drain-label draining';
