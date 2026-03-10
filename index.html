@@ -1490,10 +1490,9 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
       <div class="briefing-stat-strip">
         <div class="bss-item"><div class="bss-lbl">Destination</div><div class="bss-val">AI Assistant</div></div>
         <div class="bss-item"><div class="bss-lbl">Submitted By</div><div class="bss-val">Marcus Webb</div></div>
-        <div class="bss-item"><div class="bss-lbl">Risk Level</div><div class="bss-val" style="color:var(--blue2)">HIGH</div></div>
       </div>
       <div class="briefing-divider"></div>
-      <div class="briefing-text">Marcus is about to paste a work prompt into an AI assistant. Once it's sent, you can't take it back — anything in that prompt could be stored, logged, or used to train external models. Read the prompt. Find anything that shouldn't leave the organisation. Redact it before it goes.</div>
+      <div class="briefing-text">A colleague's prompt contains credentials, personal data, and internal references. Classify every piece before it reaches the AI.</div>
       <div class="briefing-legend">
         <div class="b-leg"><div class="b-leg-dot" style="background:var(--cat-cred);box-shadow:0 0 6px rgba(239,68,68,.7)"></div><span class="b-leg-name" style="color:var(--cat-cred)">[CREDENTIALS]</span><span class="b-leg-desc">Passwords, API keys — highest risk</span></div>
         <div class="b-leg"><div class="b-leg-dot" style="background:var(--cat-pii);box-shadow:0 0 6px rgba(251,146,60,.6)"></div><span class="b-leg-name" style="color:var(--cat-pii)">[PERSONAL DATA]</span><span class="b-leg-desc">Names, emails, personal identifiers</span></div>
@@ -1710,10 +1709,9 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
       <div class="briefing-stat-strip">
         <div class="bss-item"><div class="bss-lbl">Destination</div><div class="bss-val">Legal Team</div></div>
         <div class="bss-item"><div class="bss-lbl">Topic</div><div class="bss-val">GDPR Compliance</div></div>
-        <div class="bss-item"><div class="bss-lbl">Risk</div><div class="bss-val" style="color:var(--blue2)">HIGH</div></div>
       </div>
       <div class="briefing-divider"></div>
-      <div class="briefing-text">Your AI wrote this GDPR compliance report. It reads like it knows what it's talking about. Some of it is accurate. Some of it is <strong>completely invented</strong> — citations that don't exist, statistics with no source, laws that were never passed. The AI doesn't know the difference. Before this reaches legal or compliance, find the claims that can't be verified.</div>
+      <div class="briefing-text">This AI-generated GDPR report is heading to legal. Some claims are accurate — others are <strong>completely invented</strong>. Flag every fabrication before it goes.</div>
       <div class="briefing-legend">
         <div class="b-leg"><div class="b-leg-dot" style="background:var(--cat-cred);box-shadow:0 0 6px rgba(239,68,68,.7)"></div><span class="b-leg-name" style="color:var(--cat-cred)">[FAKE CITATION]</span><span class="b-leg-desc">Made-up source, journal, or authority</span></div>
         <div class="b-leg"><div class="b-leg-dot" style="background:var(--cat-pii);box-shadow:0 0 6px rgba(251,146,60,.6)"></div><span class="b-leg-name" style="color:var(--cat-pii)">[WRONG FIGURE]</span><span class="b-leg-desc">Invented statistic or false percentage</span></div>
@@ -1921,15 +1919,12 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
     <div class="briefing-body">
       <div class="briefing-stat-strip">
         <div class="bss-item"><div class="bss-lbl">Documents</div><div class="bss-val">6 to Scan</div></div>
-        <div class="bss-item"><div class="bss-lbl">Threat Level</div><div class="bss-val" style="color:var(--blue2)">CRITICAL</div></div>
         <div class="bss-item"><div class="bss-lbl">Level 1</div><div class="bss-val" style="color:var(--green)">No Timer</div></div>
       </div>
       <div class="briefing-divider"></div>
-      <div class="briefing-text">A document arrived this morning from outside the organisation — forwarded by a colleague who didn't read it before adding it to the AI processing queue. That's how these get through: not through hacking, but through routine. Before it goes anywhere near the assistant — <span class="hl">read it</span>. Documents from external sources can contain hidden instructions that tell your AI to ignore your request and do something else entirely. This is a <strong>prompt injection attack</strong>. Find the hidden instruction before you submit.</div>
+      <div class="briefing-text">An external document has entered the AI processing queue. It may contain hidden instructions designed to hijack your AI tool. <strong>Find and flag the injection before you submit.</strong></div>
       <div class="briefing-mechanics">
-        <div class="b-mech">Level 1 has no timer — read carefully and learn the pattern</div>
-        <div class="b-mech">Later levels add time pressure as injections get harder to spot</div>
-        <div class="b-mech">Click any text that looks like an instruction aimed at an AI, not a human</div>
+        <div class="b-mech">Click any text that instructs an AI, not a human</div>
         <div class="b-mech">Wrong selections lose integrity — missing an injection loses more</div>
       </div>
       <button class="briefing-start-btn" onclick="s3Start()">▶ &nbsp;&nbsp; START REVIEW</button>
