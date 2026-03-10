@@ -4763,7 +4763,7 @@ function showInsight(category, tokenText, message, onDismiss, graphicHtml, isCor
   compEl.innerHTML = '';
   compEl.classList.remove('show', 'single');
 
-  const correctTone = isCorrect ? 'ok' : tone;
+  const correctTone = tone;
   const noBadgeCategories = ['Timeout', 'Missed'];
 
   if(!noBadgeCategories.includes(category)) {
