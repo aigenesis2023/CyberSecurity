@@ -817,15 +817,15 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
   width:100%; padding:10px 18px;
   font-family:'Orbitron',monospace; font-size:10px; font-weight:700;
   letter-spacing:.14em; text-transform:uppercase;
-  background:rgba(56,189,248,.15); border:1px solid rgba(56,189,248,.4);
-  color:var(--blue2); cursor:pointer; transition:all .2s;
+  background:rgba(30,80,120,.85); border:1px solid rgba(56,189,248,.5);
+  color:#fff; cursor:pointer; transition:all .2s;
   border-radius:0 0 10px 10px; border-top:none;
 }
-.s2-notes-btn:hover { background:rgba(56,189,248,.25); color:#fff; }
+.s2-notes-btn:hover { background:rgba(40,100,150,.95); color:#fff; }
 .s2-notes-btn.pulsing { animation:notesPulse 2.2s ease-in-out infinite; }
 @keyframes notesPulse {
-  0%,100% { background:rgba(56,189,248,.15); color:var(--blue2); }
-  50%     { background:rgba(56,189,248,.3); color:#fff; box-shadow:0 0 14px rgba(56,189,248,.3); }
+  0%,100% { background:rgba(30,80,120,.85); color:#fff; }
+  50%     { background:rgba(40,120,180,.95); color:#fff; box-shadow:0 0 16px rgba(56,189,248,.4); }
 }
 .s2-notes-btn .s2-notes-chevron { transition:transform .25s; font-size:8px; }
 .s2-notes-btn.open .s2-notes-chevron { transform:rotate(180deg); }
@@ -839,12 +839,13 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 /* Scroll hint at bottom of notes panel */
 .s2-notes-scroll-hint {
   position:sticky; bottom:0; left:0; right:0;
-  display:flex; justify-content:center; padding:6px 0 4px;
-  background:linear-gradient(transparent, rgba(6,14,32,0.95) 40%);
+  display:flex; justify-content:center; padding:10px 0 8px;
+  background:linear-gradient(transparent, rgba(6,14,32,0.97) 35%);
   pointer-events:none; transition:opacity .3s;
 }
 .s2-notes-scroll-hint span {
-  font-size:12px; color:rgba(56,189,248,.5);
+  font-size:11px; color:rgba(56,189,248,.6); letter-spacing:.06em;
+  font-family:'Orbitron',monospace;
   animation:scrollHintBounce 1.6s ease-in-out infinite;
 }
 @keyframes scrollHintBounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(3px)} }
@@ -3510,7 +3511,7 @@ function s2BuildPayload() {
   });
 
   document.getElementById('s2payload').innerHTML = `
-    <div class="ai-scenario-frame">\uD83D\uDCCB <strong>Your task:</strong> <strong>Flag any claim that doesn\u2019t match the notes.</strong></div>
+    <div class="ai-scenario-frame"><strong>Flag any claim that doesn\u2019t match the notes.</strong></div>
     <div class="ai-response-window">
       <span class="s2-section-counter" id="s2SectionCounter" style="display:block;padding:10px 18px 2px">Section 1 of 2</span>
       <div class="ai-response-body" id="s2docBody">${sectionHTML}</div>
