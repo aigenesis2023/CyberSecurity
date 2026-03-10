@@ -808,55 +808,32 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 /* ════════════════════════════════════════════
    M2: NOTES DRAWER & INLINE TOGGLE
 ════════════════════════════════════════════ */
-/* Notes bar — inside sticky-header, matches banner width */
-.s2-notes-bar {
-  margin:0 124px 0 18px;
+/* Toggle buttons — Meeting Notes / AI Report */
+.s2-view-toggle {
+  display:flex; gap:8px; margin-top:12px;
 }
-.s2-notes-btn {
-  display:flex; align-items:center; justify-content:center; gap:8px;
-  width:100%; padding:10px 18px;
+.s2-view-btn {
+  flex:1; padding:10px 14px;
   font-family:'Orbitron',monospace; font-size:10px; font-weight:700;
-  letter-spacing:.14em; text-transform:uppercase;
-  background:rgba(30,80,120,.85); border:1px solid rgba(56,189,248,.5);
-  color:#fff; cursor:pointer; transition:all .2s;
-  border-radius:10px; margin-top:8px;
+  letter-spacing:.12em; text-transform:uppercase;
+  background:rgba(56,189,248,.06); border:1px solid rgba(56,189,248,.2);
+  color:rgba(56,189,248,.5); cursor:pointer; transition:all .2s;
+  border-radius:8px; text-align:center;
 }
-.s2-notes-btn:hover { background:rgba(40,100,150,.95); color:#fff; }
-.s2-notes-btn.pulsing { animation:notesPulse 2.2s ease-in-out infinite; }
+.s2-view-btn:hover { background:rgba(56,189,248,.12); border-color:rgba(56,189,248,.4); color:rgba(56,189,248,.8); }
+.s2-view-btn.active {
+  background:rgba(30,80,120,.85); border-color:rgba(56,189,248,.6);
+  color:#fff; box-shadow:0 0 12px rgba(56,189,248,.2);
+}
+.s2-view-btn.pulsing { animation:notesPulse 2.2s ease-in-out infinite; }
 @keyframes notesPulse {
-  0%,100% { background:rgba(30,80,120,.85); color:#fff; }
-  50%     { background:rgba(40,120,180,.95); color:#fff; box-shadow:0 0 16px rgba(56,189,248,.4); }
+  0%,100% { background:rgba(56,189,248,.06); border-color:rgba(56,189,248,.2); color:rgba(56,189,248,.5); }
+  50%     { background:rgba(40,120,180,.25); border-color:rgba(56,189,248,.55); color:rgba(56,189,248,.9); box-shadow:0 0 16px rgba(56,189,248,.3); }
 }
-.s2-notes-btn .s2-notes-chevron { transition:transform .25s; font-size:8px; }
-.s2-notes-btn.open .s2-notes-chevron { transform:rotate(180deg); }
-/* Collapsible notes panel */
-.s2-notes-panel {
-  max-height:0; overflow:hidden; position:relative;
-  background:rgba(6,14,32,0.97); border-top:1px solid rgba(56,189,248,.08);
-  transition:max-height .35s cubic-bezier(.4,0,.2,1);
-}
-.s2-notes-panel.open { max-height:50vh; overflow-y:auto; }
-/* Scroll hint at bottom of notes panel */
-.s2-notes-scroll-hint {
-  position:sticky; bottom:0; left:0; right:0;
-  display:flex; justify-content:center;
-  padding:14px 0 12px;
-  background:rgba(6,16,36,.98);
-  border-top:1px solid rgba(56,189,248,.3);
-  box-shadow:0 -8px 20px rgba(6,16,36,.95);
-  pointer-events:none; transition:opacity .3s;
-}
-.s2-notes-scroll-hint span {
-  font-size:10px; color:rgba(56,189,248,.95); letter-spacing:.12em;
-  font-family:'Orbitron',monospace; text-transform:uppercase;
-  text-shadow:0 0 10px rgba(56,189,248,.5);
-  animation:scrollHintBounce 1.6s ease-in-out infinite;
-}
-@keyframes scrollHintBounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(3px)} }
-.s2-notes-panel.scrolled-bottom .s2-notes-scroll-hint { opacity:0; }
-.s2-notes-panel-body {
-  padding:14px 18px;
-  font-family:'DM Sans',sans-serif; font-size:12px; line-height:1.8; color:rgba(200,220,255,.75);
+/* Notes view inside console — full-height like payload */
+.s2-notes-view {
+  padding:18px;
+  font-family:'DM Sans',sans-serif; font-size:12.5px; line-height:1.85; color:rgba(200,220,255,.75);
 }
 .s2-notes-title {
   font-family:'Orbitron',monospace; font-size:10px; font-weight:700;
@@ -872,10 +849,6 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
   font-size:12px; line-height:1.7;
 }
 .s2-notes-list li strong { color:var(--blue2); font-weight:600; }
-@media(max-width:768px) {
-  .s2-notes-bar { margin:0 12px; }
-  .s2-notes-panel.open { max-height:45vh; }
-}
 
 /* ════════════════════════════════════════════
    MICRO-FEEDBACK TEACH LINE
@@ -2032,7 +2005,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
         <div class="bss-item"><div class="bss-lbl">Report</div><div class="bss-val">Account Review</div></div>
       </div>
       <div class="briefing-divider"></div>
-      <div class="briefing-text">Marcus asked an AI to turn his meeting notes into a report for James Okafor at Pinnacle Group. Some claims match the notes &mdash; others have been <strong>invented or altered by the AI</strong>. Check every claim against the meeting notes and flag anything that doesn&rsquo;t match.</div>
+      <div class="briefing-text">Marcus asked an AI to turn his meeting notes into a report for James Okafor at Pinnacle Group. Some claims match the notes &mdash; others have been <strong>invented or altered by the AI</strong>. Flag any claim in the AI report that doesn&rsquo;t match the meeting notes.</div>
       <div class="briefing-legend">
         <div class="b-leg"><div class="b-leg-dot" style="background:var(--red);box-shadow:0 0 6px rgba(239,68,68,.7)"></div><span class="b-leg-name" style="color:var(--red)">[HALLUCINATION]</span><span class="b-leg-desc">Claim doesn&rsquo;t match the meeting notes</span></div>
         <div class="b-leg"><div class="b-leg-dot" style="background:rgba(148,163,184,.5)"></div><span class="b-leg-name" style="color:var(--dim)">[ACCURATE]</span><span class="b-leg-desc">Claim matches the notes &mdash; flagging it costs integrity</span></div>
@@ -2151,24 +2124,13 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
     </div>
   </div>
 </div>
-<!-- Notes bar inside sticky-header — always visible when scrolled -->
-<div class="s2-notes-bar" id="s2notesBar">
-  <button class="s2-notes-btn pulsing" id="s2notesBtn" onclick="s2ToggleNotes()">&#x1F4DD; &nbsp;MEETING NOTES <span class="s2-notes-chevron">&#x25BC;</span></button>
-</div>
-<div class="s2-notes-panel" id="s2notesPanel">
-  <div class="s2-notes-panel-body" id="s2notesPanelBody"></div>
-  <div class="s2-notes-scroll-hint"><span>&#x25BC; scroll for more</span></div>
-</div>
 </div>
 
 <div class="shell">
   <div class="console console-col" id="s2console">
     <div class="scanline" id="s2scanline"></div>
     <div class="payload" id="s2payload"></div>
-  </div>
-  <!-- Mobile submit — visible only on mobile when diag panel is hidden -->
-  <div class="mobile-submit-wrap" id="s2mobileSubmit" style="display:none">
-    <button class="hal-submit-btn mobile-submit-btn" id="s2mobileSubmitBtn" onclick="s2Submit()"><span>&mdash;</span> &nbsp; SUBMIT REPORT <span id="s2mobileSubmitCounter">(0 / 5)</span></button>
+    <div class="payload s2-notes-view" id="s2notesView" style="display:none"></div>
   </div>
   <div class="card diag" id="s2diag">
     <button class="diag-toggle" onclick="toggleDiag(this)">
@@ -2179,7 +2141,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
     <div class="hal-flag-counter">
       <div class="hal-fc-lbl">Hallucinations Flagged</div>
       <div class="hal-fc-row"><span class="hal-fc-num" id="s2flagCount">0</span><span class="hal-fc-total" id="s2flagTotal"> / 5</span></div>
-      <div class="hal-fc-label" id="s2flagStatus">Check each claim against the meeting notes. Flag anything that doesn&rsquo;t match.</div>
+      <div class="hal-fc-label" id="s2flagStatus">Flag any claim in the AI report that doesn&rsquo;t match the meeting notes.</div>
     </div>
     <div class="diag-cats" id="s2diagCats">
       <div class="diag-cat hal-cat" id="s2catAll">
@@ -2193,9 +2155,6 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
         <polyline points="13,20 18,26 28,14" stroke="#4ade80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke-dasharray="30" stroke-dashoffset="30"><animate attributeName="stroke-dashoffset" from="30" to="0" dur="0.5s" fill="freeze" begin="0s"/></polyline>
       </svg>
       <div class="diag-secured-label">ALL HALLUCINATIONS FLAGGED</div>
-    </div>
-    <div class="diag-actions" style="margin-top:auto">
-      <button class="hal-submit-btn" id="s2submitBtn" onclick="s2Submit()"><span id="s2submitIcon">&mdash;</span> &nbsp; SUBMIT REPORT <span id="s2submitCounter">(0 / 5)</span></button>
     </div>
   </div>
 </div>
@@ -3414,14 +3373,8 @@ function s2Init() {
   updateIntUI('s2',100,0,S1_MAX_DRAIN);
   document.getElementById('s2verdict').classList.remove('show');
   document.getElementById('s2flagCount').textContent='0';
-  document.getElementById('s2submitCounter').textContent='(0 / '+S2_HAL_COUNT+')';
-  document.getElementById('s2flagStatus').textContent='Check each claim against the meeting notes. Flag anything that doesn\u2019t match.';
+  document.getElementById('s2flagStatus').textContent='Flag any claim in the AI report that doesn\u2019t match the meeting notes.';
   document.getElementById('s2diagSecured').style.display='none';
-  const s2icon=document.getElementById('s2submitIcon'); if(s2icon) s2icon.textContent='\u2014';
-  const s2sb2=document.getElementById('s2submitBtn'); if(s2sb2) s2sb2.classList.remove('ready');
-  const s2msb2=document.getElementById('s2mobileSubmitBtn'); if(s2msb2) s2msb2.classList.remove('ready');
-  const s2msR2 = document.getElementById('s2mobileSubmit'); if(s2msR2) s2msR2.style.display='none';
-  const s2mscR = document.getElementById('s2mobileSubmitCounter'); if(s2mscR) s2mscR.textContent='(0 / '+S2_HAL_COUNT+')';
   document.getElementById('s2vBonus').style.display='none';
   // Reset single-bar diagnostics segments
   const segsEl = document.getElementById('s2segsAll');
@@ -3433,9 +3386,8 @@ function s2Init() {
   // Reset mini banner bar
   const mf=document.getElementById('s2mbProgAll'); if(mf){mf.style.width='0%';}
   const ml=document.getElementById('s2mbLblAll'); if(ml) ml.className='ib-mini-lbl green';
-  // Reset notes panel
-  const notesPanel=document.getElementById('s2notesPanel'); if(notesPanel) notesPanel.classList.remove('open');
-  const notesBtn=document.getElementById('s2notesBtn'); if(notesBtn){ notesBtn.classList.remove('open'); notesBtn.classList.add('pulsing'); }
+  // Reset to report view
+  s2SwitchView('report');
   const b=document.getElementById('s2briefing'); b.style.display=''; b.classList.remove('hidden');
 }
 function s2Reset() { document.getElementById('s2verdict').classList.remove('show'); s2Init(); }
@@ -3444,15 +3396,7 @@ function s2Reset() { document.getElementById('s2verdict').classList.remove('show
 const S2_SECTION_TOKS = { 1:['fig1','fig2','det1','acc1','acc2'], 2:['det2','claim1','acc3'] };
 
 function s2CheckSectionAdvance() {
-  const sec = s2state.currentSection;
-  if (sec >= 2) return; // last section — no auto-advance
-  if (!s2state.gameActive) return;
-  const toks = S2_SECTION_TOKS[sec] || [];
-  if (toks.length === 0) return;
-  const allDone = toks.every(id => s2state.tokState[id] && s2state.tokState[id].flagged);
-  if (allDone) {
-    if (s2state.gameActive) s2NextSection();
-  }
+  // No-op — single consolidated view, no section advancement needed
 }
 
 // Per-token teach messages for M2
@@ -3493,111 +3437,90 @@ function s2BuildPayload() {
   const ht = (id) => `<span class="tok hallucination" data-id="${id}">${tMap[id].text}</span>`;
   const at = (id) => `<span class="tok accurate-claim" data-id="${id}">${tMap[id].text}</span>`;
 
-  // Build 2 sections — each revealed one at a time
-  const sections = [
-    {
-      id:'s2sec1',
-      html:`<h4>PERFORMANCE & BUDGET</h4>
-        <p>The Pinnacle Group automation programme has delivered a ${ht('fig1')} across all deployed modules since the initial rollout phase. This represents a significant return on the programme\u2019s ${ht('fig2')} investment, which was approved during the Q2 board review.</p>
-        <p>${ht('det1')}, has confirmed that despite ${at('acc1')} on the integration module, the programme remains on track. ${at('acc2')} at Pinnacle\u2019s Manchester office, providing hands-on implementation support.</p>`
-    },
-    {
-      id:'s2sec2',
-      html:`<h4>OUTLOOK & RECOMMENDATIONS</h4>
-        <p>Looking ahead, the programme is aligned with ${ht('det2')}, which prioritises end-to-end process automation across the supply chain.</p>
-        <p>Based on the Birmingham pilot results, we recommend ${ht('claim1')}, starting with the Leeds and Bristol facilities. The ${at('acc3')} to Pinnacle\u2019s senior leadership team.</p>`
-    }
-  ];
-
-  s2state.currentSection = 1;
-
-  let sectionHTML = '';
-  sections.forEach((sec, i) => {
-    sectionHTML += `<div class="s2-section" id="${sec.id}" style="display:${i===0?'block':'none'}">${sec.html}</div>`;
-  });
+  // Single consolidated report — all tokens visible at once
+  const reportHTML = `
+    <h4>PERFORMANCE & BUDGET</h4>
+    <p>The Pinnacle Group automation programme has delivered a ${ht('fig1')} across all deployed modules since the initial rollout phase. This represents a significant return on the programme\u2019s ${ht('fig2')} investment, which was approved during the Q2 board review.</p>
+    <p>${ht('det1')}, has confirmed that despite ${at('acc1')} on the integration module, the programme remains on track. ${at('acc2')} at Pinnacle\u2019s Manchester office, providing hands-on implementation support.</p>
+    <h4>OUTLOOK & RECOMMENDATIONS</h4>
+    <p>Looking ahead, the programme is aligned with ${ht('det2')}, which prioritises end-to-end process automation across the supply chain.</p>
+    <p>Based on the Birmingham pilot results, we recommend ${ht('claim1')}, starting with the Leeds and Bristol facilities. The ${at('acc3')} to Pinnacle\u2019s senior leadership team.</p>`;
 
   document.getElementById('s2payload').innerHTML = `
-    <div class="ai-scenario-frame"><strong>Flag any claim that doesn\u2019t match the notes.</strong></div>
+    <div class="ai-scenario-frame">
+      <strong>Flag any claim in the AI report that doesn\u2019t match the meeting notes.</strong>
+      <div class="s2-view-toggle">
+        <button class="s2-view-btn active" id="s2btnReport" onclick="s2SwitchView('report')">AI Report</button>
+        <button class="s2-view-btn pulsing" id="s2btnNotes" onclick="s2SwitchView('notes')">\uD83D\uDCDD Meeting Notes</button>
+      </div>
+    </div>
     <div class="ai-response-window">
-      <span class="s2-section-counter" id="s2SectionCounter" style="display:block;padding:10px 18px 2px">Section 1 of 2</span>
-      <div class="ai-response-body" id="s2docBody">${sectionHTML}</div>
+      <div class="ai-response-body" id="s2docBody">${reportHTML}</div>
     </div>
 `;
 
   // Reset payload scroll to top
   document.getElementById('s2payload').scrollTop = 0;
 
-  // Populate notes panel with meeting notes
-  var panelBody = document.getElementById('s2notesPanelBody');
-  if(panelBody) panelBody.innerHTML = S2_MEETING_NOTES;
+  // Populate the notes view
+  var notesView = document.getElementById('s2notesView');
+  if(notesView) notesView.innerHTML = `
+    <div class="ai-scenario-frame">
+      <strong>Flag any claim in the AI report that doesn\u2019t match the meeting notes.</strong>
+      <div class="s2-view-toggle">
+        <button class="s2-view-btn" id="s2btnReport2" onclick="s2SwitchView('report')">AI Report</button>
+        <button class="s2-view-btn active" id="s2btnNotes2" onclick="s2SwitchView('notes')">\uD83D\uDCDD Meeting Notes</button>
+      </div>
+    </div>
+    <div class="ai-response-window">
+      <div class="ai-response-body">${S2_MEETING_NOTES}</div>
+    </div>`;
 
-  // Attach listeners for tokens in visible section 1
+  // Attach listeners for all tokens
   s2AttachVisibleListeners();
 }
 
-function s2ToggleNotes() {
-  const panel = document.getElementById('s2notesPanel');
-  const btn = document.getElementById('s2notesBtn');
-  if(!panel || !btn) return;
-  const opening = !panel.classList.contains('open');
-  panel.classList.toggle('open');
-  btn.classList.toggle('open');
-  // Stop pulsing once user has opened notes at least once
-  if(opening) {
-    btn.classList.remove('pulsing');
-    panel.classList.remove('scrolled-bottom');
-    // Hide scroll hint when user reaches bottom
-    if(!panel._scrollBound) {
-      panel.addEventListener('scroll', function(){
-        var atBottom = panel.scrollTop + panel.clientHeight >= panel.scrollHeight - 10;
-        panel.classList.toggle('scrolled-bottom', atBottom);
-      });
-      panel._scrollBound = true;
-    }
+function s2SwitchView(view) {
+  var payload = document.getElementById('s2payload');
+  var notesView = document.getElementById('s2notesView');
+  if(!payload || !notesView) return;
+  if(view === 'notes') {
+    payload.style.display = 'none';
+    notesView.style.display = 'block';
+    // Stop pulsing once user has seen notes
+    var nb = document.getElementById('s2btnNotes');
+    if(nb) nb.classList.remove('pulsing');
+  } else {
+    payload.style.display = 'block';
+    notesView.style.display = 'none';
   }
+  // Update active states on both sets of buttons
+  var r1 = document.getElementById('s2btnReport');
+  var n1 = document.getElementById('s2btnNotes');
+  var r2 = document.getElementById('s2btnReport2');
+  var n2 = document.getElementById('s2btnNotes2');
+  if(view === 'notes') {
+    if(r1) r1.classList.remove('active');
+    if(n1) n1.classList.add('active');
+    if(r2) r2.classList.remove('active');
+    if(n2) n2.classList.add('active');
+  } else {
+    if(r1) r1.classList.add('active');
+    if(n1) n1.classList.remove('active');
+    if(r2) r2.classList.add('active');
+    if(n2) n2.classList.remove('active');
+  }
+  // Scroll to top of whichever view is now shown
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function s2NextSection() {
-  const totalSections = 2;
-  const current = s2state.currentSection;
-  if (current >= totalSections) return;
-
-  // Fade out current section
-  const currentEl = document.getElementById('s2sec' + current);
-  if (currentEl) {
-    currentEl.style.transition = 'opacity .22s';
-    currentEl.style.opacity = '0';
-    setTimeout(() => { currentEl.style.display = 'none'; currentEl.style.opacity = '1'; currentEl.style.transition = ''; }, 230);
-  }
-
-  const next = current + 1;
-  s2state.currentSection = next;
-
-  setTimeout(() => {
-    const nextEl = document.getElementById('s2sec' + next);
-    if (nextEl) {
-      nextEl.style.display = 'block';
-      nextEl.style.animation = 's2FadeIn .35s ease';
-      s2AttachVisibleListeners();
-      // Scan animation on hallucination tokens
-      nextEl.querySelectorAll('.tok.hallucination').forEach((el, i) => {
-        setTimeout(() => { el.classList.add('hint-scan'); setTimeout(() => el.classList.remove('hint-scan'), 1500); }, i * 120 + 80);
-      });
-    }
-    // Update section counter
-    const counter = document.getElementById('s2SectionCounter');
-    if (counter) counter.textContent = 'Section ' + next + ' of ' + totalSections;
-    // Scroll doc body to top
-    const body = document.getElementById('s2docBody');
-    if (body) body.scrollTop = 0;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, 240);
-}
+// Legacy stubs — sections consolidated into single view
+function s2ToggleNotes() { s2SwitchView('notes'); }
+function s2NextSection() { /* no-op — single section */ }
 
 function s2AttachVisibleListeners() {
   document.querySelectorAll('#s2payload .tok.hallucination, #s2payload .tok.accurate-claim').forEach(el=>{
-    const sec = el.closest('.s2-section');
-    if(sec && sec.style.display !== 'none' && !el._s2bound) {
+    if(!el._s2bound) {
       el._s2bound = true;
       el.addEventListener('click', s2TokenClick);
     }
@@ -3714,14 +3637,9 @@ function s2Classify(chosen) {
   s2UpdateDiag();
   var total=s2state.flagsCorrect;
   document.getElementById('s2flagCount').textContent=total;
-  document.getElementById('s2submitCounter').textContent='('+total+' / '+S2_HAL_COUNT+')';
-  var s2mscU = document.getElementById('s2mobileSubmitCounter');
-  if(s2mscU) s2mscU.textContent='('+total+' / '+S2_HAL_COUNT+')';
   var allFlagged = total>=S2_HAL_COUNT;
   if(allFlagged) {
     document.getElementById('s2flagStatus').textContent='All hallucinations flagged.';
-    var s2sb=document.getElementById('s2submitBtn'); if(s2sb) s2sb.classList.add('ready');
-    var s2msb=document.getElementById('s2mobileSubmitBtn'); if(s2msb) s2msb.classList.add('ready');
     document.getElementById('s2diagSecured').style.display='flex';
     document.getElementById('s2iwDrain').textContent='\u2713 report verified';
     document.getElementById('s2iwDrain').className='ib-drain-label secured';
@@ -3791,7 +3709,7 @@ function s2Start() {
   }, 100);
   setTimeout(function(){
     var sl=document.getElementById('s2scanline'); sl.classList.remove('run'); void sl.offsetWidth; sl.classList.add('run');
-    document.querySelectorAll('#s2payload .s2-section[style*="block"] .tok.hallucination').forEach(function(el,i){
+    document.querySelectorAll('#s2payload .tok.hallucination').forEach(function(el,i){
       setTimeout(function(){ el.classList.add('hint-scan'); setTimeout(function(){ el.classList.remove('hint-scan'); },1500); },i*120+200);
     });
   },800);
@@ -3803,10 +3721,8 @@ function s2Submit() {
 function s2EndGame(reason) {
   if(!s2state.gameActive) return; s2state.gameActive=false;
   dismissToast();
-  var s2msEnd = document.getElementById('s2mobileSubmit'); if(s2msEnd) s2msEnd.style.display='none';
-  // Close notes panel if open
-  var np=document.getElementById('s2notesPanel'); if(np) np.classList.remove('open');
-  var nb=document.getElementById('s2notesBtn'); if(nb) nb.classList.remove('open');
+  // Switch back to report view
+  s2SwitchView('report');
   vAdvance('s2',1);
   document.getElementById('s2vBonus').style.display='none';
   updatePauseBtn();
