@@ -500,7 +500,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 .tok.hallucination  { cursor:pointer; border-radius:3px; padding:1px 3px; transition:background .12s; text-decoration:underline; text-decoration-color:var(--blue); text-decoration-thickness:1px; text-underline-offset:2px; }
 .tok.hallucination:hover { background:rgba(251,146,60,.15); }
 .tok.flagged-correct          { background:rgba(239,68,68,.2);   color:var(--red);    border:1px solid rgba(239,68,68,.4);   cursor:default; border-bottom:none; padding:2px 7px; border-radius:4px; }
-.tok.flagged-correct-figure   { background:rgba(251,146,60,.2);  color:var(--orange); border:1px solid rgba(251,146,60,.4);  cursor:default; border-bottom:none; padding:2px 7px; border-radius:4px; }
+.tok.flagged-correct-figure   { background:rgba(239,68,68,.2);  color:var(--red); border:1px solid rgba(239,68,68,.4);  cursor:default; border-bottom:none; padding:2px 7px; border-radius:4px; }
 .tok.flagged-correct-law      { background:rgba(250,204,21,.18); color:var(--yellow); border:1px solid rgba(250,204,21,.4);  cursor:default; border-bottom:none; padding:2px 7px; border-radius:4px; }
 .tok.flagged-wrong            { background:rgba(148,163,184,.12); color:rgba(148,163,184,.8); border:1px solid rgba(148,163,184,.3); cursor:default; border-bottom:none; padding:2px 7px; border-radius:4px; }
 /* Injection section */
@@ -809,17 +809,16 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
    M2: NOTES DRAWER & INLINE TOGGLE
 ════════════════════════════════════════════ */
 .s2-notes-drawer {
-  position:fixed; right:0; top:0; bottom:0; width:380px; max-width:90vw;
-  background:rgba(6,14,32,0.97); border-left:1px solid rgba(56,189,248,.2);
-  z-index:180; transform:translateX(100%); transition:transform .3s cubic-bezier(.4,0,.2,1);
-  display:flex; flex-direction:column;
-  box-shadow:-8px 0 32px rgba(0,0,0,.5);
+  position:sticky; top:0; z-index:9;
+  max-height:0; overflow:hidden;
+  background:rgba(6,14,32,0.97); border-bottom:1px solid rgba(56,189,248,.12);
+  transition:max-height .35s cubic-bezier(.4,0,.2,1);
 }
-.s2-notes-drawer.open { transform:translateX(0); }
+.s2-notes-drawer.open { max-height:55vh; overflow-y:auto; }
 .s2-notes-drawer-header {
   display:flex; align-items:center; justify-content:space-between;
-  padding:14px 18px; border-bottom:1px solid rgba(56,189,248,.15);
-  flex-shrink:0;
+  padding:10px 18px; border-bottom:1px solid rgba(56,189,248,.1);
+  position:sticky; top:0; background:rgba(6,14,32,0.98); z-index:1;
 }
 .s2-notes-drawer-title {
   font-family:'Orbitron',monospace; font-size:9px; font-weight:700;
@@ -831,7 +830,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 }
 .s2-notes-drawer-close:hover { color:var(--text); }
 .s2-notes-drawer-body {
-  flex:1; overflow-y:auto; padding:18px;
+  padding:14px 18px;
   font-family:'DM Sans',sans-serif; font-size:12px; line-height:1.8; color:rgba(200,220,255,.75);
 }
 .s2-notes-title {
@@ -867,13 +866,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 }
 .s2-notes-toggle-icon { font-size:14px; }
 @media(max-width:768px) {
-  .s2-notes-drawer {
-    top:auto; bottom:0; left:0; right:0; width:100%; max-width:100%;
-    height:70vh; max-height:70vh;
-    border-left:none; border-top:1px solid rgba(56,189,248,.2);
-    transform:translateY(100%); border-radius:14px 14px 0 0;
-  }
-  .s2-notes-drawer.open { transform:translateY(0); }
+  .s2-notes-drawer.open { max-height:50vh; }
 }
 
 /* ════════════════════════════════════════════
@@ -2033,7 +2026,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
       <div class="briefing-divider"></div>
       <div class="briefing-text">Marcus asked an AI to turn his meeting notes into a report for James Okafor at Pinnacle Group. Some claims match the notes &mdash; others have been <strong>invented or altered by the AI</strong>. Check every claim against the meeting notes and flag anything that doesn&rsquo;t match.</div>
       <div class="briefing-legend">
-        <div class="b-leg"><div class="b-leg-dot" style="background:var(--orange);box-shadow:0 0 6px rgba(251,146,60,.7)"></div><span class="b-leg-name" style="color:var(--orange)">[HALLUCINATION]</span><span class="b-leg-desc">Claim doesn&rsquo;t match the meeting notes</span></div>
+        <div class="b-leg"><div class="b-leg-dot" style="background:var(--red);box-shadow:0 0 6px rgba(239,68,68,.7)"></div><span class="b-leg-name" style="color:var(--red)">[HALLUCINATION]</span><span class="b-leg-desc">Claim doesn&rsquo;t match the meeting notes</span></div>
         <div class="b-leg"><div class="b-leg-dot" style="background:rgba(148,163,184,.5)"></div><span class="b-leg-name" style="color:var(--dim)">[ACCURATE]</span><span class="b-leg-desc">Claim matches the notes &mdash; flagging it costs integrity</span></div>
       </div>
       <button class="briefing-start-btn" onclick="s2Start()">&blacktriangleright; &nbsp;&nbsp; START REVIEW</button>
@@ -2143,13 +2136,21 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
       <!-- Mini diagnostic row — mobile only (single bar) -->
       <div class="ib-mini-diag" id="s2ibMiniDiag">
         <div class="ib-mini-cat" id="s2mbCatAll">
-          <span class="ib-mini-lbl orange" id="s2mbLblAll">FLAGGED</span>
-          <div class="ib-mini-track"><div class="ib-mini-fill" id="s2mbProgAll" style="background:rgba(251,146,60,.8)"></div></div>
+          <span class="ib-mini-lbl red" id="s2mbLblAll">FLAGGED</span>
+          <div class="ib-mini-track"><div class="ib-mini-fill" id="s2mbProgAll" style="background:rgba(239,68,68,.8)"></div></div>
         </div>
       </div>
     </div>
   </div>
 </div>
+</div>
+<!-- Notes panel — collapses below sticky header -->
+<div class="s2-notes-drawer" id="s2notesDrawer">
+  <div class="s2-notes-drawer-header">
+    <span class="s2-notes-drawer-title">&#x1F4DD; Marcus&rsquo;s Meeting Notes</span>
+    <button class="s2-notes-drawer-close" onclick="s2ToggleNotes()">&times;</button>
+  </div>
+  <div class="s2-notes-drawer-body" id="s2notesDrawerBody"></div>
 </div>
 
 <div class="shell">
@@ -2160,14 +2161,6 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
   <!-- Mobile submit — visible only on mobile when diag panel is hidden -->
   <div class="mobile-submit-wrap" id="s2mobileSubmit" style="display:none">
     <button class="hal-submit-btn mobile-submit-btn" id="s2mobileSubmitBtn" onclick="s2Submit()"><span>&mdash;</span> &nbsp; SUBMIT REPORT <span id="s2mobileSubmitCounter">(0 / 5)</span></button>
-  </div>
-  <!-- Notes drawer — slides in from right on desktop, bottom on mobile -->
-  <div class="s2-notes-drawer" id="s2notesDrawer">
-    <div class="s2-notes-drawer-header">
-      <span class="s2-notes-drawer-title">&#x1F4DD; Marcus&rsquo;s Meeting Notes</span>
-      <button class="s2-notes-drawer-close" onclick="s2ToggleNotes()">&times;</button>
-    </div>
-    <div class="s2-notes-drawer-body" id="s2notesDrawerBody"></div>
   </div>
   <div class="card diag" id="s2diag">
     <button class="diag-toggle" onclick="toggleDiag(this)">
@@ -2182,7 +2175,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
     </div>
     <div class="diag-cats" id="s2diagCats">
       <div class="diag-cat hal-cat" id="s2catAll">
-        <div class="dc-head"><div class="dc-name" style="color:var(--orange)">[HALLUCINATIONS]</div><div class="dc-pill exposed-pii" id="s2pillAll">0/5</div></div>
+        <div class="dc-head"><div class="dc-name" style="color:var(--red)">[HALLUCINATIONS]</div><div class="dc-pill exposed-cred" id="s2pillAll">0/5</div></div>
         <div class="dc-segments" id="s2segsAll"><div class="dc-seg"></div><div class="dc-seg"></div><div class="dc-seg"></div><div class="dc-seg"></div><div class="dc-seg"></div></div>
       </div>
     </div>
@@ -2398,7 +2391,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 <div class="cat-popup" id="s2halPopup" style="z-index:9999">
   <div class="cat-popup-lbl">Does this match the notes?</div>
   <div class="cat-btns" style="grid-template-columns:1fr 1fr">
-    <button class="cat-btn" style="background:rgba(251,146,60,.15);color:var(--orange);border-color:rgba(251,146,60,.5);font-size:13px;padding:18px 10px;min-height:56px;letter-spacing:.06em" onclick="s2Classify('flag')">&starf; FLAG</button>
+    <button class="cat-btn" style="background:rgba(239,68,68,.15);color:var(--red);border-color:rgba(239,68,68,.5);font-size:13px;padding:18px 10px;min-height:56px;letter-spacing:.06em" onclick="s2Classify('flag')">&starf; FLAG</button>
     <button class="cat-btn cat-btn-safe" onclick="s2Classify('accurate')" style="font-size:13px;padding:18px 10px;min-height:56px;letter-spacing:.06em">&check; LOOKS ACCURATE</button>
   </div>
   <button class="cat-popup-close" onclick="s2ClosePopup()">&times;</button>
@@ -3427,12 +3420,12 @@ function s2Init() {
   const segsEl = document.getElementById('s2segsAll');
   if(segsEl) segsEl.querySelectorAll('.dc-seg').forEach(s=>s.classList.remove('secured'));
   const pillEl = document.getElementById('s2pillAll');
-  if(pillEl){ pillEl.className='dc-pill exposed-pii'; pillEl.textContent='0/'+S2_HAL_COUNT; }
+  if(pillEl){ pillEl.className='dc-pill exposed-cred'; pillEl.textContent='0/'+S2_HAL_COUNT; }
   const catEl = document.getElementById('s2catAll');
   if(catEl) catEl.className='diag-cat hal-cat';
   // Reset mini banner bar
   const mf=document.getElementById('s2mbProgAll'); if(mf){mf.style.width='0%';}
-  const ml=document.getElementById('s2mbLblAll'); if(ml) ml.className='ib-mini-lbl orange';
+  const ml=document.getElementById('s2mbLblAll'); if(ml) ml.className='ib-mini-lbl red';
   // Reset notes drawer
   const drawer=document.getElementById('s2notesDrawer'); if(drawer) drawer.classList.remove('open');
   const b=document.getElementById('s2briefing'); b.style.display=''; b.classList.remove('hidden');
@@ -3798,7 +3791,7 @@ function s2EndGame(reason) {
   document.getElementById('s2vInt').className='v-mv '+(intFinal>60?'green':intFinal>30?'orange':'red');
   // Simplified verdict rows
   document.getElementById('s2vHalsCaught').textContent=s2state.flagsCorrect+'/'+S2_HAL_COUNT;
-  document.getElementById('s2vHalsCaught').className='v-rv '+(s2state.flagsCorrect>=S2_HAL_COUNT?'green':'orange');
+  document.getElementById('s2vHalsCaught').className='v-rv '+(s2state.flagsCorrect>=S2_HAL_COUNT?'green':'red');
   document.getElementById('s2vFalseFlags').textContent=s2state.flagsWrong===0?'None':s2state.flagsWrong;
   document.getElementById('s2vFalseFlags').className='v-rv '+(s2state.flagsWrong===0?'green':'red');
   var anchorText2=document.getElementById('s2vAnchorText');
