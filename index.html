@@ -1117,7 +1117,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 /* ══ DEV TOGGLE ══ */
 #devToggleBtn {
   position: fixed; top: 12px; left: 12px; z-index: 9998;
-  display: flex; align-items: center; gap: 7px;
+  display: none; align-items: center; gap: 7px;
   padding: 5px 9px 5px 8px;
   background: rgba(6,16,36,.75); border: 1px solid rgba(255,255,255,.07);
   border-radius: 20px; cursor: pointer;
@@ -1886,7 +1886,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
     </div>
     <div class="briefing-body">
       <div class="briefing-stat-strip">
-        <div class="bss-item"><div class="bss-lbl">Documents</div><div class="bss-val">6 Levels</div></div>
+        <div class="bss-item"><div class="bss-lbl">Documents</div><div class="bss-val">6 to Scan</div></div>
         <div class="bss-item"><div class="bss-lbl">Threat Level</div><div class="bss-val" style="color:var(--blue2)">CRITICAL</div></div>
         <div class="bss-item"><div class="bss-lbl">Level 1</div><div class="bss-val" style="color:var(--green)">No Timer</div></div>
       </div>
@@ -1938,7 +1938,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
         <div class="v-rows">
           <div class="v-rows-lbl">Injection Summary</div>
           <div class="v-row"><span class="v-rk">Levels Completed</span><span class="v-rv" id="s3vLevels">—</span></div>
-          <div class="v-row"><span class="v-rk">Injections Found</span><span class="v-rv" id="s3vFound">—</span></div>
+          <div class="v-row"><span class="v-rk">Injections Blocked</span><span class="v-rv" id="s3vFound">—</span></div>
           <div class="v-row"><span class="v-rk">False Alarms</span><span class="v-rv" id="s3vFalse">—</span></div>
           <div class="v-row"><span class="v-rk">Timeouts</span><span class="v-rv" id="s3vTimeouts">—</span></div>
         </div>
@@ -2006,11 +2006,11 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
       <!-- Mini diagnostic row — mobile only -->
       <div class="ib-mini-diag" id="s3ibMiniDiag">
         <div class="ib-mini-cat">
-          <span class="ib-mini-lbl" style="color:rgba(56,189,248,.7)">LEVEL</span>
+          <span class="ib-mini-lbl" style="color:rgba(56,189,248,.7)">DOC</span>
           <div class="ib-mini-track"><div class="ib-mini-fill" id="s3mbProgLevel" style="background:rgba(56,189,248,.8)"></div></div>
         </div>
         <div class="ib-mini-cat">
-          <span class="ib-mini-lbl" style="color:rgba(74,222,128,.7)">FOUND</span>
+          <span class="ib-mini-lbl" style="color:rgba(74,222,128,.7)">BLOCKED</span>
           <div class="ib-mini-track"><div class="ib-mini-fill" id="s3mbProgFound" style="background:rgba(74,222,128,.8)"></div></div>
         </div>
       </div>
@@ -2041,11 +2041,11 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
     </div>
     <div style="flex-shrink:0">
       <div class="bss-item" style="margin-bottom:10px">
-        <div class="bss-lbl">Level</div>
+        <div class="bss-lbl">Document</div>
         <div class="bss-val" id="s3levelDisplay">1 / 6</div>
       </div>
       <div class="bss-item">
-        <div class="bss-lbl">Injections Found</div>
+        <div class="bss-lbl">Injections Blocked</div>
         <div class="bss-val" id="s3foundDisplay">0 / 3</div>
       </div>
     </div>
@@ -2313,8 +2313,8 @@ function updateMenuState() {
       // Keep next-mission glow for visual prominence even when collapsed
       if (!isDone && n === nextMission) card.classList.add('next-mission');
     } else {
-      // Desktop: never collapse — always show full cards
-      card.classList.remove('collapsed', 'expanded');
+      // Desktop: allow user to toggle collapse/expand — preserve their choice
+      // Only add next-mission highlight; don't force-expand
       if (!isDone && n === nextMission) card.classList.add('next-mission');
     }
     // Update collapse row status badge
@@ -2392,6 +2392,8 @@ function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   window.scrollTo(0,0);
+  const devBtn = document.getElementById('devToggleBtn');
+  if(devBtn) devBtn.style.display = (id === 'screenMenu') ? 'flex' : 'none';
 }
 function goMenu() {
   dismissToast();
@@ -2407,6 +2409,20 @@ function goMenu() {
     if(el) el.classList.remove('show');
   });
   updateMenuState();
+  // On mobile, auto-collapse any completed mission cards so the next mission is prominent
+  if (window.innerWidth <= 768) {
+    [1, 2, 3].forEach(n => {
+      if (courseProgress['s' + n + 'done']) {
+        const card = document.getElementById('mcard' + n);
+        if (card) {
+          card.classList.remove('expanded');
+          card.classList.add('collapsed');
+          const chevron = card.querySelector('.mc-collapse-chevron');
+          if (chevron) chevron.style.transform = '';
+        }
+      }
+    });
+  }
   showScreen('screenMenu');
   // Scroll to center on the next incomplete mission (or all-complete progress section)
   setTimeout(() => {
@@ -2623,6 +2639,8 @@ function s1ToggleAttach() {
   const open=doc.classList.toggle('open');
   if(arr) arr.textContent=open?'▲':'▼';
   if(open&&chip) { chip.classList.add('opened'); const cc=document.getElementById('s1chipCallout'); if(cc) cc.classList.add('hidden'); }
+  // On mobile, dismiss any active feedback popup so it doesn't cover the attachment
+  if(open && window.innerWidth <= 768) { forceCloseInsight(); }
 }
 function s1TokenClick(e) {
   if(!s1state.gameActive) return;
@@ -3002,6 +3020,22 @@ function s2Init() {
 }
 function s2Reset() { document.getElementById('s2verdict').classList.remove('show'); s2Init(); }
 
+// Hallucination tokens per section (used for auto-advance)
+const S2_SECTION_HALS = { 1:['law1'], 2:['cit2','fig1','fig2'], 3:['law2','cit1'], 4:[] };
+
+function s2CheckSectionAdvance() {
+  const sec = s2state.currentSection;
+  if (sec >= 4) return; // last section — no auto-advance
+  if (!s2state.gameActive) return;
+  const hals = S2_SECTION_HALS[sec] || [];
+  if (hals.length === 0) return;
+  const allDone = hals.every(id => s2state.tokState[id] && s2state.tokState[id].flagged);
+  if (allDone) {
+    // Briefly show a cue then advance — toast lasts ~2.8s, advance after 1.8s
+    setTimeout(() => { if (s2state.gameActive) s2NextSection(); }, 1800);
+  }
+}
+
 // Per-token teach messages for M2
 const S2_TEACH = {
   cit1: { correct: '"EAIRF-23" doesn\'t exist. The EU AI Act is real legislation, but this fabricated framework name sounds plausible — which is exactly what makes AI hallucinations dangerous in legal contexts.',
@@ -3076,7 +3110,7 @@ function s2BuildPayload() {
       <div class="ai-response-body" id="s2docBody">${sectionHTML}</div>
       <div class="s2-section-nav" id="s2SectionNav">
         <span class="s2-section-counter" id="s2SectionCounter">Section 1 of ${sections.length}</span>
-        <button class="s2-next-btn" id="s2NextBtn" onclick="s2NextSection()">NEXT SECTION →</button>
+        <button class="s2-next-btn" id="s2NextBtn" onclick="s2NextSection()">SKIP TO NEXT SECTION →</button>
       </div>
     </div>`;
 
@@ -3263,6 +3297,8 @@ function s2Classify(chosen) {
   const allFlagged = total>=6;
   const catLabel={'citation':'Fake Citation','figure':'Wrong Figure','law':'Fake Law'}[tok.cat]||'Flagged';
   if(S2_TEACH[id]?.correct) showToast(catLabel, S2_TEACH[id].correct);
+  // After correct flag, check if all hallucinations in current section are done → auto-advance
+  if(!allFlagged) s2CheckSectionAdvance();
   if(allFlagged) {
     document.getElementById('s2flagStatus').textContent='All hallucinations flagged — ready to submit.';
     document.getElementById('s2submitBtn').disabled=false;
