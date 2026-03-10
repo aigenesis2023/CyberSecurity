@@ -3180,7 +3180,7 @@ function s1FlashToken(id, color) {
 function s1Redact(id,cat) {
   s1state.tokState[id].redacted=true;
   const el=document.querySelector(`#s1payload .tok[data-id="${id}"]`); if(!el) return;
-  const catClass=cat==='fp'?'cat-safe':`cat-${cat==='credential'?'cred':cat==='pii'?'pii':'int'}`;
+  const catClass=cat==='fp'?'cat-safe':`cat-${cat}`;
   const badge={credential:'CRED',pii:'DATA',internal:'INT',fp:'SAFE'}[cat]||'';
   const orig=el.textContent.trim();
   el.className=`tok redacted ${catClass}`;
