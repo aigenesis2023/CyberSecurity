@@ -438,7 +438,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
   border-radius:12px;
   padding:16px 16px 14px;
   box-shadow:0 16px 48px rgba(0,0,0,.75), 0 0 0 1px rgba(56,189,248,.07), 0 0 28px rgba(56,189,248,.06);
-  min-width:252px;
+  min-width:480px;
   display:none;
   animation:popIn .18s cubic-bezier(.34,1.56,.64,1);
 }
@@ -450,7 +450,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
   padding-bottom:10px;
   border-bottom:1px solid rgba(56,189,248,.1);
 }
-.cat-btns { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.cat-btns { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
 .cat-btn {
   font-family:'Orbitron',monospace; font-size:9px; font-weight:700; letter-spacing:.12em;
   padding:13px 8px;
@@ -1517,7 +1517,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
       <div class="v-body">
         <div class="v-eyebrow">MISSION REPORT</div>
         <div class="v-divider"></div>
-        <div class="v-single-metric"><div class="v-ml">Integrity Remaining</div><div class="v-mv" id="s1vInt">—</div></div>
+        <div class="v-single-metric"><div class="v-ml">Integrity Score</div><div class="v-mv" id="s1vInt">—</div></div>
         <div class="v-rows">
           <div class="v-rows-lbl">Exposure Analysis</div>
           <div class="v-row"><span class="v-rk">[CREDENTIALS]</span><span class="v-rv" id="s1vCred">—</span></div>
@@ -1639,6 +1639,9 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
         <div class="dc-segments" id="s1segsInt"></div>
       </div>
     </div>
+    <div style="margin-top:auto;padding-top:12px">
+      <button class="btn btn-scan" id="s1btnScanDesktop" onclick="s1Scan()" style="display:flex;width:100%;align-items:center;justify-content:center;gap:7px">◎ &nbsp;Scan Items</button>
+    </div>
     <div class="diag-secured" id="s1diagSecured" style="display:none">
       <svg class="diag-secured-icon" viewBox="0 0 40 40" fill="none">
         <path d="M20 4 L34 10 L34 22 C34 29 27 35 20 37 C13 35 6 29 6 22 L6 10 Z" stroke="rgba(74,222,128,.9)" stroke-width="1.5" fill="rgba(74,222,128,.08)"/>
@@ -1722,7 +1725,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
       <div class="v-body">
         <div class="v-eyebrow">MISSION REPORT</div>
         <div class="v-divider"></div>
-        <div class="v-single-metric"><div class="v-ml">Integrity Remaining</div><div class="v-mv" id="s2vInt">—</div></div>
+        <div class="v-single-metric"><div class="v-ml">Integrity Score</div><div class="v-mv" id="s2vInt">—</div></div>
         <div class="v-rows">
           <div class="v-rows-lbl">Hallucination Summary</div>
           <div class="v-row"><span class="v-rk">Fake Citations Caught</span><span class="v-rv" id="s2vCitations">—</span></div>
@@ -1934,7 +1937,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
       <div class="v-body">
         <div class="v-eyebrow">MISSION REPORT</div>
         <div class="v-divider"></div>
-        <div class="v-single-metric"><div class="v-ml">Integrity Remaining</div><div class="v-mv" id="s3vInt">—</div></div>
+        <div class="v-single-metric"><div class="v-ml">Integrity Score</div><div class="v-mv" id="s3vInt">—</div></div>
         <div class="v-rows">
           <div class="v-rows-lbl">Injection Summary</div>
           <div class="v-row"><span class="v-rk">Levels Completed</span><span class="v-rv" id="s3vLevels">—</span></div>
@@ -2535,6 +2538,7 @@ function s1Init() {
   // Reset diag panel to initial (pre-play) state
   document.getElementById('s1diagSecured').style.display='none';
   document.getElementById('s1ibSubmitCta').style.display='none';
+  const s1scanDR=document.getElementById('s1btnScanDesktop'); if(s1scanDR) s1scanDR.parentElement.style.display='';
   const s1msR = document.getElementById('s1mobileSubmit'); if(s1msR) s1msR.style.display='none';
   document.getElementById('s1ibSeverity').style.opacity='1';
   document.getElementById('s1iwDrain').textContent='';
@@ -2656,7 +2660,7 @@ function s1TokenClick(e) {
   if(window.innerWidth<=768) { popup.style.top=''; popup.style.left=''; }
   else {
     let top=r.bottom+8, left=r.left;
-    if(left+220>window.innerWidth) left=window.innerWidth-228;
+    if(left+490>window.innerWidth) left=window.innerWidth-494;
     if(left<8) left=8;
     if(top+120>window.innerHeight) top=Math.max(8,r.top-120);
     popup.style.top=top+'px'; popup.style.left=left+'px';
@@ -2752,6 +2756,7 @@ function s1Classify(chosen) {
     document.getElementById('s1iwDrain').className='ib-drain-label secured';
     document.getElementById('s1diagSecured').style.display='flex';
     document.getElementById('s1ibSubmitCta').style.display='flex';
+    const s1scanD=document.getElementById('s1btnScanDesktop'); if(s1scanD) s1scanD.parentElement.style.display='none';
     // Show mobile submit button on mobile
     const s1ms = document.getElementById('s1mobileSubmit');
     if (s1ms && window.innerWidth <= 768) s1ms.style.display='block';
@@ -2972,7 +2977,6 @@ const S2_TOKENS = [
   { id:'acc1', cat:'accurate', isHal:false, text:'GDPR Article 5 requires personal data to be processed lawfully, fairly and transparently' },
   { id:'acc2', cat:'accurate', isHal:false, text:'data controllers must implement appropriate technical and organisational measures' },
   { id:'acc3', cat:'accurate', isHal:false, text:'Under Article 83, maximum fines can reach €20 million or 4% of global annual turnover' },
-  { id:'acc4', cat:'accurate', isHal:false, text:'the right to erasure (Article 17) allows individuals to request their data be deleted' },
 ];
 
 let s2state = {
@@ -3021,11 +3025,11 @@ function s2Init() {
 function s2Reset() { document.getElementById('s2verdict').classList.remove('show'); s2Init(); }
 
 // Hallucination tokens per section (used for auto-advance)
-const S2_SECTION_HALS = { 1:['law1'], 2:['cit2','fig1','fig2'], 3:['law2','cit1'], 4:[] };
+const S2_SECTION_HALS = { 1:['law1'], 2:['cit2','fig1','fig2'], 3:['law2','cit1'] };
 
 function s2CheckSectionAdvance() {
   const sec = s2state.currentSection;
-  if (sec >= 4) return; // last section — no auto-advance
+  if (sec >= 3) return; // last section — no auto-advance
   if (!s2state.gameActive) return;
   const hals = S2_SECTION_HALS[sec] || [];
   if (hals.length === 0) return;
@@ -3053,7 +3057,6 @@ const S2_TEACH = {
   acc1: { falseflag: 'GDPR Article 5 really does require lawful, fair, transparent processing. This is accurate — flagging it as a hallucination would have undermined your review.' },
   acc2: { falseflag: 'Data controllers genuinely must implement appropriate technical and organisational measures. This is correct GDPR wording.' },
   acc3: { falseflag: 'The €20m / 4% figure is real — it\'s the actual maximum fine under Article 83(5). Accurate claims like this can be used to make fabricated ones harder to spot.' },
-  acc4: { falseflag: 'The right to erasure under Article 17 is a genuine GDPR provision. Not every claim in an AI output is wrong — selective hallucinations are harder to catch.' },
 };
 
 function s2BuildPayload() {
@@ -3062,7 +3065,7 @@ function s2BuildPayload() {
   const ht = (id) => `<span class="tok hallucination" data-id="${id}">${tMap[id].text}</span>`;
   const at = (id) => `<span class="tok accurate-claim" data-id="${id}">${tMap[id].text}</span>`;
 
-  // Build 4 sections — each revealed one at a time
+  // Build 3 sections — each revealed one at a time
   const sections = [
     {
       id:'s2sec1',
@@ -3080,12 +3083,7 @@ function s2BuildPayload() {
       id:'s2sec3',
       html:`<h4>LEGAL FRAMEWORK UPDATE</h4>
         <p>The legal landscape is also evolving. ${at('acc2')} — including encryption, access controls, and regular security testing. Furthermore, the ${ht('law2')} requires all AI systems used in client-facing business communications to include a disclosure header beginning Q1 2025.</p>
-        <p>Per ${ht('cit1')}, organisations deploying generative AI tools for customer data analysis are required to maintain a real-time data flow audit within 48 hours of any breach event.</p>`
-    },
-    {
-      id:'s2sec4',
-      html:`<h4>RECOMMENDED ACTIONS</h4>
-        <p>Organisations should immediately audit their AI data processing workflows. ${at('acc4')} — your AI tools must honour deletion requests within 30 days of verification. Failure to comply exposes organisations to the full range of regulatory sanctions.</p>
+        <p>Per ${ht('cit1')}, organisations deploying generative AI tools for customer data analysis are required to maintain a real-time data flow audit within 48 hours of any breach event.</p>
         <span class="cite">⬡ Generated by AI Assistant · Unverified · Review before use</span>`
     }
   ];
@@ -3109,7 +3107,7 @@ function s2BuildPayload() {
       <div class="ai-warning-strip">⚠ Unverified AI output — flag fabricated claims before forwarding to legal or compliance</div>
       <div class="ai-response-body" id="s2docBody">${sectionHTML}</div>
       <div class="s2-section-nav" id="s2SectionNav">
-        <span class="s2-section-counter" id="s2SectionCounter">Section 1 of ${sections.length}</span>
+        <span class="s2-section-counter" id="s2SectionCounter">Section 1 of 3</span>
         <button class="s2-next-btn" id="s2NextBtn" onclick="s2NextSection()">SKIP TO NEXT SECTION →</button>
       </div>
     </div>`;
@@ -3119,7 +3117,7 @@ function s2BuildPayload() {
 }
 
 function s2NextSection() {
-  const totalSections = 4;
+  const totalSections = 3;
   const current = s2state.currentSection;
   if (current >= totalSections) return;
 
@@ -3204,7 +3202,7 @@ function s2TokenClick(e) {
   let top=r.bottom+8, left=r.left;
   if(window.innerWidth<=768) { popup.style.top=''; popup.style.left=''; }
   else {
-    if(left+220>window.innerWidth) left=window.innerWidth-228;
+    if(left+490>window.innerWidth) left=window.innerWidth-494;
     if(left<8) left=8;
     if(top+140>window.innerHeight) top=Math.max(8, r.top-140);
     popup.style.top=top+'px'; popup.style.left=left+'px';
@@ -4366,18 +4364,18 @@ function s3ShowInsight(category, tokenText, message, afterFn, graphicHtml) {
       <div class="cert-eyebrow">Certificate of Completion</div>
       <div class="cert-title">AI Data Guardian</div>
       <div class="cert-subtitle">You have successfully completed all three AI safety missions — identifying sensitive data exposure, AI hallucinations, and prompt injection attacks. You have demonstrated awareness of the key AI safety risks in the workplace and are better equipped to use AI tools responsibly.</div>
-      <div class="cert-scores-header">Integrity score per mission</div>
+      <div class="cert-scores-header">Scores</div>
       <div class="cert-scores">
         <div class="cert-score-item">
-          <div class="cert-score-lbl">Mission 01<br>— Data Leakage</div>
+          <div class="cert-score-lbl">Mission 01 · Score</div>
           <div class="cert-score-val" id="certS1">—</div>
         </div>
         <div class="cert-score-item">
-          <div class="cert-score-lbl">Mission 02<br>— Hallucination</div>
+          <div class="cert-score-lbl">Mission 02 · Score</div>
           <div class="cert-score-val" id="certS2">—</div>
         </div>
         <div class="cert-score-item">
-          <div class="cert-score-lbl">Mission 03<br>— Prompt Injection</div>
+          <div class="cert-score-lbl">Mission 03 · Score</div>
           <div class="cert-score-val" id="certS3">—</div>
         </div>
       </div>
