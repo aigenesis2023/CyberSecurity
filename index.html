@@ -2717,92 +2717,122 @@ function s1Classify(chosen) {
   const id=s1state.activeToken; if(!id) return;
   const token=S1_TOKENS[id];
   s1ClosePopup();
-  // Get token text from DOM for insight display
   const tokEl=document.querySelector(`#s1payload .tok[data-id="${id}"]`);
   const tokText=tokEl ? tokEl.textContent.trim() : id;
   const isSensitive=token.cat!=='noise';
+
   if(chosen==='safe') {
     if(!isSensitive) {
-      pSelected(); s1state.safeBonus+=0.008; s1state.integrity=Math.min(100,s1state.integrity+3);
-      showIntPop('s1', +3); flashDelta('s1', +3, 'confirmed safe'); s1Redact(id,'fp');
-    } else {
-      pWrong(); s1state.integrity=Math.max(0,s1state.integrity-10);
-      s1state.classifyErrors++;
-      showIntPop('s1',-10); flashDelta('s1',-10,'sensitive data exposed!');
-      s1FlashToken(id,'red');
-      if(s1state.integrity<=0) { s1EndGame('breach'); return; }
+      // Correct: safe token — no popup, fire consequences immediately
+      pSelected();
+      s1state.safeBonus+=0.008;
+      s1state.integrity=Math.min(100,s1state.integrity+3);
+      showIntPop('s1',+3); flashDelta('s1',+3,'confirmed safe');
+      s1Redact(id,'fp');
       updateIntUI('s1',s1state.integrity,s1GetDrain(),S1_MAX_DRAIN);
+    } else {
+      // Wrong: sensitive dismissed as safe — consequences fire on dismiss
+      pWrong();
+      s1state.integrity=Math.max(0,s1state.integrity-10);
+      s1state.classifyErrors++;
+      s1FlashToken(id,'red');
+      const willBreach=s1state.integrity<=0;
+      if(willBreach) { s1EndGame('breach'); return; }
+      const afterEffect=()=>{
+        showIntPop('s1',-10);
+        flashDelta('s1',-10,'sensitive data exposed!');
+        updateIntUI('s1',s1state.integrity,s1GetDrain(),S1_MAX_DRAIN);
+      };
       if(S1_TEACH[id]) {
         const catLabel={'credential':'[CREDENTIALS]','pii':'[PERSONAL DATA]','internal':'[INTERNAL INFO]'}[token.cat]||'Wrong Category';
         const g1=`<span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:rgba(220,235,255,.9);font-weight:500">${tokText}</span>`;
-        s1ShowInsight(catLabel, tokText, S1_TEACH[id].wrong, null, g1);
+        s1ShowInsight(catLabel,tokText,S1_TEACH[id].wrong,afterEffect,g1);
+      } else {
+        afterEffect();
       }
     }
-    updateIntUI('s1',s1state.integrity,s1GetDrain(),S1_MAX_DRAIN); return;
+    return;
   }
+
   if(!isSensitive) {
-    pWrong(); s1state.integrity=Math.max(0,s1state.integrity-5);
-    s1state.classifyErrors++; showIntPop('s1',-5); flashDelta('s1',-5,'unnecessary flag');
+    // Noise flagged as sensitive — no popup, fire consequences immediately
+    pWrong();
+    s1state.integrity=Math.max(0,s1state.integrity-5);
+    s1state.classifyErrors++;
+    showIntPop('s1',-5); flashDelta('s1',-5,'unnecessary flag');
     updateIntUI('s1',s1state.integrity,s1GetDrain(),S1_MAX_DRAIN);
-    if(s1state.integrity<=0) s1EndGame('breach'); return;
+    if(s1state.integrity<=0) s1EndGame('breach');
+    return;
   }
+
   if(chosen!==token.cat) {
-    pWrong(); s1FlashToken(id,'red');
+    // Wrong category — consequences fire on dismiss
+    pWrong();
+    s1FlashToken(id,'red');
     s1state.integrity=Math.max(0,s1state.integrity-3);
     s1state.classifyErrors++;
-    showIntPop('s1',-3);
-    flashDelta('s1',-3,'Identified correctly — but category matters for incident reporting. Try again.');
-    updateIntUI('s1',s1state.integrity,s1GetDrain(),S1_MAX_DRAIN);
     const key={credential:'Cred',pii:'Pii',internal:'Int'}[token.cat];
     const catEl=document.getElementById('s1cat'+key);
     catEl.style.animation='none'; void catEl.offsetWidth; catEl.style.animation='wrongGlow .6s ease';
+    const willBreach=s1state.integrity<=0;
+    const afterEffect=()=>{
+      showIntPop('s1',-3);
+      flashDelta('s1',-3,'Identified correctly — but category matters for incident reporting. Try again.');
+      updateIntUI('s1',s1state.integrity,s1GetDrain(),S1_MAX_DRAIN);
+      if(willBreach) s1EndGame('breach');
+    };
     if(S1_TEACH[id]) {
       const catLabel={'credential':'[CREDENTIALS]','pii':'[PERSONAL DATA]','internal':'[INTERNAL INFO]'}[token.cat]||'Wrong Category';
       const g2=`<span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:rgba(220,235,255,.9);font-weight:500">${tokText}</span>`;
-      s1ShowInsight(catLabel, tokText, S1_TEACH[id].wrong, null, g2);
+      s1ShowInsight(catLabel,tokText,S1_TEACH[id].wrong,afterEffect,g2);
+    } else {
+      afterEffect();
     }
-    if(s1state.integrity<=0) { s1EndGame('breach'); return; }
     return;
   }
-  // Correct classification
+
+  // Correct classification — token redacts immediately, all consequences fire on dismiss
   pSelected();
   s1Redact(id,token.cat);
-  s1UpdateDiag(token.cat,id);
-  flashDelta('s1',0,'Item secured');
-  updateIntUI('s1',s1state.integrity,s1GetDrain(),S1_MAX_DRAIN);
-  const allDone = s1AllSecured();
+  const allDone=s1AllSecured();
+  const afterEffect=()=>{
+    s1UpdateDiag(token.cat,id);
+    flashDelta('s1',0,'Item secured');
+    updateIntUI('s1',s1state.integrity,s1GetDrain(),S1_MAX_DRAIN);
+    if(allDone) {
+      clearInterval(s1state.drainInt);
+      document.getElementById('s1iwDrain').textContent='✓ secured';
+      document.getElementById('s1iwDrain').className='ib-drain-label secured';
+      document.getElementById('s1diagSecured').style.display='flex';
+      document.getElementById('s1ibSubmitCta').style.display='flex';
+      const s1scanD=document.getElementById('s1btnScanDesktop'); if(s1scanD) s1scanD.parentElement.style.display='none';
+      const s1ms=document.getElementById('s1mobileSubmit');
+      if(s1ms&&window.innerWidth<=768) s1ms.style.display='block';
+      document.getElementById('s1ibSeverity').style.opacity='0';
+      if(window.innerWidth>768) {
+        setTimeout(()=>{
+          const diag=document.getElementById('s1diag');
+          if(diag&&!diag.classList.contains('panel-open')) {
+            diag.classList.add('panel-open');
+            const lbl=diag.querySelector('.diag-toggle-lbl');
+            if(lbl) lbl.textContent='▼  CLOSE PANEL';
+          }
+          setTimeout(()=>{
+            if(diag) diag.scrollTop=diag.scrollHeight;
+            const btn=document.getElementById('s1ibSubmitCta');
+            if(btn) btn.scrollIntoView({behavior:'smooth',block:'nearest'});
+          },380);
+        },200);
+      }
+    }
+  };
   if(S1_TEACH[id]) {
     const catLabel={'credential':'[CREDENTIALS]','pii':'[PERSONAL DATA]','internal':'[INTERNAL INFO]'}[token.cat]||'Secured';
     const redactedEl=document.querySelector(`#s1payload .tok[data-id="${id}"]`);
-    const redactedText=redactedEl ? redactedEl.querySelector('.redact-label')?.textContent||'' : '';
-    s1ShowInsight(catLabel, redactedText, S1_TEACH[id].correct, null, null, true);
-  }
-  if(allDone) {
-    clearInterval(s1state.drainInt);
-    document.getElementById('s1iwDrain').textContent='✓ secured';
-    document.getElementById('s1iwDrain').className='ib-drain-label secured';
-    document.getElementById('s1diagSecured').style.display='flex';
-    document.getElementById('s1ibSubmitCta').style.display='flex';
-    const s1scanD=document.getElementById('s1btnScanDesktop'); if(s1scanD) s1scanD.parentElement.style.display='none';
-    // Show mobile submit button on mobile
-    const s1ms = document.getElementById('s1mobileSubmit');
-    if (s1ms && window.innerWidth <= 768) s1ms.style.display='block';
-    document.getElementById('s1ibSeverity').style.opacity='0';
-    if(window.innerWidth > 768) {
-      setTimeout(() => {
-        const diag = document.getElementById('s1diag');
-        if(diag && !diag.classList.contains('panel-open')) {
-          diag.classList.add('panel-open');
-          const lbl = diag.querySelector('.diag-toggle-lbl');
-          if(lbl) lbl.textContent = '▼  CLOSE PANEL';
-        }
-        setTimeout(() => {
-          if(diag) diag.scrollTop = diag.scrollHeight;
-          const btn = document.getElementById('s1ibSubmitCta');
-          if(btn) btn.scrollIntoView({behavior:'smooth', block:'nearest'});
-        }, 380);
-      }, 200);
-    }
+    const redactedText=redactedEl?redactedEl.querySelector('.redact-label')?.textContent||'':'';
+    s1ShowInsight(catLabel,redactedText,S1_TEACH[id].correct,afterEffect,null,true);
+  } else {
+    afterEffect();
   }
 }
 function s1FlashToken(id, color) {
