@@ -1093,6 +1093,49 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 .mission-card.collapsed .mc-launch-btn { display: none; }
 .mission-card.collapsed { cursor: pointer; }
 .mission-card.expanded .mc-collapse-chevron { transform: rotate(90deg); }
+
+/* ══ DESKTOP: ALWAYS SHOW FULL CARDS — ignore collapse ══ */
+@media (min-width: 769px) {
+  .mission-card .mc-collapse-row { display: none !important; }
+  .mission-card.collapsed .mc-body { display: block !important; }
+  .mission-card.collapsed .mc-launch-btn { display: flex !important; }
+  .mission-card.collapsed { cursor: default; }
+}
+
+/* ══ MOBILE COLLAPSE STATUS BADGE ══ */
+.mc-collapse-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; letter-spacing: .08em; text-transform: uppercase;
+  flex-shrink: 0; transition: color .2s;
+}
+.mc-collapse-badge.done { color: rgba(74,222,128,.85); }
+.mc-collapse-badge.locked-icon { color: rgba(255,255,255,.22); font-size: 12px; }
+.mc-collapse-badge.unlocked { color: rgba(56,189,248,.45); }
+
+/* ══ VERDICT COMPACT STATUS HEADER (Steps 2 & 3) ══ */
+.v-compact-header {
+  display: flex; align-items: center; gap: 8px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(74,222,128,.2);
+  margin-bottom: 14px;
+  font-family: 'Orbitron', monospace;
+  font-size: 9px; letter-spacing: .2em;
+  color: rgba(74,222,128,.75); text-transform: uppercase;
+}
+.v-compact-header.fail {
+  color: rgba(239,68,68,.7);
+  border-bottom-color: rgba(239,68,68,.18);
+}
+.v-compact-header-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: rgba(74,222,128,.9); flex-shrink: 0;
+  box-shadow: 0 0 6px rgba(74,222,128,.5);
+}
+.v-compact-header.fail .v-compact-header-dot {
+  background: rgba(239,68,68,.9);
+  box-shadow: 0 0 6px rgba(239,68,68,.5);
+}
+
 /* Next-up card: visually prominent */
 .mission-card.next-mission {
   border-color: rgba(56,189,248,.35);
@@ -1189,6 +1232,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
           <span class="mc-collapse-num">01</span>
           <span class="mc-collapse-title">Sensitive Data Exposure</span>
           <span class="mc-collapse-stars" id="m1starsC"></span>
+          <span class="mc-collapse-badge unlocked" id="m1collapseBadge"></span>
           <span class="mc-collapse-chevron">▸</span>
         </div>
         <div class="mc-body">
@@ -1218,6 +1262,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
           <span class="mc-collapse-num">02</span>
           <span class="mc-collapse-title">AI Hallucination Detection</span>
           <span class="mc-collapse-stars" id="m2starsC"></span>
+          <span class="mc-collapse-badge locked-icon" id="m2collapseBadge">🔒</span>
           <span class="mc-collapse-chevron">▸</span>
         </div>
         <div class="mc-body">
@@ -1249,6 +1294,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
           <span class="mc-collapse-num">03</span>
           <span class="mc-collapse-title">Prompt Injection Attacks</span>
           <span class="mc-collapse-stars" id="m3starsC"></span>
+          <span class="mc-collapse-badge locked-icon" id="m3collapseBadge">🔒</span>
           <span class="mc-collapse-chevron">▸</span>
         </div>
         <div class="mc-body">
@@ -1415,7 +1461,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
         <div class="v-fail-lbl">Data Breach Detected</div>
       </div>
       <div class="v-body">
-        <div class="v-eyebrow">SECURITY INCIDENT REPORT</div>
+        <div class="v-eyebrow">MISSION REPORT</div>
         <div class="v-divider"></div>
         <div class="v-single-metric"><div class="v-ml">Integrity Remaining</div><div class="v-mv" id="s1vInt">—</div></div>
         <div class="v-rows">
@@ -1432,6 +1478,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
     <!-- Step 2: Mission Report -->
     <div class="v-step" id="s1vStep2" style="display:none">
       <div class="v-body">
+        <div class="v-compact-header" id="s1vCompact2"><span class="v-compact-header-dot"></span><span class="v-compact-header-text">TRANSMISSION SECURED</span></div>
         <div class="v-eyebrow">MISSION REPORT</div>
         <div class="v-divider"></div>
         <div class="v-verdict-msg" id="s1vMsg"></div>
@@ -1441,6 +1488,8 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
     <!-- Step 3: Real World + nav buttons -->
     <div class="v-step" id="s1vStep3" style="display:none">
       <div class="v-body">
+        <div class="v-compact-header" id="s1vCompact3"><span class="v-compact-header-dot"></span><span class="v-compact-header-text">TRANSMISSION SECURED</span></div>
+        <div class="v-eyebrow">MISSION REPORT</div>
         <div class="v-anchor" id="s1vAnchor">
           <div class="v-anchor-lbl">⬡ Real World</div>
           <div class="v-anchor-text" id="s1vAnchorText"></div>
@@ -1617,7 +1666,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
         <div class="v-fail-lbl">Misinformation Spread</div>
       </div>
       <div class="v-body">
-        <div class="v-eyebrow">HALLUCINATION ANALYSIS REPORT</div>
+        <div class="v-eyebrow">MISSION REPORT</div>
         <div class="v-divider"></div>
         <div class="v-single-metric"><div class="v-ml">Integrity Remaining</div><div class="v-mv" id="s2vInt">—</div></div>
         <div class="v-rows">
@@ -1634,6 +1683,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
     <!-- Step 2: Mission Report -->
     <div class="v-step" id="s2vStep2" style="display:none">
       <div class="v-body">
+        <div class="v-compact-header" id="s2vCompact2"><span class="v-compact-header-dot"></span><span class="v-compact-header-text">TRANSMISSION SECURED</span></div>
         <div class="v-eyebrow">MISSION REPORT</div>
         <div class="v-divider"></div>
         <div class="v-verdict-msg" id="s2vMsg"></div>
@@ -1643,6 +1693,8 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
     <!-- Step 3: Real World + nav buttons -->
     <div class="v-step" id="s2vStep3" style="display:none">
       <div class="v-body">
+        <div class="v-compact-header" id="s2vCompact3"><span class="v-compact-header-dot"></span><span class="v-compact-header-text">TRANSMISSION SECURED</span></div>
+        <div class="v-eyebrow">MISSION REPORT</div>
         <div class="v-anchor" id="s2vAnchor">
           <div class="v-anchor-lbl">⬡ Real World</div>
           <div class="v-anchor-text" id="s2vAnchorText"></div>
@@ -1826,7 +1878,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
         <div class="v-fail-lbl">AI Hijacked</div>
       </div>
       <div class="v-body">
-        <div class="v-eyebrow">INJECTION NEUTRALISATION REPORT</div>
+        <div class="v-eyebrow">MISSION REPORT</div>
         <div class="v-divider"></div>
         <div class="v-single-metric"><div class="v-ml">Integrity Remaining</div><div class="v-mv" id="s3vInt">—</div></div>
         <div class="v-rows">
@@ -1843,6 +1895,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
     <!-- Step 2: Mission Report -->
     <div class="v-step" id="s3vStep2" style="display:none">
       <div class="v-body">
+        <div class="v-compact-header" id="s3vCompact2"><span class="v-compact-header-dot"></span><span class="v-compact-header-text">TRANSMISSION SECURED</span></div>
         <div class="v-eyebrow">MISSION REPORT</div>
         <div class="v-divider"></div>
         <div class="v-verdict-msg" id="s3vMsg"></div>
@@ -1852,6 +1905,8 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
     <!-- Step 3: Real World + nav buttons -->
     <div class="v-step" id="s3vStep3" style="display:none">
       <div class="v-body">
+        <div class="v-compact-header" id="s3vCompact3"><span class="v-compact-header-dot"></span><span class="v-compact-header-text">TRANSMISSION SECURED</span></div>
+        <div class="v-eyebrow">MISSION REPORT</div>
         <div class="v-anchor" id="s3vAnchor">
           <div class="v-anchor-lbl">⬡ Real World</div>
           <div class="v-anchor-text" id="s3vAnchorText"></div>
@@ -2179,21 +2234,40 @@ function updateMenuState() {
     if (starsCEl) { starsCEl.textContent = starStr; starsCEl.title = 'Score: ' + score + '%'; }
   });
 
-  // ── Collapsible mission cards — completed missions collapse, next-up expands ──
+  // ── Collapsible mission cards — mobile: always collapsed; desktop: always expanded ──
+  const isMobile = window.innerWidth <= 768;
   const nextMission = !courseProgress.s1done ? 1 : !courseProgress.s2done ? 2 : !courseProgress.s3done ? 3 : 0;
   [1, 2, 3].forEach(n => {
     const card = document.getElementById('mcard' + n);
     if (!card) return;
     const isDone = courseProgress['s' + n + 'done'];
+    const isLocked = (n === 2 && !courseProgress.s1done) || (n === 3 && !courseProgress.s2done);
     card.classList.remove('next-mission');
-    if (isDone) {
-      // Collapse completed missions
+    if (isMobile) {
+      // Mobile: always collapsed unless user has manually expanded
       if (!card.classList.contains('expanded')) {
         card.classList.add('collapsed');
       }
+      // Keep next-mission glow for visual prominence even when collapsed
+      if (!isDone && n === nextMission) card.classList.add('next-mission');
     } else {
+      // Desktop: never collapse — always show full cards
       card.classList.remove('collapsed', 'expanded');
-      if (n === nextMission) card.classList.add('next-mission');
+      if (!isDone && n === nextMission) card.classList.add('next-mission');
+    }
+    // Update collapse row status badge
+    const badge = document.getElementById('m' + n + 'collapseBadge');
+    if (badge) {
+      if (isDone) {
+        badge.textContent = '✓';
+        badge.className = 'mc-collapse-badge done';
+      } else if (isLocked) {
+        badge.textContent = '🔒';
+        badge.className = 'mc-collapse-badge locked-icon';
+      } else {
+        badge.textContent = '';
+        badge.className = 'mc-collapse-badge unlocked';
+      }
     }
   });
 
@@ -2774,6 +2848,17 @@ function s1EndGame(reason) {
   document.getElementById('s1vErrors').textContent=s1state.classifyErrors===0?'None':s1state.classifyErrors+' Errors';
   document.getElementById('s1vErrors').className='v-rv '+(s1state.classifyErrors===0?'green':'red');
   document.getElementById('s1menuBtn').textContent=pass?'▶ MISSION SELECT':'← MISSION SELECT';
+  // Update compact status headers for steps 2 & 3
+  ['s1vCompact2','s1vCompact3'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.className = 'v-compact-header' + (pass ? '' : ' fail');
+      const txt = el.querySelector('.v-compact-header-text');
+      if (txt) txt.textContent = pass ? 'TRANSMISSION SECURED' : 'DATA BREACH DETECTED';
+      const dot = el.querySelector('.v-compact-header-dot');
+      if (dot) dot.style.background = pass ? 'rgba(74,222,128,.9)' : 'rgba(239,68,68,.9)';
+    }
+  });
   const anchorText1=document.getElementById('s1vAnchorText');
   if(pass) {
     anchorText1.innerHTML = 'In 2023, Samsung engineers accidentally submitted proprietary source code to ChatGPT for debugging help. The data was potentially retained by OpenAI and used in model training. Samsung subsequently banned AI tools company-wide.' + '<br><br><span style="font-family:\'JetBrains Mono\',monospace;font-size:9px;letter-spacing:.12em;color:rgba(56,189,248,.5);text-transform:uppercase;">What you now do differently</span><br><span style="font-size:11px;line-height:1.9;color:rgba(200,220,255,.65);">→ Never paste credentials, PII, or internal codenames into public AI tools<br>→ Treat every AI prompt like an email sent to a stranger<br>→ When in doubt, redact first — ask your manager before including sensitive data</span>';
@@ -3208,6 +3293,17 @@ function s2EndGame(reason) {
     anchorText2.textContent = 'In the Mata v. Avianca case (2023), lawyers submitted AI-generated case citations to a US federal court — every cited case was invented. The attorneys were sanctioned. AI-fabricated content in legal and compliance contexts carries direct professional and financial consequences.';
   }
   const mb2=document.getElementById('s2menuBtn'); mb2.textContent=pass?'▶ MISSION SELECT':'← MISSION SELECT';
+  // Update compact status headers for steps 2 & 3
+  ['s2vCompact2','s2vCompact3'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.className = 'v-compact-header' + (pass ? '' : ' fail');
+      const txt = el.querySelector('.v-compact-header-text');
+      if (txt) txt.textContent = pass ? 'TRANSMISSION SECURED' : 'MISINFORMATION SPREAD';
+      const dot = el.querySelector('.v-compact-header-dot');
+      if (dot) dot.style.background = pass ? 'rgba(74,222,128,.9)' : 'rgba(239,68,68,.9)';
+    }
+  });
   forceCloseInsight();
   setTimeout(()=>document.getElementById('s2verdict').classList.add('show'),400);
 }
@@ -3696,6 +3792,17 @@ function s3EndGame(reason) {
     anchorText3.textContent = 'In 2024, researchers demonstrated that prompt injections in shared documents could cause AI email assistants to forward confidential data to attackers without the user\'s knowledge. The same technique was used in every injection you missed — a hidden instruction the AI processed while you scanned past it.';
   }
   const mb3=document.getElementById('s3menuBtn'); mb3.textContent=pass?'▶ MISSION SELECT':'← MISSION SELECT';
+  // Update compact status headers for steps 2 & 3
+  ['s3vCompact2','s3vCompact3'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.className = 'v-compact-header' + (pass ? '' : ' fail');
+      const txt = el.querySelector('.v-compact-header-text');
+      if (txt) txt.textContent = pass ? 'TRANSMISSION SECURED' : 'AI HIJACKED';
+      const dot = el.querySelector('.v-compact-header-dot');
+      if (dot) dot.style.background = pass ? 'rgba(74,222,128,.9)' : 'rgba(239,68,68,.9)';
+    }
+  });
   forceCloseInsight();
   setTimeout(()=>document.getElementById('s3verdict').classList.add('show'),400);
 }
