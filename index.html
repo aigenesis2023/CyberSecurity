@@ -503,6 +503,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 .tok.flagged-correct-figure   { background:rgba(239,68,68,.2);  color:var(--red); border:1px solid rgba(239,68,68,.4);  cursor:default; border-bottom:none; padding:2px 7px; border-radius:4px; }
 .tok.flagged-correct-law      { background:rgba(250,204,21,.18); color:var(--yellow); border:1px solid rgba(250,204,21,.4);  cursor:default; border-bottom:none; padding:2px 7px; border-radius:4px; }
 .tok.flagged-wrong            { background:rgba(148,163,184,.12); color:rgba(148,163,184,.8); border:1px solid rgba(148,163,184,.3); cursor:default; border-bottom:none; padding:2px 7px; border-radius:4px; }
+.tok.flagged-missed           { background:rgba(239,68,68,.1); color:rgba(239,68,68,.6); border:1px solid rgba(239,68,68,.25); cursor:default; border-bottom:none; padding:2px 7px; border-radius:4px; text-decoration:line-through; text-decoration-color:rgba(239,68,68,.4); }
 /* Injection section */
 .tok.injection { background:rgba(250,204,21,.08); text-decoration:underline; text-decoration-color:var(--blue); text-decoration-thickness:1px; text-underline-offset:2px; cursor:pointer; }
 .tok.injection:hover { background:rgba(250,204,21,.18); }
@@ -2114,13 +2115,6 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
       <div class="ib-bar-track"><div class="ib-bar-fill green" id="s2iwIntBar"></div></div>
       <div class="ib-bar-sub"><span class="ib-delta" id="s2iwDelta"></span></div>
       <div class="ib-bar-sub" style="margin-top:3px"><span class="teach-flash" id="s2iwTeach"></span></div>
-      <!-- Mini diagnostic row — mobile only (single bar) -->
-      <div class="ib-mini-diag" id="s2ibMiniDiag">
-        <div class="ib-mini-cat" id="s2mbCatAll">
-          <span class="ib-mini-lbl green" id="s2mbLblAll">FLAGGED</span>
-          <div class="ib-mini-track"><div class="ib-mini-fill" id="s2mbProgAll" style="background:rgba(74,222,128,.8)"></div></div>
-        </div>
-      </div>
     </div>
   </div>
 </div>
@@ -3383,9 +3377,6 @@ function s2Init() {
   if(pillEl){ pillEl.className='dc-pill exposed-cred'; pillEl.textContent='0/'+S2_HAL_COUNT; }
   const catEl = document.getElementById('s2catAll');
   if(catEl) catEl.className='diag-cat hal-cat';
-  // Reset mini banner bar
-  const mf=document.getElementById('s2mbProgAll'); if(mf){mf.style.width='0%';}
-  const ml=document.getElementById('s2mbLblAll'); if(ml) ml.className='ib-mini-lbl green';
   // Reset to report view
   s2SwitchView('report');
   const b=document.getElementById('s2briefing'); b.style.display=''; b.classList.remove('hidden');
@@ -3540,22 +3531,8 @@ function s2TokenClick(e) {
   const popup=document.getElementById('s2halPopup');
   popup._justOpened=true;
   popup.classList.add('show');
-  // Show cooldown state if still locked
-  const onCooldown = s2state.cooldownUntil && Date.now() < s2state.cooldownUntil;
-  const btns = popup.querySelectorAll('.cat-btn');
   const lbl = popup.querySelector('.cat-popup-lbl');
-  if(onCooldown) {
-    btns.forEach(b=>{ b.disabled=true; b.style.opacity='0.3'; });
-    lbl.textContent = 'Re-read before deciding\u2026';
-    const remaining = s2state.cooldownUntil - Date.now();
-    setTimeout(()=>{
-      btns.forEach(b=>{ b.disabled=false; b.style.opacity=''; });
-      lbl.textContent = 'Does this match the notes?';
-    }, remaining);
-  } else {
-    btns.forEach(b=>{ b.disabled=false; b.style.opacity=''; });
-    lbl.textContent = 'Does this match the notes?';
-  }
+  if(lbl) lbl.textContent = 'Does this match the notes?';
   // Position popup
   const r=e.currentTarget.getBoundingClientRect();
   let top=r.bottom+8, left=r.left;
@@ -3575,13 +3552,13 @@ document.addEventListener('mousedown', e => {
   if(p&&p.classList.contains('show')&&!p.contains(e.target)) s2ClosePopup();
 });
 
+function s2AllClassified() {
+  // Check if every token (hallucinations + accurate) has been classified
+  return Object.keys(s2state.tokState).every(function(id){ return s2state.tokState[id].flagged; });
+}
+
 function s2Classify(chosen) {
   const id=s2state.activeToken; if(!id) return;
-  if(s2state.cooldownUntil && Date.now() < s2state.cooldownUntil) {
-    s2ClosePopup();
-    flashDelta('s2', 0, 'stand by\u2026');
-    return;
-  }
   const tok=s2state.tokState[id];
   s2ClosePopup();
   const tokEl2=document.querySelector('#s2payload .tok[data-id="'+id+'"]');
@@ -3597,65 +3574,65 @@ function s2Classify(chosen) {
       if(el){ el.className='tok flagged-wrong'; el.innerHTML='<span class="redact-label">'+el.textContent.trim()+'</span>\u2713'; el.removeEventListener('click',s2TokenClick); }
       updateIntUI('s2',s2state.integrity,0,S1_MAX_DRAIN);
       if(S2_TEACH[id]&&S2_TEACH[id].falseflag) {
-        s2ShowInsight('LOOKS ACCURATE', tokText2, 'Correct \u2014 this claim is in the meeting notes.', function(){ flashDelta('s2', 0, 'accurate \u2014 good call'); s2CheckSectionAdvance(); }, null, true, 'accurate');
+        s2ShowInsight('LOOKS ACCURATE', tokText2, 'Correct \u2014 this claim is in the meeting notes.', function(){ flashDelta('s2', 0, 'accurate \u2014 good call'); s2CheckAllDone(); }, null, true, 'accurate');
       } else {
         flashDelta('s2', 0, 'accurate \u2014 good call');
-        s2CheckSectionAdvance();
+        s2CheckAllDone();
       }
     } else {
-      // MISS — hallucination called accurate — penalty but token stays clickable for retry
-      pWrong(); s2state.integrity=Math.max(0,s2state.integrity-12);
-      s2state.cooldownUntil = Date.now() + 1800;
+      // MISS — hallucination called accurate — locked, no retry
+      pWrong(); tok.flagged=true; s2state.integrity=Math.max(0,s2state.integrity-15);
       s2FlashTok(id,'red');
+      const el=document.querySelector('#s2payload .tok[data-id="'+id+'"]');
+      if(el){ el.className='tok flagged-missed'; el.innerHTML='<span class="redact-label">'+el.textContent.trim()+'</span>\u2717'; el.removeEventListener('click',s2TokenClick); }
       updateIntUI('s2',s2state.integrity,0,S1_MAX_DRAIN);
       if(s2state.integrity<=0) { s2EndGame('breach'); return; }
       var missMsg = S2_TEACH[id] ? S2_TEACH[id].correct : '';
-      s2ShowInsight('FLAG', tokText2, missMsg, function(){ showIntPop('s2',-12); flashDelta('s2',-12,'missed hallucination — try again'); }, null, false, 'accurate');
+      s2ShowInsight('FLAG', tokText2, missMsg, function(){ showIntPop('s2',-15); flashDelta('s2',-15,'missed hallucination'); s2CheckAllDone(); }, null, false, 'accurate');
     }
     return;
   }
 
   // ── PLAYER SAYS "FLAG" ──
   if(!tok.isHal) {
-    // False flag — accurate claim flagged as hallucination — penalty but token stays clickable for retry
-    pWrong(); s2state.integrity=Math.max(0,s2state.integrity-10); s2state.flagsWrong++;
-    s2state.cooldownUntil = Date.now() + 1800;
+    // False flag — accurate claim flagged as hallucination — locked, no retry
+    pWrong(); tok.flagged=true; s2state.integrity=Math.max(0,s2state.integrity-12); s2state.flagsWrong++;
     s2FlashTok(id,'red');
+    const el=document.querySelector('#s2payload .tok[data-id="'+id+'"]');
+    if(el){ el.className='tok flagged-missed'; el.innerHTML='<span class="redact-label">'+el.textContent.trim()+'</span>\u2717'; el.removeEventListener('click',s2TokenClick); }
     updateIntUI('s2',s2state.integrity,0,S1_MAX_DRAIN);
     if(s2state.integrity<=0) { s2EndGame('breach'); return; }
     var ffMsg = (S2_TEACH[id]&&S2_TEACH[id].falseflag) || 'This claim is in the meeting notes \u2014 flagging accurate content damages your credibility.';
-    s2ShowInsight('LOOKS ACCURATE', tokText2, ffMsg, function(){ showIntPop('s2',-10); flashDelta('s2',-10,'false alarm — try again'); }, null, false, 'flag');
+    s2ShowInsight('LOOKS ACCURATE', tokText2, ffMsg, function(){ showIntPop('s2',-12); flashDelta('s2',-12,'false alarm'); s2CheckAllDone(); }, null, false, 'flag');
     return;
   }
 
-  // Correct flag — hallucination identified!
+  // Correct flag — hallucination identified (no integrity reward — this is the expected job)
   pSelected(); tok.flagged=true; s2state.flagsCorrect++;
   var el=document.querySelector('#s2payload .tok[data-id="'+id+'"]');
   if(el){ el.className='tok flagged-correct-figure'; el.innerHTML='<span class="redact-label">'+el.textContent.trim()+'</span>'; el.removeEventListener('click',s2TokenClick); }
-  s2state.integrity=Math.min(100,s2state.integrity+8);
   updateIntUI('s2',s2state.integrity,0,S1_MAX_DRAIN);
   s2UpdateDiag();
   var total=s2state.flagsCorrect;
   document.getElementById('s2flagCount').textContent=total;
-  var allFlagged = total>=S2_HAL_COUNT;
-  if(allFlagged) {
+  var allHalsFlagged = total>=S2_HAL_COUNT;
+  if(allHalsFlagged) {
     document.getElementById('s2flagStatus').textContent='All hallucinations flagged.';
     document.getElementById('s2diagSecured').style.display='flex';
     document.getElementById('s2iwDrain').textContent='\u2713 report verified';
     document.getElementById('s2iwDrain').className='ib-drain-label secured';
-    if(S2_TEACH[id]&&S2_TEACH[id].correct) {
-      s2ShowInsight('FLAG', tokText2, S2_TEACH[id].correct, function(){ showIntPop('s2',+8); flashDelta('s2',+8,'hallucination flagged'); s2Submit(); }, null, true, 'flag');
-    } else {
-      showIntPop('s2',+8); flashDelta('s2',+8,'hallucination flagged');
-      s2Submit();
-    }
+  }
+  if(S2_TEACH[id]&&S2_TEACH[id].correct) {
+    s2ShowInsight('FLAG', tokText2, S2_TEACH[id].correct, function(){ flashDelta('s2', 0, 'hallucination flagged'); s2CheckAllDone(); }, null, true, 'flag');
   } else {
-    if(S2_TEACH[id]&&S2_TEACH[id].correct) {
-      s2ShowInsight('FLAG', tokText2, S2_TEACH[id].correct, function(){ showIntPop('s2',+8); flashDelta('s2',+8,'hallucination flagged'); s2CheckSectionAdvance(); }, null, true, 'flag');
-    } else {
-      showIntPop('s2',+8); flashDelta('s2',+8,'hallucination flagged');
-      s2CheckSectionAdvance();
-    }
+    flashDelta('s2', 0, 'hallucination flagged');
+    s2CheckAllDone();
+  }
+}
+
+function s2CheckAllDone() {
+  if(s2AllClassified() && s2state.gameActive) {
+    setTimeout(function(){ s2Submit(); }, 600);
   }
 }
 function s2FlashTok(id,color) {
@@ -3670,16 +3647,10 @@ function s2UpdateDiag() {
   if(cont){ var next=cont.querySelector('.dc-seg:not(.secured)'); if(next) next.classList.add('secured'); }
   var pill=document.getElementById('s2pillAll');
   if(pill) pill.textContent=cnt+'/'+S2_HAL_COUNT;
-  // Sync mini banner bar
-  var miniFill=document.getElementById('s2mbProgAll');
-  if(miniFill) miniFill.style.width=Math.round((cnt/S2_HAL_COUNT)*100)+'%';
   if(cnt>=S2_HAL_COUNT) {
     var catEl=document.getElementById('s2catAll');
     if(catEl) catEl.className='diag-cat hal-cat secured';
     if(pill) pill.className='dc-pill secured';
-    var miniLbl=document.getElementById('s2mbLblAll');
-    if(miniLbl) miniLbl.className='ib-mini-lbl secured';
-    if(miniFill) miniFill.style.background='rgba(74,222,128,.85)';
   }
 }
 function s2Start() {
