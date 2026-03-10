@@ -188,13 +188,14 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 
 .mc-badge { font-family:'JetBrains Mono',monospace; font-size:8px; letter-spacing:.1em; text-transform:uppercase; padding:3px 10px; border-radius:20px; background:rgba(56,189,248,.08); color:rgba(56,189,248,.7); border:1px solid rgba(56,189,248,.22); }
 .mc-badge.threat-high, .mc-badge.threat-medium, .mc-badge.threat-critical { background:rgba(56,189,248,.08); color:rgba(56,189,248,.7); border:1px solid rgba(56,189,248,.22); }
-.mc-top-row { display:flex; justify-content:flex-end; align-items:center; margin-bottom:0; }
+.mc-top-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
 .mc-domain { font-family:'JetBrains Mono',monospace; font-size:8px; letter-spacing:.12em; text-transform:uppercase; color:rgba(200,220,255,.3); margin-bottom:6px; }
 
-.mc-body { padding:24px 22px 22px; flex:1; }
+.mc-body { padding:24px 22px 22px; flex:1; display:flex; flex-direction:column; }
 .mc-num { font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.2em; color:rgba(200,220,255,.3); margin-bottom:10px; }
-.mc-stars { font-size:13px; color:rgba(250,204,21,.75); letter-spacing:1px; text-shadow:0 0 8px rgba(250,204,21,.4); margin-bottom:10px; }
-.mc-icon { width:44px; height:44px; margin-bottom:14px; }
+.mc-stars { font-size:13px; color:rgba(250,204,21,.75); letter-spacing:1px; text-shadow:0 0 8px rgba(250,204,21,.4); margin-bottom:0; }
+.mc-icon { width:44px; height:44px; margin-bottom:0; }
+.mc-desc { flex:1; }
 .mc-title { font-family:'Orbitron',monospace; font-size:15px; font-weight:700; color:#fff; letter-spacing:.04em; margin-bottom:8px; }
 .mc-desc { font-family:'DM Sans',sans-serif; font-size:12px; font-weight:300; color:rgba(200,220,255,.55); line-height:1.6; margin-bottom:16px; }
 .mc-footer { display:flex; align-items:center; justify-content:space-between; padding-top:14px; border-top:1px solid rgba(56,189,248,.08); }
@@ -1147,9 +1148,11 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 /* ══ DESKTOP: ALWAYS SHOW FULL CARDS — ignore collapse ══ */
 @media (min-width: 769px) {
   .mission-card .mc-collapse-row { display: none !important; }
-  .mission-card.collapsed .mc-body { display: block !important; }
+  .mission-card.collapsed .mc-body { display: flex !important; }
   .mission-card.collapsed .mc-launch-btn { display: flex !important; }
   .mission-card.collapsed { cursor: default; }
+  .mc-body { padding: 18px 20px 18px; }
+  .mc-icon { width: 38px; height: 38px; }
 }
 
 /* ══ MOBILE COLLAPSE STATUS BADGE ══ */
@@ -1287,14 +1290,14 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
         </div>
         <div class="mc-body">
           <div class="mc-top-row">
+            <svg class="mc-icon" viewBox="0 0 44 44" fill="none">
+              <path d="M22 4 L38 11 L38 25 C38 33.5 31 39.5 22 42 C13 39.5 6 33.5 6 25 L6 11 Z" stroke="rgba(56,189,248,.7)" stroke-width="1.5" fill="rgba(56,189,248,.05)"/>
+              <rect x="16" y="22" width="12" height="9" rx="2" stroke="rgba(56,189,248,.9)" stroke-width="1.5" fill="rgba(56,189,248,.12)"/>
+              <path d="M18 22 L18 19 C18 16.8 26 16.8 26 19 L26 22" stroke="rgba(56,189,248,.9)" stroke-width="1.5" fill="none"/>
+              <circle cx="22" cy="26.5" r="1.5" fill="rgba(56,189,248,.9)"/>
+            </svg>
             <div class="mc-stars" id="m1stars"></div>
           </div>
-          <svg class="mc-icon" viewBox="0 0 44 44" fill="none">
-            <path d="M22 4 L38 11 L38 25 C38 33.5 31 39.5 22 42 C13 39.5 6 33.5 6 25 L6 11 Z" stroke="rgba(56,189,248,.7)" stroke-width="1.5" fill="rgba(56,189,248,.05)"/>
-            <rect x="16" y="22" width="12" height="9" rx="2" stroke="rgba(56,189,248,.9)" stroke-width="1.5" fill="rgba(56,189,248,.12)"/>
-            <path d="M18 22 L18 19 C18 16.8 26 16.8 26 19 L26 22" stroke="rgba(56,189,248,.9)" stroke-width="1.5" fill="none"/>
-            <circle cx="22" cy="26.5" r="1.5" fill="rgba(56,189,248,.9)"/>
-          </svg>
           <div class="mc-title">Sensitive Data Exposure</div>
           <div class="mc-desc">A colleague is about to send sensitive data to an AI tool. Find and redact sensitive data before it gets sent outside your organisation.</div>
           <div class="mc-footer">
@@ -1317,16 +1320,16 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
         </div>
         <div class="mc-body">
           <div class="mc-top-row">
+            <svg class="mc-icon" viewBox="0 0 44 44" fill="none">
+              <rect x="9" y="7" width="22" height="30" rx="2" stroke="rgba(56,189,248,.7)" stroke-width="1.5" fill="rgba(56,189,248,.05)"/>
+              <line x1="13" y1="14" x2="27" y2="14" stroke="rgba(56,189,248,.5)" stroke-width="1.5" stroke-linecap="round"/>
+              <line x1="13" y1="19" x2="27" y2="19" stroke="rgba(56,189,248,.35)" stroke-width="1.5" stroke-linecap="round"/>
+              <line x1="13" y1="24" x2="21" y2="24" stroke="rgba(56,189,248,.25)" stroke-width="1.5" stroke-linecap="round"/>
+              <circle cx="32" cy="30" r="8" fill="rgba(8,20,45,1)" stroke="rgba(56,189,248,.7)" stroke-width="1.5"/>
+              <text x="32" y="34" text-anchor="middle" font-size="11" font-weight="bold" fill="rgba(56,189,248,.9)" font-family="monospace">?</text>
+            </svg>
             <div class="mc-stars" id="m2stars"></div>
           </div>
-          <svg class="mc-icon" viewBox="0 0 44 44" fill="none">
-            <rect x="9" y="7" width="22" height="30" rx="2" stroke="rgba(56,189,248,.7)" stroke-width="1.5" fill="rgba(56,189,248,.05)"/>
-            <line x1="13" y1="14" x2="27" y2="14" stroke="rgba(56,189,248,.5)" stroke-width="1.5" stroke-linecap="round"/>
-            <line x1="13" y1="19" x2="27" y2="19" stroke="rgba(56,189,248,.35)" stroke-width="1.5" stroke-linecap="round"/>
-            <line x1="13" y1="24" x2="21" y2="24" stroke="rgba(56,189,248,.25)" stroke-width="1.5" stroke-linecap="round"/>
-            <circle cx="32" cy="30" r="8" fill="rgba(8,20,45,1)" stroke="rgba(56,189,248,.7)" stroke-width="1.5"/>
-            <text x="32" y="34" text-anchor="middle" font-size="11" font-weight="bold" fill="rgba(56,189,248,.9)" font-family="monospace">?</text>
-          </svg>
           <div class="mc-title">AI Hallucination Detection</div>
           <div class="mc-desc">An AI has generated a plausible-sounding report full of false citations, invented statistics, and fabricated legal clauses. Find them before they spread.</div>
           <div class="mc-footer">
@@ -1349,17 +1352,17 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
         </div>
         <div class="mc-body">
           <div class="mc-top-row">
+            <svg class="mc-icon" viewBox="0 0 44 44" fill="none">
+              <rect x="13" y="12" width="20" height="20" rx="3" stroke="rgba(56,189,248,.7)" stroke-width="1.5" fill="rgba(56,189,248,.05)"/>
+              <line x1="17" y1="19" x2="27" y2="19" stroke="rgba(56,189,248,.4)" stroke-width="1.5" stroke-linecap="round"/>
+              <line x1="17" y1="23" x2="23" y2="23" stroke="rgba(56,189,248,.25)" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M3 22 L13 22" stroke="rgba(56,189,248,.9)" stroke-width="2" stroke-linecap="round"/>
+              <path d="M9 18 L14 22 L9 26" stroke="rgba(56,189,248,.9)" stroke-width="2" stroke-linejoin="round" fill="none"/>
+              <circle cx="36" cy="34" r="6" fill="rgba(239,68,68,.15)" stroke="rgba(239,68,68,.7)" stroke-width="1.5"/>
+              <path d="M33 34 L37 34 M35 32 L35 36" stroke="rgba(239,68,68,.9)" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
             <div class="mc-stars" id="m3stars"></div>
           </div>
-          <svg class="mc-icon" viewBox="0 0 44 44" fill="none">
-            <rect x="13" y="12" width="20" height="20" rx="3" stroke="rgba(56,189,248,.7)" stroke-width="1.5" fill="rgba(56,189,248,.05)"/>
-            <line x1="17" y1="19" x2="27" y2="19" stroke="rgba(56,189,248,.4)" stroke-width="1.5" stroke-linecap="round"/>
-            <line x1="17" y1="23" x2="23" y2="23" stroke="rgba(56,189,248,.25)" stroke-width="1.5" stroke-linecap="round"/>
-            <path d="M3 22 L13 22" stroke="rgba(56,189,248,.9)" stroke-width="2" stroke-linecap="round"/>
-            <path d="M9 18 L14 22 L9 26" stroke="rgba(56,189,248,.9)" stroke-width="2" stroke-linejoin="round" fill="none"/>
-            <circle cx="36" cy="34" r="6" fill="rgba(239,68,68,.15)" stroke="rgba(239,68,68,.7)" stroke-width="1.5"/>
-            <path d="M33 34 L37 34 M35 32 L35 36" stroke="rgba(239,68,68,.9)" stroke-width="1.5" stroke-linecap="round"/>
-          </svg>
           <div class="mc-title">Prompt Injection Attacks</div>
           <div class="mc-desc">A document contains a hidden instruction designed to trick your AI tool. Under time pressure, find it before the AI acts on it.</div>
           <div class="mc-footer">
@@ -1386,7 +1389,6 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
       <div class="title-unlock" id="titleUnlock">
         <div class="title-unlock-eyebrow">⬡ All Missions Complete — Title Unlocked</div>
         <div class="title-unlock-name">AI DATA GUARDIAN</div>
-        <div class="title-unlock-sub">You identified sensitive data leaks, AI hallucinations, and prompt injection attacks. You have demonstrated awareness of the key AI safety risks in the workplace.</div>
         <button class="cert-view-btn" onclick="showCertificate()">▶ VIEW CERTIFICATE</button>
       </div>
       <!-- legacy dots kept for JS compat, hidden by CSS -->
@@ -2852,7 +2854,14 @@ function vAdvance(prefix, step) {
         }
         const eyebrow = body.querySelector('.v-eyebrow');
         if(eyebrow) {
-          eyebrow.insertAdjacentElement('afterend', prog);
+          const wrapper = document.createElement('div');
+          wrapper.style.cssText = 'display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;';
+          eyebrow.parentNode.insertBefore(wrapper, eyebrow);
+          eyebrow.style.marginBottom = '0';
+          prog.style.marginBottom = '0';
+          prog.style.flexShrink = '0';
+          wrapper.appendChild(eyebrow);
+          wrapper.appendChild(prog);
         } else {
           body.insertBefore(prog, body.firstChild);
         }
@@ -4225,7 +4234,7 @@ function showInsight(category, tokenText, message, onDismiss, graphicHtml) {
   void card.offsetWidth; // reflow to restart animation
   if(isError) card.classList.add('error-mode');
 
-  if(tokenText) {
+  if(tokenText && !graphicHtml) {
     tokenEl.textContent = '"' + tokenText + '"';
     tokenEl.style.display = 'block';
   } else {
