@@ -102,7 +102,7 @@ function classify(chosenCat) {
     const catEl = document.getElementById(`cat${catKey(token.cat)}`);
     catEl.style.animation = 'none';
     void catEl.offsetWidth;
-    catEl.style.animation = 'wrongShake .4s ease';
+    catEl.style.animation = 'wrongGlow .6s ease';
     const el = document.querySelector(`.tok[data-id="${id}"]`);
     if (el) {
       el.style.background = 'rgba(239,68,68,.22)';

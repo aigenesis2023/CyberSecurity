@@ -144,3 +144,37 @@
 .ib-delta.visible  { opacity:1; transform:translateY(0); }
 .ib-delta.gain    { color:var(--green); text-shadow:0 0 10px rgba(74,222,128,.6); }
 .ib-delta.penalty { color:var(--red);   text-shadow:0 0 10px rgba(239,68,68,.6); }
+
+/* ── MINI DIAG ROW — compact category status in banner (mobile only) ── */
+.ib-mini-diag {
+  display: none; /* shown via responsive.css on mobile */
+  align-items: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+  padding-top: 7px;
+  border-top: 1px solid rgba(255,255,255,.07);
+}
+.ib-mini-cat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.ib-mini-lbl {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 7px; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--dim); white-space: nowrap;
+  transition: color .3s;
+}
+.ib-mini-lbl.red    { color: rgba(239,68,68,.8); }
+.ib-mini-lbl.orange { color: rgba(251,146,60,.8); }
+.ib-mini-lbl.yellow { color: rgba(250,204,21,.8); }
+.ib-mini-lbl.secured { color: rgba(74,222,128,.9) !important; }
+.ib-mini-track {
+  height: 4px; background: rgba(255,255,255,.07);
+  border-radius: 2px; overflow: hidden;
+}
+.ib-mini-fill {
+  height: 100%; width: 0%; border-radius: 2px;
+  transition: width .5s ease, background-color .4s ease;
+}

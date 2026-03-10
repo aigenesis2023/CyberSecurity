@@ -276,6 +276,10 @@
 .v-bar.partial { background:linear-gradient(90deg,transparent,var(--orange),transparent); }
 .v-body { padding:26px 28px 24px; }
 .v-eyebrow { font-family:'Orbitron',monospace; font-size:7.5px; letter-spacing:.2em; text-transform:uppercase; color:var(--dim); margin-bottom:7px; }
+.v-step-prog { display:flex; gap:6px; align-items:center; margin-bottom:14px; }
+.vsp-dot { width:26px; height:4px; border-radius:4px; background:rgba(255,255,255,.12); transition:background .3s, box-shadow .3s; }
+.vsp-dot.active { background:rgba(255,255,255,.95); box-shadow:0 0 8px rgba(255,255,255,.35); }
+.vsp-dot.done { background:rgba(56,189,248,.65); }
 
 /* Integrity widget pop — flash green on gain, red on penalty */
 .int-widget.flash-gain    { animation:intGain .35s ease; }
