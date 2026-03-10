@@ -1148,6 +1148,47 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 }
 .obj-sub.show { animation:objFadeUp .5s ease forwards; }
 
+/* Intro screen */
+.intro-eyebrow {
+  font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700;
+  letter-spacing:.25em; text-transform:uppercase; color:rgba(56,189,248,.5);
+  margin-bottom:16px;
+}
+.intro-heading {
+  font-family:'Orbitron',monospace; font-size:24px; font-weight:800;
+  color:#fff; text-align:center; letter-spacing:.04em; line-height:1.3;
+  margin-bottom:12px; text-shadow:0 0 40px rgba(56,189,248,.2);
+}
+.intro-body {
+  font-family:'DM Sans',sans-serif; font-size:13px; font-weight:400;
+  color:rgba(200,220,255,.6); text-align:center; line-height:1.8;
+  max-width:480px; margin-bottom:28px;
+}
+.intro-objectives {
+  width:100%; display:flex; flex-direction:column; gap:0;
+  background:rgba(56,189,248,.03); border:1px solid rgba(56,189,248,.12);
+  border-radius:10px; padding:18px 22px; margin-bottom:24px;
+}
+.intro-obj-title {
+  font-family:'DM Sans',sans-serif; font-size:11px; font-weight:600;
+  color:rgba(200,220,255,.45); letter-spacing:.04em; text-transform:uppercase;
+  margin-bottom:14px;
+}
+.intro-obj-item {
+  font-family:'DM Sans',sans-serif; font-size:13px; font-weight:400;
+  color:rgba(255,255,255,.85); line-height:1.5; padding:8px 0;
+  border-bottom:1px solid rgba(56,189,248,.06); display:flex; align-items:center; gap:14px;
+}
+.intro-obj-item:last-child { border-bottom:none; }
+.intro-obj-check {
+  font-family:'Orbitron',monospace; font-size:10px; font-weight:700;
+  color:rgba(56,189,248,.45); flex-shrink:0; width:24px;
+}
+.intro-meta {
+  font-family:'JetBrains Mono',monospace; font-size:10px;
+  color:rgba(200,220,255,.3); letter-spacing:.1em; margin-bottom:24px;
+}
+
 /* Threat cards */
 .obj-threats {
   display:flex; flex-direction:column; gap:10px; width:100%; margin-bottom:36px;
@@ -1561,21 +1602,6 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
   <div class="splash-eyebrow">AI Safety Awareness Training</div>
   <div class="splash-title">AI Data<br>Guardian</div>
   <div class="splash-subtitle">Learn to keep AI working safely for you.</div>
-  <!-- 3 mission objectives -->
-  <div class="splash-missions">
-    <div class="splash-mission">
-      <span class="splash-mission-num">01</span>
-      <div class="splash-mission-text">Spot sensitive data before it leaks through an AI prompt</div>
-    </div>
-    <div class="splash-mission">
-      <span class="splash-mission-num">02</span>
-      <div class="splash-mission-text">Catch AI hallucinations hiding in professional reports</div>
-    </div>
-    <div class="splash-mission">
-      <span class="splash-mission-num">03</span>
-      <div class="splash-mission-text">Find prompt injections buried inside documents</div>
-    </div>
-  </div>
   <!-- Loading -->
   <div class="splash-load-wrap">
     <div class="splash-load-track"><div class="splash-load-fill" id="splashFill"></div></div>
@@ -1594,47 +1620,26 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 </div>
 
 <!-- ══════════════════════════════════════════════
-     THREAT BRIEFING — Cinematic Opening
+     INTRO SCREEN — Learning Objectives
 ══════════════════════════════════════════════ -->
 <div class="obj-overlay" id="objOverlay">
   <div class="obj-grid-bg"></div>
-  <div class="obj-scan-line" id="objScanLine"></div>
-  <div class="obj-terminal" id="objTerminal"></div>
-
   <div class="obj-center">
-    <div class="obj-priority" id="objPriority">⚠ PRIORITY: URGENT</div>
-    <div class="obj-heading" id="objHeading"></div>
-    <div class="obj-sub" id="objSub">Your organisation is exposed. Three simulated missions. One chance to prove you can stop them.</div>
+    <div class="intro-eyebrow">AI DATA GUARDIAN</div>
+    <div class="intro-heading">Welcome to Your Training</div>
+    <div class="intro-body">AI tools are transforming how we work — but they introduce new risks that every employee needs to recognise. This short interactive training will prepare you to use AI safely and confidently.</div>
 
-    <div class="obj-threats" id="objThreats">
-      <div class="obj-threat" id="objT1">
-        <div class="obj-threat-icon">🔓</div>
-        <div class="obj-threat-body">
-          <div class="obj-threat-num">Mission 01</div>
-          <div class="obj-threat-label">Sensitive data leaking through AI prompts</div>
-        </div>
-        <div class="obj-threat-sev high">HIGH</div>
-      </div>
-      <div class="obj-threat" id="objT2">
-        <div class="obj-threat-icon">👁</div>
-        <div class="obj-threat-body">
-          <div class="obj-threat-num">Mission 02</div>
-          <div class="obj-threat-label">AI hallucinations embedded in live reports</div>
-        </div>
-        <div class="obj-threat-sev high">HIGH</div>
-      </div>
-      <div class="obj-threat" id="objT3">
-        <div class="obj-threat-icon">⚡</div>
-        <div class="obj-threat-body">
-          <div class="obj-threat-num">Mission 03</div>
-          <div class="obj-threat-label">Prompt injection attacks hidden in documents</div>
-        </div>
-        <div class="obj-threat-sev crit">CRITICAL</div>
-      </div>
+    <div class="intro-objectives">
+      <div class="intro-obj-title">By the end, you will be able to:</div>
+      <div class="intro-obj-item"><span class="intro-obj-check">01</span>Identify sensitive data before it leaks through an AI prompt</div>
+      <div class="intro-obj-item"><span class="intro-obj-check">02</span>Spot AI-generated hallucinations in professional documents</div>
+      <div class="intro-obj-item"><span class="intro-obj-check">03</span>Recognise prompt injection attacks hidden inside files</div>
     </div>
 
+    <div class="intro-meta">3 missions &middot; ~15 minutes &middot; interactive</div>
+
     <div class="obj-cta-wrap" id="objCtaWrap">
-      <button class="obj-cta" id="objCta" onclick="dismissObjectives()">▶ &nbsp;&nbsp;BEGIN TRAINING</button>
+      <button class="obj-cta" id="objCta" onclick="dismissObjectives()">CONTINUE</button>
     </div>
   </div>
 </div>
@@ -4456,9 +4461,9 @@ function runThreatBriefing() {
 }
 
 function showObjectivesIfNeeded() {
-  // Skip threat briefing — go straight to mission menu
-  try { localStorage.setItem('adg_objectives_seen', '1'); } catch(e){}
-  showScreen('screenMenu');
+  const el=document.getElementById('objOverlay');
+  el.classList.add('show');
+  document.getElementById('objCtaWrap').classList.add('show');
 }
 function dismissObjectives() {
   document.getElementById('objOverlay').classList.remove('show');
