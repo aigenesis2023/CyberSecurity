@@ -2828,7 +2828,7 @@ function showScreen(id) {
   if(devBtn) devBtn.style.display = (id === 'screenMenu') ? 'flex' : 'none';
 }
 function goMenu() {
-  stopVO();
+  pBleep(); stopVO();
   dismissToast();
   clearAllTimers();
   // Close any open mobile diag panels
@@ -3015,6 +3015,7 @@ function s1Init() {
   b.style.display=''; b.classList.remove('hidden');
 }
 function s1Reset() {
+  pBleep();
   document.getElementById('s1verdict').classList.remove('show');
   s1Init();
 }
@@ -3092,6 +3093,7 @@ function s1BuildPayload() {
 }
 
 function s1ToggleAttach() {
+  pClick();
   const doc=document.getElementById('s1attachDoc');
   const arr=document.getElementById('s1chipArrow');
   const chip=document.querySelector('.gpt-attach-chip');
@@ -3356,7 +3358,7 @@ function s1Start() {
   // (nudge/zoom removed — chip uses subtle breathing glow to indicate it's clickable)
 }
 function vAdvance(prefix, step) {
-  if(step>1) stopVO(); // VO only on Step 1
+  if(step>1) { stopVO(); pClick(); } // VO only on Step 1
   for(let i=1;i<=3;i++){
     const el=document.getElementById(prefix+'vStep'+i);
     if(el) el.style.display=(i===step)?'':'none';
@@ -3515,7 +3517,7 @@ function s2Init() {
   s2SwitchView('report');
   const b=document.getElementById('s2briefing'); b.style.display=''; b.classList.remove('hidden');
 }
-function s2Reset() { document.getElementById('s2verdict').classList.remove('show'); s2Init(); }
+function s2Reset() { pBleep(); document.getElementById('s2verdict').classList.remove('show'); s2Init(); }
 
 // ALL tokens per section — must classify every one before advancing
 const S2_SECTION_TOKS = { 1:['fig1','fig2','det1','acc1','acc2'], 2:['det2','claim1','acc3'] };
@@ -4050,7 +4052,7 @@ function s3Init() {
   document.getElementById('s3vBonus').style.display='none';
   const b=document.getElementById('s3briefing'); b.style.display=''; b.classList.remove('hidden');
 }
-function s3Reset() { document.getElementById('s3verdict').classList.remove('show'); s3Init(); }
+function s3Reset() { pBleep(); document.getElementById('s3verdict').classList.remove('show'); s3Init(); }
 
 function s3UpdateTimer() {
   const timerVal = document.getElementById('s3timerVal');
@@ -4643,6 +4645,7 @@ function _getActiveSection() {
 function togglePause() {
   const sec = _getActiveSection();
   if (!sec && !_paused) return; // nothing running, nothing to pause
+  pClick();
   _paused = !_paused;
   const overlay = document.getElementById('pauseOverlay');
   overlay.classList.toggle('show', _paused);
@@ -4689,6 +4692,7 @@ function togglePause() {
 function pauseQuitToMenu() {
   _paused = false;
   document.getElementById('pauseOverlay').classList.remove('show');
+  _muteAllSND(_muted); // restore audio state before goMenu
   goMenu();
 }
 
