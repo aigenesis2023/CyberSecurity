@@ -62,7 +62,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 @keyframes pulse   { 0%,100%{opacity:1} 50%{opacity:.4} }
 @keyframes scanAnim { 0%{top:-4px;opacity:0} 8%{opacity:1} 88%{opacity:1} 100%{top:100%;opacity:0} }
 @keyframes diagPulse { 0%,100%{background:var(--panel)} 40%{background:rgba(74,222,128,0.09)} }
-@keyframes wrongShake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-5px)} 60%{transform:translateX(5px)} 80%{transform:translateX(-3px)} }
+@keyframes wrongGlow { 0%{box-shadow:0 0 0 0 rgba(239,68,68,0)} 35%{box-shadow:0 0 18px 2px rgba(239,68,68,.45)} 100%{box-shadow:0 0 0 0 rgba(239,68,68,0)} }
 @keyframes popIn  { from{opacity:0;transform:scale(0.82) translateY(4px)} to{opacity:1;transform:scale(1) translateY(0)} }
 @keyframes verdictIn { from{opacity:0;transform:scale(0.94) translateY(18px)} to{opacity:1;transform:scale(1) translateY(0)} }
 @keyframes dotPop { 0%{transform:scale(1)} 50%{transform:scale(1.6)} 100%{transform:scale(1)} }
@@ -2366,7 +2366,7 @@ function tryLaunch(n) {
 function shakeCard(n) {
   const c = document.getElementById('mcard'+n);
   c.style.animation='none'; void c.offsetWidth;
-  c.style.animation='wrongShake .4s ease';
+  c.style.animation='wrongGlow .6s ease';
   setTimeout(()=>c.style.animation='',600);
 }
 
@@ -2755,7 +2755,7 @@ function s1Classify(chosen) {
     updateIntUI('s1',s1state.integrity,s1GetDrain(),S1_MAX_DRAIN);
     const key={credential:'Cred',pii:'Pii',internal:'Int'}[token.cat];
     const catEl=document.getElementById('s1cat'+key);
-    catEl.style.animation='none'; void catEl.offsetWidth; catEl.style.animation='wrongShake .4s ease';
+    catEl.style.animation='none'; void catEl.offsetWidth; catEl.style.animation='wrongGlow .6s ease';
     if(S1_TEACH[id]) {
       const catLabel={'credential':'[CREDENTIALS]','pii':'[PERSONAL DATA]','internal':'[INTERNAL INFO]'}[token.cat]||'Wrong Category';
       const g2=`<span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:rgba(220,235,255,.9);font-weight:500">${tokText}</span>`;
@@ -2775,7 +2775,7 @@ function s1Classify(chosen) {
     const catLabel={'credential':'[CREDENTIALS]','pii':'[PERSONAL DATA]','internal':'[INTERNAL INFO]'}[token.cat]||'Secured';
     const redactedEl=document.querySelector(`#s1payload .tok[data-id="${id}"]`);
     const redactedText=redactedEl ? redactedEl.querySelector('.redact-label')?.textContent||'' : '';
-    s1ShowInsight(catLabel, redactedText, S1_TEACH[id].correct, null, null);
+    s1ShowInsight(catLabel, redactedText, S1_TEACH[id].correct, null, null, true);
   }
   if(allDone) {
     clearInterval(s1state.drainInt);
@@ -4254,7 +4254,7 @@ const INSIGHT_TONE = {
 
 let _insightCallback = null;
 
-function showInsight(category, tokenText, message, onDismiss, graphicHtml) {
+function showInsight(category, tokenText, message, onDismiss, graphicHtml, isCorrect) {
   const overlay  = document.getElementById('insightOverlay');
   const catEl    = document.getElementById('insightCat');
   const iconEl   = document.getElementById('insightIcon');
@@ -4264,20 +4264,21 @@ function showInsight(category, tokenText, message, onDismiss, graphicHtml) {
 
   const tone = INSIGHT_TONE[category] || 'warn';
   const icon = INSIGHT_ICONS[category] || 'ℹ';
-  const isError = tone === 'warn' || tone === 'credential' || tone === 'pii' || tone === 'internal';
+  const isError = !isCorrect && (tone === 'warn' || tone === 'credential' || tone === 'pii' || tone === 'internal');
 
   catEl.textContent  = category;
-  catEl.className    = 'insight-cat insight-cat-' + tone;
+  catEl.className    = 'insight-cat insight-cat-' + (isCorrect ? 'ok' : tone);
   iconEl.textContent = icon;
   iconEl.className   = 'insight-icon insight-icon-' + tone;
   msgEl.textContent  = message;
   if(errCatEl) errCatEl.textContent = category;
 
-  // Apply error mode and restart animation
+  // Apply error/correct mode and restart animation
   const card = overlay.querySelector('.insight-card');
-  card.classList.remove('error-mode');
+  card.classList.remove('error-mode', 'correct-mode');
   void card.offsetWidth; // reflow to restart animation
   if(isError) card.classList.add('error-mode');
+  else if(isCorrect) card.classList.add('correct-mode');
 
   if(tokenText && !graphicHtml) {
     tokenEl.textContent = '"' + tokenText + '"';
@@ -4319,7 +4320,7 @@ function forceCloseInsight() {
 }
 
 // ── M1: teach with drain pause ──────────────────────────────
-function s1ShowInsight(category, tokenText, message, afterFn, graphicHtml) {
+function s1ShowInsight(category, tokenText, message, afterFn, graphicHtml, isCorrect) {
   clearInterval(s1state.drainInt); // pause drain
   showInsight(category, tokenText, message, () => {
     if(afterFn) afterFn();
@@ -4335,7 +4336,7 @@ function s1ShowInsight(category, tokenText, message, afterFn, graphicHtml) {
         if(s1state.integrity <= 0) s1EndGame('breach');
       }, 100);
     }
-  }, graphicHtml || null);
+  }, graphicHtml || null, isCorrect);
 }
 
 // ── M2: teach (no timer to pause) ──────────────────────────
@@ -4426,15 +4427,25 @@ function s3ShowInsight(category, tokenText, message, afterFn, graphicHtml) {
 /* ERROR MODE — wrong answer */
 .insight-card.error-mode {
   border-color:rgba(239,68,68,.35);
-  box-shadow:0 40px 80px rgba(0,0,0,.65), 0 0 40px rgba(239,68,68,.1);
-  animation:insightIn .22s cubic-bezier(.34,1.4,.64,1) both, insightShake .45s ease .18s;
+  box-shadow:0 40px 80px rgba(0,0,0,.65), 0 0 30px rgba(239,68,68,.12);
+  animation:insightIn .22s cubic-bezier(.34,1.4,.64,1) both, insightGlowRed .75s ease .18s;
 }
-@keyframes insightShake {
-  0%,100% { transform:translateX(0); }
-  18%     { transform:translateX(-8px); }
-  36%     { transform:translateX(7px); }
-  54%     { transform:translateX(-5px); }
-  72%     { transform:translateX(3px); }
+@keyframes insightGlowRed {
+  0%   { box-shadow:0 40px 80px rgba(0,0,0,.65), 0 0 12px rgba(239,68,68,.08); }
+  45%  { box-shadow:0 40px 80px rgba(0,0,0,.65), 0 0 52px rgba(239,68,68,.32); }
+  100% { box-shadow:0 40px 80px rgba(0,0,0,.65), 0 0 12px rgba(239,68,68,.08); }
+}
+
+/* CORRECT MODE — right answer */
+.insight-card.correct-mode {
+  border-color:rgba(74,222,128,.35);
+  box-shadow:0 40px 80px rgba(0,0,0,.65), 0 0 30px rgba(74,222,128,.12);
+  animation:insightIn .3s cubic-bezier(.34,1.4,.64,1) both, insightGlowGreen .75s ease .25s;
+}
+@keyframes insightGlowGreen {
+  0%   { box-shadow:0 40px 80px rgba(0,0,0,.65), 0 0 12px rgba(74,222,128,.08); }
+  45%  { box-shadow:0 40px 80px rgba(0,0,0,.65), 0 0 52px rgba(74,222,128,.32); }
+  100% { box-shadow:0 40px 80px rgba(0,0,0,.65), 0 0 12px rgba(74,222,128,.08); }
 }
 @keyframes insightIn {
   from { transform:scale(.9) translateY(14px); opacity:0; }
@@ -4455,6 +4466,9 @@ function s3ShowInsight(category, tokenText, message, afterFn, graphicHtml) {
 .insight-card.error-mode .insight-top-bar {
   background:linear-gradient(90deg,transparent,rgba(239,68,68,.65),transparent);
 }
+.insight-card.correct-mode .insight-top-bar {
+  background:linear-gradient(90deg,transparent,rgba(74,222,128,.65),transparent);
+}
 
 /* ── "// INCORRECT" micro-label — only in error mode ── */
 .insight-error-tag {
@@ -4464,6 +4478,16 @@ function s3ShowInsight(category, tokenText, message, afterFn, graphicHtml) {
   margin-bottom:12px;
 }
 .insight-card.error-mode .insight-error-tag { display:block; }
+
+/* ── "// SECURED" micro-label — only in correct mode ── */
+.insight-correct-tag {
+  display:none;
+  font-family:'JetBrains Mono',monospace; font-size:8px; font-weight:700;
+  letter-spacing:.22em; text-transform:uppercase; color:rgba(74,222,128,.5);
+  margin-bottom:12px;
+}
+.insight-card.correct-mode .insight-correct-tag { display:block; }
+.insight-card.correct-mode .insight-error-tag   { display:none !important; }
 
 /* ── BODY ── */
 .insight-body { padding:20px 24px 18px; }
@@ -4534,6 +4558,12 @@ function s3ShowInsight(category, tokenText, message, afterFn, graphicHtml) {
 .insight-card.error-mode .insight-btn:hover {
   background:rgba(239,68,68,.12); border-color:rgba(239,68,68,.45); box-shadow:0 0 12px rgba(239,68,68,.1);
 }
+.insight-card.correct-mode .insight-btn {
+  background:rgba(74,222,128,.08); border-color:rgba(74,222,128,.35); color:rgba(134,239,172,.9);
+}
+.insight-card.correct-mode .insight-btn:hover {
+  background:rgba(74,222,128,.16); border-color:rgba(74,222,128,.6); box-shadow:0 0 14px rgba(74,222,128,.18);
+}
 </style>
 
 <div id="insightOverlay">
@@ -4551,6 +4581,8 @@ function s3ShowInsight(category, tokenText, message, afterFn, graphicHtml) {
     <div class="insight-body">
       <!-- Error-mode tag (only visible on wrong answers) -->
       <div class="insight-error-tag">// INCORRECT</div>
+      <!-- Correct-mode tag (only visible on right answers) -->
+      <div class="insight-correct-tag">// SECURED</div>
       <!-- icon + category pill — always visible -->
       <div class="insight-header">
         <div class="insight-icon insight-icon-warn" id="insightIcon">⚠</div>
