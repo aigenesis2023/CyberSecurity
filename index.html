@@ -509,7 +509,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 .briefing-graphic svg.b-shield { width:58px; height:58px; filter:drop-shadow(0 0 16px rgba(56,189,248,.4)); position:relative; z-index:2; animation:shieldPop .6s cubic-bezier(.34,1.56,.64,1) .1s both; }
 .briefing-graphic .b-lbl { position:absolute; bottom:12px; left:0; right:0; text-align:center; font-family:'Orbitron',monospace; font-size:9px; font-weight:700; letter-spacing:.22em; color:rgba(255,255,255,.45); text-transform:uppercase; animation:scanReveal .5s ease .4s both; }
 .briefing-body { padding:24px 28px 24px; }
-.briefing-stat-strip { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:18px; }
+.briefing-stat-strip { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:18px; }
 .bss-item { background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.1); border-radius:8px; padding:11px 13px; }
 .bss-lbl { font-size:8px; letter-spacing:.12em; text-transform:uppercase; color:rgba(200,220,255,.35); margin-bottom:5px; }
 .bss-val { font-family:'Orbitron',monospace; font-size:13px; font-weight:700; color:#fff; letter-spacing:.02em; }
@@ -2678,6 +2678,9 @@ function s1BuildPayload() {
           </div>
         </div>
       </div>
+      </div>
+      <div class="gpt-input-bar">
+        <div class="gpt-input-field"><span style="color:#bbb">Message AI Assistant…</span><div class="gpt-input-field-icons"><div class="gpt-input-icon">↑</div></div></div>
       </div>
     </div>`;
   document.querySelectorAll('#s1payload .tok.clickable').forEach(el => el.addEventListener('click', s1TokenClick));
