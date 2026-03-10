@@ -809,11 +809,8 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
    M2: NOTES DRAWER & INLINE TOGGLE
 ════════════════════════════════════════════ */
 /* Notes bar — inside sticky-header, matches banner width */
-.s2-notes-wrap {
-  grid-column:1 / -1;
-}
 .s2-notes-bar {
-  margin:0;
+  margin:0 124px 0 18px;
 }
 .s2-notes-btn {
   display:flex; align-items:center; justify-content:center; gap:8px;
@@ -874,7 +871,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 }
 .s2-notes-list li strong { color:var(--blue2); font-weight:600; }
 @media(max-width:768px) {
-  .s2-notes-bar { margin:0; }
+  .s2-notes-bar { margin:0 12px; }
   .s2-notes-panel.open { max-height:45vh; }
 }
 
@@ -2152,19 +2149,17 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
     </div>
   </div>
 </div>
+<!-- Notes bar inside sticky-header — always visible when scrolled -->
+<div class="s2-notes-bar" id="s2notesBar">
+  <button class="s2-notes-btn pulsing" id="s2notesBtn" onclick="s2ToggleNotes()">&#x1F4DD; &nbsp;MEETING NOTES <span class="s2-notes-chevron">&#x25BC;</span></button>
+</div>
+<div class="s2-notes-panel" id="s2notesPanel">
+  <div class="s2-notes-panel-body" id="s2notesPanelBody"></div>
+  <div class="s2-notes-scroll-hint"><span>&#x25BC; scroll for more</span></div>
+</div>
 </div>
 
 <div class="shell">
-  <!-- Notes button + collapsible panel (inside shell, above console) -->
-  <div class="s2-notes-wrap" id="s2notesWrap">
-    <div class="s2-notes-bar" id="s2notesBar">
-      <button class="s2-notes-btn pulsing" id="s2notesBtn" onclick="s2ToggleNotes()">&#x1F4DD; &nbsp;MEETING NOTES <span class="s2-notes-chevron">&#x25BC;</span></button>
-    </div>
-    <div class="s2-notes-panel" id="s2notesPanel">
-      <div class="s2-notes-panel-body" id="s2notesPanelBody"></div>
-      <div class="s2-notes-scroll-hint"><span>&#x25BC; scroll for more</span></div>
-    </div>
-  </div>
   <div class="console console-col" id="s2console">
     <div class="scanline" id="s2scanline"></div>
     <div class="payload" id="s2payload"></div>
