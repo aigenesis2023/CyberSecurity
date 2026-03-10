@@ -596,7 +596,8 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 .gpt-logo { width:22px; height:22px; flex-shrink:0; border-radius:50%; background:#000; display:flex; align-items:center; justify-content:center; font-size:13px; color:#fff; }
 .gpt-title-text { font-family:'DM Sans',sans-serif; font-size:12px; font-weight:600; color:#1a1a1a; flex:1; }
 .gpt-model-pill { font-family:'DM Sans',sans-serif; font-size:9px; font-weight:500; padding:2px 8px; border-radius:20px; background:#f4f4f4; color:#666; border:1px solid #e0e0e0; }
-.gpt-warning-bar { background:#fff8f0; border-bottom:1px solid #fed7aa; padding:7px 14px; display:flex; align-items:center; gap:6px; flex-shrink:0; font-family:'DM Sans',sans-serif; font-size:10px; font-weight:500; color:#92400e; }
+.gpt-warning-bar { background:#eff6ff; border-bottom:2px solid #93c5fd; padding:10px 14px; display:flex; align-items:center; gap:6px; flex-shrink:0; font-family:'DM Sans',sans-serif; font-size:11px; font-weight:400; color:#1e40af; }
+.gpt-warning-bar strong { font-weight:700; }
 .gpt-chat-area { background:#ffffff; padding:16px 16px 10px; flex:1; display:flex; flex-direction:column; gap:14px; }
 .gpt-user-msg { display:flex; justify-content:flex-end; }
 .gpt-user-bubble { background:#f4f4f4; border-radius:18px 18px 4px 18px; padding:11px 15px; max-width:92%; font-family:'DM Sans',sans-serif; font-size:12px; line-height:1.75; color:#1a1a1a; }
@@ -639,8 +640,8 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 .ai-response-title { font-family:'DM Sans',sans-serif; font-size:12px; font-weight:600; color:var(--text); flex:1; }
 .ai-model-badge { font-family:'JetBrains Mono',monospace; font-size:8px; padding:3px 8px; border-radius:20px; background:rgba(99,102,241,.15); color:rgba(147,149,251,1); border:1px solid rgba(99,102,241,.3); }
 .ai-warning-strip { background:rgba(56,189,248,.04); border-bottom:1px solid rgba(56,189,248,.15); padding:7px 16px; font-family:'DM Sans',sans-serif; font-size:10px; color:rgba(56,189,248,.65); display:flex; align-items:center; gap:6px; }
-.ai-scenario-frame { background:rgba(99,102,241,.07); border-bottom:1px solid rgba(99,102,241,.2); padding:9px 16px; font-family:'DM Sans',sans-serif; font-size:11px; color:rgba(200,210,255,.75); line-height:1.5; }
-.ai-scenario-frame strong { color:rgba(147,149,251,.9); }
+.ai-scenario-frame { background:rgba(56,189,248,.07); border-bottom:2px solid rgba(56,189,248,.28); padding:10px 16px; font-family:'DM Sans',sans-serif; font-size:11px; font-weight:400; color:rgba(200,225,255,.85); line-height:1.55; }
+.ai-scenario-frame strong { color:rgba(56,189,248,.95); font-weight:600; }
 .ai-response-body { padding:18px; color:var(--text); font-family:'DM Sans',sans-serif; font-size:12.5px; line-height:1.85; }
 .ai-response-body h4 { font-family:'Orbitron',monospace; font-size:11px; letter-spacing:.06em; color:var(--blue2); margin:14px 0 8px; }
 .ai-response-body .cite { font-family:'JetBrains Mono',monospace; font-size:10px; color:rgba(200,220,255,.45); display:block; margin:6px 0; padding-left:12px; border-left:2px solid rgba(56,189,248,.2); }
@@ -667,7 +668,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 .email-body { padding:16px; font-family:'DM Sans',sans-serif; font-size:12px; line-height:1.85; color:rgba(200,220,255,.75); }
 .email-body p { margin-bottom:10px; }
 .email-body .email-sig { margin-top:16px; font-size:11px; color:rgba(200,220,255,.35); border-top:1px solid rgba(56,189,248,.08); padding-top:10px; }
-.injection-warning { background:rgba(56,189,248,.04); border:1px solid rgba(56,189,248,.15); border-radius:8px; padding:9px 14px; margin-bottom:10px; font-family:'JetBrains Mono',monospace; font-size:9px; color:rgba(56,189,248,.6); letter-spacing:.04em; display:flex; align-items:center; gap:8px; }
+.injection-warning { background:rgba(56,189,248,.07); border-bottom:2px solid rgba(56,189,248,.28); padding:10px 16px; margin-bottom:0; font-family:'DM Sans',sans-serif; font-size:11px; font-weight:400; color:rgba(200,225,255,.85); line-height:1.55; }
 
 /* Timer row in sidebar (Section 3) */
 .s3-timer-display { font-family:'Orbitron',monospace; font-size:28px; font-weight:900; color:var(--red); text-align:center; letter-spacing:-.02em; }
@@ -2641,7 +2642,7 @@ function s1BuildPayload() {
         <div class="gpt-logo">⬡</div>
         <div class="gpt-title-text">AI Assistant</div>
       </div>
-      <div class="gpt-warning-bar">⚠&nbsp; Sensitive data detected — identify and classify before sending</div>
+      <div class="gpt-warning-bar"><strong>Your task:</strong>&nbsp; This prompt contains sensitive data. Identify and classify every piece before it reaches the AI.</div>
       <div class="gpt-chat-area">
         <div class="gpt-user-msg">
           <div style="max-width:92%">
@@ -3755,8 +3756,8 @@ function s3LoadLevel(lvl) {
   // Build payload — FP levels pass null injId
   const levelDef = S3_LEVELS[lvl];
   const warningText = levelDef.isInjection
-    ? '⚠ This document may contain a hidden prompt injection. Find and flag the injected instruction before submitting to AI.'
-    : '⚠ Carefully read this document. Flag any prompt injection — but be precise: not all suspicious-looking text is an injection.';
+    ? '<strong>Your task:</strong> Read this document carefully. Find and flag any hidden instruction aimed at an AI — not a human reader.'
+    : '<strong>Your task:</strong> Read this document carefully. Not all suspicious-looking text is an injection — flag only what directly instructs an AI system.';
   document.getElementById('s3payload').innerHTML =
     '<div class="s3-timeout-msg" id="s3timeoutMsg"></div>' +
     `<div class="injection-warning">${warningText}</div>` +
