@@ -4147,7 +4147,7 @@ function s3LoadLevel(lvl) {
       const mt2=document.getElementById('s3mobileTimer');
       if(mt2){ mt2.textContent=s3state.timeLeft+'s'; mt2.className='diag-toggle-timer'+(s3state.timeLeft<=10?' critical':s3state.timeLeft<=20?' warn':''); }
       // Drain only from timer (no separate drain interval)
-      s3state.integrity=Math.max(0,s3state.integrity-0.3);
+      s3state.integrity=Math.max(0,s3state.integrity-0.5);
       updateIntUI('s3',s3state.integrity,0.8,S1_MAX_DRAIN);
       if(s3state.timeLeft<=0) {
         s3state.levelActive=false; clearInterval(s3state.timerInt);
@@ -4158,20 +4158,20 @@ function s3LoadLevel(lvl) {
         s3state.levelActive=false;
         if(currentLvlDef.isInjection) {
           // Timed out on a real injection — penalty
-          s3state.integrity=Math.max(0,s3state.integrity-30);
-          s3state.pendingFlash={amount:-30,msg:'injection executed!'};
+          s3state.integrity=Math.max(0,s3state.integrity-35);
+          s3state.pendingFlash={amount:-35,msg:'injection executed!'};
           updateIntUI('s3',s3state.integrity,0,S1_MAX_DRAIN);
           s3RevealInjection(currentLvlDef.injectionId);
           if(s3state.integrity<=0){ s3EndGame('breach'); return; }
           const note=currentLvlDef.timeoutNote||'The injection executed before you could identify it. Time is critical — attackers rely on document length and complexity to slow you down.';
-          showInsight('Timeout', '', 'Integrity −30. Time expired. '+note, ()=>s3NextLevel());
+          showInsight('Timeout', '', 'Integrity −35. Time expired. '+note, ()=>s3NextLevel());
         } else {
           // Timed out on a false-positive — smaller penalty, different message
-          s3state.integrity=Math.max(0,s3state.integrity-15);
-          s3state.pendingFlash={amount:-15,msg:'time expired'};
+          s3state.integrity=Math.max(0,s3state.integrity-20);
+          s3state.pendingFlash={amount:-20,msg:'time expired'};
           updateIntUI('s3',s3state.integrity,0,S1_MAX_DRAIN);
           if(s3state.integrity<=0){ s3EndGame('breach'); return; }
-          showInsight('Timeout', '', 'Integrity −15. Time expired. This document contained no injection — flagging it SAFE would have cleared the level. Injections address AI systems directly and instruct them to extract data or override behaviour. Human-directed instructions are always safe.', ()=>s3NextLevel());
+          showInsight('Timeout', '', 'Integrity −20. Time expired. This document contained no injection — flagging it SAFE would have cleared the level. Injections address AI systems directly and instruct them to extract data or override behaviour. Human-directed instructions are always safe.', ()=>s3NextLevel());
         }
       }
     },1000);
@@ -4218,11 +4218,15 @@ function s3Flag(isInjection) {
   // ── FALSE-POSITIVE LEVEL ──
   if(isFPLevel) {
     if(isInjection) {
-      // Wrong: flagged legitimate content as injection
+      // Wrong: flagged legitimate content as injection — locked, advance
       pWrong(); s3state.falseAlarms++;
-      s3state.integrity=Math.max(0,s3state.integrity-15);
-      updateIntUI('s3',s3state.integrity,0.8,S1_MAX_DRAIN);
+      s3state.levelActive=false; clearInterval(s3state.timerInt);
+      s3state.integrity=Math.max(0,s3state.integrity-20);
+      s3state.pendingFlash={amount:-20,msg:'false alarm!'};
+      updateIntUI('s3',s3state.integrity,0,S1_MAX_DRAIN);
       if(s3state.integrity<=0){ s3EndGame('breach'); return; }
+      document.getElementById('s3levelPill').textContent='FALSE ALARM';
+      document.getElementById('s3levelPill').className='dc-pill exposed';
       const fpFeedback = {
         fp1: 'This block lists action items for named team members — it\'s directing people, not an AI. The key difference: injections tell an AI system how to behave or what data to extract. This tells humans what to do before Friday.',
         fp2: 'This is a standard list of follow-up tasks for a sales rep. It names a specific person and describes real-world actions. An injection gives instructions to an AI system — this gives instructions to Dan.',
@@ -4232,7 +4236,7 @@ function s3Flag(isInjection) {
       const el=document.querySelector(`#s3payload .tok[data-id="${id}"]`);
       if(el){ el.style.background='rgba(239,68,68,.22)'; setTimeout(()=>el.style.background='',900); }
       const fpTxt = el ? el.textContent.trim() : '';
-      s3ShowInsight('False Alarm', fpTxt ? fpTxt.slice(0,120)+(fpTxt.length>120?'…':'') : '', msg, ()=>{ showIntPop('s3',-15); flashDelta('s3',-15,'false alarm!'); }, null, false, 'injection');
+      s3ShowInsight('False Alarm', fpTxt ? fpTxt.slice(0,120)+(fpTxt.length>120?'…':'') : '', 'Integrity −20. '+msg, ()=>s3NextLevel(), null, false, 'injection');
     } else {
       // Correct: correctly identified content as safe, advance
       pSelected(); s3state.levelActive=false; clearInterval(s3state.timerInt);
@@ -4281,19 +4285,29 @@ function s3Flag(isInjection) {
     const tokText=tokEl ? tokEl.querySelector('.redact-label')?.textContent?.slice(0,80)+'…' || '' : '';
     s3ShowInsight('Injection Found', tokText, teaches[s3state.currentLevel] || 'Injection found.', ()=>s3NextLevel(), null, true, 'injection');
   } else if(isInjection&&!isActualInjection) {
-    // False alarm on a real-injection level — flagged wrong token (safe decoy doesn't exist on these levels but handle gracefully)
+    // False alarm on a real-injection level — flagged wrong token, locked, advance
     pWrong(); s3state.falseAlarms++;
-    s3state.integrity=Math.max(0,s3state.integrity-15);
-    updateIntUI('s3',s3state.integrity,0.8,S1_MAX_DRAIN);
+    s3state.levelActive=false; clearInterval(s3state.timerInt);
+    s3state.integrity=Math.max(0,s3state.integrity-20);
+    s3RevealInjection(lvl.injectionId);
+    s3state.pendingFlash={amount:-20,msg:'wrong token!'};
+    updateIntUI('s3',s3state.integrity,0,S1_MAX_DRAIN);
     if(s3state.integrity<=0){ s3EndGame('breach'); return; }
-    s3ShowInsight('False Alarm', '', 'That\'s legitimate document content. The actual injection in this document gives instructions to an AI system — not information for a human reader. Look for phrases like "extract", "prior context", or "override instructions".', ()=>{ showIntPop('s3',-15); flashDelta('s3',-15,'false alarm — keep looking'); }, null, false, 'injection');
+    document.getElementById('s3levelPill').textContent='MISSED';
+    document.getElementById('s3levelPill').className='dc-pill exposed';
+    s3ShowInsight('Wrong Token', '', 'Integrity −20. That\'s legitimate document content. The actual injection is highlighted above — it gives instructions to an AI system, not information for a human reader. Look for phrases like "extract", "prior context", or "override instructions".', ()=>s3NextLevel(), null, false, 'injection');
   } else {
-    // Marked safe — small penalty, stay on level (injection still undetected)
+    // Marked injection as safe — worst mistake, locked, advance
     pWrong();
-    s3state.integrity=Math.max(0,s3state.integrity-5);
-    updateIntUI('s3',s3state.integrity,0.8,S1_MAX_DRAIN);
+    s3state.levelActive=false; clearInterval(s3state.timerInt);
+    s3state.integrity=Math.max(0,s3state.integrity-25);
+    s3RevealInjection(lvl.injectionId);
+    s3state.pendingFlash={amount:-25,msg:'injection executed!'};
+    updateIntUI('s3',s3state.integrity,0,S1_MAX_DRAIN);
     if(s3state.integrity<=0){ s3EndGame('breach'); return; }
-    s3ShowInsight('False Alarm', '', 'There is an injection in this document — marking it safe leaves it active. Look for a block that instructs an AI to extract data, discard prior context, or change how it responds. Keep scanning.', ()=>{ showIntPop('s3',-5); flashDelta('s3',-5,'keep scanning'); }, null, false);
+    document.getElementById('s3levelPill').textContent='COMPROMISED';
+    document.getElementById('s3levelPill').className='dc-pill exposed';
+    s3ShowInsight('Injection Missed', '', 'Integrity −25. The injection in this document is now highlighted above. It instructs an AI to extract data, discard prior context, or change how it responds. Marking it safe allowed it to execute unchecked.', ()=>s3NextLevel(), null, false);
   }
 }
 
@@ -4306,8 +4320,8 @@ function s3EndGame(reason) {
   updatePauseBtn();
   clearInterval(s3state.timerInt);
   const intFinal=Math.max(0,Math.round(s3state.integrity));
-  const pass=(reason==='complete')&&s3state.integrity>0;
-  const precisionPass = pass && s3state.falseAlarms===0 && s3state.timeouts===0;
+  const pass=(reason==='complete')&&s3state.integrity>0&&s3state.injectionFound>=2;
+  const precisionPass = pass && s3state.injectionFound>=3 && s3state.falseAlarms===0 && s3state.timeouts===0;
   if(pass){ pSuccess(); courseProgress.s3done=true; saveProgress(); }
   else pError();
   setTimeout(()=>playVO(pass?'VO-M3-PASS':'VO-M3-FAIL'),600);
@@ -4318,7 +4332,9 @@ function s3EndGame(reason) {
   else fg.style.display='flex';
   document.getElementById('s3vBar').className='v-bar '+(pass?'pass':'fail');
   const vMsg = pass
-    ? 'All injection attempts neutralised. You identified hidden instructions inside legitimate-looking documents — including a formatting instruction disguised as part of a brief, a fake document schema hidden in a contract, and a data-extraction directive buried in a translator\'s note. Always read external documents before pasting them into an AI tool. The document is the attack surface.\n\nThree documents. Three attempts to weaponise your AI against you. You caught all of them. That\'s not instinct — it\'s a trained skill.'
+    ? (s3state.injectionFound>=3
+      ? 'All three injection attempts neutralised. You identified hidden instructions inside legitimate-looking documents — including a formatting instruction disguised as part of a brief, a fake document schema hidden in a contract, and a data-extraction directive buried in a translator\'s note. Always read external documents before pasting them into an AI tool. The document is the attack surface.\n\nThree documents. Three attempts to weaponise your AI against you. You caught all of them. That\'s not instinct — it\'s a trained skill.'
+      : 'You identified '+s3state.injectionFound+' of 3 injection attempts. You survived the scan, but at least one hidden instruction slipped through your review. In a real scenario, that missed injection could mean leaked data or a hijacked AI response. Always read external documents before pasting them into an AI tool — the document is the attack surface.\n\nTip: Injections address AI systems directly and instruct them to extract data or override behaviour. If a block tells an AI what to do rather than informing a human reader, it\'s an injection.')
     : `One or more prompt injections were not identified. Attackers deliberately embed instructions in innocent-looking documents because they know people scan rather than read. If an AI produces unexpected output after processing an external document, a prompt injection may be why.\n\nTip: Ask yourself "is this addressed to a human or to an AI system?" Injections give instructions about how the AI should process data, what to output first, or how to handle "prior context" — no legitimate document section does that.`;
   document.getElementById('s3vMsg').textContent = vMsg;
   document.getElementById('s3vInt').textContent=intFinal+'%';
