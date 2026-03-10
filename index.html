@@ -806,6 +806,77 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 
 
 /* ════════════════════════════════════════════
+   M2: NOTES DRAWER & INLINE TOGGLE
+════════════════════════════════════════════ */
+.s2-notes-drawer {
+  position:fixed; right:0; top:0; bottom:0; width:380px; max-width:90vw;
+  background:rgba(6,14,32,0.97); border-left:1px solid rgba(56,189,248,.2);
+  z-index:180; transform:translateX(100%); transition:transform .3s cubic-bezier(.4,0,.2,1);
+  display:flex; flex-direction:column;
+  box-shadow:-8px 0 32px rgba(0,0,0,.5);
+}
+.s2-notes-drawer.open { transform:translateX(0); }
+.s2-notes-drawer-header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 18px; border-bottom:1px solid rgba(56,189,248,.15);
+  flex-shrink:0;
+}
+.s2-notes-drawer-title {
+  font-family:'Orbitron',monospace; font-size:9px; font-weight:700;
+  letter-spacing:.14em; text-transform:uppercase; color:var(--blue2);
+}
+.s2-notes-drawer-close {
+  background:none; border:none; color:var(--dim); font-size:18px;
+  cursor:pointer; padding:4px 8px; line-height:1;
+}
+.s2-notes-drawer-close:hover { color:var(--text); }
+.s2-notes-drawer-body {
+  flex:1; overflow-y:auto; padding:18px;
+  font-family:'DM Sans',sans-serif; font-size:12px; line-height:1.8; color:rgba(200,220,255,.75);
+}
+.s2-notes-title {
+  font-family:'Orbitron',monospace; font-size:10px; font-weight:700;
+  letter-spacing:.08em; color:var(--text); margin-bottom:4px;
+}
+.s2-notes-meta {
+  font-family:'JetBrains Mono',monospace; font-size:9px;
+  color:rgba(56,189,248,.5); letter-spacing:.04em; margin-bottom:14px;
+  padding-bottom:10px; border-bottom:1px solid rgba(56,189,248,.1);
+}
+.s2-notes-list {
+  list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:10px;
+}
+.s2-notes-list li {
+  padding:8px 10px; border-left:2px solid rgba(56,189,248,.25);
+  background:rgba(56,189,248,.03); border-radius:0 4px 4px 0;
+  font-size:12px; line-height:1.7;
+}
+.s2-notes-list li strong { color:var(--blue2); font-weight:600; }
+/* Inline notes toggle (below the AI draft) */
+.s2-notes-toggle-inline {
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  width:100%; padding:12px; margin-top:12px;
+  font-family:'Orbitron',monospace; font-size:10px; font-weight:700;
+  letter-spacing:.14em; text-transform:uppercase;
+  background:rgba(56,189,248,.06); border:1px solid rgba(56,189,248,.22);
+  color:rgba(56,189,248,.7); border-radius:8px; cursor:pointer; transition:all .2s;
+}
+.s2-notes-toggle-inline:hover {
+  background:rgba(56,189,248,.12); border-color:rgba(56,189,248,.4);
+  color:var(--blue2);
+}
+.s2-notes-toggle-icon { font-size:14px; }
+@media(max-width:768px) {
+  .s2-notes-drawer {
+    top:auto; bottom:0; left:0; right:0; width:100%; max-width:100%;
+    height:70vh; max-height:70vh;
+    border-left:none; border-top:1px solid rgba(56,189,248,.2);
+    transform:translateY(100%); border-radius:14px 14px 0 0;
+  }
+  .s2-notes-drawer.open { transform:translateY(0); }
+}
+
+/* ════════════════════════════════════════════
    MICRO-FEEDBACK TEACH LINE
 ════════════════════════════════════════════ */
 .teach-flash { font-family:'DM Sans',sans-serif; font-size:10.5px; font-weight:400; color:rgba(200,220,255,.62); line-height:1.5; opacity:0; transform:translateY(3px); }
@@ -1613,7 +1684,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
             <div class="mc-stars" id="m2stars"></div>
           </div>
           <div class="mc-title">AI Hallucination Detection</div>
-          <div class="mc-desc">An AI has generated a plausible-sounding report full of false citations, invented statistics, and fabricated legal clauses. Find them before they spread.</div>
+          <div class="mc-desc">Marcus used an AI to draft a client report from his meeting notes. Some claims are accurate &mdash; others have been invented or altered. Find them before it&rsquo;s sent.</div>
           <div class="mc-footer">
             <span class="mc-badge threat-medium">⬡ Hallucinations</span>
             <span class="mc-status locked-s" id="m2status"><span class="mc-dot-s grey" id="m2dot"></span><span id="m2statuslbl">LOCKED</span></span>
@@ -1943,7 +2014,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 <div class="briefing-overlay" id="s2briefing" onclick="if(event.target===this)goMenu()">
   <div class="briefing-card">
     <div class="briefing-top-bar m2"></div>
-    <button class="briefing-back-btn" onclick="goMenu()">← MENU</button>
+    <button class="briefing-back-btn" onclick="goMenu()">&larr; MENU</button>
     <div class="briefing-graphic" style="background:linear-gradient(180deg,rgba(56,189,248,.06) 0%,transparent 100%)">
       <div class="b-ring"></div>
       <div class="b-ring b-ring2"></div>
@@ -1956,18 +2027,16 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
     </div>
     <div class="briefing-body">
       <div class="briefing-stat-strip">
-        <div class="bss-item"><div class="bss-lbl">Destination</div><div class="bss-val">Legal Team</div></div>
-        <div class="bss-item"><div class="bss-lbl">Topic</div><div class="bss-val">GDPR Compliance</div></div>
+        <div class="bss-item"><div class="bss-lbl">Recipient</div><div class="bss-val">James Okafor</div></div>
+        <div class="bss-item"><div class="bss-lbl">Report</div><div class="bss-val">Account Review</div></div>
       </div>
       <div class="briefing-divider"></div>
-      <div class="briefing-text">This AI-generated GDPR report is heading to legal. Some claims are accurate — others are <strong>completely invented</strong>. Flag every fabrication before it goes.</div>
+      <div class="briefing-text">Marcus asked an AI to turn his meeting notes into a report for James Okafor at Pinnacle Group. Some claims match the notes &mdash; others have been <strong>invented or altered by the AI</strong>. Check every claim against the meeting notes and flag anything that doesn&rsquo;t match.</div>
       <div class="briefing-legend">
-        <div class="b-leg"><div class="b-leg-dot" style="background:var(--cat-cred);box-shadow:0 0 6px rgba(239,68,68,.7)"></div><span class="b-leg-name" style="color:var(--cat-cred)">[FAKE CITATION]</span><span class="b-leg-desc">Made-up source, journal, or authority</span></div>
-        <div class="b-leg"><div class="b-leg-dot" style="background:var(--cat-pii);box-shadow:0 0 6px rgba(251,146,60,.6)"></div><span class="b-leg-name" style="color:var(--cat-pii)">[WRONG FIGURE]</span><span class="b-leg-desc">Invented statistic or false percentage</span></div>
-        <div class="b-leg"><div class="b-leg-dot" style="background:var(--cat-int);box-shadow:0 0 6px rgba(250,204,21,.5)"></div><span class="b-leg-name" style="color:var(--cat-int)">[FAKE LAW]</span><span class="b-leg-desc">Non-existent legal clause or regulation</span></div>
-        <div class="b-leg"><div class="b-leg-dot" style="background:rgba(148,163,184,.5)"></div><span class="b-leg-name" style="color:var(--dim)">[ACCURATE]</span><span class="b-leg-desc">Real claim — flagging it as a hallucination costs integrity</span></div>
+        <div class="b-leg"><div class="b-leg-dot" style="background:var(--orange);box-shadow:0 0 6px rgba(251,146,60,.7)"></div><span class="b-leg-name" style="color:var(--orange)">[HALLUCINATION]</span><span class="b-leg-desc">Claim doesn&rsquo;t match the meeting notes</span></div>
+        <div class="b-leg"><div class="b-leg-dot" style="background:rgba(148,163,184,.5)"></div><span class="b-leg-name" style="color:var(--dim)">[ACCURATE]</span><span class="b-leg-desc">Claim matches the notes &mdash; flagging it costs integrity</span></div>
       </div>
-      <button class="briefing-start-btn" onclick="s2Start()">▶ &nbsp;&nbsp; START REVIEW</button>
+      <button class="briefing-start-btn" onclick="s2Start()">&blacktriangleright; &nbsp;&nbsp; START REVIEW</button>
     </div>
   </div>
 </div>
@@ -1988,7 +2057,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
             <polyline points="27,40 36,50 54,32" stroke="rgba(74,222,128,1)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke-dasharray="60" stroke-dashoffset="60" style="animation:checkDraw .5s ease .5s forwards"/>
           </svg>
         </div>
-        <div class="success-lbl">Hallucinations Flagged</div>
+        <div class="success-lbl">Report Verified</div>
       </div>
       <div class="v-fail-graphic" id="s2vFail" style="display:none">
         <div class="v-fail-scan-line"></div>
@@ -2006,10 +2075,8 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
         <div class="v-single-metric"><div class="v-ml">Integrity Score</div><div class="v-mv" id="s2vInt">—</div></div>
         <div class="v-rows">
           <div class="v-rows-lbl">Hallucination Summary</div>
-          <div class="v-row"><span class="v-rk">Fake Citations Caught</span><span class="v-rv" id="s2vCitations">—</span></div>
-          <div class="v-row"><span class="v-rk">Wrong Figures Caught</span><span class="v-rv" id="s2vFigures">—</span></div>
-          <div class="v-row"><span class="v-rk">Fake Laws Caught</span><span class="v-rv" id="s2vLaws">—</span></div>
-          <div class="v-row"><span class="v-rk">False Alarms</span><span class="v-rv" id="s2vFalseFlags">—</span></div>
+          <div class="v-row"><span class="v-rk">Hallucinations Caught</span><span class="v-rv" id="s2vHalsCaught">&mdash;</span></div>
+          <div class="v-row"><span class="v-rk">False Alarms</span><span class="v-rv" id="s2vFalseFlags">&mdash;</span></div>
         </div>
         <div id="s2vBonus" style="display:none"></div>
         <button class="v-next-btn" onclick="vAdvance('s2',2)">NEXT &nbsp;→</button>
@@ -2073,19 +2140,11 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
       <div class="ib-bar-track"><div class="ib-bar-fill green" id="s2iwIntBar"></div></div>
       <div class="ib-bar-sub"><span class="ib-delta" id="s2iwDelta"></span></div>
       <div class="ib-bar-sub" style="margin-top:3px"><span class="teach-flash" id="s2iwTeach"></span></div>
-      <!-- Mini diagnostic row — mobile only -->
+      <!-- Mini diagnostic row — mobile only (single bar) -->
       <div class="ib-mini-diag" id="s2ibMiniDiag">
-        <div class="ib-mini-cat" id="s2mbCatCit">
-          <span class="ib-mini-lbl red" id="s2mbLblCit">FAKE CITE</span>
-          <div class="ib-mini-track"><div class="ib-mini-fill" id="s2mbProgCit" style="background:rgba(239,68,68,.8)"></div></div>
-        </div>
-        <div class="ib-mini-cat" id="s2mbCatFig">
-          <span class="ib-mini-lbl orange" id="s2mbLblFig">WRONG FIG</span>
-          <div class="ib-mini-track"><div class="ib-mini-fill" id="s2mbProgFig" style="background:rgba(251,146,60,.8)"></div></div>
-        </div>
-        <div class="ib-mini-cat" id="s2mbCatLaw">
-          <span class="ib-mini-lbl yellow" id="s2mbLblLaw">FAKE LAW</span>
-          <div class="ib-mini-track"><div class="ib-mini-fill" id="s2mbProgLaw" style="background:rgba(250,204,21,.8)"></div></div>
+        <div class="ib-mini-cat" id="s2mbCatAll">
+          <span class="ib-mini-lbl orange" id="s2mbLblAll">FLAGGED</span>
+          <div class="ib-mini-track"><div class="ib-mini-fill" id="s2mbProgAll" style="background:rgba(251,146,60,.8)"></div></div>
         </div>
       </div>
     </div>
@@ -2100,42 +2159,45 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
   </div>
   <!-- Mobile submit — visible only on mobile when diag panel is hidden -->
   <div class="mobile-submit-wrap" id="s2mobileSubmit" style="display:none">
-    <button class="hal-submit-btn mobile-submit-btn" id="s2mobileSubmitBtn" onclick="s2Submit()"><span>—</span> &nbsp; SUBMIT REPORT <span id="s2mobileSubmitCounter">(0 / 6)</span></button>
+    <button class="hal-submit-btn mobile-submit-btn" id="s2mobileSubmitBtn" onclick="s2Submit()"><span>&mdash;</span> &nbsp; SUBMIT REPORT <span id="s2mobileSubmitCounter">(0 / 5)</span></button>
+  </div>
+  <!-- Notes drawer — slides in from right on desktop, bottom on mobile -->
+  <div class="s2-notes-drawer" id="s2notesDrawer">
+    <div class="s2-notes-drawer-header">
+      <span class="s2-notes-drawer-title">&#x1F4DD; Marcus&rsquo;s Meeting Notes</span>
+      <button class="s2-notes-drawer-close" onclick="s2ToggleNotes()">&times;</button>
+    </div>
+    <div class="s2-notes-drawer-body" id="s2notesDrawerBody"></div>
   </div>
   <div class="card diag" id="s2diag">
     <button class="diag-toggle" onclick="toggleDiag(this)">
       <span class="diag-toggle-handle"></span>
-      <span class="diag-toggle-lbl">▲&nbsp; HALLUCINATION DETECTOR</span>
+      <span class="diag-toggle-lbl">&blacktriangle;&nbsp; HALLUCINATION DETECTOR</span>
     </button>
     <div class="diag-title">// Hallucination Detector</div>
     <div class="hal-flag-counter">
       <div class="hal-fc-lbl">Hallucinations Flagged</div>
-      <div class="hal-fc-row"><span class="hal-fc-num" id="s2flagCount">0</span><span class="hal-fc-total" id="s2flagTotal"> / 6</span></div>
-      <div class="hal-fc-label" id="s2flagStatus">Flag all fabricated claims. Accurate claims: leave them.</div>
+      <div class="hal-fc-row"><span class="hal-fc-num" id="s2flagCount">0</span><span class="hal-fc-total" id="s2flagTotal"> / 5</span></div>
+      <div class="hal-fc-label" id="s2flagStatus">Check each claim against the meeting notes. Flag anything that doesn&rsquo;t match.</div>
     </div>
     <div class="diag-cats" id="s2diagCats">
-      <div class="diag-cat hal-cat" id="s2catCitations">
-        <div class="dc-head"><div class="dc-name" style="color:var(--red)">[FAKE CITATION]</div><div class="dc-pill exposed" id="s2pillCitations">0/2</div></div>
-        <div class="dc-segments" id="s2segsCitations"><div class="dc-seg"></div><div class="dc-seg"></div></div>
+      <div class="diag-cat hal-cat" id="s2catAll">
+        <div class="dc-head"><div class="dc-name" style="color:var(--orange)">[HALLUCINATIONS]</div><div class="dc-pill exposed-pii" id="s2pillAll">0/5</div></div>
+        <div class="dc-segments" id="s2segsAll"><div class="dc-seg"></div><div class="dc-seg"></div><div class="dc-seg"></div><div class="dc-seg"></div><div class="dc-seg"></div></div>
       </div>
-      <div class="diag-cat hal-cat" id="s2catFigures">
-        <div class="dc-head"><div class="dc-name" style="color:var(--orange)">[WRONG FIGURE]</div><div class="dc-pill exposed-pii" id="s2pillFigures">0/2</div></div>
-        <div class="dc-segments" id="s2segsFigures"><div class="dc-seg"></div><div class="dc-seg"></div></div>
-      </div>
-      <div class="diag-cat hal-cat" id="s2catLaws">
-        <div class="dc-head"><div class="dc-name" style="color:var(--yellow)">[FAKE LAW]</div><div class="dc-pill exposed-int" id="s2pillLaws">0/2</div></div>
-        <div class="dc-segments" id="s2segsLaws"><div class="dc-seg"></div><div class="dc-seg"></div></div>
-      </div>
+    </div>
+    <div style="padding:6px 0">
+      <button class="btn btn-scan" onclick="s2ToggleNotes()" style="display:flex;width:100%;align-items:center;justify-content:center;gap:7px">&#x1F4DD; &nbsp;CHECK MEETING NOTES</button>
     </div>
     <div class="diag-secured" id="s2diagSecured" style="display:none">
       <svg class="diag-secured-icon" viewBox="0 0 40 40" fill="none">
         <path d="M20 4 L34 10 L34 22 C34 29 27 35 20 37 C13 35 6 29 6 22 L6 10 Z" stroke="rgba(74,222,128,.9)" stroke-width="1.5" fill="rgba(74,222,128,.08)"/>
         <polyline points="13,20 18,26 28,14" stroke="#4ade80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke-dasharray="30" stroke-dashoffset="30"><animate attributeName="stroke-dashoffset" from="30" to="0" dur="0.5s" fill="freeze" begin="0s"/></polyline>
       </svg>
-      <div class="diag-secured-label">ALL CLAIMS FLAGGED</div>
+      <div class="diag-secured-label">ALL HALLUCINATIONS FLAGGED</div>
     </div>
     <div class="diag-actions" style="margin-top:auto">
-      <button class="hal-submit-btn" id="s2submitBtn" onclick="s2Submit()"><span id="s2submitIcon">—</span> &nbsp; SUBMIT REPORT <span id="s2submitCounter">(0 / 6)</span></button>
+      <button class="hal-submit-btn" id="s2submitBtn" onclick="s2Submit()"><span id="s2submitIcon">&mdash;</span> &nbsp; SUBMIT REPORT <span id="s2submitCounter">(0 / 5)</span></button>
     </div>
   </div>
 </div>
@@ -2332,16 +2394,14 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 
 </div><!-- /screen S3 -->
 
-<!-- HAL POPUP (outside all screens) -->
+<!-- HAL POPUP (outside all screens) — 2-button FLAG / ACCURATE -->
 <div class="cat-popup" id="s2halPopup" style="z-index:9999">
-  <div class="cat-popup-lbl">Flag this claim</div>
-  <div class="cat-btns">
-    <button class="cat-btn cat-btn-cred" onclick="s2Classify('citation')">FAKE CITATION</button>
-    <button class="cat-btn cat-btn-pii"  onclick="s2Classify('figure')">WRONG FIGURE</button>
-    <button class="cat-btn cat-btn-int"  onclick="s2Classify('law')">FAKE LAW</button>
-    <button class="cat-btn cat-btn-safe" onclick="s2Classify('accurate')">ACCURATE</button>
+  <div class="cat-popup-lbl">Does this match the notes?</div>
+  <div class="cat-btns" style="grid-template-columns:1fr 1fr">
+    <button class="cat-btn" style="background:rgba(251,146,60,.15);color:var(--orange);border-color:rgba(251,146,60,.5);font-size:13px;padding:18px 10px;min-height:56px;letter-spacing:.06em" onclick="s2Classify('flag')">&starf; FLAG</button>
+    <button class="cat-btn cat-btn-safe" onclick="s2Classify('accurate')" style="font-size:13px;padding:18px 10px;min-height:56px;letter-spacing:.06em">&check; LOOKS ACCURATE</button>
   </div>
-  <button class="cat-popup-close" onclick="s2ClosePopup()">✕</button>
+  <button class="cat-popup-close" onclick="s2ClosePopup()">&times;</button>
 </div>
 
 <!-- INJECTION POPUP (outside all screens) -->
@@ -3323,70 +3383,68 @@ function s1EndGame(reason) {
 //  SECTION 2 — AI HALLUCINATION
 // ════════════════════════════════════════════
 const S2_TOKENS = [
-  // id, text, cat, isHallucination
-  { id:'cit1', cat:'citation', isHal:true,  text:'European AI Regulatory Framework 2023 (EAIRF-23), Article 14(b)' },
-  { id:'cit2', cat:'citation', isHal:true,  text:'GDPR Enforcement Report Q3 2024 — ICO Internal Memorandum No. 8812' },
-  { id:'fig1', cat:'figure',   isHal:true,  text:'94% of EU GDPR violations in 2023 stemmed from AI-generated data processing errors' },
-  { id:'fig2', cat:'figure',   isHal:true,  text:'fines totalling €2.4 billion were levied specifically against AI data processors in 2023' },
-  { id:'law1', cat:'law',      isHal:true,  text:'Article 83(5a) of the GDPR — the AI Exemption Clause' },
-  { id:'law2', cat:'law',      isHal:true,  text:'Digital Services Act Annex IX, Section 3 — Mandatory AI Output Labelling for B2B Communications' },
-  // Accurate tokens (noise)
-  { id:'acc1', cat:'accurate', isHal:false, text:'GDPR Article 5 requires personal data to be processed lawfully, fairly and transparently' },
-  { id:'acc2', cat:'accurate', isHal:false, text:'data controllers must implement appropriate technical and organisational measures' },
-  { id:'acc3', cat:'accurate', isHal:false, text:'Under Article 83, maximum fines can reach €20 million or 4% of global annual turnover' },
+  // 5 hallucinations — single FLAG action, type is teaching-only
+  { id:'fig1', type:'wrong-figure',      isHal:true,  text:'34% improvement in operational efficiency' },
+  { id:'fig2', type:'wrong-figure',      isHal:true,  text:'\u00A3420,000' },
+  { id:'det1', type:'invented-detail',   isHal:true,  text:'James Okafor, Head of Digital Transformation' },
+  { id:'det2', type:'invented-detail',   isHal:true,  text:'Pinnacle Group\u2019s 2025 Digital Acceleration Strategy' },
+  { id:'claim1', type:'unsupported-claim', isHal:true,  text:'expanding the automation pilot to two additional distribution centres in Q1 2026' },
+  // 3 accurate tokens (traps)
+  { id:'acc1', isHal:false, text:'a three-week delay due to vendor-related issues' },
+  { id:'acc2', isHal:false, text:'Six Meridian consultants are currently deployed on-site' },
+  { id:'acc3', isHal:false, text:'interim report is scheduled for delivery on 6 December' },
 ];
 
+const S2_HAL_COUNT = S2_TOKENS.filter(t => t.isHal).length; // 5
+
 let s2state = {
-  tokState:{}, integrity:100, gameActive:false, timerInt:null, drainInt:null,
-  flagsCorrect:0, flagsWrong:0, catCount:{citation:0,figure:0,law:0}, activeToken:null,
+  tokState:{}, integrity:100, gameActive:false, drainInt:null,
+  flagsCorrect:0, flagsWrong:0, activeToken:null,
   cooldownUntil:0, currentSection:1,
 };
 
 function s2Init() {
   s2state.tokState={};
-  S2_TOKENS.forEach(t => { s2state.tokState[t.id]={ flagged:false, cat:t.cat, isHal:t.isHal }; });
+  S2_TOKENS.forEach(t => { s2state.tokState[t.id]={ flagged:false, isHal:t.isHal, type:t.type||null }; });
   s2state.integrity=100; s2state.gameActive=false;
   s2state.flagsCorrect=0; s2state.flagsWrong=0;
-  s2state.catCount={citation:0,figure:0,law:0}; s2state.activeToken=null; s2state.cooldownUntil=0;
+  s2state.activeToken=null; s2state.cooldownUntil=0;
   clearInterval(s2state.drainInt);
   s2BuildPayload();
   updateIntUI('s2',100,0,S1_MAX_DRAIN);
   document.getElementById('s2verdict').classList.remove('show');
   document.getElementById('s2flagCount').textContent='0';
-  document.getElementById('s2submitCounter').textContent='(0 / 6)';
-  document.getElementById('s2flagStatus').textContent='Flag all fabricated claims. Accurate claims: leave them.';
+  document.getElementById('s2submitCounter').textContent='(0 / '+S2_HAL_COUNT+')';
+  document.getElementById('s2flagStatus').textContent='Check each claim against the meeting notes. Flag anything that doesn\u2019t match.';
   document.getElementById('s2diagSecured').style.display='none';
-  const s2icon=document.getElementById('s2submitIcon'); if(s2icon) s2icon.textContent='—';
+  const s2icon=document.getElementById('s2submitIcon'); if(s2icon) s2icon.textContent='\u2014';
   const s2sb2=document.getElementById('s2submitBtn'); if(s2sb2) s2sb2.classList.remove('ready');
   const s2msb2=document.getElementById('s2mobileSubmitBtn'); if(s2msb2) s2msb2.classList.remove('ready');
   const s2msR2 = document.getElementById('s2mobileSubmit'); if(s2msR2) s2msR2.style.display='none';
-  const s2mscR = document.getElementById('s2mobileSubmitCounter'); if(s2mscR) s2mscR.textContent='(0 / 6)';
+  const s2mscR = document.getElementById('s2mobileSubmitCounter'); if(s2mscR) s2mscR.textContent='(0 / '+S2_HAL_COUNT+')';
   document.getElementById('s2vBonus').style.display='none';
-  // Reset diag cats
-  ['Citations','Figures','Laws'].forEach((k,i)=>{
-    const baseClass=['exposed','exposed-pii','exposed-int'][i];
-    document.getElementById('s2cat'+k).className='diag-cat hal-cat';
-    document.getElementById('s2pill'+k).className='dc-pill '+baseClass;
-    document.getElementById('s2pill'+k).textContent='0/2';
-    document.getElementById('s2segs'+k).querySelectorAll('.dc-seg').forEach(s=>s.classList.remove('secured'));
-  });
-  // Reset mini banner bars
-  const miniMap2={Cit:'rgba(239,68,68,.8)',Fig:'rgba(251,146,60,.8)',Law:'rgba(250,204,21,.8)'};
-  const miniLbl2={Cit:'red',Fig:'orange',Law:'yellow'};
-  ['Cit','Fig','Law'].forEach(k=>{
-    const f=document.getElementById('s2mbProg'+k); if(f){f.style.width='0%';f.style.background=miniMap2[k];}
-    const l=document.getElementById('s2mbLbl'+k); if(l) l.className='ib-mini-lbl '+miniLbl2[k];
-  });
+  // Reset single-bar diagnostics segments
+  const segsEl = document.getElementById('s2segsAll');
+  if(segsEl) segsEl.querySelectorAll('.dc-seg').forEach(s=>s.classList.remove('secured'));
+  const pillEl = document.getElementById('s2pillAll');
+  if(pillEl){ pillEl.className='dc-pill exposed-pii'; pillEl.textContent='0/'+S2_HAL_COUNT; }
+  const catEl = document.getElementById('s2catAll');
+  if(catEl) catEl.className='diag-cat hal-cat';
+  // Reset mini banner bar
+  const mf=document.getElementById('s2mbProgAll'); if(mf){mf.style.width='0%';}
+  const ml=document.getElementById('s2mbLblAll'); if(ml) ml.className='ib-mini-lbl orange';
+  // Reset notes drawer
+  const drawer=document.getElementById('s2notesDrawer'); if(drawer) drawer.classList.remove('open');
   const b=document.getElementById('s2briefing'); b.style.display=''; b.classList.remove('hidden');
 }
 function s2Reset() { document.getElementById('s2verdict').classList.remove('show'); s2Init(); }
 
 // Hallucination tokens per section (used for auto-advance)
-const S2_SECTION_HALS = { 1:['law1'], 2:['cit2','fig1','fig2'], 3:['law2','cit1'] };
+const S2_SECTION_HALS = { 1:['fig1','fig2','det1'], 2:['det2','claim1'] };
 
 function s2CheckSectionAdvance() {
   const sec = s2state.currentSection;
-  if (sec >= 3) return; // last section — no auto-advance
+  if (sec >= 2) return; // last section — no auto-advance
   if (!s2state.gameActive) return;
   const hals = S2_SECTION_HALS[sec] || [];
   if (hals.length === 0) return;
@@ -3397,23 +3455,36 @@ function s2CheckSectionAdvance() {
 }
 
 // Per-token teach messages for M2
+// 'correct' shown after a correct flag, 'falseflag' shown after flagging an accurate claim,
+// 'missed' shown after marking a hallucination as accurate
 const S2_TEACH = {
-  cit1: { correct: '"EAIRF-23" doesn\'t exist. The EU AI Act is real legislation, but this fabricated framework name sounds plausible — which is exactly what makes AI hallucinations dangerous in legal contexts.',
-          wrongtype: 'This is a fake citation, not a wrong figure. The document reference (EAIRF-23, Article 14(b)) is entirely invented.' },
-  cit2: { correct: 'There is no ICO Internal Memorandum No. 8812. AI tools invent document numbers, internal memos, and report titles with high confidence.',
-          wrongtype: 'This is a fake citation — an invented document reference. The ICO is a real body, but this specific report doesn\'t exist.' },
-  fig1: { correct: '94% is a fabricated statistic. Real GDPR enforcement data is published by DPAs — AI tools routinely invent percentages that sound authoritative.',
-          wrongtype: 'This is a wrong figure — an invented statistic. Always check figures against primary sources before sharing.' },
-  fig2: { correct: '€2.4 billion in AI-specific fines doesn\'t match any published enforcement data. The AI invented a number that sounds alarming and precise.',
-          wrongtype: 'This is a wrong figure. The AI generated a plausible-sounding financial statistic with no basis in actual enforcement data.' },
-  law1: { correct: '"Article 83(5a) — the AI Exemption Clause" doesn\'t exist. There is no AI exemption in GDPR. The AI invented a clause that directly contradicts real law.',
-          wrongtype: 'This is a fake law. Article 83(5a) and "AI Exemption Clause" are completely fabricated. GDPR has no such provision.' },
-  law2: { correct: 'DSA Annex IX, Section 3 doesn\'t mandate AI output labelling for B2B comms. This is a plausible-sounding but invented regulatory requirement.',
-          wrongtype: 'This is a fake law — a non-existent DSA provision. The Digital Services Act is real, but this Annex and Section are invented.' },
-  acc1: { falseflag: 'GDPR Article 5 really does require lawful, fair, transparent processing. This is accurate — flagging it as a hallucination would have undermined your review.' },
-  acc2: { falseflag: 'Data controllers genuinely must implement appropriate technical and organisational measures. This is correct GDPR wording.' },
-  acc3: { falseflag: 'The €20m / 4% figure is real — it\'s the actual maximum fine under Article 83(5). Accurate claims like this can be used to make fabricated ones harder to spot.' },
+  fig1: { correct: 'The notes say 27% improvement in process turnaround times \u2014 the AI inflated this to 34% and changed \u201Cturnaround times\u201D to \u201Coperational efficiency\u201D. AI tools routinely adjust figures upward and generalise specific metrics.',
+          label: 'Wrong Figure' },
+  fig2: { correct: 'The approved budget was \u00A3400,000 \u2014 not \u00A3420,000. A \u00A320,000 discrepancy in a client report could trigger a budget review or damage trust. Always verify financial figures against source documents.',
+          label: 'Wrong Figure' },
+  det1: { correct: 'The notes identify James Okafor as a Pinnacle Group contact but never mention his job title. \u201CHead of Digital Transformation\u201D sounds plausible, but AI models routinely invent professional titles when they aren\u2019t provided.',
+          label: 'Invented Detail' },
+  det2: { correct: 'There is no \u201C2025 Digital Acceleration Strategy\u201D in the meeting notes. The AI invented a formal strategy name to make the report sound more authoritative. Fabricated proper nouns are one of the hardest hallucinations to spot.',
+          label: 'Invented Detail' },
+  claim1: { correct: 'The notes mention one distribution centre (Birmingham) with positive results. The AI fabricated a recommendation to expand to Leeds and Bristol \u2014 a concrete action plan that was never discussed. This is the most dangerous type: AI-generated recommendations that sound like agreed decisions.',
+            label: 'Unsupported Claim' },
+  acc1: { falseflag: 'The three-week delay due to vendor-related issues is directly in the meeting notes. Flagging accurate claims as hallucinations can be just as damaging \u2014 it undermines confidence in the parts of the report that are correct.' },
+  acc2: { falseflag: 'Six Meridian consultants on-site is confirmed in the meeting notes. Not every specific detail is a hallucination \u2014 the skill is checking each claim against the source.' },
+  acc3: { falseflag: 'The 6 December interim report deadline is in the meeting notes. Accurate dates and deadlines should be verified, not assumed wrong.' },
 };
+
+// Marcus's meeting notes — the source-of-truth reference document
+const S2_MEETING_NOTES = `<div class="s2-notes-title">Meeting Notes \u2014 Pinnacle Group Account Review</div>
+<div class="s2-notes-meta">Date: 28 November 2024 &nbsp;\u00B7&nbsp; Attendees: Marcus Webb, James Okafor (Pinnacle Group)</div>
+<ul class="s2-notes-list">
+<li>Current phase running <strong>three weeks behind schedule</strong> \u2014 vendor-related delays on the integration module</li>
+<li><strong>Six Meridian consultants</strong> currently deployed on-site at Pinnacle\u2019s Manchester office</li>
+<li>Process turnaround times have improved by <strong>27%</strong> since automation rollout began</li>
+<li>Total project budget: <strong>\u00A3400,000</strong> (approved at Q2 board) \u2014 currently tracking within budget</li>
+<li>James confirmed <strong>interim report due 6 December</strong> to Pinnacle\u2019s senior leadership</li>
+<li>Automation pilot covers <strong>one distribution centre (Birmingham)</strong> \u2014 results positive so far</li>
+<li>Next review meeting scheduled for January 2025</li>
+</ul>`;
 
 function s2BuildPayload() {
   const tMap={};
@@ -3421,30 +3492,22 @@ function s2BuildPayload() {
   const ht = (id) => `<span class="tok hallucination" data-id="${id}">${tMap[id].text}</span>`;
   const at = (id) => `<span class="tok accurate-claim" data-id="${id}">${tMap[id].text}</span>`;
 
-  // Build 3 sections — each revealed one at a time
+  // Build 2 sections — each revealed one at a time
   const sections = [
     {
       id:'s2sec1',
-      html:`<h4>GDPR COMPLIANCE SUMMARY — DATA PROCESSING REVIEW</h4>
-        <p>The following report summarises key obligations under the General Data Protection Regulation (GDPR) as they apply to AI-mediated data processing workflows within your organisation.</p>
-        <p>It should be noted at the outset that ${at('acc1')}. However, organisations should also be aware that ${ht('law1')}, which provides a limited safe harbour for AI-generated output where a human review layer is demonstrably in place.</p>`
+      html:`<h4>PERFORMANCE & BUDGET</h4>
+        <p>The Pinnacle Group automation programme has delivered a ${ht('fig1')} across all deployed modules since the initial rollout phase. This represents a significant return on the programme\u2019s ${ht('fig2')} investment, which was approved during the Q2 board review.</p>
+        <p>${ht('det1')}, has confirmed that despite ${at('acc1')} on the integration module, the programme remains on track. ${at('acc2')} at Pinnacle\u2019s Manchester office, providing hands-on implementation support.</p>`
     },
     {
       id:'s2sec2',
-      html:`<h4>ENFORCEMENT LANDSCAPE</h4>
-        <p>Enforcement activity has accelerated significantly. ${at('acc3')}, making proactive compliance essential. Yet according to the ${ht('cit2')}, ${ht('fig1')}, up from 41% in 2022 — a figure that should concern any compliance team.</p>
-        <p>In total, ${ht('fig2')}. These penalties far exceed those seen in earlier enforcement cycles.</p>`
-    },
-    {
-      id:'s2sec3',
-      html:`<h4>LEGAL FRAMEWORK UPDATE</h4>
-        <p>The legal landscape is also evolving. ${at('acc2')} — including encryption, access controls, and regular security testing. Furthermore, the ${ht('law2')} requires all AI systems used in client-facing business communications to include a disclosure header beginning Q1 2025.</p>
-        <p>Per ${ht('cit1')}, organisations deploying generative AI tools for customer data analysis are required to maintain a real-time data flow audit within 48 hours of any breach event.</p>
-        `
+      html:`<h4>OUTLOOK & RECOMMENDATIONS</h4>
+        <p>Looking ahead, the programme is aligned with ${ht('det2')}, which prioritises end-to-end process automation across the supply chain.</p>
+        <p>Based on the Birmingham pilot results, we recommend ${ht('claim1')}, starting with the Leeds and Bristol facilities. The ${at('acc3')} to Pinnacle\u2019s senior leadership team.</p>`
     }
   ];
 
-  // Track current section (1-indexed to match section IDs s2sec1…s2sec4)
   s2state.currentSection = 1;
 
   let sectionHTML = '';
@@ -3453,18 +3516,28 @@ function s2BuildPayload() {
   });
 
   document.getElementById('s2payload').innerHTML = `
-    <div class="ai-scenario-frame">📋 <strong>Your task:</strong> The legal team used an AI assistant to draft this GDPR compliance brief and sent it to you for a second pair of eyes before it goes to senior management. <strong>Flag every fabricated claim</strong> — hallucinations carry the same confident tone as facts, and there is no internal signal.</div>
+    <div class="ai-scenario-frame">\uD83D\uDCCB <strong>Your task:</strong> Marcus asked an AI to turn his meeting notes into a report for James Okafor at Pinnacle Group. <strong>Flag any claim that doesn\u2019t match the notes.</strong> You can check the notes at any time using the button below.</div>
     <div class="ai-response-window">
-      <span class="s2-section-counter" id="s2SectionCounter" style="display:block;padding:10px 18px 2px">Section 1 of 3</span>
+      <span class="s2-section-counter" id="s2SectionCounter" style="display:block;padding:10px 18px 2px">Section 1 of 2</span>
       <div class="ai-response-body" id="s2docBody">${sectionHTML}</div>
-    </div>`;
+    </div>
+    <button class="s2-notes-toggle-inline" id="s2notesToggleInline" onclick="s2ToggleNotes()"><span class="s2-notes-toggle-icon">\uD83D\uDCDD</span> CHECK MEETING NOTES</button>`;
+
+  // Populate notes drawer with meeting notes
+  var drawerBody = document.getElementById('s2notesDrawerBody');
+  if(drawerBody) drawerBody.innerHTML = S2_MEETING_NOTES;
 
   // Attach listeners for tokens in visible section 1
   s2AttachVisibleListeners();
 }
 
+function s2ToggleNotes() {
+  const d = document.getElementById('s2notesDrawer');
+  if(d) d.classList.toggle('open');
+}
+
 function s2NextSection() {
-  const totalSections = 3;
+  const totalSections = 2;
   const current = s2state.currentSection;
   if (current >= totalSections) return;
 
@@ -3492,7 +3565,7 @@ function s2NextSection() {
     }
     // Update section counter
     const counter = document.getElementById('s2SectionCounter');
-    if (counter) counter.textContent = `Section ${next} of ${totalSections}`;
+    if (counter) counter.textContent = 'Section ' + next + ' of ' + totalSections;
     // Scroll doc body to top
     const body = document.getElementById('s2docBody');
     if (body) body.scrollTop = 0;
@@ -3529,22 +3602,22 @@ function s2TokenClick(e) {
   const lbl = popup.querySelector('.cat-popup-lbl');
   if(onCooldown) {
     btns.forEach(b=>{ b.disabled=true; b.style.opacity='0.3'; });
-    lbl.textContent = 'Re-read before classifying…';
+    lbl.textContent = 'Re-read before deciding\u2026';
     const remaining = s2state.cooldownUntil - Date.now();
     setTimeout(()=>{
       btns.forEach(b=>{ b.disabled=false; b.style.opacity=''; });
-      lbl.textContent = 'Classify this claim';
+      lbl.textContent = 'Does this match the notes?';
     }, remaining);
   } else {
     btns.forEach(b=>{ b.disabled=false; b.style.opacity=''; });
-    lbl.textContent = 'Classify this claim';
+    lbl.textContent = 'Does this match the notes?';
   }
   // Position popup
   const r=e.currentTarget.getBoundingClientRect();
   let top=r.bottom+8, left=r.left;
   if(window.innerWidth<=768) { popup.style.top=''; popup.style.left=''; }
   else {
-    if(left+490>window.innerWidth) left=window.innerWidth-494;
+    if(left+320>window.innerWidth) left=window.innerWidth-324;
     if(left<8) left=8;
     if(top+140>window.innerHeight) top=Math.max(8, r.top-140);
     popup.style.top=top+'px'; popup.style.left=left+'px';
@@ -3560,107 +3633,87 @@ document.addEventListener('mousedown', e => {
 
 function s2Classify(chosen) {
   const id=s2state.activeToken; if(!id) return;
-  // Cooldown check — prevent spam cycling through options
   if(s2state.cooldownUntil && Date.now() < s2state.cooldownUntil) {
     s2ClosePopup();
-    flashDelta('s2', 0, 'stand by…');
+    flashDelta('s2', 0, 'stand by\u2026');
     return;
   }
   const tok=s2state.tokState[id];
   s2ClosePopup();
-  // Get token text from DOM for insight display
-  const tokEl2=document.querySelector(`#s2payload .tok[data-id="${id}"]`);
-  const tokText2=tokEl2 ? tokEl2.textContent.replace(/[✓⚠]/g,'').trim() : '';
+  const tokEl2=document.querySelector('#s2payload .tok[data-id="'+id+'"]');
+  const tokText2=tokEl2 ? tokEl2.textContent.replace(/[\u2713\u26A0]/g,'').trim() : '';
 
+  // ── PLAYER SAYS "LOOKS ACCURATE" ──
   if(chosen==='accurate') {
     if(!tok.isHal) {
+      // Correct — it IS accurate
       pSelected();
       tok.flagged=true;
-      const el=document.querySelector(`#s2payload .tok[data-id="${id}"]`);
-      if(el){ el.className='tok flagged-wrong'; el.innerHTML=`<span class="redact-label">${el.textContent.trim()}</span>✓`; el.removeEventListener('click',s2TokenClick); }
+      const el=document.querySelector('#s2payload .tok[data-id="'+id+'"]');
+      if(el){ el.className='tok flagged-wrong'; el.innerHTML='<span class="redact-label">'+el.textContent.trim()+'</span>\u2713'; el.removeEventListener('click',s2TokenClick); }
       updateIntUI('s2',s2state.integrity,0,S1_MAX_DRAIN);
-      if(S2_TEACH[id]) {
-        s2ShowInsight('Accurate Claim', tokText2, S2_TEACH[id].falseflag || '', ()=>{ flashDelta('s2', 0, 'accurate — good call'); }, null, true, 'accurate');
+      if(S2_TEACH[id]&&S2_TEACH[id].falseflag) {
+        s2ShowInsight('Accurate Claim', tokText2, 'Correct \u2014 this claim is in the meeting notes.', function(){ flashDelta('s2', 0, 'accurate \u2014 good call'); }, null, true, 'accurate');
       } else {
-        flashDelta('s2', 0, 'accurate — good call');
+        flashDelta('s2', 0, 'accurate \u2014 good call');
       }
     } else {
+      // MISS — hallucination called accurate
       pWrong(); s2state.integrity=Math.max(0,s2state.integrity-12);
       s2state.cooldownUntil = Date.now() + 1800;
       s2FlashTok(id,'red');
       updateIntUI('s2',s2state.integrity,0,S1_MAX_DRAIN);
       if(s2state.integrity<=0) { s2EndGame('breach'); return; }
-      const catLabel={'citation':'Fake Citation','figure':'Wrong Figure','law':'Fake Law'}[tok.cat]||'Missed';
-      const msg = S2_TEACH[id]?.wrongtype || (S2_TEACH[id]?.correct ? 'Missed: '+S2_TEACH[id].correct : '');
-      if(msg) {
-        s2ShowInsight(catLabel, tokText2, msg, ()=>{ showIntPop('s2',-12); flashDelta('s2',-12,'missed hallucination!'); }, null, false, 'accurate');
-      } else {
-        showIntPop('s2',-12); flashDelta('s2',-12,'missed hallucination!');
-      }
+      var missLabel = (S2_TEACH[id]&&S2_TEACH[id].label) || 'Missed';
+      var missMsg = S2_TEACH[id] ? S2_TEACH[id].correct : '';
+      s2ShowInsight(missLabel, tokText2, missMsg, function(){ showIntPop('s2',-12); flashDelta('s2',-12,'missed hallucination!'); }, null, false, 'accurate');
     }
     return;
   }
 
-  // Flagged as hallucination type
+  // ── PLAYER SAYS "FLAG" ──
   if(!tok.isHal) {
+    // False flag — accurate claim flagged as hallucination
     pWrong(); s2state.integrity=Math.max(0,s2state.integrity-10); s2state.flagsWrong++;
     s2state.cooldownUntil = Date.now() + 1800;
     s2FlashTok(id,'red');
     updateIntUI('s2',s2state.integrity,0,S1_MAX_DRAIN);
     if(s2state.integrity<=0) { s2EndGame('breach'); return; }
-    const msg = S2_TEACH[id]?.falseflag || 'This is an accurate claim — flagging it damages your credibility with legal teams.';
-    s2ShowInsight('Accurate', tokText2, msg, ()=>{ showIntPop('s2',-10); flashDelta('s2',-10,'false alarm — accurate claim'); }, null, false, chosen);
+    var ffMsg = (S2_TEACH[id]&&S2_TEACH[id].falseflag) || 'This claim is in the meeting notes \u2014 flagging accurate content damages your credibility.';
+    s2ShowInsight('Accurate Claim', tokText2, ffMsg, function(){ showIntPop('s2',-10); flashDelta('s2',-10,'false alarm \u2014 accurate claim'); }, null, false, 'flag');
     return;
   }
-  if(chosen!==tok.cat) {
-    pWrong();
-    s2FlashTok(id,'red');
-    s2state.integrity=Math.max(0,s2state.integrity-5);
-    s2state.cooldownUntil = Date.now() + 1600;
-    updateIntUI('s2',s2state.integrity,0,S1_MAX_DRAIN);
-    if(s2state.integrity<=0) { s2EndGame('breach'); return; }
-    const correctLabel={'citation':'Fake Citation','figure':'Wrong Figure','law':'Fake Law'}[tok.cat]||'Wrong Category';
-    if(S2_TEACH[id]?.wrongtype) {
-      s2ShowInsight(correctLabel, tokText2, S2_TEACH[id].wrongtype, ()=>{ showIntPop('s2',-5); flashDelta('s2',-5,'wrong type — re-read carefully'); }, null, false, chosen);
-    } else {
-      showIntPop('s2',-5); flashDelta('s2',-5,'wrong type — re-read carefully');
-    }
-    return;
-  }
-  // Correct flag!
+
+  // Correct flag — hallucination identified!
   pSelected(); tok.flagged=true; s2state.flagsCorrect++;
-  s2state.catCount[tok.cat]++;
-  const el=document.querySelector(`#s2payload .tok[data-id="${id}"]`);
-  const flagClass={'citation':'flagged-correct','figure':'flagged-correct-figure','law':'flagged-correct-law'}[tok.cat]||'flagged-correct';
-  if(el){ el.className='tok '+flagClass; el.innerHTML=`<span class="redact-label">${el.textContent.trim()}</span>`; el.removeEventListener('click',s2TokenClick); }
+  var el=document.querySelector('#s2payload .tok[data-id="'+id+'"]');
+  if(el){ el.className='tok flagged-correct-figure'; el.innerHTML='<span class="redact-label">'+el.textContent.trim()+'</span>'; el.removeEventListener('click',s2TokenClick); }
   s2state.integrity=Math.min(100,s2state.integrity+8);
   updateIntUI('s2',s2state.integrity,0,S1_MAX_DRAIN);
-  s2UpdateDiag(tok.cat);
-  const total=s2state.flagsCorrect;
+  s2UpdateDiag();
+  var total=s2state.flagsCorrect;
   document.getElementById('s2flagCount').textContent=total;
-  document.getElementById('s2submitCounter').textContent=`(${total} / 6)`;
-  const s2mscU = document.getElementById('s2mobileSubmitCounter');
-  if(s2mscU) s2mscU.textContent=`(${total} / 6)`;
-  const allFlagged = total>=6;
-  const catLabel={'citation':'Fake Citation','figure':'Wrong Figure','law':'Fake Law'}[tok.cat]||'Flagged';
+  document.getElementById('s2submitCounter').textContent='('+total+' / '+S2_HAL_COUNT+')';
+  var s2mscU = document.getElementById('s2mobileSubmitCounter');
+  if(s2mscU) s2mscU.textContent='('+total+' / '+S2_HAL_COUNT+')';
+  var allFlagged = total>=S2_HAL_COUNT;
+  var teachLabel = (S2_TEACH[id]&&S2_TEACH[id].label) || 'Hallucination Flagged';
   if(allFlagged) {
-    // All hallucinations found — update UI state, then lightbox → auto-submit on Continue
     document.getElementById('s2flagStatus').textContent='All hallucinations flagged.';
-    const s2sb=document.getElementById('s2submitBtn'); if(s2sb) s2sb.classList.add('ready');
-    const s2msb=document.getElementById('s2mobileSubmitBtn'); if(s2msb) s2msb.classList.add('ready');
+    var s2sb=document.getElementById('s2submitBtn'); if(s2sb) s2sb.classList.add('ready');
+    var s2msb=document.getElementById('s2mobileSubmitBtn'); if(s2msb) s2msb.classList.add('ready');
     document.getElementById('s2diagSecured').style.display='flex';
-    document.getElementById('s2iwDrain').textContent='✓ report verified';
+    document.getElementById('s2iwDrain').textContent='\u2713 report verified';
     document.getElementById('s2iwDrain').className='ib-drain-label secured';
-    if(S2_TEACH[id]?.correct) {
-      s2ShowInsight(catLabel, tokText2, S2_TEACH[id].correct, ()=>{ showIntPop('s2',+8); flashDelta('s2',+8,'hallucination flagged'); s2Submit(); }, null, true, chosen);
+    if(S2_TEACH[id]&&S2_TEACH[id].correct) {
+      s2ShowInsight(teachLabel, tokText2, S2_TEACH[id].correct, function(){ showIntPop('s2',+8); flashDelta('s2',+8,'hallucination flagged'); s2Submit(); }, null, true, 'flag');
     } else {
       showIntPop('s2',+8); flashDelta('s2',+8,'hallucination flagged');
       s2Submit();
     }
   } else {
-    // Not all flagged yet — show feedback, then check section advance on Continue
-    if(S2_TEACH[id]?.correct) {
-      s2ShowInsight(catLabel, tokText2, S2_TEACH[id].correct, ()=>{ showIntPop('s2',+8); flashDelta('s2',+8,'hallucination flagged'); s2CheckSectionAdvance(); }, null, true, chosen);
+    if(S2_TEACH[id]&&S2_TEACH[id].correct) {
+      s2ShowInsight(teachLabel, tokText2, S2_TEACH[id].correct, function(){ showIntPop('s2',+8); flashDelta('s2',+8,'hallucination flagged'); s2CheckSectionAdvance(); }, null, true, 'flag');
     } else {
       showIntPop('s2',+8); flashDelta('s2',+8,'hallucination flagged');
       s2CheckSectionAdvance();
@@ -3668,48 +3721,46 @@ function s2Classify(chosen) {
   }
 }
 function s2FlashTok(id,color) {
-  const el=document.querySelector(`#s2payload .tok[data-id="${id}"]`); if(!el) return;
+  var el=document.querySelector('#s2payload .tok[data-id="'+id+'"]'); if(!el) return;
   el.style.background=color==='red'?'rgba(239,68,68,.22)':'rgba(74,222,128,.15)';
-  setTimeout(()=>el.style.background='',700);
+  setTimeout(function(){ el.style.background=''; },700);
 }
-function s2UpdateDiag(cat) {
-  const map={citation:['Citations','exposed'],figure:['Figures','exposed-pii'],law:['Laws','exposed-int']};
-  const [key,baseClass]=map[cat];
-  const cnt=s2state.catCount[cat];
-  const cont=document.getElementById('s2segs'+key);
-  if(cont){ const next=cont.querySelector('.dc-seg:not(.secured)'); if(next) next.classList.add('secured'); }
-  document.getElementById('s2pill'+key).textContent=cnt+'/2';
-  // Sync mini banner bars
-  const miniMap={citation:'Cit',figure:'Fig',law:'Law'};
-  const mKey=miniMap[cat];
-  const miniFill=document.getElementById('s2mbProg'+mKey);
-  if(miniFill) miniFill.style.width=Math.round((cnt/2)*100)+'%';
-  if(cnt>=2) {
-    document.getElementById('s2cat'+key).className='diag-cat hal-cat secured';
-    document.getElementById('s2pill'+key).className='dc-pill secured';
-    const miniLbl=document.getElementById('s2mbLbl'+mKey);
-    if(miniLbl){ miniLbl.className='ib-mini-lbl secured'; }
-    if(miniFill){ miniFill.style.background='rgba(74,222,128,.85)'; }
+function s2UpdateDiag() {
+  var cnt=s2state.flagsCorrect;
+  // Update single category bar segments
+  var cont=document.getElementById('s2segsAll');
+  if(cont){ var next=cont.querySelector('.dc-seg:not(.secured)'); if(next) next.classList.add('secured'); }
+  var pill=document.getElementById('s2pillAll');
+  if(pill) pill.textContent=cnt+'/'+S2_HAL_COUNT;
+  // Sync mini banner bar
+  var miniFill=document.getElementById('s2mbProgAll');
+  if(miniFill) miniFill.style.width=Math.round((cnt/S2_HAL_COUNT)*100)+'%';
+  if(cnt>=S2_HAL_COUNT) {
+    var catEl=document.getElementById('s2catAll');
+    if(catEl) catEl.className='diag-cat hal-cat secured';
+    if(pill) pill.className='dc-pill secured';
+    var miniLbl=document.getElementById('s2mbLblAll');
+    if(miniLbl) miniLbl.className='ib-mini-lbl secured';
+    if(miniFill) miniFill.style.background='rgba(74,222,128,.85)';
   }
 }
 function s2Start() {
-  const b=document.getElementById('s2briefing'); b.classList.add('hidden'); setTimeout(()=>b.style.display='none',600);
+  var b=document.getElementById('s2briefing'); b.classList.add('hidden'); setTimeout(function(){ b.style.display='none'; },600);
   s2state.gameActive=true;
   updatePauseBtn();
   document.getElementById('s2iwDrain').textContent='under review';
   document.getElementById('s2iwDrain').className='ib-drain-label draining';
-  // Gentle drain: 0.3%/min = 0.005%/s — creates light time pressure without punishing careful readers
-  s2state.drainInt = setInterval(()=>{
+  // Gentle drain: 0.3%/min = 0.005%/s
+  s2state.drainInt = setInterval(function(){
     if(!s2state.gameActive) return;
     s2state.integrity = Math.max(0, s2state.integrity - 0.0005);
     updateIntUI('s2', s2state.integrity, 0, S1_MAX_DRAIN);
     if(s2state.integrity<=0) s2EndGame('breach');
   }, 100);
-  setTimeout(()=>{
-    const sl=document.getElementById('s2scanline'); sl.classList.remove('run'); void sl.offsetWidth; sl.classList.add('run');
-    // Scan only currently visible hallucination tokens
-    document.querySelectorAll('#s2payload .s2-section[style*="block"] .tok.hallucination').forEach((el,i)=>{
-      setTimeout(()=>{ el.classList.add('hint-scan'); setTimeout(()=>el.classList.remove('hint-scan'),1500); },i*120+200);
+  setTimeout(function(){
+    var sl=document.getElementById('s2scanline'); sl.classList.remove('run'); void sl.offsetWidth; sl.classList.add('run');
+    document.querySelectorAll('#s2payload .s2-section[style*="block"] .tok.hallucination').forEach(function(el,i){
+      setTimeout(function(){ el.classList.add('hint-scan'); setTimeout(function(){ el.classList.remove('hint-scan'); },1500); },i*120+200);
     });
   },800);
 }
@@ -3720,57 +3771,56 @@ function s2Submit() {
 function s2EndGame(reason) {
   if(!s2state.gameActive) return; s2state.gameActive=false;
   dismissToast();
-  const s2msEnd = document.getElementById('s2mobileSubmit'); if(s2msEnd) s2msEnd.style.display='none';
+  var s2msEnd = document.getElementById('s2mobileSubmit'); if(s2msEnd) s2msEnd.style.display='none';
+  // Close notes drawer if open
+  var drawer=document.getElementById('s2notesDrawer'); if(drawer) drawer.classList.remove('open');
   vAdvance('s2',1);
   document.getElementById('s2vBonus').style.display='none';
   updatePauseBtn();
   clearInterval(s2state.drainInt);
-  const intFinal=Math.max(0,Math.round(s2state.integrity));
-  const pass=(reason!=='breach')&&s2state.flagsCorrect>=6;
-  const precisionPass = pass && s2state.flagsWrong===0;
+  var intFinal=Math.max(0,Math.round(s2state.integrity));
+  var pass=(reason!=='breach')&&s2state.flagsCorrect>=S2_HAL_COUNT;
+  var precisionPass = pass && s2state.flagsWrong===0;
   if(pass){ pSuccess(); courseProgress.s2done=true; saveProgress(); }
   else pError();
   scormReport(intFinal, pass, 's2');
-  const sg=document.getElementById('s2vSuccess'), fg=document.getElementById('s2vFail');
+  var sg=document.getElementById('s2vSuccess'), fg=document.getElementById('s2vFail');
   sg.style.display='none'; fg.style.display='none'; sg.classList.remove('animate');
-  if(pass){ sg.style.display='flex'; setTimeout(()=>sg.classList.add('animate'),50); setTimeout(()=>sg.querySelectorAll('.ring').forEach(r=>r.classList.add('frozen')),2000); }
+  if(pass){ sg.style.display='flex'; setTimeout(function(){ sg.classList.add('animate'); },50); setTimeout(function(){ sg.querySelectorAll('.ring').forEach(function(r){ r.classList.add('frozen'); }); },2000); }
   else fg.style.display='flex';
   document.getElementById('s2vBar').className='v-bar '+(pass?'pass':'fail');
-  const vMsg = pass
-    ? 'Report quarantined. You found all 6 fabricated claims — including a fake legal framework, invented enforcement statistics, and a non-existent exemption clause. AI models generate false information with the same confident tone as accurate information. There is no internal signal for uncertainty. Verification is always on the human.\n\nThe legal team will act on this report. They\'ll trust it because it was reviewed. That trust is now yours to carry — AI confidence is not accuracy, and you\'re the one who knows the difference.'
-    : `The report reached legal with ${6-s2state.flagsCorrect} fabricated claim${6-s2state.flagsCorrect!==1?'s':''} still inside. In a real scenario, your legal team would act on invented regulations, false statistics, and non-existent GDPR clauses — potentially exposing the organisation to real risk.\n\nTip: Focus on any claim that cites a specific document, regulation, or statistic — these are the hallucination hotspots. Real GDPR article numbers and percentages are verifiable; invented ones sound authoritative but can't be found in primary sources.`;
+  var missed = S2_HAL_COUNT - s2state.flagsCorrect;
+  var vMsg = pass
+    ? 'Report intercepted. You found all '+S2_HAL_COUNT+' fabricated claims \u2014 including inflated figures, an invented job title, a fabricated strategy name, and a recommendation that was never discussed. AI models generate false information with the same confident tone as accurate information. There is no internal signal.\n\nJames Okafor will receive this report. He\u2019ll trust it because Marcus reviewed it. That trust is now yours to carry \u2014 AI confidence is not accuracy, and you\u2019re the one who knows the difference.'
+    : 'The report reached James Okafor at Pinnacle Group with '+missed+' fabricated claim'+(missed!==1?'s':'')+' still inside. In a real scenario, the client would act on invented figures, fabricated details, or recommendations that were never discussed \u2014 damaging trust and potentially the commercial relationship.\n\nTip: Compare every specific number, name, and recommendation against the source material. AI hallucinations are hardest to spot when they sound plausible.';
   document.getElementById('s2vMsg').textContent = vMsg;
   document.getElementById('s2vInt').textContent=intFinal+'%';
   document.getElementById('s2vInt').className='v-mv '+(intFinal>60?'green':intFinal>30?'orange':'red');
-  document.getElementById('s2vCitations').textContent=s2state.catCount.citation+'/2';
-  document.getElementById('s2vCitations').className='v-rv '+(s2state.catCount.citation>=2?'green':'orange');
-  document.getElementById('s2vFigures').textContent=s2state.catCount.figure+'/2';
-  document.getElementById('s2vFigures').className='v-rv '+(s2state.catCount.figure>=2?'green':'orange');
-  document.getElementById('s2vLaws').textContent=s2state.catCount.law+'/2';
-  document.getElementById('s2vLaws').className='v-rv '+(s2state.catCount.law>=2?'green':'orange');
+  // Simplified verdict rows
+  document.getElementById('s2vHalsCaught').textContent=s2state.flagsCorrect+'/'+S2_HAL_COUNT;
+  document.getElementById('s2vHalsCaught').className='v-rv '+(s2state.flagsCorrect>=S2_HAL_COUNT?'green':'orange');
   document.getElementById('s2vFalseFlags').textContent=s2state.flagsWrong===0?'None':s2state.flagsWrong;
   document.getElementById('s2vFalseFlags').className='v-rv '+(s2state.flagsWrong===0?'green':'red');
-  const anchorText2=document.getElementById('s2vAnchorText');
+  var anchorText2=document.getElementById('s2vAnchorText');
   if(pass) {
-    anchorText2.innerHTML = 'Research consistently finds that most professionals cannot reliably spot errors in AI-generated legal summaries without independent verification. In the Mata v. Avianca case — documented in 2023 — lawyers submitted AI-generated case citations to a federal court. Every cited case was invented. The judge sanctioned the attorneys and noted that the AI had produced the fabrications with the same confident prose as genuine legal analysis.' + '<br><br><span style="font-family:\'JetBrains Mono\',monospace;font-size:9px;letter-spacing:.12em;color:rgba(56,189,248,.5);text-transform:uppercase;">What you now do differently</span><br><span style="font-size:11px;line-height:1.9;color:rgba(200,220,255,.65);">→ Verify AI-generated statistics and citations against primary sources before sharing<br>→ Never forward an AI output directly to legal, compliance, or clients without review<br>→ AI confidence is not the same as accuracy — always check the source</span>';
-    if(precisionPass){ const b=document.getElementById('s2vBonus'); b.style.display='block'; b.innerHTML='<div class="v-bonus-wrap"><span class="v-precision-bonus">⬡ PRECISION BONUS — Zero false alarms</span></div>'; }
+    anchorText2.innerHTML = 'A 2024 study found that professionals shown AI-generated reports identified fewer than half of the factual errors without access to source documents. In the Mata v. Avianca case (2023), lawyers submitted AI-generated case citations to a US federal court \u2014 every cited case was invented. The attorneys were sanctioned.' + '<br><br><span style="font-family:\'JetBrains Mono\',monospace;font-size:9px;letter-spacing:.12em;color:rgba(56,189,248,.5);text-transform:uppercase;">What you now do differently</span><br><span style="font-size:11px;line-height:1.9;color:rgba(200,220,255,.65);">\u2192 Always verify AI-generated content against the original source material<br>\u2192 Check every figure, name, and recommendation \u2014 not just the ones that feel wrong<br>\u2192 Never send an AI-drafted document to a client without a line-by-line review</span>';
+    if(precisionPass){ var bonus=document.getElementById('s2vBonus'); bonus.style.display='block'; bonus.innerHTML='<div class="v-bonus-wrap"><span class="v-precision-bonus">\u2B21 PRECISION BONUS \u2014 Zero false alarms</span></div>'; }
   } else {
-    anchorText2.textContent = 'In the Mata v. Avianca case (2023), lawyers submitted AI-generated case citations to a US federal court — every cited case was invented. The attorneys were sanctioned. AI-fabricated content in legal and compliance contexts carries direct professional and financial consequences.';
+    anchorText2.textContent = 'In the Mata v. Avianca case (2023), lawyers submitted AI-generated case citations to a US federal court \u2014 every cited case was invented. The attorneys were sanctioned. AI-fabricated content in client reports carries direct professional and financial consequences. Always verify against source material.';
   }
-  const mb2=document.getElementById('s2menuBtn'); mb2.textContent=pass?'▶ MISSION SELECT':'← MISSION SELECT';
-  // Update compact status headers for steps 2 & 3
-  ['s2vCompact2','s2vCompact3'].forEach(id => {
-    const el = document.getElementById(id);
+  var mb2=document.getElementById('s2menuBtn'); mb2.textContent=pass?'\u25B6 MISSION SELECT':'\u2190 MISSION SELECT';
+  ['s2vCompact2','s2vCompact3'].forEach(function(cid) {
+    var el = document.getElementById(cid);
     if (el) {
       el.className = 'v-compact-header' + (pass ? '' : ' fail');
-      const txt = el.querySelector('.v-compact-header-text');
-      if (txt) txt.textContent = pass ? 'TRANSMISSION SECURED' : 'MISINFORMATION SPREAD';
-      const dot = el.querySelector('.v-compact-header-dot');
+      var txt = el.querySelector('.v-compact-header-text');
+      if (txt) txt.textContent = pass ? 'REPORT VERIFIED' : 'MISINFORMATION SPREAD';
+      var dot = el.querySelector('.v-compact-header-dot');
       if (dot) dot.style.background = pass ? 'rgba(74,222,128,.9)' : 'rgba(239,68,68,.9)';
     }
   });
   forceCloseInsight();
-  setTimeout(()=>document.getElementById('s2verdict').classList.add('show'),400);
+  setTimeout(function(){ document.getElementById('s2verdict').classList.add('show'); },400);
 }
 
 // ════════════════════════════════════════════
@@ -4611,6 +4661,7 @@ const INSIGHT_TONE = {
   '[CREDENTIALS]': 'credential', '[PERSONAL DATA]': 'pii', '[INTERNAL INFO]': 'internal',
   'Wrong Category': 'warn', 'False Alarm': 'warn', 'Missed': 'warn', 'Timeout': 'warn',
   'Fake Citation': 'credential', 'Wrong Figure': 'pii', 'Fake Law': 'internal',
+  'Invented Detail': 'internal', 'Unsupported Claim': 'credential',
   'Accurate': 'neutral', 'Safe': 'neutral', 'Accurate Claim': 'ok', 'Safe Item': 'ok', 'Injection Found': 'ok', 'Document Cleared': 'ok',
 };
 
@@ -4618,13 +4669,13 @@ const INSIGHT_TONE = {
 const CHOICE_TONE = {
   'credential': 'credential', 'pii': 'pii', 'internal': 'internal', 'safe': 'ok',
   'citation': 'credential', 'figure': 'pii', 'law': 'internal', 'accurate': 'ok',
-  'injection': 'warn', 'not-injection': 'ok',
+  'flag': 'warn', 'injection': 'warn', 'not-injection': 'ok',
 };
 // Friendly labels for raw choice keys
 const CHOICE_LABEL = {
   'credential': '[CREDENTIALS]', 'pii': '[PERSONAL DATA]', 'internal': '[INTERNAL INFO]', 'safe': 'SAFE',
   'citation': 'Fake Citation', 'figure': 'Wrong Figure', 'law': 'Fake Law', 'accurate': 'Accurate',
-  'injection': 'Injection', 'not-injection': 'Safe',
+  'flag': 'FLAG', 'injection': 'Injection', 'not-injection': 'Safe',
 };
 
 let _insightCallback = null;
