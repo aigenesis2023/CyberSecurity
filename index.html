@@ -3665,33 +3665,36 @@ function s2Classify(chosen) {
       if(el){ el.className='tok flagged-wrong'; el.innerHTML='<span class="redact-label">'+el.textContent.trim()+'</span>\u2713'; el.removeEventListener('click',s2TokenClick); }
       updateIntUI('s2',s2state.integrity,0,S1_MAX_DRAIN);
       if(S2_TEACH[id]&&S2_TEACH[id].falseflag) {
-        s2ShowInsight('LOOKS ACCURATE', tokText2, 'Correct \u2014 this claim is in the meeting notes.', function(){ flashDelta('s2', 0, 'accurate \u2014 good call'); }, null, true, 'accurate');
+        s2ShowInsight('LOOKS ACCURATE', tokText2, 'Correct \u2014 this claim is in the meeting notes.', function(){ flashDelta('s2', 0, 'accurate \u2014 good call'); s2CheckSectionAdvance(); }, null, true, 'accurate');
       } else {
         flashDelta('s2', 0, 'accurate \u2014 good call');
+        s2CheckSectionAdvance();
       }
     } else {
-      // MISS — hallucination called accurate
-      pWrong(); s2state.integrity=Math.max(0,s2state.integrity-12);
+      // MISS — hallucination called accurate (still counts as classified)
+      pWrong(); tok.flagged=true; s2state.integrity=Math.max(0,s2state.integrity-12);
       s2state.cooldownUntil = Date.now() + 1800;
       s2FlashTok(id,'red');
       updateIntUI('s2',s2state.integrity,0,S1_MAX_DRAIN);
       if(s2state.integrity<=0) { s2EndGame('breach'); return; }
       var missMsg = S2_TEACH[id] ? S2_TEACH[id].correct : '';
-      s2ShowInsight('FLAG', tokText2, missMsg, function(){ showIntPop('s2',-12); flashDelta('s2',-12,'missed hallucination!'); }, null, false, 'accurate');
+      s2ShowInsight('FLAG', tokText2, missMsg, function(){ showIntPop('s2',-12); flashDelta('s2',-12,'missed hallucination!'); s2CheckSectionAdvance(); }, null, false, 'accurate');
     }
     return;
   }
 
   // ── PLAYER SAYS "FLAG" ──
   if(!tok.isHal) {
-    // False flag — accurate claim flagged as hallucination
-    pWrong(); s2state.integrity=Math.max(0,s2state.integrity-10); s2state.flagsWrong++;
+    // False flag — accurate claim flagged as hallucination (still counts as classified)
+    pWrong(); tok.flagged=true; s2state.integrity=Math.max(0,s2state.integrity-10); s2state.flagsWrong++;
     s2state.cooldownUntil = Date.now() + 1800;
     s2FlashTok(id,'red');
+    var el2=document.querySelector('#s2payload .tok[data-id="'+id+'"]');
+    if(el2){ el2.className='tok flagged-wrong'; el2.innerHTML='<span class="redact-label">'+el2.textContent.trim()+'</span>\u2713'; el2.removeEventListener('click',s2TokenClick); }
     updateIntUI('s2',s2state.integrity,0,S1_MAX_DRAIN);
     if(s2state.integrity<=0) { s2EndGame('breach'); return; }
     var ffMsg = (S2_TEACH[id]&&S2_TEACH[id].falseflag) || 'This claim is in the meeting notes \u2014 flagging accurate content damages your credibility.';
-    s2ShowInsight('LOOKS ACCURATE', tokText2, ffMsg, function(){ showIntPop('s2',-10); flashDelta('s2',-10,'false alarm \u2014 accurate claim'); }, null, false, 'flag');
+    s2ShowInsight('LOOKS ACCURATE', tokText2, ffMsg, function(){ showIntPop('s2',-10); flashDelta('s2',-10,'false alarm \u2014 accurate claim'); s2CheckSectionAdvance(); }, null, false, 'flag');
     return;
   }
 
