@@ -3716,8 +3716,8 @@ function s2EndGame(reason) {
   updatePauseBtn();
   clearInterval(s2state.drainInt);
   var intFinal=Math.max(0,Math.round(s2state.integrity));
-  var pass=(reason!=='breach')&&s2state.flagsCorrect>=S2_HAL_COUNT;
-  var precisionPass = pass && s2state.flagsWrong===0;
+  var pass=(reason!=='breach')&&intFinal>0;
+  var precisionPass = pass && s2state.flagsCorrect>=S2_HAL_COUNT && s2state.flagsWrong===0;
   if(pass){ pSuccess(); courseProgress.s2done=true; saveProgress(); }
   else pError();
   scormReport(intFinal, pass, 's2');
@@ -3727,21 +3727,26 @@ function s2EndGame(reason) {
   else fg.style.display='flex';
   document.getElementById('s2vBar').className='v-bar '+(pass?'pass':'fail');
   var missed = S2_HAL_COUNT - s2state.flagsCorrect;
-  var vMsg = pass
-    ? 'Report intercepted. You found all '+S2_HAL_COUNT+' fabricated claims \u2014 including inflated figures, an invented job title, a fabricated strategy name, and a recommendation that was never discussed. AI models generate false information with the same confident tone as accurate information. There is no internal signal.\n\nJames Okafor will receive this report. He\u2019ll trust it because Marcus reviewed it. That trust is now yours to carry \u2014 AI confidence is not accuracy, and you\u2019re the one who knows the difference.'
-    : 'The report reached James Okafor at Pinnacle Group with '+missed+' fabricated claim'+(missed!==1?'s':'')+' still inside. In a real scenario, the client would act on invented figures, fabricated details, or recommendations that were never discussed \u2014 damaging trust and potentially the commercial relationship.\n\nTip: Compare every specific number, name, and recommendation against the source material. AI hallucinations are hardest to spot when they sound plausible.';
+  var vMsg;
+  if(!pass) {
+    vMsg = 'Your credibility was compromised. Too many errors drained your integrity to zero \u2014 in a real scenario, the client would lose trust in your review process entirely.\n\nTip: Compare every specific number, name, and recommendation against the source material. AI hallucinations are hardest to spot when they sound plausible.';
+  } else if(missed===0) {
+    vMsg = 'Report intercepted. You found all '+S2_HAL_COUNT+' fabricated claims \u2014 including inflated figures, an invented job title, a fabricated strategy name, and a recommendation that was never discussed. AI models generate false information with the same confident tone as accurate information. There is no internal signal.\n\nJames Okafor will receive this report. He\u2019ll trust it because Marcus reviewed it. That trust is now yours to carry.';
+  } else {
+    vMsg = 'Report reviewed, but '+missed+' fabricated claim'+(missed!==1?'s':'')+' slipped through. In a real scenario, the client could act on invented figures or recommendations that were never discussed. Your integrity held, but the review wasn\u2019t thorough enough.\n\nTip: Compare every specific number, name, and recommendation against the source material \u2014 not just the ones that feel wrong.';
+  }
   document.getElementById('s2vMsg').textContent = vMsg;
   document.getElementById('s2vInt').textContent=intFinal+'%';
   document.getElementById('s2vInt').className='v-mv '+(intFinal>60?'green':intFinal>30?'orange':'red');
   // Simplified verdict rows
   document.getElementById('s2vHalsCaught').textContent=s2state.flagsCorrect+'/'+S2_HAL_COUNT;
-  document.getElementById('s2vHalsCaught').className='v-rv '+(s2state.flagsCorrect>=S2_HAL_COUNT?'green':'red');
+  document.getElementById('s2vHalsCaught').className='v-rv '+(s2state.flagsCorrect>=S2_HAL_COUNT?'green':s2state.flagsCorrect>=3?'orange':'red');
   document.getElementById('s2vFalseFlags').textContent=s2state.flagsWrong===0?'None':s2state.flagsWrong;
   document.getElementById('s2vFalseFlags').className='v-rv '+(s2state.flagsWrong===0?'green':'red');
   var anchorText2=document.getElementById('s2vAnchorText');
   if(pass) {
     anchorText2.innerHTML = 'A 2024 study found that professionals shown AI-generated reports identified fewer than half of the factual errors without access to source documents. In the Mata v. Avianca case (2023), lawyers submitted AI-generated case citations to a US federal court \u2014 every cited case was invented. The attorneys were sanctioned.' + '<br><br><span style="font-family:\'JetBrains Mono\',monospace;font-size:9px;letter-spacing:.12em;color:rgba(56,189,248,.5);text-transform:uppercase;">What you now do differently</span><br><span style="font-size:11px;line-height:1.9;color:rgba(200,220,255,.65);">\u2192 Always verify AI-generated content against the original source material<br>\u2192 Check every figure, name, and recommendation \u2014 not just the ones that feel wrong<br>\u2192 Never send an AI-drafted document to a client without a line-by-line review</span>';
-    if(precisionPass){ var bonus=document.getElementById('s2vBonus'); bonus.style.display='block'; bonus.innerHTML='<div class="v-bonus-wrap"><span class="v-precision-bonus">\u2B21 PRECISION BONUS \u2014 Zero false alarms</span></div>'; }
+    if(precisionPass){ var bonus=document.getElementById('s2vBonus'); bonus.style.display='block'; bonus.innerHTML='<div class="v-bonus-wrap"><span class="v-precision-bonus">\u2B21 PRECISION BONUS \u2014 All hallucinations caught, zero false alarms</span></div>'; }
   } else {
     anchorText2.textContent = 'In the Mata v. Avianca case (2023), lawyers submitted AI-generated case citations to a US federal court \u2014 every cited case was invented. The attorneys were sanctioned. AI-fabricated content in client reports carries direct professional and financial consequences. Always verify against source material.';
   }
