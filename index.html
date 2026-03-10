@@ -22,8 +22,8 @@
   /* Mission identity colours — distinct, not threat-coded */
   --m1:#38bdf8;      /* M1: cyan/blue  — data, network */
   --m1-bg:rgba(56,189,248,0.08); --m1-border:rgba(56,189,248,0.45);
-  --m2:#a78bfa;      /* M2: violet     — cognitive, hallucination */
-  --m2-bg:rgba(167,139,250,0.08); --m2-border:rgba(167,139,250,0.45);
+  --m2:#fb923c;      /* M2: orange     — cognitive, hallucination */
+  --m2-bg:rgba(251,146,60,0.08); --m2-border:rgba(251,146,60,0.45);
   --m3:#f59e0b;      /* M3: amber      — intrusion, injection */
   --m3-bg:rgba(245,158,11,0.08); --m3-border:rgba(245,158,11,0.45);
 }
@@ -443,8 +443,10 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 .tok.safe-decoy:hover { background:rgba(56,189,248,.12); }
 .tok.hallucination  { cursor:pointer; border-radius:3px; padding:1px 3px; transition:background .12s; text-decoration:underline; text-decoration-color:var(--blue); text-decoration-thickness:1px; text-underline-offset:2px; }
 .tok.hallucination:hover { background:rgba(251,146,60,.15); }
-.tok.flagged-correct { background:rgba(239,68,68,.2); color:var(--red); border:1px solid rgba(239,68,68,.4); cursor:default; border-bottom:none; padding:2px 7px; border-radius:4px; }
-.tok.flagged-wrong   { background:rgba(74,222,128,.12); color:var(--green); border:1px solid rgba(74,222,128,.3); cursor:default; border-bottom:none; padding:2px 7px; border-radius:4px; }
+.tok.flagged-correct          { background:rgba(239,68,68,.2);   color:var(--red);    border:1px solid rgba(239,68,68,.4);   cursor:default; border-bottom:none; padding:2px 7px; border-radius:4px; }
+.tok.flagged-correct-figure   { background:rgba(251,146,60,.2);  color:var(--orange); border:1px solid rgba(251,146,60,.4);  cursor:default; border-bottom:none; padding:2px 7px; border-radius:4px; }
+.tok.flagged-correct-law      { background:rgba(250,204,21,.18); color:var(--yellow); border:1px solid rgba(250,204,21,.4);  cursor:default; border-bottom:none; padding:2px 7px; border-radius:4px; }
+.tok.flagged-wrong            { background:rgba(74,222,128,.12); color:var(--green);  border:1px solid rgba(74,222,128,.3);  cursor:default; border-bottom:none; padding:2px 7px; border-radius:4px; }
 /* Injection section */
 .tok.injection { background:rgba(250,204,21,.08); text-decoration:underline; text-decoration-color:var(--blue); text-decoration-thickness:1px; text-underline-offset:2px; cursor:pointer; }
 .tok.injection:hover { background:rgba(250,204,21,.18); }
@@ -3387,7 +3389,8 @@ function s2Classify(chosen) {
   pSelected(); tok.flagged=true; s2state.flagsCorrect++;
   s2state.catCount[tok.cat]++;
   const el=document.querySelector(`#s2payload .tok[data-id="${id}"]`);
-  if(el){ el.className='tok flagged-correct'; el.innerHTML=`<span class="redact-label">${el.textContent.trim()}</span>⚠`; el.removeEventListener('click',s2TokenClick); }
+  const flagClass={'citation':'flagged-correct','figure':'flagged-correct-figure','law':'flagged-correct-law'}[tok.cat]||'flagged-correct';
+  if(el){ el.className='tok '+flagClass; el.innerHTML=`<span class="redact-label">${el.textContent.trim()}</span>⚠`; el.removeEventListener('click',s2TokenClick); }
   s2state.integrity=Math.min(100,s2state.integrity+8);
   showIntPop('s2',+8); flashDelta('s2',+8,'hallucination flagged');
   updateIntUI('s2',s2state.integrity,0,S1_MAX_DRAIN);
@@ -4327,7 +4330,7 @@ const INSIGHT_ICONS = {
 const INSIGHT_TONE = {
   '[CREDENTIALS]': 'credential', '[PERSONAL DATA]': 'pii', '[INTERNAL INFO]': 'internal',
   'Wrong Category': 'warn', 'False Alarm': 'warn', 'Missed': 'warn', 'Timeout': 'warn',
-  'Fake Citation': 'warn', 'Wrong Figure': 'warn', 'Fake Law': 'warn',
+  'Fake Citation': 'credential', 'Wrong Figure': 'pii', 'Fake Law': 'internal',
   'Accurate Claim': 'ok', 'Safe Item': 'ok', 'Injection Found': 'ok', 'Document Cleared': 'ok',
 };
 
@@ -4590,7 +4593,7 @@ function s3ShowInsight(category, tokenText, message, afterFn, graphicHtml, isCor
   letter-spacing:.16em; text-transform:uppercase; padding:3px 10px; border-radius:20px;
 }
 .insight-cat-warn       { background:rgba(239,68,68,.1);    color:#fca5a5; border:1px solid rgba(239,68,68,.3); }
-.insight-cat-flag       { background:rgba(167,139,250,.1);  color:#c4b5fd; border:1px solid rgba(167,139,250,.3); }
+.insight-cat-flag       { background:rgba(251,146,60,.1);   color:var(--orange); border:1px solid rgba(251,146,60,.3); }
 .insight-cat-ok         { background:rgba(74,222,128,.1);   color:#86efac; border:1px solid rgba(74,222,128,.3); }
 .insight-cat-credential { background:rgba(239,68,68,.1);    color:var(--red);    border:1px solid rgba(239,68,68,.45); }
 .insight-cat-pii        { background:rgba(251,146,60,.1);   color:var(--orange); border:1px solid rgba(251,146,60,.45); }
