@@ -441,11 +441,6 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 .sb-timer-val.critical { color:var(--red);    text-shadow:0 0 12px rgba(239,68,68,.5); animation:pulse .5s ease infinite; }
 
 .btn { font-family:'DM Sans',sans-serif; font-size:11px; font-weight:500; padding:9px 16px; border-radius:6px; cursor:pointer; transition:all .2s; letter-spacing:.03em; width:100%; text-align:center; }
-.shell-scan-row { display:none; position:relative; z-index:10; }
-.btn-scan { background:#0d1f35; border:1px solid rgba(56,189,248,.35); color:var(--blue2); display:flex; align-items:center; justify-content:center; gap:7px; }
-.btn-scan:hover { background:rgba(56,189,248,.14); border-color:rgba(56,189,248,.4); }
-.btn-scan:disabled { opacity:.3; cursor:not-allowed; }
-.scan-badge { font-family:'Orbitron',monospace; font-size:9px; background:rgba(56,189,248,.15); border-radius:8px; padding:1px 6px; color:var(--blue); }
 
 .diag { grid-column:2/3; padding:16px 15px; display:flex; flex-direction:column; gap:10px; animation:slideIn .5s ease .05s both; position:sticky; top:10px; height:calc(100vh - 110px); max-height:700px; overflow:hidden; box-sizing:border-box; }
 .diag-cats { display:flex; flex-direction:column; gap:10px; flex-shrink:0; }
@@ -869,19 +864,19 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 }
 .s2-notes-docicon { font-size:14px; }
 .s2-notes-title {
-  font-family:'Orbitron',monospace; font-size:10px; font-weight:700;
-  letter-spacing:.08em; color:var(--text); margin-bottom:10px;
-  padding-bottom:8px; border-bottom:1px solid rgba(56,189,248,.1);
+  font-family:'DM Sans',sans-serif; font-size:13px; font-weight:700;
+  color:#1f2328; margin-bottom:12px;
+  padding-bottom:8px; border-bottom:1px solid #d8dee4;
 }
 .s2-notes-list {
-  list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:10px;
+  list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:8px;
 }
 .s2-notes-list li {
-  padding:8px 10px; border-left:2px solid rgba(56,189,248,.25);
-  background:rgba(56,189,248,.03); border-radius:0 4px 4px 0;
-  font-size:12px; line-height:1.7;
+  padding:8px 12px; border-left:3px solid #d0d7de;
+  background:#f6f8fa; border-radius:0 4px 4px 0;
+  font-family:Georgia,'Times New Roman',serif; font-size:13px; line-height:1.8; color:#1f2328;
 }
-.s2-notes-list li strong { color:var(--blue2); font-weight:600; }
+.s2-notes-list li strong { color:#1f2328; font-weight:700; }
 
 /* ════════════════════════════════════════════
    MICRO-FEEDBACK TEACH LINE
@@ -1299,8 +1294,6 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
   .ib-num-col { display:none !important; }
   .ib-num-compact-wrap { display:flex !important; }
   .ib-bar-top { margin-top:4px; }
-  /* Scan items row: visible on all mobile sizes */
-  .shell-scan-row { display:block; margin:0 12px 8px; }
   /* Shell: single column, no diag panel */
   .shell { grid-template-columns:1fr; grid-template-rows:1fr; padding:8px 12px 12px 12px; min-height:unset; gap:8px; }
   /* Diag panel: hidden on mobile — replaced by mini-diag in sticky header */
@@ -1328,7 +1321,6 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
   .ib-brand { padding:8px 112px 7px 12px; }
   .h-title { font-size:9px; letter-spacing:.12em; }
   .shell { display:flex; flex-direction:column; padding:6px 8px 8px 8px; gap:8px; }
-  .shell-scan-row { display:block; margin:0 8px; }
   .ib-num { font-size:26px; }
   .splash-title { font-size:32px; }
   .splash-subtitle { padding:0 20px; }
@@ -1963,9 +1955,6 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
     </div>
   </div>
 </div>
-<div class="shell-scan-row">
-  <button class="btn btn-scan" id="s1btnScanMobile" onclick="s1Scan()">◎ &nbsp;Scan Items</button>
-</div>
 </div>
 
 <div class="shell">
@@ -1983,9 +1972,6 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
       <span class="diag-toggle-lbl">▲&nbsp; VULNERABILITY DIAGNOSTICS</span>
     </button>
     <div class="diag-title">// Vulnerability Diagnostics</div>
-    <div style="padding-bottom:10px">
-      <button class="btn btn-scan" id="s1btnScanDesktop" onclick="s1Scan()" style="display:flex;width:100%;align-items:center;justify-content:center;gap:7px">◎ &nbsp;Scan Items</button>
-    </div>
     <div class="diag-cats">
       <div class="diag-cat exposed" id="s1catCred">
         <div class="dc-head"><div class="dc-name" style="color:var(--red)">[CREDENTIALS]</div><div class="dc-pill exposed" id="s1pillCred">EXPOSED</div></div>
@@ -2885,7 +2871,6 @@ function s1Init() {
   // Reset diag panel to initial (pre-play) state
   document.getElementById('s1diagSecured').style.display='none';
   document.getElementById('s1ibSubmitCta').style.display='none';
-  const s1scanDR=document.getElementById('s1btnScanDesktop'); if(s1scanDR) s1scanDR.parentElement.style.display='';
   const s1msR = document.getElementById('s1mobileSubmit'); if(s1msR) s1msR.style.display='none';
   document.getElementById('s1ibSeverity').style.opacity='1';
   document.getElementById('s1iwDrain').textContent='';
@@ -3154,7 +3139,6 @@ function s1Classify(chosen) {
       document.getElementById('s1iwDrain').className='ib-drain-label secured';
       document.getElementById('s1diagSecured').style.display='flex';
       document.getElementById('s1ibSubmitCta').style.display='flex';
-      const s1scanD=document.getElementById('s1btnScanDesktop'); if(s1scanD) s1scanD.parentElement.style.display='none';
       const s1ms=document.getElementById('s1mobileSubmit');
       if(s1ms&&window.innerWidth<=768) s1ms.style.display='block';
       document.getElementById('s1ibSeverity').style.opacity='0';
@@ -3230,14 +3214,6 @@ function s1GetDrain() {
   if(!s1state.tokState.project.redacted) r+=0.064;
   const MAX_DRAIN = 0.72; // cap prevents unrecoverable early mistakes
   return Math.min(MAX_DRAIN, Math.max(0.05, r-s1state.safeBonus));
-}
-function s1Scan() {
-  if(!s1state.gameActive) return;
-  const sl=document.getElementById('s1scanline'); sl.classList.remove('run'); void sl.offsetWidth; sl.classList.add('run');
-  document.querySelectorAll('#s1payload .tok.clickable').forEach(el=>{
-    if(s1state.tokState[el.dataset.id]?.redacted) return;
-    el.classList.add('hint-scan'); setTimeout(()=>el.classList.remove('hint-scan'),2000);
-  });
 }
 function s1Submit() { s1EndGame('submit'); }
 function s1Start() {
