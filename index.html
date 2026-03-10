@@ -519,10 +519,10 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 .v-fail-lbl { position:absolute; bottom:12px; left:0; right:0; text-align:center; font-family:'Orbitron',monospace; font-size:9px; font-weight:700; letter-spacing:.22em; color:rgba(239,68,68,.7); text-transform:uppercase; animation:scanReveal .5s ease .5s both; }
 .v-body { padding:26px 28px 24px; }
 .v-eyebrow { font-family:'Orbitron',monospace; font-size:9px; letter-spacing:.2em; text-transform:uppercase; color:rgba(56,189,248,.55); margin-bottom:4px; }
-.v-step-prog { display:flex; gap:5px; align-items:center; margin-bottom:12px; }
-.vsp-dot { width:20px; height:3px; border-radius:2px; background:rgba(255,255,255,.1); transition:background .3s; }
-.vsp-dot.active { background:rgba(56,189,248,.8); }
-.vsp-dot.done { background:rgba(74,222,128,.5); }
+.v-step-prog { display:flex; gap:6px; align-items:center; margin-bottom:14px; }
+.vsp-dot { width:26px; height:4px; border-radius:4px; background:rgba(255,255,255,.12); transition:background .3s, box-shadow .3s; }
+.vsp-dot.active { background:rgba(255,255,255,.95); box-shadow:0 0 8px rgba(255,255,255,.35); }
+.vsp-dot.done { background:rgba(56,189,248,.65); }
 .v-verdict-msg { font-family:'DM Sans',sans-serif; font-size:13px; font-weight:300; color:rgba(200,220,255,.75); line-height:1.8; margin-bottom:16px; }
 .v-divider { height:1px; background:rgba(56,189,248,.1); margin:16px 0; }
 .v-ml { font-size:9px; letter-spacing:.12em; text-transform:uppercase; color:rgba(200,220,255,.4); margin-bottom:5px; }
@@ -2697,8 +2697,7 @@ function vAdvance(prefix, step) {
     const existing = activeStep.querySelector('.v-step-prog');
     if(!existing) {
       const body = activeStep.querySelector('.v-body');
-      const eyebrow = body ? body.querySelector('.v-eyebrow') : null;
-      if(eyebrow && body) {
+      if(body) {
         const prog = document.createElement('div');
         prog.className = 'v-step-prog';
         for(let d=1;d<=3;d++) {
@@ -2706,7 +2705,12 @@ function vAdvance(prefix, step) {
           dot.className = 'vsp-dot' + (d < step ? ' done' : d === step ? ' active' : '');
           prog.appendChild(dot);
         }
-        eyebrow.insertAdjacentElement('afterend', prog);
+        const eyebrow = body.querySelector('.v-eyebrow');
+        if(eyebrow) {
+          eyebrow.insertAdjacentElement('afterend', prog);
+        } else {
+          body.insertBefore(prog, body.firstChild);
+        }
       }
     }
   }
