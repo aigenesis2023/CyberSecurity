@@ -1302,6 +1302,13 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
       <div class="mp-level-label" id="mpLevelLabel"></div>
     </div>
 
+    <!-- DEV TOOLBAR -->
+    <div id="devToolbar" style="display:flex;align-items:center;gap:8px;justify-content:center;padding:16px 0 2px;opacity:0.45;">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.16em;color:rgba(255,255,255,.35);text-transform:uppercase;">DEV</span>
+      <button onclick="devResetAll();showDevToast('⬡ DEV: Progress reset')" style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:rgba(239,68,68,.65);background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.18);border-radius:4px;padding:4px 10px;cursor:pointer;">LOCK</button>
+      <button onclick="devUnlockAll();showDevToast('⬡ DEV: All missions unlocked')" style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:rgba(56,189,248,.65);background:rgba(56,189,248,.07);border:1px solid rgba(56,189,248,.18);border-radius:4px;padding:4px 10px;cursor:pointer;">UNLOCK ALL</button>
+    </div>
+
   </div>
 </div>
 
@@ -2072,6 +2079,10 @@ function devResetAll() {
   try { localStorage.removeItem('adg_progress'); } catch(e){}
   updateMenuState();
   console.log('[DEV] Progress reset to zero.');
+}
+function showDevToast(msg) {
+  const panel = document.getElementById('devPanel');
+  if(panel) { panel.textContent=msg; panel.style.opacity='1'; clearTimeout(panel._t); panel._t=setTimeout(()=>panel.style.opacity='0',2400); }
 }
 function updateMenuState() {
   loadProgress();
@@ -3850,15 +3861,8 @@ function boot() {
 // ════════════════════════════════════════════
 window.addEventListener('load', ()=>{
   preloadAudio();
-  loadProgress();
-  // Restore SCORM bookmark (merges with localStorage progress)
-  const bm = SCORM.getBookmark();
-  if (bm && bm.progress) {
-    if(bm.progress.s1done) courseProgress.s1done = true;
-    if(bm.progress.s2done) courseProgress.s2done = true;
-    if(bm.progress.s3done) courseProgress.s3done = true;
-  }
-  if (bm && bm.scores) window._scormScores = bm.scores;
+  // Always start fresh — clear saved progress on every page load
+  try { localStorage.removeItem('adg_progress'); localStorage.removeItem('adg_objectives_seen'); } catch(e){}
   loadMuteState();
   updateMenuState();
   runSplashLoader();
@@ -3969,22 +3973,6 @@ window.addEventListener('beforeunload', e => {
   }
 });
 
-// ════════════════════════════════════════════
-//  DEV TOGGLE — Shift+Ctrl+D to unlock / reset
-// ════════════════════════════════════════════
-window.addEventListener('keydown', e => {
-  if(e.shiftKey && e.ctrlKey && e.key==='D') {
-    const allDone = courseProgress.s1done && courseProgress.s2done && courseProgress.s3done;
-    if(allDone) devResetAll(); else devUnlockAll();
-    const panel = document.getElementById('devPanel');
-    if(panel) {
-      panel.textContent = allDone ? '⬡ DEV: Progress reset' : '⬡ DEV: All missions unlocked';
-      panel.style.opacity='1';
-      clearTimeout(panel._t);
-      panel._t = setTimeout(()=>panel.style.opacity='0', 2500);
-    }
-  }
-});
 
 /* ═══════════════════════════════════════════════════════════
    INSIGHT LIGHTBOX ENGINE
