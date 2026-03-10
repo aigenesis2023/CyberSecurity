@@ -3082,7 +3082,7 @@ function s1Classify(chosen) {
         updateIntUI('s1', s1state.integrity, s1GetDrain(), S1_MAX_DRAIN);
       };
       const safeMsg = S1_SAFE_TEACH[id] || 'This token contains no credentials, personal data, or confidential business information — safe to include in external AI prompts.';
-      s1ShowInsight('Safe Item', tokText, safeMsg, safeAfterEffect, null, true, 'safe');
+      s1ShowInsight('Safe', tokText, safeMsg, safeAfterEffect, null, true, 'safe');
     } else {
       // Wrong: sensitive dismissed as safe — consequences fire on dismiss
       pWrong();
@@ -3769,20 +3769,9 @@ function s2UpdateDiag() {
 function s2Start() {
   var b=document.getElementById('s2briefing'); b.classList.add('hidden'); setTimeout(function(){ b.style.display='none'; },600);
   s2state.gameActive=true;
-  // Reset scroll so task instruction is visible below sticky header
+  // Scroll to very top so sticky header is in normal flow, not overlapping content
   window.scrollTo(0,0);
-  setTimeout(function(){
-    var payload=document.getElementById('s2payload');
-    if(payload) {
-      var rect=payload.getBoundingClientRect();
-      var sticky=document.getElementById('s2intBanner');
-      var stickyH=sticky?sticky.offsetHeight:0;
-      var notesBar=document.getElementById('s2notesBar');
-      var notesH=notesBar?notesBar.offsetHeight:0;
-      var offset=rect.top+window.pageYOffset-(stickyH+notesH+8);
-      window.scrollTo({top:Math.max(0,offset),behavior:'smooth'});
-    }
-  },650);
+  setTimeout(function(){ window.scrollTo(0,0); },650);
   updatePauseBtn();
   document.getElementById('s2iwDrain').textContent='under review';
   document.getElementById('s2iwDrain').className='ib-drain-label draining';
@@ -4699,13 +4688,13 @@ const INSIGHT_TONE = {
   'Wrong Category': 'warn', 'False Alarm': 'warn', 'Missed': 'warn', 'Timeout': 'warn',
   'Fake Citation': 'credential', 'Wrong Figure': 'pii', 'Fake Law': 'internal',
   'Invented Detail': 'internal', 'Unsupported Claim': 'credential',
-  'Accurate': 'neutral', 'Safe': 'neutral', 'Accurate Claim': 'ok', 'Safe Item': 'ok', 'Injection Found': 'ok', 'Document Cleared': 'ok',
+  'Accurate': 'neutral', 'Safe': 'neutral', 'Accurate Claim': 'neutral', 'Safe Item': 'neutral', 'Injection Found': 'ok', 'Document Cleared': 'ok',
   'FLAG': 'warn', 'LOOKS ACCURATE': 'neutral',
 };
 
 // Map user-facing choice labels to tones for badge colouring
 const CHOICE_TONE = {
-  'credential': 'credential', 'pii': 'pii', 'internal': 'internal', 'safe': 'ok',
+  'credential': 'credential', 'pii': 'pii', 'internal': 'internal', 'safe': 'neutral',
   'citation': 'credential', 'figure': 'pii', 'law': 'internal', 'accurate': 'neutral',
   'flag': 'warn', 'injection': 'warn', 'not-injection': 'ok',
 };
@@ -4740,9 +4729,8 @@ function showInsight(category, tokenText, message, onDismiss, graphicHtml, isCor
   const verdictIcon = document.getElementById('insightVerdictIcon');
   const verdictText = document.getElementById('insightVerdictText');
   if(isCorrect) {
-    const isSafe = category === 'Safe Item' || category === 'Accurate Claim' || category === 'Document Cleared';
     verdictIcon.textContent = '✓';
-    verdictText.textContent = isSafe ? 'CORRECT' : 'CORRECT';
+    verdictText.textContent = 'CORRECT';
   } else {
     verdictIcon.textContent = '✗';
     verdictText.textContent = 'INCORRECT';
