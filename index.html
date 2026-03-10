@@ -107,26 +107,88 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 ════════════════════════════════════════════ */
 .splash {
   position:fixed; inset:0; z-index:600;
-  background:radial-gradient(ellipse at 50% 40%, #0d1e3c 0%, #020810 70%);
-  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0;
-  transition:opacity .7s ease; overflow:hidden;
+  background:radial-gradient(ellipse 80% 60% at 50% 30%, #071a38 0%, #020810 65%);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  transition:opacity .7s ease; overflow:hidden; padding:20px;
 }
 .splash.hidden { opacity:0; pointer-events:none; }
-.splash::before { content:''; position:absolute; width:600px; height:600px; border-radius:50%; background:radial-gradient(circle, rgba(56,189,248,.06) 0%, transparent 70%); top:50%; left:50%; transform:translate(-50%,-60%); pointer-events:none; }
-.splash-hero { width:76px; height:76px; margin-bottom:22px; opacity:.85; filter:drop-shadow(0 0 20px rgba(56,189,248,.4)); }
-.splash-eyebrow { font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.2em; color:rgba(56,189,248,.35); text-transform:uppercase; margin-bottom:18px; display:flex; align-items:center; gap:12px; width:480px; max-width:90vw; }
-.splash-eyebrow::before, .splash-eyebrow::after { content:''; flex:1; height:1px; background:rgba(56,189,248,.15); }
-.splash-title { font-family:'Orbitron',monospace; font-size:52px; font-weight:900; letter-spacing:.04em; color:#ffffff; text-align:center; line-height:1.1; margin-bottom:12px; text-shadow: 0 0 80px rgba(56,189,248,.2), 0 2px 4px rgba(0,0,0,.9); }
-.splash-subtitle { font-family:'DM Sans',sans-serif; font-size:15px; font-weight:300; color:rgba(200,220,255,.38); letter-spacing:.06em; text-align:center; margin-bottom:24px; padding:0 40px; }
-.splash-load-wrap { display:flex; flex-direction:column; align-items:center; gap:10px; margin-bottom:40px; }
-.splash-load-track { width:280px; height:3px; background:rgba(56,189,248,.08); border-radius:2px; overflow:hidden; }
-.splash-load-fill { height:100%; width:0%; background:linear-gradient(90deg,rgba(56,189,248,.6),var(--blue),var(--blue2)); border-radius:2px; transition:width .05s linear; box-shadow:0 0 10px rgba(56,189,248,.4); }
-.splash-load-msg { font-family:'JetBrains Mono',monospace; font-size:10px; color:rgba(56,189,248,.4); letter-spacing:.12em; }
-.splash-btn { font-family:'Orbitron',monospace; font-size:11px; font-weight:700; letter-spacing:.28em; text-transform:uppercase; padding:18px 60px; border-radius:4px; cursor:pointer; background:transparent; border:1px solid rgba(56,189,248,.45); color:rgba(56,189,248,.85); transition:all .3s; position:relative; overflow:hidden; }
-.splash-btn::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg, rgba(56,189,248,.1) 0%, transparent 60%); opacity:0; transition:opacity .3s; }
-.splash-btn:not(:disabled):hover { border-color:var(--blue); color:#fff; box-shadow:0 0 30px rgba(56,189,248,.2); }
+/* ambient glow orbs */
+.splash::before {
+  content:''; position:absolute;
+  width:700px; height:700px; border-radius:50%;
+  background:radial-gradient(circle, rgba(56,189,248,.055) 0%, transparent 68%);
+  top:50%; left:50%; transform:translate(-50%,-58%); pointer-events:none;
+}
+/* second accent orb */
+.splash-hero {
+  width:64px; height:64px; margin-bottom:16px; opacity:.9;
+  filter:drop-shadow(0 0 28px rgba(56,189,248,.55)) drop-shadow(0 0 8px rgba(56,189,248,.3));
+  animation:hexGlow 3s ease-in-out infinite;
+}
+.splash-eyebrow {
+  font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.22em;
+  color:rgba(56,189,248,.4); text-transform:uppercase; margin-bottom:14px;
+  display:flex; align-items:center; gap:14px; width:520px; max-width:92vw;
+}
+.splash-eyebrow::before, .splash-eyebrow::after { content:''; flex:1; height:1px; background:rgba(56,189,248,.14); }
+.splash-title {
+  font-family:'Orbitron',monospace; font-size:clamp(36px,7vw,58px); font-weight:900;
+  letter-spacing:.04em; color:#ffffff; text-align:center; line-height:1.05;
+  margin-bottom:8px;
+  text-shadow: 0 0 100px rgba(56,189,248,.25), 0 0 40px rgba(56,189,248,.12), 0 2px 6px rgba(0,0,0,.95);
+}
+.splash-subtitle {
+  font-family:'DM Sans',sans-serif; font-size:14px; font-weight:300;
+  color:rgba(200,220,255,.35); letter-spacing:.05em; text-align:center;
+  margin-bottom:32px;
+}
+/* ── Mission preview rows ── */
+.splash-missions {
+  display:flex; flex-direction:column; gap:0;
+  width:500px; max-width:92vw; margin-bottom:32px;
+  border:1px solid rgba(56,189,248,.1); border-radius:10px; overflow:hidden;
+  background:rgba(6,14,32,0.55); backdrop-filter:blur(12px);
+}
+.splash-mission {
+  display:flex; align-items:center; gap:14px; padding:13px 18px;
+  border-bottom:1px solid rgba(56,189,248,.07);
+  animation:fadeUp .5s ease both;
+}
+.splash-mission:last-child { border-bottom:none; }
+.splash-mission:nth-child(2) { animation-delay:.08s; }
+.splash-mission:nth-child(3) { animation-delay:.16s; }
+.splash-mission-num {
+  font-family:'Orbitron',monospace; font-size:10px; font-weight:900;
+  letter-spacing:.1em; color:rgba(56,189,248,.4);
+  flex-shrink:0; width:22px;
+}
+.splash-mission-icon {
+  flex-shrink:0; width:28px; height:28px; border-radius:6px;
+  display:flex; align-items:center; justify-content:center;
+  background:rgba(56,189,248,.07); border:1px solid rgba(56,189,248,.14);
+  font-size:13px; line-height:1;
+}
+.splash-mission-text {
+  font-family:'DM Sans',sans-serif; font-size:12.5px; font-weight:400;
+  color:rgba(200,225,255,.7); line-height:1.4; letter-spacing:.01em;
+}
+/* ── Loading ── */
+.splash-load-wrap { display:flex; flex-direction:column; align-items:center; gap:8px; margin-bottom:20px; width:300px; max-width:88vw; }
+.splash-load-track { width:100%; height:2px; background:rgba(56,189,248,.07); border-radius:2px; overflow:hidden; }
+.splash-load-fill { height:100%; width:0%; background:linear-gradient(90deg,rgba(56,189,248,.5),var(--blue2)); border-radius:2px; transition:width .05s linear; box-shadow:0 0 10px rgba(56,189,248,.5); }
+.splash-load-msg { font-family:'JetBrains Mono',monospace; font-size:9px; color:rgba(56,189,248,.35); letter-spacing:.14em; }
+/* ── CTA ── */
+.splash-btn {
+  font-family:'Orbitron',monospace; font-size:10px; font-weight:700;
+  letter-spacing:.3em; text-transform:uppercase;
+  padding:16px 56px; border-radius:6px; cursor:pointer;
+  background:rgba(56,189,248,.07); border:1px solid rgba(56,189,248,.4);
+  color:rgba(56,189,248,.85); transition:all .3s; position:relative; overflow:hidden;
+}
+.splash-btn::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg, rgba(56,189,248,.12) 0%, transparent 60%); opacity:0; transition:opacity .3s; }
+.splash-btn:not(:disabled):hover { border-color:var(--blue); color:#fff; background:rgba(56,189,248,.12); box-shadow:0 0 36px rgba(56,189,248,.22), 0 0 12px rgba(56,189,248,.1); }
 .splash-btn:not(:disabled):hover::before { opacity:1; }
-.splash-btn:disabled { opacity:.25; cursor:not-allowed; }
+.splash-btn:disabled { opacity:.2; cursor:not-allowed; }
 
 /* ════════════════════════════════════════════
    BOOT
@@ -1050,42 +1112,51 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 .briefing-back-btn:hover { color:rgba(200,220,255,.7); }
 
 /* ════════════════════════════════════════════
-   GAME CONTROLS (pause + mute — standalone HUD, top-right)
+   GAME CONTROLS (pause + mute — single pill, top-right)
 ════════════════════════════════════════════ */
 #gameCtrlBar {
-  position:fixed; top:0; right:18px; z-index:9000;
-  display:flex; align-items:center; gap:6px;
-  height:70px; /* visually aligns with int-banner min-height */
+  position:fixed; top:0; right:16px; z-index:9000;
+  display:flex; align-items:center;
+  height:70px; /* aligns with int-banner min-height */
   pointer-events:none;
+}
+/* Single unified pill container */
+#ctrlPill {
+  pointer-events:all;
+  display:flex; align-items:stretch;
+  height:44px;
+  background:rgba(4,10,26,0.92);
+  border:1px solid rgba(255,255,255,.11);
+  border-radius:10px;
+  box-shadow:0 2px 16px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.04);
+  overflow:hidden;
 }
 #pauseBtn, #muteBtn {
   pointer-events:all;
-  display:none; flex-direction:column; align-items:center; justify-content:center; gap:3px;
-  width:42px; height:42px; border-radius:8px;
-  background:rgba(4,10,26,0.96);
-  border:1px solid rgba(56,189,248,.22);
-  color:rgba(56,189,248,.65);
-  cursor:pointer; transition:all .2s;
-  box-shadow:0 2px 12px rgba(0,0,0,.45), inset 0 1px 0 rgba(56,189,248,.07);
-  padding:0;
+  display:none; align-items:center; justify-content:center;
+  width:44px;
+  background:transparent; border:none;
+  color:rgba(255,255,255,.5);
+  cursor:pointer; transition:color .18s, background .18s;
+  padding:0; flex-shrink:0;
 }
 #pauseBtn { display:none; }
 #pauseBtn.visible { display:flex; }
 #muteBtn { display:flex; }
+/* Thin divider between the two — only visible when both are shown */
+#pauseBtn.visible + #muteBtn {
+  border-left:1px solid rgba(255,255,255,.08);
+}
 #pauseBtn:hover, #muteBtn:hover {
-  background:rgba(56,189,248,.1); border-color:rgba(56,189,248,.5);
-  color:rgba(200,235,255,.9); box-shadow:0 2px 12px rgba(0,0,0,.45), 0 0 14px rgba(56,189,248,.15), inset 0 1px 0 rgba(56,189,248,.12);
+  background:rgba(255,255,255,.06);
+  color:rgba(255,255,255,.9);
 }
-#pauseBtn:active, #muteBtn:active { transform:scale(.94); }
-.ctrl-icon { width:14px; height:14px; flex-shrink:0; }
-.ctrl-lbl {
-  font-family:'JetBrains Mono',monospace; font-size:6px; font-weight:700;
-  letter-spacing:.15em; text-transform:uppercase; color:rgba(56,189,248,.3);
-  line-height:1;
-}
-#pauseBtn:hover .ctrl-lbl, #muteBtn:hover .ctrl-lbl { color:rgba(56,189,248,.55); }
-#muteBtn.muted { color:rgba(200,220,255,.25); border-color:rgba(200,220,255,.12); background:rgba(4,10,26,0.96); }
-#muteBtn.muted .ctrl-lbl { color:rgba(200,220,255,.18); }
+#pauseBtn:active, #muteBtn:active { color:rgba(255,255,255,1); }
+.ctrl-icon { width:16px; height:16px; flex-shrink:0; }
+/* Hide labels — icon-only */
+.ctrl-lbl { display:none; }
+#muteBtn.muted { color:rgba(255,255,255,.22); }
+#muteBtn.muted:hover { color:rgba(255,255,255,.7); background:rgba(255,255,255,.06); }
 
 /* ════════════════════════════════════════════
    RESPONSIVE  (inline overrides — see also css/responsive.css)
@@ -1108,7 +1179,9 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
   .sticky-header { background:#020610; }
   /* Banner: stack, clear ctrl buttons on the right */
   .int-banner { grid-template-columns:1fr; margin:0 12px; overflow:visible; }
-  #gameCtrlBar { height:auto; top:14px; gap:5px; }
+  #gameCtrlBar { height:auto; top:13px; }
+  #ctrlPill { height:38px; }
+  #pauseBtn, #muteBtn { width:38px; }
   .ib-brand { padding:10px 112px 8px 16px; border-right:none; border-bottom:1px solid rgba(56,189,248,.1); overflow:visible; }
   .h-title { white-space:normal; line-height:1.3; }
   .ib-center { padding:10px 16px; gap:14px; }
@@ -1342,19 +1415,45 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
      SPLASH SCREEN
 ══════════════════════════════════════════════ -->
 <div class="splash" id="splashScreen">
+  <!-- Shield icon -->
   <svg class="splash-hero" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <path d="M36 6 L60 17 L60 37 C60 51 49.5 61.5 36 66 C22.5 61.5 12 51 12 37 L12 17 Z" stroke="rgba(56,189,248,.55)" stroke-width="1.5" fill="rgba(56,189,248,.04)"/>
-    <path d="M36 6 L60 17 L60 37 C60 51 49.5 61.5 36 66 C22.5 61.5 12 51 12 37 L12 17 Z" stroke="rgba(56,189,248,.12)" stroke-width="6" fill="none"/>
-    <circle cx="36" cy="38" r="12" stroke="rgba(56,189,248,.55)" stroke-width="1.5" fill="rgba(56,189,248,.06)"/>
-    <circle cx="36" cy="38" r="5" fill="rgba(56,189,248,.55)"/>
-    <line x1="36" y1="26" x2="36" y2="32" stroke="rgba(56,189,248,.35)" stroke-width="1.5" stroke-linecap="round"/>
-    <line x1="36" y1="44" x2="36" y2="50" stroke="rgba(56,189,248,.35)" stroke-width="1.5" stroke-linecap="round"/>
-    <line x1="24" y1="38" x2="30" y2="38" stroke="rgba(56,189,248,.35)" stroke-width="1.5" stroke-linecap="round"/>
-    <line x1="42" y1="38" x2="48" y2="38" stroke="rgba(56,189,248,.35)" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M36 6 L60 17 L60 37 C60 51 49.5 61.5 36 66 C22.5 61.5 12 51 12 37 L12 17 Z" stroke="rgba(56,189,248,.6)" stroke-width="1.5" fill="rgba(56,189,248,.05)"/>
+    <path d="M36 6 L60 17 L60 37 C60 51 49.5 61.5 36 66 C22.5 61.5 12 51 12 37 L12 17 Z" stroke="rgba(56,189,248,.08)" stroke-width="7" fill="none"/>
+    <circle cx="36" cy="38" r="12" stroke="rgba(56,189,248,.5)" stroke-width="1.5" fill="rgba(56,189,248,.06)"/>
+    <circle cx="36" cy="38" r="5" fill="rgba(56,189,248,.6)"/>
+    <line x1="36" y1="26" x2="36" y2="32" stroke="rgba(56,189,248,.4)" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="36" y1="44" x2="36" y2="50" stroke="rgba(56,189,248,.4)" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="24" y1="38" x2="30" y2="38" stroke="rgba(56,189,248,.4)" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="42" y1="38" x2="48" y2="38" stroke="rgba(56,189,248,.4)" stroke-width="1.5" stroke-linecap="round"/>
   </svg>
-  <div class="splash-eyebrow">Cybersecurity Awareness Training</div>
+  <div class="splash-eyebrow">AI Safety Awareness Training</div>
   <div class="splash-title">AI Data<br>Guardian</div>
-  <div class="splash-subtitle">Three missions. Real threats. Learn to protect your AI interactions.</div>
+  <div class="splash-subtitle">Three missions. Learn to keep AI working safely for you.</div>
+  <!-- 3 mission objectives -->
+  <div class="splash-missions">
+    <div class="splash-mission">
+      <span class="splash-mission-num">01</span>
+      <div class="splash-mission-icon">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 1L14 4v5c0 3.5-2.8 6-6 7C2.8 15 0 12.5 0 9V4L8 1z" fill="none" stroke="rgba(56,189,248,.7)" stroke-width="1.5"/><path d="M5 8h6M8 5v6" stroke="rgba(56,189,248,.7)" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </div>
+      <div class="splash-mission-text">Spot sensitive data before it leaks through an AI prompt</div>
+    </div>
+    <div class="splash-mission">
+      <span class="splash-mission-num">02</span>
+      <div class="splash-mission-icon">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="rgba(56,189,248,.7)" stroke-width="1.5"/><path d="M8 5v4" stroke="rgba(56,189,248,.7)" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="12" r="1" fill="rgba(56,189,248,.7)"/></svg>
+      </div>
+      <div class="splash-mission-text">Catch AI hallucinations hiding in professional reports</div>
+    </div>
+    <div class="splash-mission">
+      <span class="splash-mission-num">03</span>
+      <div class="splash-mission-icon">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="10" rx="1.5" stroke="rgba(56,189,248,.7)" stroke-width="1.5"/><path d="M5 7h6M5 10h4" stroke="rgba(56,189,248,.45)" stroke-width="1.2" stroke-linecap="round"/><path d="M10 9l3 3" stroke="rgba(56,189,248,.7)" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </div>
+      <div class="splash-mission-text">Find prompt injections buried inside documents</div>
+    </div>
+  </div>
+  <!-- Loading -->
   <div class="splash-load-wrap">
     <div class="splash-load-track"><div class="splash-load-fill" id="splashFill"></div></div>
     <div class="splash-load-msg" id="splashMsg">LOADING ASSETS...</div>
@@ -1562,16 +1661,22 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
   </div>
 </div>
 
-<!-- GLOBAL GAME CONTROLS (pause + mute, shown top-right during gameplay) -->
+<!-- GLOBAL GAME CONTROLS (pause + mute, top-right pill) -->
 <div id="gameCtrlBar">
-  <button id="pauseBtn" onclick="togglePause()" title="Pause / Resume (P)" aria-label="Pause game">
-    <svg id="pauseIcon" class="ctrl-icon" viewBox="0 0 16 16" fill="currentColor"><rect x="2" y="2" width="4" height="12" rx="1"/><rect x="10" y="2" width="4" height="12" rx="1"/></svg>
-    <span class="ctrl-lbl">PAUSE</span>
-  </button>
-  <button id="muteBtn" onclick="toggleMute()" title="Toggle audio (M)" aria-label="Toggle audio">
-    <svg id="muteIcon" class="ctrl-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M3 5.5v5h3l4 3V2.5l-4 3H3z"/><path id="muteX" d="M11.5 6.5 14 9m0-2.5-2.5 2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0"/></svg>
-    <span class="ctrl-lbl">SOUND</span>
-  </button>
+  <div id="ctrlPill">
+    <button id="pauseBtn" onclick="togglePause()" title="Pause / Resume (P)" aria-label="Pause game">
+      <svg id="pauseIcon" class="ctrl-icon" viewBox="0 0 16 16" fill="currentColor">
+        <rect x="3" y="2" width="3.5" height="12" rx="1"/>
+        <rect x="9.5" y="2" width="3.5" height="12" rx="1"/>
+      </svg>
+    </button>
+    <button id="muteBtn" onclick="toggleMute()" title="Toggle audio (M)" aria-label="Toggle audio">
+      <svg id="muteIcon" class="ctrl-icon" viewBox="0 0 16 16" fill="currentColor">
+        <path d="M3 5.5v5h2.5l4 3V2.5l-4 3H3z"/>
+        <path id="muteX" d="M11.5 6.5 14 9m0-2.5-2.5 2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0"/>
+      </svg>
+    </button>
+  </div>
 </div>
 
 <!-- PAUSE OVERLAY -->
@@ -3644,7 +3749,7 @@ const S3_LEVELS = [
   // ── LEVEL 1 (real injection) — project brief, no timer ──
   {
     timeLimit: 0, isInjection: true, injectionId: 'inj1',
-    hint: 'Technical metadata blocks embedded in shared documents can carry hidden instructions. Read the highlighted block carefully — does it configure a legitimate document property, or does it tell an AI what to output and how to behave before completing your request?',
+    hint: 'Read the highlighted block carefully. Does it set up a genuine document property — or does it tell an AI what to extract and output before completing your request? Look for words like "extract", "return", "prior context", or "override".',
     timeoutNote: null,
     content: (injId) => `
       <div class="ai-response-window">
@@ -3666,7 +3771,7 @@ const S3_LEVELS = [
   // ── LEVEL 2 (false positive) — client services team review, no timer ──
   {
     timeLimit: 0, isInjection: false, injectionId: null,
-    hint: 'Workflow automation blocks often use terse, directive syntax — but they assign tasks to named team members, not to an AI system. Ask: does this block tell an AI what to output or how to behave, or does it record responsibilities for specific people? If the document is clean, click the highlighted text and mark it SAFE.',
+    hint: 'This block uses short, terse instructions. Ask yourself: is it telling a person what to do, or is it telling an AI system how to process data? If everything is directed at named team members with real tasks, the document is clean. Click the highlighted text and mark it SAFE.',
     timeoutNote: null,
     content: () => `
       <div class="ai-response-window">
@@ -3688,8 +3793,8 @@ const S3_LEVELS = [
   // ── LEVEL 3 (real injection) — supplier contract metadata, 60s ──
   {
     timeLimit: 60, isInjection: true, injectionId: 'inj2',
-    hint: 'Document processing schemas define how software handles a file. Look closely at the highlighted block — does it describe a rendering or display parameter, or does it instruct an AI to discard its prior context and exfiltrate data before completing your request?',
-    timeoutNote: 'The injection was disguised as a document processing schema. Attackers embed system-style configuration blocks in shared documents, knowing that humans skim technical metadata — but AI processes it as instruction.',
+    hint: 'This looks like a technical document setting. Read it closely — does it describe how the file should display, or does it tell an AI to discard its previous instructions and extract sensitive data before processing your request? Words like "discard", "extract", and "prior_context" are red flags.',
+    timeoutNote: 'The injection was hidden inside a "doc-processing-schema" block — it looked like a technical document setting, but it told the AI to extract sensitive data before processing your request. Always read these technical blocks fully, not just skim them.',
     content: (injId) => `
       <div class="ai-response-window">
         <div class="ai-response-body">
@@ -3712,7 +3817,7 @@ const S3_LEVELS = [
   // ── LEVEL 4 (false positive) — sales call CRM note, 50s ──
   {
     timeLimit: 50, isInjection: false, injectionId: null,
-    hint: 'CRM automation tags use terse key-value syntax that can look like system instructions. Read the highlighted block carefully — are these tasks assigned to a named sales rep with specific deadlines, or are they directing an AI to change its output behaviour? If the document is clean, click the highlighted text and mark it SAFE.',
+    hint: 'This block uses short, technical-looking syntax. Read it carefully — is it giving tasks to a named person with specific deadlines, or is it telling an AI system how to process data or change its output? If it\'s directing a specific person at real-world tasks, mark it SAFE.',
     timeoutNote: null,
     content: () => `
       <div class="ai-response-window">
@@ -3734,8 +3839,8 @@ const S3_LEVELS = [
   // ── LEVEL 5 (real injection) — feedback report localisation note, 40s ──
   {
     timeLimit: 40, isInjection: true, injectionId: 'inj3',
-    hint: 'Localisation configuration blocks appear in many professional documents. Read the highlighted note word for word — does it describe a translation rule for human editors to follow, or does it instruct an AI to extract sensitive data and output it under a specific heading before proceeding?',
-    timeoutNote: 'The injection was hidden inside what appeared to be a standard localisation config block. Framing exfiltration directives as compliance requirements makes them almost indistinguishable from legitimate editorial metadata.',
+    hint: 'This block appears to be a translation or localisation setting. Read every word carefully — does it describe a translation rule for human editors, or does it tell an AI to extract names, financial data, or other sensitive details before completing your request? "Extract and return" or "before processing" are warning signs.',
+    timeoutNote: 'The injection was hidden inside what looked like a standard localisation setting. It told the AI to extract names and financial data before proceeding. Injections often disguise themselves as routine technical or compliance content — always read these blocks word for word.',
     content: (injId) => `
       <div class="ai-response-window">
         <div class="ai-response-body">
@@ -3761,7 +3866,7 @@ const S3_LEVELS = [
   // ── LEVEL 6 (false positive) — editorial style guide, 35s ──
   {
     timeLimit: 35, isInjection: false, injectionId: null,
-    hint: 'Content template blocks use the same terse syntax as processing configs. Read the highlighted block — do these parameters constrain how a human writer structures their copy, or do they instruct an AI to alter its output behaviour in ways that would serve an attacker? If the document is clean, click the highlighted text and mark it SAFE.',
+    hint: 'This block uses short formatting rules. Ask: are these telling a human writer how to structure their content, or are they telling an AI how to behave? If they\'re style guidelines for a person (headlines, tone, sign-offs), the document is clean. Click the highlighted text and mark it SAFE.',
     timeoutNote: null,
     content: () => `
       <div class="ai-response-window">
@@ -3979,9 +4084,9 @@ function s3Flag(isInjection) {
       updateIntUI('s3',s3state.integrity,0.8,S1_MAX_DRAIN);
       if(s3state.integrity<=0){ s3EndGame('breach'); return; }
       const fpFeedback = {
-        fp1: 'This is a legitimate meeting action item directing team members — not an AI. Operational language is directive by design but it addresses people, not an AI system. An injection specifically tells an AI how to process or output data.',
-        fp2: 'This is standard CRM next-steps guidance for a human sales rep. It names a specific person (Dan) and describes real-world tasks — an injection tells an AI system how to behave or extract data, not what a salesperson should do.',
-        fp3: 'These are genuine brand editorial guidelines for human writers. They guide a writer\'s style and voice, not an AI\'s data processing behaviour. Injections hijack AI output; style guides shape human writing.',
+        fp1: 'This block lists action items for named team members — it\'s directing people, not an AI. The key difference: injections tell an AI system how to behave or what data to extract. This tells humans what to do before Friday.',
+        fp2: 'This is a standard list of follow-up tasks for a sales rep. It names a specific person and describes real-world actions. An injection gives instructions to an AI system — this gives instructions to Dan.',
+        fp3: 'These are writing guidelines for human editors — they cover tone, sentence structure, and sign-offs. An injection tells an AI how to process data or override its instructions. This tells writers how to format copy.',
       };
       const msg = fpFeedback[id] || 'This is legitimate document content, not an injection. Injections specifically instruct an AI system to change its behaviour, extract data, or override prior instructions.';
       const el=document.querySelector(`#s3payload .tok[data-id="${id}"]`);
@@ -4002,9 +4107,9 @@ function s3Flag(isInjection) {
       document.getElementById('s3iwDrain').textContent='✓ document cleared';
       document.getElementById('s3iwDrain').className='ib-drain-label secured';
       const fpCorrectMsg = {
-        fp1: 'Good judgement. These are standard meeting action items directed at named team members. The language is imperative by design — managers write to staff this way. An injection tells an AI how to process data or override prior context, not what a person should do before Friday.',
-        fp2: 'Well read. These are standard CRM next-steps for a human sales rep. The instructions name a specific person (Dan) and describe real-world tasks. An injection tells an AI system how to process data or override prior context — not what a salesperson should do before a demo.',
-        fp3: 'Correct. These are editorial formatting rules for human writers — they guide tone, sentence structure, and style. They say nothing about discarding prior context, extracting sensitive data, or altering AI output behaviour. Injections hijack AI systems; style guides shape human writing.',
+        fp1: 'Correct — this document is clean. The highlighted block contains meeting action items for named team members, not instructions for an AI. The language is directive because managers write that way to staff. An injection tells an AI how to behave; this tells people what to do before Friday.',
+        fp2: 'Correct — no injection here. The highlighted block lists follow-up tasks for a specific sales rep. An injection tells an AI system how to process data or change its output. These tasks are for a person, not a system.',
+        fp3: 'Correct. These are formatting and style rules for human writers — tone, sentence structure, sign-off format. None of these tell an AI to extract data or override its instructions. If it tells a person how to write, it\'s a style guide. If it tells an AI what to output, it\'s an injection.',
       };
       const msg = fpCorrectMsg[id] || 'Correct — this is legitimate content. No injection present.';
       s3ShowInsight('Document Cleared', '', msg, ()=>s3NextLevel(), null, true);
@@ -4029,9 +4134,9 @@ function s3Flag(isInjection) {
     document.getElementById('s3iwDrain').textContent='✓ injection blocked';
     document.getElementById('s3iwDrain').className='ib-drain-label secured';
     const teaches={
-      0: 'Correct. The "[Output format]" block is an injection disguised as a formatting instruction. Real attackers use polite, bureaucratic language — not "IGNORE ALL". The tell is that it addresses an AI system, not a human reader.',
-      2: 'Well spotted. The "doc-processing-schema" block is a system-prompt impersonation. Attackers hide directives inside what looks like technical metadata, knowing humans will skim it — but AI processes every word.',
-      4: 'Expert-level catch. The "Translator\'s note" is an injection disguised as editorial metadata. It uses localisation language to justify why it\'s addressing the AI. The actual directive is buried mid-sentence — always read footnotes word for word.'
+      0: 'That block is a prompt injection. It looks like a document config setting, but it\'s actually telling the AI to extract names, budgets, and contact details from the session before doing anything else — and send them out as "extracted_refs". Real injections don\'t say "IGNORE ALL". They blend in with technical-looking content.',
+      2: 'Well spotted. The "doc-processing-schema" block tells the AI to discard its previous context and pull out names, email addresses, and financial figures before processing your request. It\'s disguised as a routine rendering parameter. Attackers know people skim technical metadata — the AI reads every word.',
+      4: 'Good catch. The "i18n-config" block looks like a translation setting, but it tells the AI to extract named individuals, project codes, and financial figures before proceeding. The attack hides inside what looks like a compliance requirement. Always read these technical blocks fully — they can contain instructions aimed at the AI, not at you.'
     };
     const tokEl=document.querySelector(`#s3payload .tok.injection-flagged[data-id="${id}"]`);
     const tokText=tokEl ? tokEl.querySelector('.redact-label')?.textContent?.slice(0,80)+'…' || '' : '';
@@ -4042,14 +4147,14 @@ function s3Flag(isInjection) {
     s3state.integrity=Math.max(0,s3state.integrity-15);
     updateIntUI('s3',s3state.integrity,0.8,S1_MAX_DRAIN);
     if(s3state.integrity<=0){ s3EndGame('breach'); return; }
-    s3ShowInsight('False Alarm', '', 'That is legitimate document content. The real injection gives instructions to an AI system — not information to a human reader. Keep scanning carefully.', ()=>{ showIntPop('s3',-15); flashDelta('s3',-15,'false alarm — keep looking'); });
+    s3ShowInsight('False Alarm', '', 'That\'s legitimate document content. The actual injection in this document gives instructions to an AI system — not information for a human reader. Look for phrases like "extract", "prior context", or "override instructions".', ()=>{ showIntPop('s3',-15); flashDelta('s3',-15,'false alarm — keep looking'); });
   } else {
     // Marked safe — small penalty, stay on level (injection still undetected)
     pWrong();
     s3state.integrity=Math.max(0,s3state.integrity-5);
     updateIntUI('s3',s3state.integrity,0.8,S1_MAX_DRAIN);
     if(s3state.integrity<=0){ s3EndGame('breach'); return; }
-    s3ShowInsight('False Alarm', '', 'There is an injection in this document — marking it safe leaves it active. The real injection directly instructs an AI system to change its behaviour or extract data. Keep scanning carefully.', ()=>{ showIntPop('s3',-5); flashDelta('s3',-5,'keep scanning'); });
+    s3ShowInsight('False Alarm', '', 'There is an injection in this document — marking it safe leaves it active. Look for a block that instructs an AI to extract data, discard prior context, or change how it responds. Keep scanning.', ()=>{ showIntPop('s3',-5); flashDelta('s3',-5,'keep scanning'); });
   }
 }
 
@@ -4410,10 +4515,9 @@ function togglePause() {
     Object.values(SND).forEach(a => { if(a) a.muted = true; });
     // Switch to play icon
     const pi=document.getElementById('pauseIcon'); if(pi) pi.innerHTML='<polygon points="4,2 14,8 4,14"/>';
-    const pl=document.querySelector('#pauseBtn .ctrl-lbl'); if(pl) pl.textContent='RESUME';
   } else {
     // Resume — switch back to pause icon
-    const pi=document.getElementById('pauseIcon'); if(pi) pi.innerHTML='<rect x="2" y="2" width="4" height="12" rx="1"/><rect x="10" y="2" width="4" height="12" rx="1"/>';
+    const pi=document.getElementById('pauseIcon'); if(pi) pi.innerHTML='<rect x="3" y="2" width="3.5" height="12" rx="1"/><rect x="9.5" y="2" width="3.5" height="12" rx="1"/>';
     const pl=document.querySelector('#pauseBtn .ctrl-lbl'); if(pl) pl.textContent='PAUSE';
     // Restore mute state
     Object.values(SND).forEach(a => { if(a) a.muted = _muted; });
@@ -4518,20 +4622,20 @@ function showInsight(category, tokenText, message, onDismiss, graphicHtml, isCor
   const icon = INSIGHT_ICONS[category] || 'ℹ';
   const isError = !isCorrect && (tone === 'warn' || tone === 'credential' || tone === 'pii' || tone === 'internal');
 
+  // Legacy elements (hidden but kept for compatibility)
   catEl.textContent  = category;
   catEl.className    = 'insight-cat insight-cat-' + (isCorrect ? 'ok' : tone);
   iconEl.textContent = icon;
   iconEl.className   = 'insight-icon insight-icon-' + tone;
-  msgEl.textContent  = message;
   if(errCatEl) errCatEl.textContent = category;
 
-  // Set correct/incorrect tag text clearly
+  // Status headings — big INCORRECT / CORRECT
   const errTag = document.getElementById('insightErrTag');
   const okTag  = document.getElementById('insightOkTag');
-  if(errTag) errTag.textContent = '✕ \u00A0INCORRECT';
+  if(errTag) errTag.textContent = 'INCORRECT';
   if(okTag) {
     const isSafeItem = category === 'Safe Item' || category === 'Accurate Claim' || category === 'Document Cleared';
-    okTag.textContent = isSafeItem ? '✓ \u00A0CORRECT — Not Sensitive' : '✓ \u00A0CORRECT — Item Secured';
+    okTag.textContent = isSafeItem ? 'CORRECT — WELL SPOTTED' : 'CORRECT — ITEM SECURED';
   }
 
   // Apply error/correct mode and restart animation
@@ -4541,6 +4645,7 @@ function showInsight(category, tokenText, message, onDismiss, graphicHtml, isCor
   if(isError) card.classList.add('error-mode');
   else if(isCorrect) card.classList.add('correct-mode');
 
+  // Token text (legacy box — hidden when graphic present)
   if(tokenText && !graphicHtml) {
     tokenEl.textContent = '"' + tokenText + '"';
     tokenEl.style.display = 'block';
@@ -4548,19 +4653,35 @@ function showInsight(category, tokenText, message, onDismiss, graphicHtml, isCor
     tokenEl.style.display = 'none';
   }
 
-  // Graphic preview
+  // Graphic preview (FLAGGED ELEMENT box)
   const gEl = document.getElementById('insightGraphic');
   const gContent = document.getElementById('insightGraphicContent');
   const gLabel = document.getElementById('insightGraphicLabel');
   if(gEl && gContent) {
     if(graphicHtml) {
       gContent.innerHTML = graphicHtml;
-      if(gLabel) gLabel.textContent = 'Flagged element:';
+      if(gLabel) gLabel.textContent = 'FLAGGED ELEMENT:';
+      gEl.classList.add('show');
+    } else if(tokenText) {
+      // Show token text inside the flagged element box
+      gContent.innerHTML = '<span style="font-family:\'JetBrains Mono\',monospace;font-size:11px;color:rgba(200,220,255,.75);line-height:1.5">"' + tokenText.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '"</span>';
+      if(gLabel) gLabel.textContent = 'FLAGGED ELEMENT:';
       gEl.classList.add('show');
     } else {
       gEl.classList.remove('show');
       gContent.innerHTML = '';
     }
+  }
+
+  // Build message HTML — inline token badge at start of text
+  // Badge only shown when category is meaningful (not generic 'Timeout' etc.)
+  const badgeCategories = ['[CREDENTIALS]','[PERSONAL DATA]','[INTERNAL INFO]','Fake Citation','Wrong Figure','Fake Law','Accurate Claim','Safe Item','Injection Found','Document Cleared','False Alarm','Wrong Category'];
+  const badgeTone = isCorrect ? 'ok' : tone;
+  if(message && badgeCategories.includes(category)) {
+    const safeMsg = message.replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    msgEl.innerHTML = '<span class="insight-token-badge insight-token-badge-' + badgeTone + '">' + category + '</span>' + safeMsg;
+  } else {
+    msgEl.textContent = message;
   }
 
   _insightCallback = onDismiss || null;
@@ -4747,45 +4868,34 @@ function s3ShowInsight(category, tokenText, message, afterFn, graphicHtml, isCor
   background:linear-gradient(90deg,transparent,rgba(74,222,128,.65),transparent);
 }
 
-/* ── "// INCORRECT" micro-label — only in error mode ── */
+/* ── STATUS HEADING — INCORRECT (error mode) ── */
 .insight-error-tag {
   display:none;
-  font-family:'JetBrains Mono',monospace; font-size:8px; font-weight:700;
-  letter-spacing:.22em; text-transform:uppercase; color:rgba(239,68,68,.4);
-  margin-bottom:12px;
+  font-family:'Orbitron',monospace; font-size:18px; font-weight:900;
+  letter-spacing:.06em; text-transform:uppercase;
+  color:rgba(239,68,68,.9);
+  margin-bottom:14px; line-height:1.1;
 }
 .insight-card.error-mode .insight-error-tag { display:block; }
 
-/* ── "// SECURED" micro-label — only in correct mode ── */
+/* ── STATUS HEADING — CORRECT ── */
 .insight-correct-tag {
   display:none;
-  font-family:'JetBrains Mono',monospace; font-size:8px; font-weight:700;
-  letter-spacing:.22em; text-transform:uppercase; color:rgba(74,222,128,.5);
-  margin-bottom:12px;
+  font-family:'Orbitron',monospace; font-size:15px; font-weight:900;
+  letter-spacing:.06em; text-transform:uppercase;
+  color:rgba(74,222,128,.9);
+  margin-bottom:14px; line-height:1.1;
 }
 .insight-card.correct-mode .insight-correct-tag { display:block; }
 .insight-card.correct-mode .insight-error-tag   { display:none !important; }
 
 /* ── BODY ── */
 .insight-body { padding:20px 24px 18px; }
-.insight-card.error-mode .insight-body { padding:18px 24px 16px; }
 
-.insight-header { display:flex; align-items:center; gap:12px; margin-bottom:14px; }
-
+/* Hide the old icon+pill header row — pill moves into message text */
+.insight-header { display:none !important; }
 .insight-icon { display:none !important; }
-
-.insight-cat {
-  font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:700;
-  letter-spacing:.16em; text-transform:uppercase; padding:3px 10px; border-radius:20px;
-}
-.insight-cat-warn       { background:rgba(239,68,68,.1);    color:#fca5a5; border:1px solid rgba(239,68,68,.3); }
-.insight-cat-flag       { background:rgba(251,146,60,.1);   color:var(--orange); border:1px solid rgba(251,146,60,.3); }
-.insight-cat-ok         { background:rgba(74,222,128,.1);   color:#86efac; border:1px solid rgba(74,222,128,.3); }
-.insight-cat-credential { background:rgba(239,68,68,.1);    color:var(--red);    border:1px solid rgba(239,68,68,.45); }
-.insight-cat-pii        { background:rgba(251,146,60,.1);   color:var(--orange); border:1px solid rgba(251,146,60,.45); }
-.insight-cat-internal   { background:rgba(250,204,21,.1);   color:var(--yellow); border:1px solid rgba(250,204,21,.45); }
-
-/* Error-mode secondary category pill — hidden; main header handles the category */
+.insight-cat { display:none !important; }
 .insight-error-cat { display:none !important; }
 
 .insight-divider { height:1px; background:rgba(255,255,255,.06); margin:0 0 14px; }
@@ -4796,11 +4906,8 @@ function s3ShowInsight(category, tokenText, message, afterFn, graphicHtml, isCor
   border:1px solid rgba(56,189,248,.1); border-radius:5px;
   padding:6px 10px; margin-bottom:12px; display:none; letter-spacing:.02em;
 }
-.insight-card.error-mode .insight-token {
-  border-color:rgba(239,68,68,.15); background:rgba(239,68,68,.04);
-}
 
-/* ── GRAPHIC PREVIEW — token/element visual for wrong-answer recall ── */
+/* ── GRAPHIC PREVIEW — FLAGGED ELEMENT box ── */
 .insight-graphic {
   display:none; margin-bottom:14px;
   padding:10px 12px; border-radius:7px;
@@ -4813,10 +4920,24 @@ function s3ShowInsight(category, tokenText, message, afterFn, graphicHtml, isCor
 }
 .insight-graphic.show { display:block; }
 
+/* ── MESSAGE with inline token badge ── */
 .insight-msg {
   font-family:'DM Sans',sans-serif; font-size:13px; font-weight:400;
   color:rgba(220,235,255,.85); line-height:1.75;
 }
+/* Inline token badge — same pill style as the old header badge, now inside the message */
+.insight-token-badge {
+  display:inline-flex; align-items:center;
+  font-family:'JetBrains Mono',monospace; font-size:8.5px; font-weight:700;
+  letter-spacing:.14em; text-transform:uppercase;
+  padding:2px 9px; border-radius:20px; margin-right:6px;
+  vertical-align:middle; position:relative; top:-1px;
+}
+.insight-token-badge-warn       { background:rgba(239,68,68,.12); color:#fca5a5; border:1px solid rgba(239,68,68,.32); }
+.insight-token-badge-credential { background:rgba(239,68,68,.12); color:var(--red); border:1px solid rgba(239,68,68,.45); }
+.insight-token-badge-pii        { background:rgba(251,146,60,.12); color:var(--orange); border:1px solid rgba(251,146,60,.45); }
+.insight-token-badge-internal   { background:rgba(250,204,21,.1);  color:var(--yellow); border:1px solid rgba(250,204,21,.45); }
+.insight-token-badge-ok         { background:rgba(74,222,128,.1);  color:#86efac; border:1px solid rgba(74,222,128,.32); }
 
 /* ── FOOTER ── */
 .insight-footer { padding:0 24px 22px; }
@@ -4845,34 +4966,26 @@ function s3ShowInsight(category, tokenText, message, afterFn, graphicHtml, isCor
 
 <div id="insightOverlay">
   <div class="insight-card">
-    <!-- Error-mode band (only visible on wrong answers) -->
-    <div class="insight-error-band">
-      <div class="insight-error-x">✕</div>
-      <div>
-        <div class="insight-error-label">Incorrect</div>
-        <div class="insight-error-sub">Read the explanation below</div>
-      </div>
-    </div>
-    <!-- Neutral top bar (only visible on non-error) -->
     <div class="insight-top-bar"></div>
     <div class="insight-body">
-      <!-- Error-mode tag (only visible on wrong answers) -->
-      <div class="insight-error-tag" id="insightErrTag">✕ &nbsp;INCORRECT</div>
-      <!-- Correct-mode tag (only visible on right answers) -->
-      <div class="insight-correct-tag" id="insightOkTag">✓ &nbsp;CORRECT</div>
-      <!-- icon + category pill — always visible -->
-      <div class="insight-header">
-        <div class="insight-icon insight-icon-warn" id="insightIcon">⚠</div>
-        <span class="insight-cat insight-cat-warn" id="insightCat">Risk</span>
+      <!-- Status heading — large INCORRECT or CORRECT -->
+      <div class="insight-error-tag" id="insightErrTag">INCORRECT</div>
+      <div class="insight-correct-tag" id="insightOkTag">CORRECT — ITEM SECURED</div>
+      <!-- Hidden legacy elements kept for JS compatibility -->
+      <div class="insight-header" style="display:none">
+        <div class="insight-icon insight-icon-warn" id="insightIcon"></div>
+        <span class="insight-cat insight-cat-warn" id="insightCat"></span>
       </div>
-      <!-- Error-mode: category pill only (band handles the INCORRECT label) -->
-      <div class="insight-error-cat" id="insightErrCat">Category</div>
+      <div class="insight-error-cat" id="insightErrCat" style="display:none"></div>
+      <!-- Flagged element box -->
       <div class="insight-divider"></div>
       <div class="insight-graphic" id="insightGraphic">
-        <div class="insight-graphic-label" id="insightGraphicLabel"></div>
+        <div class="insight-graphic-label" id="insightGraphicLabel">FLAGGED ELEMENT:</div>
         <div id="insightGraphicContent"></div>
       </div>
+      <!-- Token text (legacy, hidden) -->
       <div class="insight-token" id="insightToken"></div>
+      <!-- Message — category badge inline at start -->
       <div class="insight-msg" id="insightMsg"></div>
     </div>
     <div class="insight-footer">
