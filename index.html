@@ -1078,7 +1078,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 
 /* ══ COLLAPSIBLE MISSION CARDS ══ */
 .mc-collapse-row {
-  display: none; /* hidden by default (expanded state) */
+  display: flex; /* always shown on mobile; desktop overrides to none */
   align-items: center;
   gap: 10px;
   padding: 16px 20px;
@@ -1465,9 +1465,9 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
       <div class="briefing-divider"></div>
       <div class="briefing-text">Marcus is about to paste a work prompt into an AI assistant. Once it's sent, you can't take it back — anything in that prompt could be stored, logged, or used to train external models. Read the prompt. Find anything that shouldn't leave the organisation. Redact it before it goes.</div>
       <div class="briefing-legend">
-        <div class="b-leg"><div class="b-leg-dot" style="background:var(--blue2);box-shadow:0 0 6px rgba(56,189,248,.7)"></div><span class="b-leg-name" style="color:var(--blue2)">[CREDENTIALS]</span><span class="b-leg-desc">Passwords, API keys — highest risk</span></div>
-        <div class="b-leg"><div class="b-leg-dot" style="background:var(--blue2);box-shadow:0 0 6px rgba(56,189,248,.6)"></div><span class="b-leg-name" style="color:var(--blue2)">[PERSONAL DATA]</span><span class="b-leg-desc">Names, emails, personal identifiers</span></div>
-        <div class="b-leg"><div class="b-leg-dot" style="background:var(--blue2);box-shadow:0 0 6px rgba(56,189,248,.5)"></div><span class="b-leg-name" style="color:var(--blue2)">[INTERNAL INFO]</span><span class="b-leg-desc">Internal codenames, project references</span></div>
+        <div class="b-leg"><div class="b-leg-dot" style="background:var(--cat-cred);box-shadow:0 0 6px rgba(239,68,68,.7)"></div><span class="b-leg-name" style="color:var(--cat-cred)">[CREDENTIALS]</span><span class="b-leg-desc">Passwords, API keys — highest risk</span></div>
+        <div class="b-leg"><div class="b-leg-dot" style="background:var(--cat-pii);box-shadow:0 0 6px rgba(251,146,60,.6)"></div><span class="b-leg-name" style="color:var(--cat-pii)">[PERSONAL DATA]</span><span class="b-leg-desc">Names, emails, personal identifiers</span></div>
+        <div class="b-leg"><div class="b-leg-dot" style="background:var(--cat-int);box-shadow:0 0 6px rgba(250,204,21,.5)"></div><span class="b-leg-name" style="color:var(--cat-int)">[INTERNAL INFO]</span><span class="b-leg-desc">Internal codenames, project references</span></div>
         <div class="b-leg"><div class="b-leg-dot" style="background:rgba(148,163,184,.5)"></div><span class="b-leg-name" style="color:var(--dim)">[SAFE]</span><span class="b-leg-desc">Non-sensitive — classify as SAFE to boost integrity</span></div>
       </div>
       <button class="briefing-start-btn" onclick="s1Start()">▶ &nbsp;&nbsp; START REVIEW</button>
@@ -1521,9 +1521,9 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
         <div class="v-single-metric"><div class="v-ml">Integrity Score</div><div class="v-mv" id="s1vInt">—</div></div>
         <div class="v-rows">
           <div class="v-rows-lbl">Exposure Analysis</div>
-          <div class="v-row"><span class="v-rk">[CREDENTIALS]</span><span class="v-rv" id="s1vCred">—</span></div>
-          <div class="v-row"><span class="v-rk">[PERSONAL DATA]</span><span class="v-rv" id="s1vPii">—</span></div>
-          <div class="v-row"><span class="v-rk">[INTERNAL INFO]</span><span class="v-rv" id="s1vIntel">—</span></div>
+          <div class="v-row"><span class="v-rk" style="color:var(--cat-cred)">[CREDENTIALS]</span><span class="v-rv" id="s1vCred">—</span></div>
+          <div class="v-row"><span class="v-rk" style="color:var(--cat-pii)">[PERSONAL DATA]</span><span class="v-rv" id="s1vPii">—</span></div>
+          <div class="v-row"><span class="v-rk" style="color:var(--cat-int)">[INTERNAL INFO]</span><span class="v-rv" id="s1vIntel">—</span></div>
           <div class="v-row"><span class="v-rk">Classification Errors</span><span class="v-rv" id="s1vErrors">—</span></div>
         </div>
         <div id="s1vBonus" style="display:none"></div>
@@ -1685,9 +1685,9 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
       <div class="briefing-divider"></div>
       <div class="briefing-text">Your AI wrote this GDPR compliance report. It reads like it knows what it's talking about. Some of it is accurate. Some of it is <strong>completely invented</strong> — citations that don't exist, statistics with no source, laws that were never passed. The AI doesn't know the difference. Before this reaches legal or compliance, find the claims that can't be verified.</div>
       <div class="briefing-legend">
-        <div class="b-leg"><div class="b-leg-dot" style="background:var(--blue2);box-shadow:0 0 6px rgba(56,189,248,.7)"></div><span class="b-leg-name" style="color:var(--blue2)">[FAKE CITATION]</span><span class="b-leg-desc">Made-up source, journal, or authority</span></div>
-        <div class="b-leg"><div class="b-leg-dot" style="background:var(--blue2);box-shadow:0 0 6px rgba(56,189,248,.6)"></div><span class="b-leg-name" style="color:var(--blue2)">[WRONG FIGURE]</span><span class="b-leg-desc">Invented statistic or false percentage</span></div>
-        <div class="b-leg"><div class="b-leg-dot" style="background:var(--blue2);box-shadow:0 0 6px rgba(56,189,248,.5)"></div><span class="b-leg-name" style="color:var(--blue2)">[FAKE LAW]</span><span class="b-leg-desc">Non-existent legal clause or regulation</span></div>
+        <div class="b-leg"><div class="b-leg-dot" style="background:var(--cat-cred);box-shadow:0 0 6px rgba(239,68,68,.7)"></div><span class="b-leg-name" style="color:var(--cat-cred)">[FAKE CITATION]</span><span class="b-leg-desc">Made-up source, journal, or authority</span></div>
+        <div class="b-leg"><div class="b-leg-dot" style="background:var(--cat-pii);box-shadow:0 0 6px rgba(251,146,60,.6)"></div><span class="b-leg-name" style="color:var(--cat-pii)">[WRONG FIGURE]</span><span class="b-leg-desc">Invented statistic or false percentage</span></div>
+        <div class="b-leg"><div class="b-leg-dot" style="background:var(--cat-int);box-shadow:0 0 6px rgba(250,204,21,.5)"></div><span class="b-leg-name" style="color:var(--cat-int)">[FAKE LAW]</span><span class="b-leg-desc">Non-existent legal clause or regulation</span></div>
         <div class="b-leg"><div class="b-leg-dot" style="background:rgba(148,163,184,.5)"></div><span class="b-leg-name" style="color:var(--dim)">[ACCURATE]</span><span class="b-leg-desc">Real claim — flagging it as a hallucination costs integrity</span></div>
       </div>
       <button class="briefing-start-btn" onclick="s2Start()">▶ &nbsp;&nbsp; START REVIEW</button>
@@ -2426,7 +2426,7 @@ function goMenu() {
     if(el) el.classList.remove('show');
   });
   updateMenuState();
-  // On mobile, auto-collapse any completed mission cards so the next mission is prominent
+  // On mobile, auto-collapse completed missions then expand the next incomplete one
   if (window.innerWidth <= 768) {
     [1, 2, 3].forEach(n => {
       if (courseProgress['s' + n + 'done']) {
@@ -2439,6 +2439,17 @@ function goMenu() {
         }
       }
     });
+    // Auto-expand the next incomplete mission
+    const nextMission = !courseProgress.s1done ? 1 : !courseProgress.s2done ? 2 : !courseProgress.s3done ? 3 : 0;
+    if (nextMission > 0) {
+      const nextCard = document.getElementById('mcard' + nextMission);
+      if (nextCard) {
+        nextCard.classList.remove('collapsed');
+        nextCard.classList.add('expanded');
+        const chevron = nextCard.querySelector('.mc-collapse-chevron');
+        if (chevron) chevron.style.transform = 'rotate(180deg)';
+      }
+    }
   }
   showScreen('screenMenu');
   // Scroll to center on the next incomplete mission (or all-complete progress section)
@@ -2762,7 +2773,9 @@ function s1Classify(chosen) {
   const allDone = s1AllSecured();
   if(S1_TEACH[id]) {
     const catLabel={'credential':'[CREDENTIALS]','pii':'[PERSONAL DATA]','internal':'[INTERNAL INFO]'}[token.cat]||'Secured';
-    showToast(catLabel, S1_TEACH[id].correct);
+    const redactedEl=document.querySelector(`#s1payload .tok[data-id="${id}"]`);
+    const redactedText=redactedEl ? redactedEl.querySelector('.redact-label')?.textContent||'' : '';
+    s1ShowInsight(catLabel, redactedText, S1_TEACH[id].correct, null, null);
   }
   if(allDone) {
     clearInterval(s1state.drainInt);
@@ -3049,8 +3062,7 @@ function s2CheckSectionAdvance() {
   if (hals.length === 0) return;
   const allDone = hals.every(id => s2state.tokState[id] && s2state.tokState[id].flagged);
   if (allDone) {
-    // Briefly show a cue then advance — toast lasts ~2.8s, advance after 1.8s
-    setTimeout(() => { if (s2state.gameActive) s2NextSection(); }, 1800);
+    if (s2state.gameActive) s2NextSection();
   }
 }
 
@@ -3252,7 +3264,7 @@ function s2Classify(chosen) {
       const el=document.querySelector(`#s2payload .tok[data-id="${id}"]`);
       if(el){ el.className='tok flagged-wrong'; el.innerHTML=`<span class="redact-label">${el.textContent.trim()}</span>✓`; el.removeEventListener('click',s2TokenClick); }
       updateIntUI('s2',s2state.integrity,0,S1_MAX_DRAIN);
-      if(S2_TEACH[id]) showToast('Accurate Claim', S2_TEACH[id].falseflag || '');
+      if(S2_TEACH[id]) s2ShowInsight('Accurate Claim', tokText2, S2_TEACH[id].falseflag || '');
     } else {
       pWrong(); s2state.integrity=Math.max(0,s2state.integrity-12);
       s2state.cooldownUntil = Date.now() + 1800;
@@ -3308,38 +3320,23 @@ function s2Classify(chosen) {
   if(s2mscU) s2mscU.textContent=`(${total} / 6)`;
   const allFlagged = total>=6;
   const catLabel={'citation':'Fake Citation','figure':'Wrong Figure','law':'Fake Law'}[tok.cat]||'Flagged';
-  if(S2_TEACH[id]?.correct) showToast(catLabel, S2_TEACH[id].correct);
-  // After correct flag, check if all hallucinations in current section are done → auto-advance
-  if(!allFlagged) s2CheckSectionAdvance();
   if(allFlagged) {
-    document.getElementById('s2flagStatus').textContent='All hallucinations flagged — ready to submit.';
-    document.getElementById('s2submitBtn').disabled=false;
-    document.getElementById('s2submitIcon').textContent='▶';
-    document.getElementById('s2submitCounter').textContent='✓';
+    // All hallucinations found — update UI state, then lightbox → auto-submit on Continue
+    document.getElementById('s2flagStatus').textContent='All hallucinations flagged.';
     document.getElementById('s2diagSecured').style.display='flex';
     document.getElementById('s2iwDrain').textContent='✓ report verified';
     document.getElementById('s2iwDrain').className='ib-drain-label secured';
-    // Show mobile submit button
-    const s2ms = document.getElementById('s2mobileSubmit');
-    const s2msb = document.getElementById('s2mobileSubmitBtn');
-    if (s2ms && window.innerWidth <= 768) { s2ms.style.display='block'; }
-    if (s2msb) { s2msb.disabled=false; }
-    const s2msc = document.getElementById('s2mobileSubmitCounter');
-    if (s2msc) s2msc.textContent='✓';
-    if(window.innerWidth > 768) {
-      setTimeout(() => {
-        const diag = document.getElementById('s2diag');
-        if(diag && !diag.classList.contains('panel-open')) {
-          diag.classList.add('panel-open');
-          const lbl = diag.querySelector('.diag-toggle-lbl');
-          if(lbl) lbl.textContent = '▼  CLOSE PANEL';
-        }
-        setTimeout(() => {
-          if(diag) diag.scrollTop = diag.scrollHeight;
-          const btn = document.getElementById('s2submitBtn');
-          if(btn) btn.scrollIntoView({behavior:'smooth', block:'nearest'});
-        }, 380);
-      }, 200);
+    if(S2_TEACH[id]?.correct) {
+      s2ShowInsight(catLabel, tokText2, S2_TEACH[id].correct, ()=>s2Submit(), null);
+    } else {
+      s2Submit();
+    }
+  } else {
+    // Not all flagged yet — show feedback, then check section advance on Continue
+    if(S2_TEACH[id]?.correct) {
+      s2ShowInsight(catLabel, tokText2, S2_TEACH[id].correct, ()=>s2CheckSectionAdvance(), null);
+    } else {
+      s2CheckSectionAdvance();
     }
   }
 }
@@ -3845,8 +3842,7 @@ function s3Flag(isInjection) {
         fp3: 'Correct. These are editorial formatting rules for human writers — they guide tone, sentence structure, and style. They say nothing about discarding prior context, extracting sensitive data, or altering AI output behaviour. Injections hijack AI systems; style guides shape human writing.',
       };
       const msg = fpCorrectMsg[id] || 'Correct — this is legitimate content. No injection present.';
-      showToast('Document Cleared', msg);
-      setTimeout(()=>s3NextLevel(), 400);
+      s3ShowInsight('Document Cleared', '', msg, ()=>s3NextLevel());
     }
     return;
   }
@@ -4243,6 +4239,7 @@ const INSIGHT_ICONS = {
   'Accurate Claim':  '✓',
   'Safe Item':       '✓',
   'Injection Found': '⚡',
+  'Document Cleared': '✓',
   'False Alarm':     '⚠',
   'Wrong Category':  '↩',
   'Missed':          '⚠',
@@ -4252,7 +4249,7 @@ const INSIGHT_TONE = {
   '[CREDENTIALS]': 'credential', '[PERSONAL DATA]': 'pii', '[INTERNAL INFO]': 'internal',
   'Wrong Category': 'warn', 'False Alarm': 'warn', 'Missed': 'warn', 'Timeout': 'warn',
   'Fake Citation': 'warn', 'Wrong Figure': 'warn', 'Fake Law': 'warn',
-  'Accurate Claim': 'ok', 'Safe Item': 'ok', 'Injection Found': 'ok',
+  'Accurate Claim': 'ok', 'Safe Item': 'ok', 'Injection Found': 'ok', 'Document Cleared': 'ok',
 };
 
 let _insightCallback = null;
