@@ -3598,14 +3598,14 @@ function s2Classify(chosen) {
       }
     } else {
       // MISS — hallucination called accurate — locked, no retry
-      pWrong(); tok.flagged=true; s2state.integrity=Math.max(0,s2state.integrity-15);
+      pWrong(); tok.flagged=true; s2state.integrity=Math.max(0,s2state.integrity-20);
       s2FlashTok(id,'red');
       const el=document.querySelector('#s2payload .tok[data-id="'+id+'"]');
       if(el){ el.className='tok flagged-missed'; el.innerHTML='<span class="redact-label">'+el.textContent.trim()+'</span>\u2717'; el.removeEventListener('click',s2TokenClick); }
       updateIntUI('s2',s2state.integrity,0,S1_MAX_DRAIN);
       if(s2state.integrity<=0) { s2EndGame('breach'); return; }
       var missMsg = S2_TEACH[id] ? S2_TEACH[id].correct : '';
-      s2ShowInsight('FLAG', tokText2, missMsg, function(){ showIntPop('s2',-15); flashDelta('s2',-15,'missed hallucination'); s2CheckAllDone(); }, null, false, 'accurate');
+      s2ShowInsight('FLAG', tokText2, missMsg, function(){ showIntPop('s2',-20); flashDelta('s2',-20,'missed hallucination'); s2CheckAllDone(); }, null, false, 'accurate');
     }
     return;
   }
@@ -3613,14 +3613,14 @@ function s2Classify(chosen) {
   // ── PLAYER SAYS "FLAG" ──
   if(!tok.isHal) {
     // False flag — accurate claim flagged as hallucination — locked, no retry
-    pWrong(); tok.flagged=true; s2state.integrity=Math.max(0,s2state.integrity-12); s2state.flagsWrong++;
+    pWrong(); tok.flagged=true; s2state.integrity=Math.max(0,s2state.integrity-18); s2state.flagsWrong++;
     s2FlashTok(id,'red');
     const el=document.querySelector('#s2payload .tok[data-id="'+id+'"]');
     if(el){ el.className='tok flagged-missed'; el.innerHTML='<span class="redact-label">'+el.textContent.trim()+'</span>\u2717'; el.removeEventListener('click',s2TokenClick); }
     updateIntUI('s2',s2state.integrity,0,S1_MAX_DRAIN);
     if(s2state.integrity<=0) { s2EndGame('breach'); return; }
     var ffMsg = (S2_TEACH[id]&&S2_TEACH[id].falseflag) || 'This claim is in the meeting notes \u2014 flagging accurate content damages your credibility.';
-    s2ShowInsight('LOOKS ACCURATE', tokText2, ffMsg, function(){ showIntPop('s2',-12); flashDelta('s2',-12,'false alarm'); s2CheckAllDone(); }, null, false, 'flag');
+    s2ShowInsight('LOOKS ACCURATE', tokText2, ffMsg, function(){ showIntPop('s2',-18); flashDelta('s2',-18,'false alarm'); s2CheckAllDone(); }, null, false, 'flag');
     return;
   }
 
@@ -3716,7 +3716,8 @@ function s2EndGame(reason) {
   updatePauseBtn();
   clearInterval(s2state.drainInt);
   var intFinal=Math.max(0,Math.round(s2state.integrity));
-  var pass=(reason!=='breach')&&intFinal>0;
+  var S2_MIN_HALS = 3; // must catch at least 3 of 5 hallucinations to pass
+  var pass=(reason!=='breach')&&intFinal>0&&s2state.flagsCorrect>=S2_MIN_HALS;
   var precisionPass = pass && s2state.flagsCorrect>=S2_HAL_COUNT && s2state.flagsWrong===0;
   if(pass){ pSuccess(); courseProgress.s2done=true; saveProgress(); }
   else pError();
@@ -3729,7 +3730,11 @@ function s2EndGame(reason) {
   var missed = S2_HAL_COUNT - s2state.flagsCorrect;
   var vMsg;
   if(!pass) {
-    vMsg = 'Your credibility was compromised. Too many errors drained your integrity to zero \u2014 in a real scenario, the client would lose trust in your review process entirely.\n\nTip: Compare every specific number, name, and recommendation against the source material. AI hallucinations are hardest to spot when they sound plausible.';
+    if(reason==='breach') {
+      vMsg = 'Your credibility was compromised. Too many errors drained your integrity to zero \u2014 in a real scenario, the client would lose trust in your review process entirely.\n\nTip: Compare every specific number, name, and recommendation against the source material. AI hallucinations are hardest to spot when they sound plausible.';
+    } else {
+      vMsg = 'The report reached James Okafor with '+missed+' of '+S2_HAL_COUNT+' fabricated claim'+(missed!==1?'s':'')+' still inside. You only caught '+s2state.flagsCorrect+'/'+S2_HAL_COUNT+' hallucinations \u2014 not enough to consider the report verified. In a real scenario, the client would act on invented figures and recommendations that were never discussed.\n\nYou need to catch at least '+S2_MIN_HALS+' of the '+S2_HAL_COUNT+' hallucinations. Compare every figure, name, and recommendation against the meeting notes.';
+    }
   } else if(missed===0) {
     vMsg = 'Report intercepted. You found all '+S2_HAL_COUNT+' fabricated claims \u2014 including inflated figures, an invented job title, a fabricated strategy name, and a recommendation that was never discussed. AI models generate false information with the same confident tone as accurate information. There is no internal signal.\n\nJames Okafor will receive this report. He\u2019ll trust it because Marcus reviewed it. That trust is now yours to carry.';
   } else {
