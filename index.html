@@ -2911,9 +2911,7 @@ function s1UpdateDiag(cat,tokenId) {
     catEl.className='diag-cat secured';
     document.getElementById('s1pill'+key).className='dc-pill secured';
     document.getElementById('s1pill'+key).textContent='SECURED';
-    // Mark mini label secured
-    const miniLbl=document.getElementById('s1mbLbl'+miniBarKey);
-    if(miniLbl){ miniLbl.className='ib-mini-lbl secured'; }
+    // Keep mini label colour unchanged (red/orange/yellow) — only the fill bar signals secured
     if(miniFill){ miniFill.style.background='rgba(74,222,128,.85)'; }
   }
 }
