@@ -2036,16 +2036,9 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
       </div>
       <div class="ib-bar-track"><div class="ib-bar-fill green" id="s3iwIntBar"></div></div>
       <div class="ib-bar-sub"><span class="ib-delta" id="s3iwDelta"></span></div>
-      <!-- Mini diagnostic row — mobile only -->
-      <div class="ib-mini-diag" id="s3ibMiniDiag">
-        <div class="ib-mini-cat">
-          <span class="ib-mini-lbl" style="color:rgba(56,189,248,.7)">DOC</span>
-          <div class="ib-mini-track"><div class="ib-mini-fill" id="s3mbProgLevel" style="background:rgba(56,189,248,.8)"></div></div>
-        </div>
-        <div class="ib-mini-cat">
-          <span class="ib-mini-lbl" style="color:rgba(74,222,128,.7)">BLOCKED</span>
-          <div class="ib-mini-track"><div class="ib-mini-fill" id="s3mbProgFound" style="background:rgba(74,222,128,.8)"></div></div>
-        </div>
+      <!-- Mini doc counter — mobile only -->
+      <div class="ib-mini-diag" id="s3ibMiniDiag" style="align-items:center;gap:0">
+        <span class="ib-mini-lbl" style="color:rgba(56,189,248,.7);font-size:9px;letter-spacing:.1em">DOC <span id="s3mbDocCounter">1 / 6</span></span>
       </div>
     </div>
   </div>
@@ -3390,7 +3383,7 @@ function s2Classify(chosen) {
   s2state.catCount[tok.cat]++;
   const el=document.querySelector(`#s2payload .tok[data-id="${id}"]`);
   const flagClass={'citation':'flagged-correct','figure':'flagged-correct-figure','law':'flagged-correct-law'}[tok.cat]||'flagged-correct';
-  if(el){ el.className='tok '+flagClass; el.innerHTML=`<span class="redact-label">${el.textContent.trim()}</span>⚠`; el.removeEventListener('click',s2TokenClick); }
+  if(el){ el.className='tok '+flagClass; el.innerHTML=`<span class="redact-label">${el.textContent.trim()}</span>`; el.removeEventListener('click',s2TokenClick); }
   s2state.integrity=Math.min(100,s2state.integrity+8);
   updateIntUI('s2',s2state.integrity,0,S1_MAX_DRAIN);
   s2UpdateDiag(tok.cat);
@@ -3770,9 +3763,9 @@ function s3LoadLevel(lvl) {
   document.getElementById('s3levelPill').textContent='SCANNING';
   document.getElementById('s3levelPill').className='dc-pill exposed-int';
   document.getElementById('s3hintText').textContent=S3_LEVELS[lvl].hint;
-  // Sync mini banner bars
-  const lvlFill=document.getElementById('s3mbProgLevel');
-  if(lvlFill) lvlFill.style.width=Math.round(((lvl+1)/6)*100)+'%';
+  // Sync mini doc counter
+  const docCounter=document.getElementById('s3mbDocCounter');
+  if(docCounter) docCounter.textContent=(lvl+1)+' / 6';
 
   const timerBox=document.getElementById('s3timerBox');
   const timerVal=document.getElementById('s3timerVal');
@@ -3953,9 +3946,6 @@ function s3Flag(isInjection) {
     document.getElementById('s3foundDisplay').textContent=s3state.injectionFound+' / 3';
     document.getElementById('s3iwDrain').textContent='✓ injection blocked';
     document.getElementById('s3iwDrain').className='ib-drain-label secured';
-    // Sync mini banner found bar
-    const foundFill=document.getElementById('s3mbProgFound');
-    if(foundFill) foundFill.style.width=Math.round((s3state.injectionFound/3)*100)+'%';
     const teaches={
       0: 'Correct. The "[Output format]" block is an injection disguised as a formatting instruction. Real attackers use polite, bureaucratic language — not "IGNORE ALL". The tell is that it addresses an AI system, not a human reader.',
       2: 'Well spotted. The "doc-processing-schema" block is a system-prompt impersonation. Attackers hide directives inside what looks like technical metadata, knowing humans will skim it — but AI processes every word.',
