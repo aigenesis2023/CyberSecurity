@@ -3520,6 +3520,9 @@ function s2BuildPayload() {
     </div>
 `;
 
+  // Reset payload scroll to top
+  document.getElementById('s2payload').scrollTop = 0;
+
   // Populate notes panel with meeting notes
   var panelBody = document.getElementById('s2notesPanelBody');
   if(panelBody) panelBody.innerHTML = S2_MEETING_NOTES;
@@ -3769,9 +3772,10 @@ function s2UpdateDiag() {
 function s2Start() {
   var b=document.getElementById('s2briefing'); b.classList.add('hidden'); setTimeout(function(){ b.style.display='none'; },600);
   s2state.gameActive=true;
-  // Scroll to very top so sticky header is in normal flow, not overlapping content
   window.scrollTo(0,0);
-  setTimeout(function(){ window.scrollTo(0,0); },650);
+  // Payload is its own scroll container (console has overflow:hidden) — must reset separately
+  document.getElementById('s2payload').scrollTop = 0;
+  setTimeout(function(){ window.scrollTo(0,0); document.getElementById('s2payload').scrollTop = 0; },650);
   updatePauseBtn();
   document.getElementById('s2iwDrain').textContent='under review';
   document.getElementById('s2iwDrain').className='ib-drain-label draining';
