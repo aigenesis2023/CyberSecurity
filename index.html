@@ -483,13 +483,13 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 .tok.clickable.noise:hover { background:rgba(200,220,255,.12); }
 .tok.hint-scan { background:rgba(56,189,248,.2) !important; border-bottom-color:rgba(56,189,248,.6) !important; box-shadow:0 0 8px rgba(56,189,248,.3); }
 .tok.ghost { background:rgba(74,222,128,.15) !important; transition:background .1s; }
-.tok.redacted { cursor:default; display:inline-flex; align-items:center; gap:5px; border-radius:4px; padding:2px 8px; font-size:.88em; letter-spacing:.03em; font-weight:600; border-bottom:none; }
-.tok.redacted .redact-label { text-decoration:line-through; text-decoration-thickness:1.5px; text-decoration-color:rgba(255,255,255,.5); opacity:.75; font-size:.85em; color:#fff; }
-.tok.redacted .redact-badge { font-family:'Orbitron',monospace; font-size:8.5px; font-weight:700; letter-spacing:.1em; padding:1px 5px; border-radius:3px; line-height:1.4; flex-shrink:0; color:#fff; }
-.tok.cat-credential { background:#dc2626; color:#fff; border:1px solid #dc2626; }
-.tok.cat-pii        { background:#ea580c; color:#fff; border:1px solid #ea580c; }
-.tok.cat-internal   { background:#ca8a04; color:#fff; border:1px solid #ca8a04; }
-.tok.cat-safe       { background:#64748b; color:#fff; border:1px solid #64748b; }
+.tok.redacted { cursor:default !important; display:inline-flex !important; align-items:center; gap:5px; border-radius:4px; padding:2px 8px !important; font-size:.88em; letter-spacing:.03em; font-weight:600; border-bottom:none !important; }
+.tok.redacted .redact-label { text-decoration:line-through; text-decoration-thickness:1.5px; text-decoration-color:rgba(255,255,255,.5); opacity:.75; font-size:.85em; color:#fff !important; }
+.tok.redacted .redact-badge { font-family:'Orbitron',monospace; font-size:8.5px; font-weight:700; letter-spacing:.1em; padding:1px 5px; border-radius:3px; line-height:1.4; flex-shrink:0; color:#fff !important; }
+.tok.cat-credential { background:#dc2626 !important; color:#fff !important; border:1px solid #dc2626 !important; }
+.tok.cat-pii        { background:#ea580c !important; color:#fff !important; border:1px solid #ea580c !important; }
+.tok.cat-internal   { background:#ca8a04 !important; color:#fff !important; border:1px solid #ca8a04 !important; }
+.tok.cat-safe       { background:#64748b !important; color:#fff !important; border:1px solid #64748b !important; }
 /* Hallucination section token styles */
 .tok.safe-decoy { cursor:pointer; border-radius:3px; padding:1px 3px; transition:background .12s; text-decoration:underline; text-decoration-color:var(--blue); text-decoration-thickness:1px; text-underline-offset:2px; }
 .tok.safe-decoy:hover { background:rgba(56,189,248,.12); }
