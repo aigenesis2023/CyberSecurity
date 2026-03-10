@@ -147,7 +147,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
   display:flex; flex-direction:column; gap:0;
   width:500px; max-width:92vw; margin-bottom:32px;
   border:1px solid rgba(56,189,248,.1); border-radius:10px; overflow:hidden;
-  background:rgba(6,14,32,0.55); backdrop-filter:blur(12px);
+  background:rgba(6,14,32,1); backdrop-filter:blur(12px);
 }
 .splash-mission {
   display:flex; align-items:center; gap:14px; padding:13px 18px;
@@ -159,14 +159,8 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 .splash-mission:nth-child(3) { animation-delay:.16s; }
 .splash-mission-num {
   font-family:'Orbitron',monospace; font-size:10px; font-weight:900;
-  letter-spacing:.1em; color:rgba(56,189,248,.4);
+  letter-spacing:.1em; color:#ffffff;
   flex-shrink:0; width:22px;
-}
-.splash-mission-icon {
-  flex-shrink:0; width:28px; height:28px; border-radius:6px;
-  display:flex; align-items:center; justify-content:center;
-  background:rgba(56,189,248,.07); border:1px solid rgba(56,189,248,.14);
-  font-size:13px; line-height:1;
 }
 .splash-mission-text {
   font-family:'DM Sans',sans-serif; font-size:12.5px; font-weight:400;
@@ -1468,28 +1462,19 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
   </svg>
   <div class="splash-eyebrow">AI Safety Awareness Training</div>
   <div class="splash-title">AI Data<br>Guardian</div>
-  <div class="splash-subtitle">Three missions. Learn to keep AI working safely for you.</div>
+  <div class="splash-subtitle">Learn to keep AI working safely for you.</div>
   <!-- 3 mission objectives -->
   <div class="splash-missions">
     <div class="splash-mission">
       <span class="splash-mission-num">01</span>
-      <div class="splash-mission-icon">
-        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 1L14 4v5c0 3.5-2.8 6-6 7C2.8 15 0 12.5 0 9V4L8 1z" fill="none" stroke="rgba(56,189,248,.7)" stroke-width="1.5"/><path d="M5 8h6M8 5v6" stroke="rgba(56,189,248,.7)" stroke-width="1.5" stroke-linecap="round"/></svg>
-      </div>
       <div class="splash-mission-text">Spot sensitive data before it leaks through an AI prompt</div>
     </div>
     <div class="splash-mission">
       <span class="splash-mission-num">02</span>
-      <div class="splash-mission-icon">
-        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="rgba(56,189,248,.7)" stroke-width="1.5"/><path d="M8 5v4" stroke="rgba(56,189,248,.7)" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="12" r="1" fill="rgba(56,189,248,.7)"/></svg>
-      </div>
       <div class="splash-mission-text">Catch AI hallucinations hiding in professional reports</div>
     </div>
     <div class="splash-mission">
       <span class="splash-mission-num">03</span>
-      <div class="splash-mission-icon">
-        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="10" rx="1.5" stroke="rgba(56,189,248,.7)" stroke-width="1.5"/><path d="M5 7h6M5 10h4" stroke="rgba(56,189,248,.45)" stroke-width="1.2" stroke-linecap="round"/><path d="M10 9l3 3" stroke="rgba(56,189,248,.7)" stroke-width="1.5" stroke-linecap="round"/></svg>
-      </div>
       <div class="splash-mission-text">Find prompt injections buried inside documents</div>
     </div>
   </div>
@@ -3066,13 +3051,19 @@ function s1Classify(chosen) {
   }
 
   if(!isSensitive) {
-    // Noise flagged as sensitive — no popup, fire consequences immediately
+    // Noise flagged as sensitive — show feedback, then fire consequences
     pWrong();
     s1state.integrity=Math.max(0,s1state.integrity-5);
     s1state.classifyErrors++;
-    showIntPop('s1',-5); flashDelta('s1',-5,'unnecessary flag');
-    updateIntUI('s1',s1state.integrity,s1GetDrain(),S1_MAX_DRAIN);
-    if(s1state.integrity<=0) s1EndGame('breach');
+    s1FlashToken(id,'red');
+    const willBreach=s1state.integrity<=0;
+    if(willBreach) { s1EndGame('breach'); return; }
+    const afterEffect=()=>{
+      showIntPop('s1',-5); flashDelta('s1',-5,'false alarm — not sensitive');
+      updateIntUI('s1',s1state.integrity,s1GetDrain(),S1_MAX_DRAIN);
+    };
+    const msg = S1_SAFE_TEACH[id] || 'This item doesn\'t contain credentials, personal data, or confidential information — flagging it wastes time and erodes trust in your review.';
+    s1ShowInsight('Safe', tokText, msg, afterEffect, null, false, chosen);
     return;
   }
 
@@ -4620,7 +4611,7 @@ const INSIGHT_TONE = {
   '[CREDENTIALS]': 'credential', '[PERSONAL DATA]': 'pii', '[INTERNAL INFO]': 'internal',
   'Wrong Category': 'warn', 'False Alarm': 'warn', 'Missed': 'warn', 'Timeout': 'warn',
   'Fake Citation': 'credential', 'Wrong Figure': 'pii', 'Fake Law': 'internal',
-  'Accurate': 'neutral', 'Accurate Claim': 'ok', 'Safe Item': 'ok', 'Injection Found': 'ok', 'Document Cleared': 'ok',
+  'Accurate': 'neutral', 'Safe': 'neutral', 'Accurate Claim': 'ok', 'Safe Item': 'ok', 'Injection Found': 'ok', 'Document Cleared': 'ok',
 };
 
 // Map user-facing choice labels to tones for badge colouring
