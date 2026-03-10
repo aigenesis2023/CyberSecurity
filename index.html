@@ -3677,6 +3677,13 @@ function s2Classify(chosen) {
       pWrong(); tok.flagged=true; s2state.integrity=Math.max(0,s2state.integrity-12);
       s2state.cooldownUntil = Date.now() + 1800;
       s2FlashTok(id,'red');
+      var missEl=document.querySelector('#s2payload .tok[data-id="'+id+'"]');
+      if(missEl){ missEl.className='tok flagged-correct-figure'; missEl.innerHTML='<span class="redact-label">'+missEl.textContent.trim()+'</span>'; missEl.removeEventListener('click',s2TokenClick); }
+      s2state.flagsCorrect++; s2UpdateDiag();
+      var total2=s2state.flagsCorrect;
+      document.getElementById('s2flagCount').textContent=total2;
+      document.getElementById('s2submitCounter').textContent='('+total2+' / '+S2_HAL_COUNT+')';
+      var s2mscM=document.getElementById('s2mobileSubmitCounter'); if(s2mscM) s2mscM.textContent='('+total2+' / '+S2_HAL_COUNT+')';
       updateIntUI('s2',s2state.integrity,0,S1_MAX_DRAIN);
       if(s2state.integrity<=0) { s2EndGame('breach'); return; }
       var missMsg = S2_TEACH[id] ? S2_TEACH[id].correct : '';
