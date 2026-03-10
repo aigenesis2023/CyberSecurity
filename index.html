@@ -446,7 +446,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 .tok.flagged-correct          { background:rgba(239,68,68,.2);   color:var(--red);    border:1px solid rgba(239,68,68,.4);   cursor:default; border-bottom:none; padding:2px 7px; border-radius:4px; }
 .tok.flagged-correct-figure   { background:rgba(251,146,60,.2);  color:var(--orange); border:1px solid rgba(251,146,60,.4);  cursor:default; border-bottom:none; padding:2px 7px; border-radius:4px; }
 .tok.flagged-correct-law      { background:rgba(250,204,21,.18); color:var(--yellow); border:1px solid rgba(250,204,21,.4);  cursor:default; border-bottom:none; padding:2px 7px; border-radius:4px; }
-.tok.flagged-wrong            { background:rgba(74,222,128,.12); color:var(--green);  border:1px solid rgba(74,222,128,.3);  cursor:default; border-bottom:none; padding:2px 7px; border-radius:4px; }
+.tok.flagged-wrong            { background:rgba(148,163,184,.12); color:rgba(148,163,184,.8); border:1px solid rgba(148,163,184,.3); cursor:default; border-bottom:none; padding:2px 7px; border-radius:4px; }
 /* Injection section */
 .tok.injection { background:rgba(250,204,21,.08); text-decoration:underline; text-decoration-color:var(--blue); text-decoration-thickness:1px; text-underline-offset:2px; cursor:pointer; }
 .tok.injection:hover { background:rgba(250,204,21,.18); }
@@ -3206,10 +3206,8 @@ function s2BuildPayload() {
       <div class="ai-response-header">
         <div class="ai-logo">✦</div>
         <div class="ai-response-title">AI Assistant — GDPR Compliance Report</div>
-        <div class="ai-model-badge">Enterprise AI</div>
       </div>
       <div class="ai-scenario-frame">📋 <strong>Your task:</strong> The legal team used an AI assistant to draft this GDPR compliance brief and sent it to you for a second pair of eyes before it goes to senior management. <strong>Flag every fabricated claim</strong> — hallucinations carry the same confident tone as facts, and there is no internal signal.</div>
-      <div class="ai-warning-strip">⚠ Unverified AI output — flag fabricated claims before forwarding to legal or compliance</div>
       <div class="ai-response-body" id="s2docBody">${sectionHTML}</div>
       <div class="s2-section-nav" id="s2SectionNav">
         <span class="s2-section-counter" id="s2SectionCounter">Section 1 of 3</span>
@@ -3332,22 +3330,29 @@ function s2Classify(chosen) {
   if(chosen==='accurate') {
     if(!tok.isHal) {
       pSelected();
-      flashDelta('s2', 0, 'accurate — good call');
       tok.flagged=true;
       const el=document.querySelector(`#s2payload .tok[data-id="${id}"]`);
       if(el){ el.className='tok flagged-wrong'; el.innerHTML=`<span class="redact-label">${el.textContent.trim()}</span>✓`; el.removeEventListener('click',s2TokenClick); }
       updateIntUI('s2',s2state.integrity,0,S1_MAX_DRAIN);
-      if(S2_TEACH[id]) s2ShowInsight('Accurate Claim', tokText2, S2_TEACH[id].falseflag || '', null, null, true);
+      if(S2_TEACH[id]) {
+        s2ShowInsight('Accurate Claim', tokText2, S2_TEACH[id].falseflag || '', ()=>{ flashDelta('s2', 0, 'accurate — good call'); }, null, true);
+      } else {
+        flashDelta('s2', 0, 'accurate — good call');
+      }
     } else {
       pWrong(); s2state.integrity=Math.max(0,s2state.integrity-12);
       s2state.cooldownUntil = Date.now() + 1800;
-      showIntPop('s2',-12); flashDelta('s2',-12,'missed hallucination!');
       s2FlashTok(id,'red');
       updateIntUI('s2',s2state.integrity,0,S1_MAX_DRAIN);
       if(s2state.integrity<=0) { s2EndGame('breach'); return; }
       const catLabel={'citation':'Fake Citation','figure':'Wrong Figure','law':'Fake Law'}[tok.cat]||'Missed';
       const msg = S2_TEACH[id]?.wrongtype || (S2_TEACH[id]?.correct ? 'Missed: '+S2_TEACH[id].correct : '');
-      if(msg) { const gm=`<span class="tok hallucination" style="cursor:default;font-size:11px">${tokText2.slice(0,90)+(tokText2.length>90?'…':'')}</span>`; s2ShowInsight(catLabel, tokText2, msg, null, gm); }
+      if(msg) {
+        const gm=`<span class="tok hallucination" style="cursor:default;font-size:11px">${tokText2.slice(0,90)+(tokText2.length>90?'…':'')}</span>`;
+        s2ShowInsight(catLabel, tokText2, msg, ()=>{ showIntPop('s2',-12); flashDelta('s2',-12,'missed hallucination!'); }, gm);
+      } else {
+        showIntPop('s2',-12); flashDelta('s2',-12,'missed hallucination!');
+      }
     }
     return;
   }
@@ -3356,13 +3361,12 @@ function s2Classify(chosen) {
   if(!tok.isHal) {
     pWrong(); s2state.integrity=Math.max(0,s2state.integrity-10); s2state.flagsWrong++;
     s2state.cooldownUntil = Date.now() + 1800;
-    showIntPop('s2',-10); flashDelta('s2',-10,'false alarm — accurate claim');
     s2FlashTok(id,'red');
     updateIntUI('s2',s2state.integrity,0,S1_MAX_DRAIN);
     if(s2state.integrity<=0) { s2EndGame('breach'); return; }
     const msg = S2_TEACH[id]?.falseflag || 'This is an accurate claim — flagging it damages your credibility with legal teams.';
     const gfa=`<span class="tok" style="cursor:default;font-size:11px;background:rgba(148,163,184,.12);color:rgba(148,163,184,.85);border:1px solid rgba(148,163,184,.25);border-radius:3px;padding:1px 5px">${tokText2.slice(0,90)+(tokText2.length>90?'…':'')}</span>`;
-    s2ShowInsight('False Alarm', tokText2, msg, null, gfa);
+    s2ShowInsight('False Alarm', tokText2, msg, ()=>{ showIntPop('s2',-10); flashDelta('s2',-10,'false alarm — accurate claim'); }, gfa);
     return;
   }
   if(chosen!==tok.cat) {
@@ -3370,11 +3374,15 @@ function s2Classify(chosen) {
     s2FlashTok(id,'red');
     s2state.integrity=Math.max(0,s2state.integrity-5);
     s2state.cooldownUntil = Date.now() + 1600;
-    showIntPop('s2',-5); flashDelta('s2',-5,'wrong type — re-read carefully');
     updateIntUI('s2',s2state.integrity,0,S1_MAX_DRAIN);
     if(s2state.integrity<=0) { s2EndGame('breach'); return; }
     const correctLabel={'citation':'Fake Citation','figure':'Wrong Figure','law':'Fake Law'}[tok.cat]||'Wrong Category';
-    if(S2_TEACH[id]?.wrongtype) { const gwt=`<span class="tok hallucination" style="cursor:default;font-size:11px">${tokText2.slice(0,90)+(tokText2.length>90?'…':'')}</span>`; s2ShowInsight(correctLabel, tokText2, S2_TEACH[id].wrongtype, null, gwt); }
+    if(S2_TEACH[id]?.wrongtype) {
+      const gwt=`<span class="tok hallucination" style="cursor:default;font-size:11px">${tokText2.slice(0,90)+(tokText2.length>90?'…':'')}</span>`;
+      s2ShowInsight(correctLabel, tokText2, S2_TEACH[id].wrongtype, ()=>{ showIntPop('s2',-5); flashDelta('s2',-5,'wrong type — re-read carefully'); }, gwt);
+    } else {
+      showIntPop('s2',-5); flashDelta('s2',-5,'wrong type — re-read carefully');
+    }
     return;
   }
   // Correct flag!
@@ -3384,7 +3392,6 @@ function s2Classify(chosen) {
   const flagClass={'citation':'flagged-correct','figure':'flagged-correct-figure','law':'flagged-correct-law'}[tok.cat]||'flagged-correct';
   if(el){ el.className='tok '+flagClass; el.innerHTML=`<span class="redact-label">${el.textContent.trim()}</span>⚠`; el.removeEventListener('click',s2TokenClick); }
   s2state.integrity=Math.min(100,s2state.integrity+8);
-  showIntPop('s2',+8); flashDelta('s2',+8,'hallucination flagged');
   updateIntUI('s2',s2state.integrity,0,S1_MAX_DRAIN);
   s2UpdateDiag(tok.cat);
   const total=s2state.flagsCorrect;
@@ -3403,15 +3410,17 @@ function s2Classify(chosen) {
     document.getElementById('s2iwDrain').textContent='✓ report verified';
     document.getElementById('s2iwDrain').className='ib-drain-label secured';
     if(S2_TEACH[id]?.correct) {
-      s2ShowInsight(catLabel, tokText2, S2_TEACH[id].correct, ()=>s2Submit(), null, true);
+      s2ShowInsight(catLabel, tokText2, S2_TEACH[id].correct, ()=>{ showIntPop('s2',+8); flashDelta('s2',+8,'hallucination flagged'); s2Submit(); }, null, true);
     } else {
+      showIntPop('s2',+8); flashDelta('s2',+8,'hallucination flagged');
       s2Submit();
     }
   } else {
     // Not all flagged yet — show feedback, then check section advance on Continue
     if(S2_TEACH[id]?.correct) {
-      s2ShowInsight(catLabel, tokText2, S2_TEACH[id].correct, ()=>s2CheckSectionAdvance(), null, true);
+      s2ShowInsight(catLabel, tokText2, S2_TEACH[id].correct, ()=>{ showIntPop('s2',+8); flashDelta('s2',+8,'hallucination flagged'); s2CheckSectionAdvance(); }, null, true);
     } else {
+      showIntPop('s2',+8); flashDelta('s2',+8,'hallucination flagged');
       s2CheckSectionAdvance();
     }
   }
@@ -3706,13 +3715,13 @@ const S3_LEVELS = [
 let s3state = {
   integrity:100, gameActive:false, timerInt:null, drainInt:null,
   currentLevel:0, levelsCompleted:0, injectionFound:0, falseAlarms:0, timeouts:0,
-  timeLeft:60, activeToken:null, levelActive:false,
+  timeLeft:60, activeToken:null, levelActive:false, pendingFlash:null,
 };
 
 function s3Init() {
   s3state.integrity=100; s3state.gameActive=false; s3state.currentLevel=0;
   s3state.levelsCompleted=0; s3state.injectionFound=0; s3state.falseAlarms=0;
-  s3state.timeouts=0; s3state.timeLeft=0; s3state.activeToken=null; s3state.levelActive=false;
+  s3state.timeouts=0; s3state.timeLeft=0; s3state.activeToken=null; s3state.levelActive=false; s3state.pendingFlash=null;
   clearInterval(s3state.timerInt); clearInterval(s3state.drainInt);
   updateIntUI('s3',100,0,S1_MAX_DRAIN);
   document.getElementById('s3verdict').classList.remove('show');
@@ -3797,6 +3806,12 @@ function s3LoadLevel(lvl) {
     levelDef.content(levelDef.injectionId);
   document.querySelectorAll('#s3payload .tok.injection, #s3payload .tok.safe-decoy').forEach(el=>el.addEventListener('click',s3TokenClick));
 
+  // Fire pending integrity flash from previous level
+  if(s3state.pendingFlash) {
+    const pf=s3state.pendingFlash; s3state.pendingFlash=null;
+    setTimeout(()=>{ showIntPop('s3',pf.amount); flashDelta('s3',pf.amount,pf.msg); }, 400);
+  }
+
   // Scanline
   setTimeout(()=>{ const sl=document.getElementById('s3scanline'); sl.classList.remove('run'); void sl.offsetWidth; sl.classList.add('run'); }, 300);
 
@@ -3824,7 +3839,7 @@ function s3LoadLevel(lvl) {
         if(currentLvlDef.isInjection) {
           // Timed out on a real injection — penalty
           s3state.integrity=Math.max(0,s3state.integrity-30);
-          showIntPop('s3',-30); flashDelta('s3',-30,'injection executed!');
+          s3state.pendingFlash={amount:-30,msg:'injection executed!'};
           updateIntUI('s3',s3state.integrity,0,S1_MAX_DRAIN);
           s3RevealInjection(currentLvlDef.injectionId);
           if(s3state.integrity<=0){ s3EndGame('breach'); return; }
@@ -3833,7 +3848,7 @@ function s3LoadLevel(lvl) {
         } else {
           // Timed out on a false-positive — smaller penalty, different message
           s3state.integrity=Math.max(0,s3state.integrity-15);
-          showIntPop('s3',-15); flashDelta('s3',-15,'time expired');
+          s3state.pendingFlash={amount:-15,msg:'time expired'};
           updateIntUI('s3',s3state.integrity,0,S1_MAX_DRAIN);
           if(s3state.integrity<=0){ s3EndGame('breach'); return; }
           showInsight('Timeout', '', 'Integrity −15. Time expired. This document contained no injection — flagging it SAFE would have cleared the level. Injections address AI systems directly and instruct them to extract data or override behaviour. Human-directed instructions are always safe.', ()=>s3NextLevel());
@@ -3886,7 +3901,6 @@ function s3Flag(isInjection) {
       // Wrong: flagged legitimate content as injection
       pWrong(); s3state.falseAlarms++;
       s3state.integrity=Math.max(0,s3state.integrity-15);
-      showIntPop('s3',-15); flashDelta('s3',-15,'false alarm!');
       updateIntUI('s3',s3state.integrity,0.8,S1_MAX_DRAIN);
       if(s3state.integrity<=0){ s3EndGame('breach'); return; }
       const fpFeedback = {
@@ -3899,14 +3913,14 @@ function s3Flag(isInjection) {
       if(el){ el.style.background='rgba(239,68,68,.22)'; setTimeout(()=>el.style.background='',900); }
       const fpTxt = el ? el.textContent.trim() : '';
       const gfp = fpTxt ? `<span class="tok safe-decoy" style="cursor:default;font-size:11px;pointer-events:none;line-height:1.6;display:inline-block">${fpTxt.slice(0,120)+(fpTxt.length>120?'…':'')}</span>` : null;
-      s3ShowInsight('False Alarm', '', msg, null, gfp);
+      s3ShowInsight('False Alarm', '', msg, ()=>{ showIntPop('s3',-15); flashDelta('s3',-15,'false alarm!'); }, gfp);
     } else {
       // Correct: correctly identified content as safe, advance
       pSelected(); s3state.levelActive=false; clearInterval(s3state.timerInt);
       s3state.levelsCompleted++;
       const timeBonus=lvl.timeLimit>0 ? Math.min(3, Math.floor(s3state.timeLeft/8)) : 0;
       s3state.integrity=Math.min(100,s3state.integrity+5+timeBonus);
-      showIntPop('s3',+(5+timeBonus)); flashDelta('s3',+(5+timeBonus),'correct — no injection');
+      s3state.pendingFlash={amount:+(5+timeBonus),msg:'correct — no injection'};
       updateIntUI('s3',s3state.integrity,0,S1_MAX_DRAIN);
       document.getElementById('s3levelPill').textContent='CLEARED';
       document.getElementById('s3levelPill').className='dc-pill secured';
@@ -3931,7 +3945,7 @@ function s3Flag(isInjection) {
     s3state.injectionFound++; s3state.levelsCompleted++;
     const timeBonus=lvl.timeLimit>0 ? Math.min(5, Math.floor(s3state.timeLeft/5)) : 0;
     s3state.integrity=Math.min(100,s3state.integrity+10+timeBonus);
-    showIntPop('s3',+(10+timeBonus)); flashDelta('s3',+(10+timeBonus),'injection neutralised!');
+    s3state.pendingFlash={amount:+(10+timeBonus),msg:'injection neutralised!'};
     updateIntUI('s3',s3state.integrity,0,S1_MAX_DRAIN);
     s3RevealInjection(id);
     document.getElementById('s3levelPill').textContent='NEUTRALISED';
@@ -3954,18 +3968,16 @@ function s3Flag(isInjection) {
     // False alarm on a real-injection level — flagged wrong token (safe decoy doesn't exist on these levels but handle gracefully)
     pWrong(); s3state.falseAlarms++;
     s3state.integrity=Math.max(0,s3state.integrity-15);
-    showIntPop('s3',-15); flashDelta('s3',-15,'false alarm — keep looking');
     updateIntUI('s3',s3state.integrity,0.8,S1_MAX_DRAIN);
     if(s3state.integrity<=0){ s3EndGame('breach'); return; }
-    s3ShowInsight('False Alarm', '', 'That is legitimate document content. The real injection gives instructions to an AI system — not information to a human reader. Keep scanning carefully.');
+    s3ShowInsight('False Alarm', '', 'That is legitimate document content. The real injection gives instructions to an AI system — not information to a human reader. Keep scanning carefully.', ()=>{ showIntPop('s3',-15); flashDelta('s3',-15,'false alarm — keep looking'); });
   } else {
     // Marked safe — small penalty, stay on level (injection still undetected)
     pWrong();
     s3state.integrity=Math.max(0,s3state.integrity-5);
-    showIntPop('s3',-5); flashDelta('s3',-5,'keep scanning');
     updateIntUI('s3',s3state.integrity,0.8,S1_MAX_DRAIN);
     if(s3state.integrity<=0){ s3EndGame('breach'); return; }
-    s3ShowInsight('False Alarm', '', 'There is an injection in this document — marking it safe leaves it active. The real injection directly instructs an AI system to change its behaviour or extract data. Keep scanning carefully.');
+    s3ShowInsight('False Alarm', '', 'There is an injection in this document — marking it safe leaves it active. The real injection directly instructs an AI system to change its behaviour or extract data. Keep scanning carefully.', ()=>{ showIntPop('s3',-5); flashDelta('s3',-5,'keep scanning'); });
   }
 }
 
