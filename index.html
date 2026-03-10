@@ -833,9 +833,38 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 }
 /* Notes view inside console — full-height like payload */
 .s2-notes-view {
-  padding:18px;
+  padding:0;
   font-family:'DM Sans',sans-serif; font-size:12.5px; line-height:1.85; color:rgba(200,220,255,.75);
 }
+/* Document-feel wrapper for meeting notes */
+.s2-notes-view .ai-response-window {
+  background:#f8f9fa; border:1px solid #d0d7de; border-radius:8px;
+  box-shadow:0 1px 4px rgba(0,0,0,.08), 0 8px 24px rgba(0,0,0,.06);
+}
+.s2-notes-view .ai-response-body {
+  background:#ffffff; color:#1f2328; font-family:Georgia,'Times New Roman',serif;
+  font-size:13px; line-height:2; padding:24px 28px; border-radius:0 0 8px 8px;
+}
+.s2-notes-view .ai-response-body h4 {
+  font-family:'DM Sans',sans-serif; font-size:11px; font-weight:700;
+  letter-spacing:.04em; color:#57606a; margin:18px 0 8px;
+  text-transform:uppercase; border-bottom:1px solid #d8dee4; padding-bottom:6px;
+}
+.s2-notes-view .ai-response-body strong { color:#1f2328; font-weight:700; }
+.s2-notes-view .ai-response-body .cite {
+  font-family:'JetBrains Mono',monospace; font-size:10px; color:#656d76;
+  border-left:2px solid #d0d7de; padding-left:12px;
+}
+.s2-notes-view .ai-response-body .num-stat {
+  font-family:'DM Sans',sans-serif; font-size:13px; font-weight:700; color:#1a7f37;
+}
+.s2-notes-docbar {
+  background:#f0f3f6; border-bottom:1px solid #d0d7de; padding:8px 16px;
+  font-family:'DM Sans',sans-serif; font-size:11px; font-weight:600;
+  color:#57606a; display:flex; align-items:center; gap:6px;
+  border-radius:8px 8px 0 0;
+}
+.s2-notes-docicon { font-size:14px; }
 .s2-notes-title {
   font-family:'Orbitron',monospace; font-size:10px; font-weight:700;
   letter-spacing:.08em; color:var(--text); margin-bottom:10px;
@@ -1919,7 +1948,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
           <div class="ib-mini-track"><div class="ib-mini-fill" id="s1mbProgCred" style="background:rgba(239,68,68,.8)"></div></div>
         </div>
         <div class="ib-mini-cat" id="s1mbCatPii">
-          <span class="ib-mini-lbl orange" id="s1mbLblPii">PII</span>
+          <span class="ib-mini-lbl orange" id="s1mbLblPii">DATA</span>
           <div class="ib-mini-track"><div class="ib-mini-fill" id="s1mbProgPii" style="background:rgba(251,146,60,.8)"></div></div>
         </div>
         <div class="ib-mini-cat" id="s1mbCatInt">
@@ -3464,6 +3493,7 @@ function s2BuildPayload() {
       </div>
     </div>
     <div class="ai-response-window">
+      <div class="s2-notes-docbar"><span class="s2-notes-docicon">\uD83D\uDCC4</span> Meeting Notes — Pinnacle Group · Automation Programme</div>
       <div class="ai-response-body">${S2_MEETING_NOTES}</div>
     </div>`;
 
