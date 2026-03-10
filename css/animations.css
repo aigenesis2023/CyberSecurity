@@ -1,3 +1,12 @@
+@keyframes launchFirstPulse {
+  0%, 100% { box-shadow: 0 0 4px rgba(56,189,248,.15); border-color: rgba(56,189,248,.22); }
+  50%       { box-shadow: 0 0 22px rgba(56,189,248,.55); border-color: rgba(56,189,248,.75); }
+}
+@media (max-width: 768px) {
+  .mc-launch-btn.first-pulse {
+    animation: launchFirstPulse 1.5s ease-in-out 3;
+  }
+}
 @keyframes intPopAnim {
   0%   { opacity:0;   transform:translateX(-50%) translateY(10px)  scale(.7); }
   15%  { opacity:1;   transform:translateX(-50%) translateY(0px)   scale(1.3); }

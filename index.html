@@ -1112,7 +1112,8 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 .mission-card.collapsed .mc-body { display: none; }
 .mission-card.collapsed .mc-launch-btn { display: none; }
 .mission-card.collapsed { cursor: pointer; }
-.mission-card.expanded .mc-collapse-chevron { transform: rotate(90deg); }
+.mission-card.expanded .mc-collapse-chevron { transform: rotate(180deg); }
+.mission-card.locked .mc-collapse-chevron { visibility: hidden; }
 
 /* ══ DEV TOGGLE ══ */
 #devToggleBtn {
@@ -1286,7 +1287,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
           <span class="mc-collapse-title">Sensitive Data Exposure</span>
           <span class="mc-collapse-stars" id="m1starsC"></span>
           <span class="mc-collapse-badge unlocked" id="m1collapseBadge"></span>
-          <span class="mc-collapse-chevron">▸</span>
+          <span class="mc-collapse-chevron">▼</span>
         </div>
         <div class="mc-body">
           <div class="mc-top-row">
@@ -1316,7 +1317,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
           <span class="mc-collapse-title">AI Hallucination Detection</span>
           <span class="mc-collapse-stars" id="m2starsC"></span>
           <span class="mc-collapse-badge locked-icon" id="m2collapseBadge">🔒</span>
-          <span class="mc-collapse-chevron">▸</span>
+          <span class="mc-collapse-chevron">▼</span>
         </div>
         <div class="mc-body">
           <div class="mc-top-row">
@@ -1348,7 +1349,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
           <span class="mc-collapse-title">Prompt Injection Attacks</span>
           <span class="mc-collapse-stars" id="m3starsC"></span>
           <span class="mc-collapse-badge locked-icon" id="m3collapseBadge">🔒</span>
-          <span class="mc-collapse-chevron">▸</span>
+          <span class="mc-collapse-chevron">▼</span>
         </div>
         <div class="mc-body">
           <div class="mc-top-row">
@@ -2162,6 +2163,7 @@ function pBleep()    { if(!audioReady||!SND.bleep)   return; const a=SND.bleep.c
 //  COURSE PROGRESS
 // ════════════════════════════════════════════
 let courseProgress = { s1done:false, s2done:false, s3done:false, s1score:null, s2score:null, s3score:null, certShown:false };
+let menuFirstRender = true;
 
 function saveProgress() {
   try { localStorage.setItem('adg_progress', JSON.stringify(courseProgress)); } catch(e){}
@@ -2309,8 +2311,15 @@ function updateMenuState() {
     const isLocked = (n === 2 && !courseProgress.s1done) || (n === 3 && !courseProgress.s2done);
     card.classList.remove('next-mission');
     if (isMobile) {
-      // Mobile: always collapsed unless user has manually expanded
-      if (!card.classList.contains('expanded')) {
+      // Mobile: auto-expand M1 on first render; others collapsed unless user expanded
+      if (n === 1 && menuFirstRender) {
+        card.classList.remove('collapsed');
+        card.classList.add('expanded');
+        const chevron = card.querySelector('.mc-collapse-chevron');
+        if (chevron) chevron.style.transform = 'rotate(180deg)';
+        const btn = document.getElementById('m1btn');
+        if (btn) btn.classList.add('first-pulse');
+      } else if (!card.classList.contains('expanded')) {
         card.classList.add('collapsed');
       }
       // Keep next-mission glow for visual prominence even when collapsed
@@ -2335,6 +2344,7 @@ function updateMenuState() {
       }
     }
   });
+  menuFirstRender = false;
 
   const clearanceNames=['AI Operator','AI Analyst','AI Reviewer','AI Data Guardian'];
   const cl=document.getElementById('clearanceLabel');
@@ -2377,14 +2387,18 @@ function toggleMissionCard(n) {
   if (card.classList.contains('collapsed')) {
     card.classList.remove('collapsed');
     card.classList.add('expanded');
-    // Animate chevron
     const chevron = card.querySelector('.mc-collapse-chevron');
-    if (chevron) chevron.style.transform = 'rotate(90deg)';
+    if (chevron) chevron.style.transform = 'rotate(180deg)';
   } else {
     card.classList.add('collapsed');
     card.classList.remove('expanded');
     const chevron = card.querySelector('.mc-collapse-chevron');
     if (chevron) chevron.style.transform = '';
+    // Remove pulse if user collapses M1
+    if (n === 1) {
+      const btn = document.getElementById('m1btn');
+      if (btn) btn.classList.remove('first-pulse');
+    }
   }
 }
 
