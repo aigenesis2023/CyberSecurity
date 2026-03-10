@@ -176,6 +176,15 @@
   .mission-cards { gap: 16px; }
   .mission-card  { width: calc(100vw - 48px); max-width: 340px; }
   .mission-title { font-size: 28px; }
+
+  /* Threat briefing */
+  .obj-center { width:100%; max-width:calc(100vw - 32px); }
+  .obj-heading { font-size:22px; min-height:56px; }
+  .obj-sub { font-size:12px; }
+  .obj-terminal { font-size:8px; top:12px; left:12px; right:12px; }
+  .obj-threat { padding:12px 14px; gap:10px; }
+  .obj-threat-icon { width:32px; height:32px; font-size:15px; }
+  .obj-threat-label { font-size:12px; }
 }
 
 
@@ -238,6 +247,15 @@
   .v-headline   { font-size: 22px; }
   .v-next-btn   { padding: 14px; font-size: 10px; }
   .v-reset      { font-size: 12px; padding: 13px; }
+
+  /* Threat briefing — tighter on small phones */
+  .obj-heading { font-size:20px; min-height:50px; }
+  .obj-priority { font-size:9px; padding:5px 14px; }
+  .obj-threat { padding:10px 12px; }
+  .obj-threat-icon { width:28px; height:28px; font-size:14px; border-radius:6px; }
+  .obj-threat-label { font-size:11px; }
+  .obj-threat-sev { font-size:7px; padding:3px 8px; }
+  .obj-sub { font-size:11px; padding:0 8px; }
 
   /* Mission select: prevent header from being pushed off-screen */
   .mission-screen  { padding: 56px 16px 40px; justify-content: flex-start; }

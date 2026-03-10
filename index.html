@@ -874,37 +874,142 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 /* ════════════════════════════════════════════
    LEARNING OBJECTIVES INTERSTITIAL
 ════════════════════════════════════════════ */
+/* ── Cinematic Objectives Overlay ── */
 .obj-overlay {
   position:fixed; inset:0; z-index:350;
-  background:rgba(4,10,20,0.96);
-  display:flex; align-items:center; justify-content:center;
+  background:#030810;
+  display:flex; align-items:center; justify-content:center; flex-direction:column;
   opacity:0; pointer-events:none;
   transition:opacity .5s ease;
+  overflow:hidden;
 }
 .obj-overlay.show { opacity:1; pointer-events:all; }
-.obj-card {
-  width:500px; max-width:calc(100vw - 32px);
-  background:rgba(8,20,45,0.55);
-  border:1px solid rgba(255,255,255,.16);
-  border-radius:14px; overflow:hidden;
-  backdrop-filter:blur(32px);
-  box-shadow:0 40px 80px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.07);
-  animation:verdictIn .55s cubic-bezier(.34,1.56,.64,1) both;
+
+/* Animated grid background */
+.obj-grid-bg {
+  position:absolute; inset:0; overflow:hidden; pointer-events:none;
+  background:
+    linear-gradient(rgba(56,189,248,.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56,189,248,.03) 1px, transparent 1px);
+  background-size:60px 60px;
+  mask-image:radial-gradient(ellipse 70% 60% at 50% 45%, black 0%, transparent 100%);
+  -webkit-mask-image:radial-gradient(ellipse 70% 60% at 50% 45%, black 0%, transparent 100%);
+  animation:gridDrift 20s linear infinite;
 }
-.obj-top { height:3px; background:linear-gradient(90deg,transparent,rgba(56,189,248,.7) 30%,rgba(56,189,248,.4) 70%,transparent); }
-.obj-body { padding:28px 30px 24px; }
-.obj-eyebrow { font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.2em; text-transform:uppercase; color:rgba(56,189,248,.45); margin-bottom:10px; }
-.obj-title  { font-family:'Orbitron',monospace; font-size:18px; font-weight:900; color:#fff; margin-bottom:8px; letter-spacing:.04em; }
-.obj-intro  { font-family:'DM Sans',sans-serif; font-size:12px; color:rgba(200,220,255,.6); line-height:1.75; font-weight:300; margin-bottom:20px; }
-.obj-list   { display:flex; flex-direction:column; gap:10px; margin-bottom:24px; }
-.obj-item   { display:flex; align-items:flex-start; gap:12px; }
-.obj-num    { font-family:'Orbitron',monospace; font-size:10px; font-weight:700; color:rgba(56,189,248,.7); background:rgba(56,189,248,.08); border:1px solid rgba(56,189,248,.2); border-radius:5px; padding:3px 8px; flex-shrink:0; margin-top:1px; }
-.obj-text   { font-family:'DM Sans',sans-serif; font-size:12px; color:rgba(200,220,255,.75); line-height:1.6; font-weight:300; }
-.obj-text strong { color:#fff; font-weight:500; }
-.obj-footer { padding:0 30px 26px; }
-.obj-cta    { width:100%; padding:13px; font-family:'Orbitron',monospace; font-size:11px; font-weight:700; letter-spacing:.2em; text-transform:uppercase; background:transparent; border:1px solid rgba(255,255,255,.22); color:rgba(255,255,255,.85); border-radius:8px; cursor:pointer; transition:all .2s; animation:ctaPulse 1.4s ease 1s infinite; }
-.obj-cta:hover { background:rgba(255,255,255,.05); border-color:rgba(255,255,255,.45); }
-/* First-time flag — shown only once per device */
+@keyframes gridDrift { 0%{transform:translate(0,0)} 100%{transform:translate(60px,60px)} }
+
+/* Scan line sweep */
+.obj-scan-line {
+  position:absolute; left:0; right:0; height:2px; top:-2px;
+  background:linear-gradient(90deg, transparent 0%, rgba(56,189,248,.5) 30%, rgba(56,189,248,.8) 50%, rgba(56,189,248,.5) 70%, transparent 100%);
+  box-shadow:0 0 30px 8px rgba(56,189,248,.15);
+  pointer-events:none; opacity:0;
+}
+.obj-scan-line.active { animation:objScanSweep 2s ease-in-out forwards; }
+@keyframes objScanSweep { 0%{top:-2px;opacity:0} 5%{opacity:1} 95%{opacity:1} 100%{top:100%;opacity:0} }
+
+/* Terminal log at top */
+.obj-terminal {
+  position:absolute; top:20px; left:20px; right:20px;
+  font-family:'JetBrains Mono',monospace; font-size:10px; color:rgba(56,189,248,.35);
+  letter-spacing:.04em; line-height:1.8; max-height:80px; overflow:hidden;
+  pointer-events:none; opacity:0; transition:opacity .4s;
+}
+.obj-terminal.show { opacity:1; }
+.obj-terminal div { opacity:0; animation:termLine .3s ease forwards; }
+@keyframes termLine { from{opacity:0;transform:translateX(-8px)} to{opacity:1;transform:none} }
+
+/* Central content wrapper */
+.obj-center {
+  display:flex; flex-direction:column; align-items:center; gap:0;
+  z-index:2; width:600px; max-width:calc(100vw - 40px);
+}
+
+/* Priority badge */
+.obj-priority {
+  font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700;
+  letter-spacing:.25em; text-transform:uppercase;
+  color:#f87171; background:rgba(248,113,113,.08); border:1px solid rgba(248,113,113,.25);
+  padding:6px 18px; border-radius:3px; margin-bottom:20px;
+  opacity:0; transform:translateY(8px);
+}
+.obj-priority.show { animation:objFadeUp .5s ease forwards; }
+
+/* Main heading — decrypt target */
+.obj-heading {
+  font-family:'Orbitron',monospace; font-size:28px; font-weight:900;
+  color:#fff; text-align:center; letter-spacing:.06em; line-height:1.25;
+  margin-bottom:10px; min-height:72px;
+  text-shadow:0 0 60px rgba(56,189,248,.25);
+  opacity:0;
+}
+.obj-heading.show { opacity:1; }
+
+/* Subtitle */
+.obj-sub {
+  font-family:'DM Sans',sans-serif; font-size:13px; font-weight:300;
+  color:rgba(200,220,255,.4); text-align:center; letter-spacing:.04em;
+  margin-bottom:36px; opacity:0; transform:translateY(6px);
+}
+.obj-sub.show { animation:objFadeUp .5s ease forwards; }
+
+/* Threat cards */
+.obj-threats {
+  display:flex; flex-direction:column; gap:10px; width:100%; margin-bottom:36px;
+}
+.obj-threat {
+  display:flex; align-items:center; gap:14px;
+  background:rgba(56,189,248,.03); border:1px solid rgba(56,189,248,.1);
+  border-radius:10px; padding:14px 18px;
+  opacity:0; transform:translateX(-20px);
+  transition:border-color .2s, background .2s;
+}
+.obj-threat.show { animation:objSlideIn .45s cubic-bezier(.4,0,.2,1) forwards; }
+.obj-threat:hover { border-color:rgba(56,189,248,.3); background:rgba(56,189,248,.06); }
+.obj-threat-icon {
+  width:38px; height:38px; border-radius:8px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center; font-size:18px;
+  background:rgba(56,189,248,.06); border:1px solid rgba(56,189,248,.15);
+}
+.obj-threat-body { flex:1; min-width:0; }
+.obj-threat-num {
+  font-family:'JetBrains Mono',monospace; font-size:8px; font-weight:700;
+  letter-spacing:.2em; text-transform:uppercase; color:rgba(56,189,248,.5);
+  margin-bottom:2px;
+}
+.obj-threat-label {
+  font-family:'DM Sans',sans-serif; font-size:13px; font-weight:500;
+  color:rgba(255,255,255,.9); line-height:1.4;
+}
+.obj-threat-sev {
+  font-family:'JetBrains Mono',monospace; font-size:8px; font-weight:700;
+  letter-spacing:.15em; text-transform:uppercase; flex-shrink:0;
+  padding:4px 10px; border-radius:3px;
+}
+.obj-threat-sev.high { color:#f87171; background:rgba(248,113,113,.1); border:1px solid rgba(248,113,113,.2); }
+.obj-threat-sev.crit { color:#fb923c; background:rgba(251,146,60,.1); border:1px solid rgba(251,146,60,.2); }
+
+/* CTA button */
+.obj-cta-wrap { opacity:0; transform:translateY(10px); width:100%; }
+.obj-cta-wrap.show { animation:objFadeUp .5s ease forwards; }
+.obj-cta {
+  width:100%; padding:16px; font-family:'Orbitron',monospace; font-size:11px;
+  font-weight:700; letter-spacing:.22em; text-transform:uppercase;
+  background:transparent; border:1px solid rgba(74,222,128,.4);
+  color:rgba(74,222,128,.9); border-radius:8px; cursor:pointer;
+  transition:all .25s; position:relative; overflow:hidden;
+}
+.obj-cta::before {
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(135deg, rgba(74,222,128,.08) 0%, transparent 60%);
+  opacity:0; transition:opacity .25s;
+}
+.obj-cta:hover { border-color:rgba(74,222,128,.7); color:#fff; box-shadow:0 0 30px rgba(74,222,128,.15); }
+.obj-cta:hover::before { opacity:1; }
+.obj-cta.glow { animation:ctaPulse 1.4s ease infinite; }
+
+@keyframes objFadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+@keyframes objSlideIn { from{opacity:0;transform:translateX(-20px)} to{opacity:1;transform:translateX(0)} }
 
 /* ════════════════════════════════════════════
    PAUSE OVERLAY
@@ -1267,33 +1372,47 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 </div>
 
 <!-- ══════════════════════════════════════════════
-     LEARNING OBJECTIVES INTERSTITIAL
-     Shown once (on first visit). Skipped on return.
+     THREAT BRIEFING — Cinematic Opening
 ══════════════════════════════════════════════ -->
-<div class="obj-overlay" id="objOverlay" onclick="dismissObjectives()">
-  <div class="obj-card" onclick="event.stopPropagation()">
-    <div class="obj-top"></div>
-    <div class="obj-body">
-      <div class="obj-eyebrow">AI Safety Training · Learning Objectives</div>
-      <div class="obj-title">What You Will Learn</div>
-      <div class="obj-intro">This module trains you to identify the three most common AI-related security risks in the workplace. By the end, you will be able to:</div>
-      <div class="obj-list">
-        <div class="obj-item">
-          <div class="obj-num">01</div>
-          <div class="obj-text"><strong>Identify and classify sensitive data</strong> in AI prompts — including credentials, personal data, and internal information — before it leaves your organisation.</div>
+<div class="obj-overlay" id="objOverlay">
+  <div class="obj-grid-bg"></div>
+  <div class="obj-scan-line" id="objScanLine"></div>
+  <div class="obj-terminal" id="objTerminal"></div>
+
+  <div class="obj-center">
+    <div class="obj-priority" id="objPriority">⚠ PRIORITY: URGENT</div>
+    <div class="obj-heading" id="objHeading"></div>
+    <div class="obj-sub" id="objSub">Your organisation is exposed. Three simulated missions. One chance to prove you can stop them.</div>
+
+    <div class="obj-threats" id="objThreats">
+      <div class="obj-threat" id="objT1">
+        <div class="obj-threat-icon">🔓</div>
+        <div class="obj-threat-body">
+          <div class="obj-threat-num">Mission 01</div>
+          <div class="obj-threat-label">Sensitive data leaking through AI prompts</div>
         </div>
-        <div class="obj-item">
-          <div class="obj-num">02</div>
-          <div class="obj-text"><strong>Spot AI hallucinations</strong> in generated reports — fabricated citations, invented statistics, and non-existent legal provisions — before they reach decision-makers.</div>
+        <div class="obj-threat-sev high">HIGH</div>
+      </div>
+      <div class="obj-threat" id="objT2">
+        <div class="obj-threat-icon">👁</div>
+        <div class="obj-threat-body">
+          <div class="obj-threat-num">Mission 02</div>
+          <div class="obj-threat-label">AI hallucinations embedded in live reports</div>
         </div>
-        <div class="obj-item">
-          <div class="obj-num">03</div>
-          <div class="obj-text"><strong>Detect prompt injection attacks</strong> hidden inside documents — instructions designed to trick your AI tool into doing something it shouldn't.</div>
+        <div class="obj-threat-sev high">HIGH</div>
+      </div>
+      <div class="obj-threat" id="objT3">
+        <div class="obj-threat-icon">⚡</div>
+        <div class="obj-threat-body">
+          <div class="obj-threat-num">Mission 03</div>
+          <div class="obj-threat-label">Prompt injection attacks hidden in documents</div>
         </div>
+        <div class="obj-threat-sev crit">CRITICAL</div>
       </div>
     </div>
-    <div class="obj-footer">
-      <button class="obj-cta" onclick="dismissObjectives()">▶ &nbsp;&nbsp;BEGIN TRAINING</button>
+
+    <div class="obj-cta-wrap" id="objCtaWrap">
+      <button class="obj-cta" id="objCta" onclick="dismissObjectives()">▶ &nbsp;&nbsp;BEGIN TRAINING</button>
     </div>
   </div>
 </div>
@@ -4108,17 +4227,109 @@ function runSplashLoader() {
 }
 
 // ════════════════════════════════════════════
-//  LEARNING OBJECTIVES INTERSTITIAL
+//  CINEMATIC THREAT BRIEFING
 // ════════════════════════════════════════════
+const OBJ_TERMINAL_LINES = [
+  '> sec-ops :: threat-monitor v4.2.1 active',
+  '> scanning organisational AI endpoints...',
+  '> ██ 3 active threat vectors detected',
+  '> classification: DATA LEAK / HALLUCINATION / INJECTION',
+  '> escalation level: URGENT — agent briefing required',
+  '> preparing threat briefing...',
+];
+
+function _scrambleText(el, finalText, duration, cb) {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%&*!?<>{}[]';
+  const len = finalText.length;
+  const start = performance.now();
+  el.style.opacity = '1';
+  el.classList.add('show');
+  function frame(now) {
+    const elapsed = now - start;
+    const progress = Math.min(1, elapsed / duration);
+    // Characters resolve left-to-right
+    const resolved = Math.floor(progress * len);
+    let out = '';
+    for (let i = 0; i < len; i++) {
+      if (finalText[i] === ' ') { out += ' '; continue; }
+      if (i < resolved) { out += finalText[i]; }
+      else { out += chars[Math.floor(Math.random() * chars.length)]; }
+    }
+    el.textContent = out;
+    if (progress < 1) requestAnimationFrame(frame);
+    else { el.textContent = finalText; if (cb) cb(); }
+  }
+  requestAnimationFrame(frame);
+}
+
+function runThreatBriefing() {
+  const terminal = document.getElementById('objTerminal');
+  const scanLine = document.getElementById('objScanLine');
+  const priority = document.getElementById('objPriority');
+  const heading  = document.getElementById('objHeading');
+  const sub      = document.getElementById('objSub');
+  const threats  = [document.getElementById('objT1'), document.getElementById('objT2'), document.getElementById('objT3')];
+  const ctaWrap  = document.getElementById('objCtaWrap');
+  const cta      = document.getElementById('objCta');
+
+  let t = 0; // running delay in ms
+
+  // Phase 1: Terminal lines trickle in (0–1800ms)
+  terminal.classList.add('show');
+  OBJ_TERMINAL_LINES.forEach((line, i) => {
+    setTimeout(() => {
+      const div = document.createElement('div');
+      div.textContent = line;
+      div.style.animationDelay = '0s';
+      terminal.appendChild(div);
+    }, t);
+    t += 280;
+  });
+
+  // Phase 2: Scan line sweeps (1800ms)
+  setTimeout(() => { scanLine.classList.add('active'); }, t);
+  t += 600;
+
+  // Phase 3: Priority badge appears (2400ms)
+  setTimeout(() => { priority.classList.add('show'); }, t);
+  t += 400;
+
+  // Phase 4: Heading decrypts (2800ms)
+  const headingText = '3 THREATS DETECTED';
+  setTimeout(() => { _scrambleText(heading, headingText, 1200); }, t);
+  t += 1400;
+
+  // Phase 5: Subtitle fades up (4200ms)
+  setTimeout(() => { sub.classList.add('show'); }, t);
+  t += 400;
+
+  // Phase 6: Threat cards slide in staggered (4600ms)
+  threats.forEach((card, i) => {
+    setTimeout(() => { card.classList.add('show'); }, t + i * 220);
+  });
+  t += threats.length * 220 + 300;
+
+  // Phase 7: CTA appears with glow (5560ms)
+  setTimeout(() => {
+    ctaWrap.classList.add('show');
+    setTimeout(() => cta.classList.add('glow'), 400);
+  }, t);
+
+  // Fade terminal after everything is shown
+  setTimeout(() => { terminal.style.opacity = '0.15'; }, t + 200);
+}
+
 function showObjectivesIfNeeded() {
   try {
     const seen = localStorage.getItem('adg_objectives_seen');
     if (!seen) {
-      document.getElementById('objOverlay').classList.add('show');
+      const ov = document.getElementById('objOverlay');
+      ov.classList.add('show');
+      // Small delay to let the overlay fade in before the sequence starts
+      setTimeout(runThreatBriefing, 400);
       return;
     }
   } catch(e) {}
-  // Already seen — go straight to menu
   showScreen('screenMenu');
 }
 function dismissObjectives() {
