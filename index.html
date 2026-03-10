@@ -3837,8 +3837,9 @@ function s2EndGame(reason) {
   updatePauseBtn();
   clearInterval(s2state.drainInt);
   var intFinal=Math.max(0,Math.round(s2state.integrity));
-  var S2_MIN_HALS = 3; // must catch at least 3 of 5 hallucinations to pass
-  var pass=(reason!=='breach')&&intFinal>0&&s2state.flagsCorrect>=S2_MIN_HALS;
+  var S2_MIN_HALS = 4; // must catch at least 4 of 5 hallucinations to pass
+  var S2_MIN_INTEGRITY = 30; // must retain at least 30% integrity
+  var pass=(reason!=='breach')&&intFinal>=S2_MIN_INTEGRITY&&s2state.flagsCorrect>=S2_MIN_HALS;
   var precisionPass = pass && s2state.flagsCorrect>=S2_HAL_COUNT && s2state.flagsWrong===0;
   if(pass){ pSuccess(); courseProgress.s2done=true; saveProgress(); }
   else pError();
@@ -3854,8 +3855,10 @@ function s2EndGame(reason) {
   if(!pass) {
     if(reason==='breach') {
       vMsg = 'Your credibility was compromised. Too many errors drained your integrity to zero \u2014 in a real scenario, the client would lose trust in your review process entirely.\n\nTip: Compare every specific number, name, and recommendation against the source material. AI hallucinations are hardest to spot when they sound plausible.';
-    } else {
+    } else if(s2state.flagsCorrect<S2_MIN_HALS) {
       vMsg = 'The report reached James Okafor with '+missed+' of '+S2_HAL_COUNT+' fabricated claim'+(missed!==1?'s':'')+' still inside. You only caught '+s2state.flagsCorrect+'/'+S2_HAL_COUNT+' hallucinations \u2014 not enough to consider the report verified. In a real scenario, the client would act on invented figures and recommendations that were never discussed.\n\nYou need to catch at least '+S2_MIN_HALS+' of the '+S2_HAL_COUNT+' hallucinations. Compare every figure, name, and recommendation against the meeting notes.';
+    } else {
+      vMsg = 'You identified '+s2state.flagsCorrect+' of '+S2_HAL_COUNT+' hallucinations, but too many errors eroded your credibility to '+intFinal+'%. In a real scenario, flagging accurate content as fabricated undermines trust in your review \u2014 colleagues stop acting on valid concerns when surrounded by false alarms.\n\nYou need to maintain at least '+S2_MIN_INTEGRITY+'% integrity. Only flag claims you can confirm are fabricated by checking the source material.';
     }
   } else if(missed===0) {
     vMsg = 'Report intercepted. You found all '+S2_HAL_COUNT+' fabricated claims \u2014 including inflated figures, an invented job title, a fabricated strategy name, and a recommendation that was never discussed. AI models generate false information with the same confident tone as accurate information. There is no internal signal.\n\nJames Okafor will receive this report. He\u2019ll trust it because Marcus reviewed it. That trust is now yours to carry.';
@@ -3867,7 +3870,7 @@ function s2EndGame(reason) {
   document.getElementById('s2vInt').className='v-mv '+(intFinal>60?'green':intFinal>30?'orange':'red');
   // Simplified verdict rows
   document.getElementById('s2vHalsCaught').textContent=s2state.flagsCorrect+'/'+S2_HAL_COUNT;
-  document.getElementById('s2vHalsCaught').className='v-rv '+(s2state.flagsCorrect>=S2_HAL_COUNT?'green':s2state.flagsCorrect>=3?'orange':'red');
+  document.getElementById('s2vHalsCaught').className='v-rv '+(s2state.flagsCorrect>=S2_HAL_COUNT?'green':s2state.flagsCorrect>=S2_MIN_HALS?'orange':'red');
   document.getElementById('s2vFalseFlags').textContent=s2state.flagsWrong===0?'None':s2state.flagsWrong;
   document.getElementById('s2vFalseFlags').className='v-rv '+(s2state.flagsWrong===0?'green':'red');
   var anchorText2=document.getElementById('s2vAnchorText');
