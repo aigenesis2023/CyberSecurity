@@ -635,8 +635,8 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 .v-rv.green { color:var(--green); } .v-rv.red { color:var(--red); } .v-rv.orange { color:var(--orange); } .v-rv.yellow { color:var(--yellow); }
 .v-reset { width:100%; padding:13px; background:transparent; border:1px solid rgba(255,255,255,.18); border-radius:10px; color:rgba(255,255,255,.7); font-family:'DM Sans',sans-serif; font-size:12px; font-weight:500; letter-spacing:.04em; cursor:pointer; transition:all .2s; margin-top:8px; }
 .v-reset:hover { background:rgba(255,255,255,.05); border-color:rgba(255,255,255,.35); color:rgba(255,255,255,.9); }
-.v-retry-btn { width:100%; padding:14px; background:rgba(239,68,68,.1); border:1px solid rgba(239,68,68,.4); border-radius:10px; color:var(--red); font-family:'Orbitron',monospace; font-size:10px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; cursor:pointer; transition:all .2s; margin-top:10px; }
-.v-retry-btn:hover { background:rgba(239,68,68,.2); border-color:rgba(239,68,68,.7); box-shadow:0 0 16px rgba(239,68,68,.2); }
+.v-retry-btn { width:100%; padding:14px; background:rgba(56,189,248,.08); border:1px solid rgba(56,189,248,.35); border-radius:10px; color:var(--blue2); font-family:'Orbitron',monospace; font-size:10px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; cursor:pointer; transition:all .2s; margin-top:10px; }
+.v-retry-btn:hover { background:rgba(56,189,248,.16); border-color:rgba(56,189,248,.6); box-shadow:0 0 16px rgba(56,189,248,.15); }
 .v-menu-btn { width:100%; padding:14px; background:rgba(56,189,248,.08); border:1px solid rgba(56,189,248,.35); border-radius:10px; color:var(--blue2); font-family:'Orbitron',monospace; font-size:10px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; cursor:pointer; transition:all .2s; margin-top:10px; }
 .v-menu-btn:hover { background:rgba(56,189,248,.16); border-color:rgba(56,189,248,.6); box-shadow:0 0 16px rgba(56,189,248,.15); }
 .v-next-btn { width:100%; padding:14px; margin-top:18px; font-family:'Orbitron',monospace; font-size:11px; font-weight:700; letter-spacing:.22em; text-transform:uppercase; background:rgba(56,189,248,.14); border:1px solid rgba(56,189,248,.45); border-radius:10px; color:#fff; cursor:pointer; transition:all .2s; }
@@ -3585,7 +3585,7 @@ function s2Classify(chosen) {
       pSelected();
       tok.flagged=true;
       const el=document.querySelector('#s2payload .tok[data-id="'+id+'"]');
-      if(el){ el.className='tok flagged-wrong'; el.innerHTML='<span class="redact-label">'+el.textContent.trim()+'</span>\u2713'; el.removeEventListener('click',s2TokenClick); }
+      if(el){ el.className='tok flagged-wrong'; el.innerHTML='<span class="redact-label">'+el.textContent.trim()+'</span>'; el.removeEventListener('click',s2TokenClick); }
       updateIntUI('s2',s2state.integrity,0,S1_MAX_DRAIN);
       if(S2_TEACH[id]&&S2_TEACH[id].falseflag) {
         s2ShowInsight('LOOKS ACCURATE', tokText2, 'Correct \u2014 this claim is in the meeting notes.', function(){ flashDelta('s2', 0, 'accurate \u2014 good call'); s2CheckAllDone(); }, null, true, 'accurate');
@@ -4195,10 +4195,10 @@ function s3EndGame(reason) {
   document.getElementById('s3vTimeouts').className='v-rv '+(s3state.timeouts===0?'green':'orange');
   const anchorText3=document.getElementById('s3vAnchorText');
   if(pass) {
-    anchorText3.innerHTML = 'Prompt injection attacks on AI-integrated business tools are documented in the wild. In 2024, researchers demonstrated attacks where malicious documents caused AI email assistants to forward confidential messages to attackers — by embedding instructions invisible to human readers but processed by the AI. In this training, the injections were visible so you could learn to spot the pattern — but in the real world, they can also be hidden in white-on-white text, metadata fields, or encoded characters that humans cannot see at all. The skill is the same: always review AI output for unexpected behaviour after processing external documents.' + '<br><br><span style="font-family:\'JetBrains Mono\',monospace;font-size:9px;letter-spacing:.12em;color:rgba(56,189,248,.5);text-transform:uppercase;">What a Guardian does before submitting any external document</span><br><span style="font-size:11px;line-height:1.9;color:rgba(200,220,255,.65);">→ Read external documents carefully before pasting them into any AI tool<br>→ Unexpected AI output after processing an external file is a red flag<br>→ The document is the attack surface — treat it as untrusted input</span>';
+    anchorText3.innerHTML = 'In 2024, researchers showed that malicious documents could hijack AI email assistants into forwarding confidential data to attackers. Here, the injections were visible so you could learn the pattern — in the real world, they can be hidden in white-on-white text or metadata you\'d never see.' + '<br><br><span style="font-family:\'JetBrains Mono\',monospace;font-size:9px;letter-spacing:.12em;color:rgba(56,189,248,.5);text-transform:uppercase;">What you now do differently</span><br><span style="font-size:11px;line-height:1.9;color:rgba(200,220,255,.65);">→ Read external documents before pasting them into any AI tool<br>→ Unexpected AI output after processing a file is a red flag<br>→ The document is the attack surface — treat it as untrusted input</span>';
     if(precisionPass){ const b=document.getElementById('s3vBonus'); b.style.display='block'; b.innerHTML='<div class="v-bonus-wrap"><span class="v-precision-bonus">⬡ PRECISION BONUS — No false alarms, no timeouts</span></div>'; }
   } else {
-    anchorText3.textContent = 'In 2024, researchers demonstrated that prompt injections in shared documents could cause AI email assistants to forward confidential data to attackers without the user\'s knowledge. The same technique was used in every injection you missed — a hidden instruction the AI processed while you scanned past it.';
+    anchorText3.textContent = 'In 2024, researchers showed that prompt injections in shared documents could hijack AI assistants into leaking confidential data. The same technique was in every injection you missed — a hidden instruction the AI followed while you scanned past it.';
   }
   document.getElementById('s3retryBtn').style.display=pass?'none':'block';
   const mb3=document.getElementById('s3menuBtn'); mb3.textContent=pass?'▶ MISSION SELECT':'← MISSION SELECT';
