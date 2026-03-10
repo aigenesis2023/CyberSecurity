@@ -3197,13 +3197,9 @@ function s2BuildPayload() {
 
   document.getElementById('s2payload').innerHTML = `
     <div class="ai-response-window">
-        <div class="ai-response-title">AI Assistant — GDPR Compliance Report</div>
-      </div>
       <div class="ai-scenario-frame">📋 <strong>Your task:</strong> The legal team used an AI assistant to draft this GDPR compliance brief and sent it to you for a second pair of eyes before it goes to senior management. <strong>Flag every fabricated claim</strong> — hallucinations carry the same confident tone as facts, and there is no internal signal.</div>
+      <span class="s2-section-counter" id="s2SectionCounter" style="display:block;padding:10px 0 2px">Section 1 of 3</span>
       <div class="ai-response-body" id="s2docBody">${sectionHTML}</div>
-      <div class="s2-section-nav" id="s2SectionNav">
-        <span class="s2-section-counter" id="s2SectionCounter">Section 1 of 3</span>
-      </div>
     </div>`;
 
   // Attach listeners for tokens in visible section 1
