@@ -639,6 +639,8 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 .v-rv.green { color:var(--green); } .v-rv.red { color:var(--red); } .v-rv.orange { color:var(--orange); } .v-rv.yellow { color:var(--yellow); }
 .v-reset { width:100%; padding:13px; background:transparent; border:1px solid rgba(255,255,255,.18); border-radius:10px; color:rgba(255,255,255,.7); font-family:'DM Sans',sans-serif; font-size:12px; font-weight:500; letter-spacing:.04em; cursor:pointer; transition:all .2s; margin-top:8px; }
 .v-reset:hover { background:rgba(255,255,255,.05); border-color:rgba(255,255,255,.35); color:rgba(255,255,255,.9); }
+.v-retry-btn { width:100%; padding:14px; background:rgba(239,68,68,.1); border:1px solid rgba(239,68,68,.4); border-radius:10px; color:var(--red); font-family:'Orbitron',monospace; font-size:10px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; cursor:pointer; transition:all .2s; margin-top:10px; }
+.v-retry-btn:hover { background:rgba(239,68,68,.2); border-color:rgba(239,68,68,.7); box-shadow:0 0 16px rgba(239,68,68,.2); }
 .v-menu-btn { width:100%; padding:14px; background:rgba(56,189,248,.08); border:1px solid rgba(56,189,248,.35); border-radius:10px; color:var(--blue2); font-family:'Orbitron',monospace; font-size:10px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; cursor:pointer; transition:all .2s; margin-top:10px; }
 .v-menu-btn:hover { background:rgba(56,189,248,.16); border-color:rgba(56,189,248,.6); box-shadow:0 0 16px rgba(56,189,248,.15); }
 .v-next-btn { width:100%; padding:14px; margin-top:18px; font-family:'Orbitron',monospace; font-size:11px; font-weight:700; letter-spacing:.22em; text-transform:uppercase; background:rgba(56,189,248,.14); border:1px solid rgba(56,189,248,.45); border-radius:10px; color:#fff; cursor:pointer; transition:all .2s; }
@@ -1902,6 +1904,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
           <div class="v-anchor-lbl">⬡ Real World</div>
           <div class="v-anchor-text" id="s1vAnchorText"></div>
         </div>
+        <button class="v-retry-btn" id="s1retryBtn" onclick="s1Reset()" style="display:none">↻ TRY AGAIN</button>
         <button class="v-menu-btn" id="s1menuBtn" onclick="goMenu()">← MISSION SELECT</button>
       </div>
     </div>
@@ -2105,6 +2108,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
           <div class="v-anchor-lbl">⬡ Real World</div>
           <div class="v-anchor-text" id="s2vAnchorText"></div>
         </div>
+        <button class="v-retry-btn" id="s2retryBtn" onclick="s2Reset()" style="display:none">↻ TRY AGAIN</button>
         <button class="v-menu-btn" id="s2menuBtn" onclick="goMenu()">← MISSION SELECT</button>
       </div>
     </div>
@@ -2285,6 +2289,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
           <div class="v-anchor-lbl">⬡ Real World</div>
           <div class="v-anchor-text" id="s3vAnchorText"></div>
         </div>
+        <button class="v-retry-btn" id="s3retryBtn" onclick="s3Reset()" style="display:none">↻ TRY AGAIN</button>
         <button class="v-menu-btn" id="s3menuBtn" onclick="goMenu()">← MISSION SELECT</button>
       </div>
     </div>
@@ -3338,6 +3343,7 @@ function s1EndGame(reason) {
   document.getElementById('s1vIntel').className='v-rv '+(intLeft===0?'green':'yellow');
   document.getElementById('s1vErrors').textContent=s1state.classifyErrors===0?'None':s1state.classifyErrors+' Errors';
   document.getElementById('s1vErrors').className='v-rv '+(s1state.classifyErrors===0?'green':'red');
+  document.getElementById('s1retryBtn').style.display=pass?'none':'block';
   document.getElementById('s1menuBtn').textContent=pass?'▶ MISSION SELECT':'← MISSION SELECT';
   // Update compact status headers for steps 2 & 3
   ['s1vCompact2','s1vCompact3'].forEach(id => {
@@ -3758,6 +3764,7 @@ function s2EndGame(reason) {
   } else {
     anchorText2.textContent = 'In the Mata v. Avianca case (2023), lawyers submitted AI-generated case citations to a US federal court \u2014 every cited case was invented. The attorneys were sanctioned. AI-fabricated content in client reports carries direct professional and financial consequences. Always verify against source material.';
   }
+  document.getElementById('s2retryBtn').style.display=pass?'none':'block';
   var mb2=document.getElementById('s2menuBtn'); mb2.textContent=pass?'\u25B6 MISSION SELECT':'\u2190 MISSION SELECT';
   ['s2vCompact2','s2vCompact3'].forEach(function(cid) {
     var el = document.getElementById(cid);
@@ -4215,6 +4222,7 @@ function s3EndGame(reason) {
   } else {
     anchorText3.textContent = 'In 2024, researchers demonstrated that prompt injections in shared documents could cause AI email assistants to forward confidential data to attackers without the user\'s knowledge. The same technique was used in every injection you missed — a hidden instruction the AI processed while you scanned past it.';
   }
+  document.getElementById('s3retryBtn').style.display=pass?'none':'block';
   const mb3=document.getElementById('s3menuBtn'); mb3.textContent=pass?'▶ MISSION SELECT':'← MISSION SELECT';
   // Update compact status headers for steps 2 & 3
   ['s3vCompact2','s3vCompact3'].forEach(id => {
