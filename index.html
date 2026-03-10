@@ -964,10 +964,12 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
   .ib-num { font-size:32px; }
   /* Scan items row: visible on all mobile sizes */
   .shell-scan-row { display:block; margin:0 12px 8px; }
-  /* Shell: single column, no reserved space for fixed drawer */
+  /* Shell: single column, no diag panel */
   .shell { grid-template-columns:1fr; grid-template-rows:1fr; padding:8px 12px 12px 12px; min-height:unset; gap:8px; }
-  /* Diag: static, always visible at bottom of content */
-  .diag { grid-column:1 / -1 !important; position:static !important; height:auto !important; max-height:none !important; overflow:visible !important; border-radius:8px !important; padding:16px 15px !important; top:auto !important; bottom:auto !important; left:auto !important; right:auto !important; z-index:1 !important; transition:none !important; }
+  /* Diag panel: hidden on mobile — replaced by mini-diag in sticky header */
+  .diag { display:none !important; }
+  /* Show mini diag row in banner on mobile */
+  .ib-mini-diag { display:flex !important; }
   /* Cat popup: compact sticky footer, single row of classification buttons */
   .cat-popup { position:fixed !important; bottom:0 !important; left:0 !important; right:0 !important; top:auto !important; min-width:unset; width:100%; border-radius:16px 16px 0 0; padding:10px 12px 20px; z-index:502 !important; transform:none !important; }
   .cat-popup-lbl { display:none; }
@@ -996,6 +998,106 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
   .mission-title { font-size:22px; }
   .mission-subtitle { font-size:12px; }
   .mission-card { width:calc(100vw - 32px); max-width:unset; }
+}
+
+/* ══ MOBILE SUBMIT BUTTON — replaces diag-embedded submit on mobile ══ */
+.mobile-submit-wrap {
+  display: none; /* controlled by JS */
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+  background: rgba(4,10,20,.95);
+  border-top: 1px solid rgba(74,222,128,.2);
+  z-index: 40;
+  backdrop-filter: blur(12px);
+}
+@media (min-width: 769px) {
+  .mobile-submit-wrap { display: none !important; }
+}
+.mobile-submit-btn { width: 100%; }
+
+/* ══ MINI DIAGNOSTIC ROW — compact category status in banner ══ */
+.ib-mini-diag {
+  display: none; /* hidden on desktop/tablet — shown at ≤768px */
+  flex-direction: row;
+  align-items: stretch;
+  gap: 6px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255,255,255,.07);
+}
+.ib-mini-cat {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,.03);
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: 5px;
+  padding: 5px 7px;
+}
+.ib-mini-lbl {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 7px; letter-spacing: .06em; text-transform: uppercase;
+  color: var(--dim); white-space: nowrap; flex-shrink: 0;
+  transition: color .3s;
+}
+.ib-mini-lbl.red    { color: rgba(239,68,68,.85); }
+.ib-mini-lbl.orange { color: rgba(251,146,60,.85); }
+.ib-mini-lbl.yellow { color: rgba(250,204,21,.85); }
+.ib-mini-lbl.secured { color: rgba(74,222,128,.9) !important; }
+.ib-mini-track {
+  flex: 1;
+  height: 4px; background: rgba(255,255,255,.08);
+  border-radius: 2px; overflow: hidden;
+}
+.ib-mini-fill {
+  height: 100%; width: 0%; border-radius: 2px;
+  transition: width .5s ease, background-color .4s ease;
+}
+
+/* ══ COLLAPSIBLE MISSION CARDS ══ */
+.mc-collapse-row {
+  display: none; /* hidden by default (expanded state) */
+  align-items: center;
+  gap: 10px;
+  padding: 16px 20px;
+  cursor: pointer;
+  transition: background .2s;
+}
+.mc-collapse-row:hover { background: rgba(56,189,248,.04); }
+.mc-collapse-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; letter-spacing: .14em; color: var(--dim);
+  text-transform: uppercase; flex-shrink: 0;
+}
+.mc-collapse-title {
+  font-family: 'Orbitron', monospace;
+  font-size: 12px; font-weight: 700; color: #fff;
+  letter-spacing: .03em; flex: 1; min-width: 0;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.mc-collapse-stars {
+  font-size: 12px; color: rgba(250,204,21,.75);
+  letter-spacing: 1px; text-shadow: 0 0 6px rgba(250,204,21,.35);
+  flex-shrink: 0;
+}
+.mc-collapse-chevron {
+  font-size: 14px; color: rgba(56,189,248,.5);
+  transition: transform .3s ease, color .2s;
+  flex-shrink: 0; margin-left: 4px;
+}
+.mc-collapse-row:hover .mc-collapse-chevron { color: rgba(56,189,248,.85); }
+.mission-card.collapsed .mc-collapse-row { display: flex; }
+.mission-card.collapsed .mc-body { display: none; }
+.mission-card.collapsed .mc-launch-btn { display: none; }
+.mission-card.collapsed { cursor: pointer; }
+.mission-card.expanded .mc-collapse-chevron { transform: rotate(90deg); }
+/* Next-up card: visually prominent */
+.mission-card.next-mission {
+  border-color: rgba(56,189,248,.35);
+  box-shadow: 0 8px 32px rgba(0,0,0,.4), 0 0 24px rgba(56,189,248,.1), inset 0 1px 0 rgba(56,189,248,.12);
+  animation: fadeUp .6s ease both, cardGlow 3s ease-in-out infinite;
 }
 </style>
 </head>
@@ -1081,8 +1183,14 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
     <div class="mission-cards">
 
       <!-- MISSION 1 — Data Leakage -->
-      <div class="mission-card unlocked" id="mcard1" onclick="launchSection(1)">
+      <div class="mission-card unlocked" id="mcard1" onclick="handleMissionClick(1)">
         <div class="mc-accent m1"></div>
+        <div class="mc-collapse-row" onclick="event.stopPropagation();toggleMissionCard(1)">
+          <span class="mc-collapse-num">01</span>
+          <span class="mc-collapse-title">Sensitive Data Exposure</span>
+          <span class="mc-collapse-stars" id="m1starsC"></span>
+          <span class="mc-collapse-chevron">▸</span>
+        </div>
         <div class="mc-body">
           <div class="mc-top-row">
             <div class="mc-stars" id="m1stars"></div>
@@ -1104,8 +1212,14 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
       </div>
 
       <!-- MISSION 2 — AI Hallucination -->
-      <div class="mission-card" id="mcard2" onclick="tryLaunch(2)">
+      <div class="mission-card" id="mcard2" onclick="handleMissionClick(2)">
         <div class="mc-accent m2"></div>
+        <div class="mc-collapse-row" onclick="event.stopPropagation();toggleMissionCard(2)">
+          <span class="mc-collapse-num">02</span>
+          <span class="mc-collapse-title">AI Hallucination Detection</span>
+          <span class="mc-collapse-stars" id="m2starsC"></span>
+          <span class="mc-collapse-chevron">▸</span>
+        </div>
         <div class="mc-body">
           <div class="mc-top-row">
             <div class="mc-stars" id="m2stars"></div>
@@ -1129,8 +1243,14 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
       </div>
 
       <!-- MISSION 3 — Prompt Injection -->
-      <div class="mission-card" id="mcard3" onclick="tryLaunch(3)">
+      <div class="mission-card" id="mcard3" onclick="handleMissionClick(3)">
         <div class="mc-accent m3"></div>
+        <div class="mc-collapse-row" onclick="event.stopPropagation();toggleMissionCard(3)">
+          <span class="mc-collapse-num">03</span>
+          <span class="mc-collapse-title">Prompt Injection Attacks</span>
+          <span class="mc-collapse-stars" id="m3starsC"></span>
+          <span class="mc-collapse-chevron">▸</span>
+        </div>
         <div class="mc-body">
           <div class="mc-top-row">
             <div class="mc-stars" id="m3stars"></div>
@@ -1385,6 +1505,10 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
     <div class="scanline" id="s1scanline"></div>
     <div class="payload" id="s1payload"></div>
   </div>
+  <!-- Mobile submit — visible only on mobile when diag panel is hidden -->
+  <div class="mobile-submit-wrap" id="s1mobileSubmit" style="display:none">
+    <button class="ib-submit-cta mobile-submit-btn" onclick="s1Submit()">▶ &nbsp;SUBMIT REPORT</button>
+  </div>
   <div class="card diag" id="s1diag">
     <button class="diag-toggle" onclick="toggleDiag(this)">
       <span class="diag-toggle-handle"></span>
@@ -1579,6 +1703,10 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
   <div class="console console-col" id="s2console">
     <div class="scanline" id="s2scanline"></div>
     <div class="payload" id="s2payload"></div>
+  </div>
+  <!-- Mobile submit — visible only on mobile when diag panel is hidden -->
+  <div class="mobile-submit-wrap" id="s2mobileSubmit" style="display:none">
+    <button class="hal-submit-btn mobile-submit-btn" id="s2mobileSubmitBtn" onclick="s2Submit()" disabled><span>—</span> &nbsp; SUBMIT REPORT <span id="s2mobileSubmitCounter">(0 / 6)</span></button>
   </div>
   <div class="card diag" id="s2diag">
     <button class="diag-toggle" onclick="toggleDiag(this)">
@@ -2024,16 +2152,40 @@ function updateMenuState() {
   });
   const mc=document.getElementById('masteryCount');
   if(mc){ mc.textContent=lvlCount+' / 3'; mc.className='mastery-count'+(lvlCount>=3?' complete':''); }
-  // Star ratings on mission cards
+  // Star ratings on mission cards + collapsed card stars
   ['1','2','3'].forEach(n => {
     const starsEl = document.getElementById('m'+n+'stars');
-    if (!starsEl) return;
+    const starsCEl = document.getElementById('m'+n+'starsC');
     const score = courseProgress['s'+n+'score'];
-    if (!courseProgress['s'+n+'done'] || score == null) { starsEl.textContent = ''; return; }
+    if (!courseProgress['s'+n+'done'] || score == null) {
+      if (starsEl) starsEl.textContent = '';
+      if (starsCEl) starsCEl.textContent = '';
+      return;
+    }
     const starCount = score >= 80 ? 3 : score >= 50 ? 2 : 1;
-    starsEl.textContent = '★'.repeat(starCount) + '☆'.repeat(3 - starCount);
-    starsEl.title = 'Score: ' + score + '%';
+    const starStr = '★'.repeat(starCount) + '☆'.repeat(3 - starCount);
+    if (starsEl) { starsEl.textContent = starStr; starsEl.title = 'Score: ' + score + '%'; }
+    if (starsCEl) { starsCEl.textContent = starStr; starsCEl.title = 'Score: ' + score + '%'; }
   });
+
+  // ── Collapsible mission cards — completed missions collapse, next-up expands ──
+  const nextMission = !courseProgress.s1done ? 1 : !courseProgress.s2done ? 2 : !courseProgress.s3done ? 3 : 0;
+  [1, 2, 3].forEach(n => {
+    const card = document.getElementById('mcard' + n);
+    if (!card) return;
+    const isDone = courseProgress['s' + n + 'done'];
+    card.classList.remove('next-mission');
+    if (isDone) {
+      // Collapse completed missions
+      if (!card.classList.contains('expanded')) {
+        card.classList.add('collapsed');
+      }
+    } else {
+      card.classList.remove('collapsed', 'expanded');
+      if (n === nextMission) card.classList.add('next-mission');
+    }
+  });
+
   const clearanceNames=['AI Operator','AI Analyst','AI Reviewer','AI Data Guardian'];
   const cl=document.getElementById('clearanceLabel');
   if(cl){
@@ -2056,6 +2208,34 @@ function shakeCard(n) {
   c.style.animation='none'; void c.offsetWidth;
   c.style.animation='wrongShake .4s ease';
   setTimeout(()=>c.style.animation='',600);
+}
+
+function handleMissionClick(n) {
+  const card = document.getElementById('mcard'+n);
+  // If collapsed, expand instead of launching
+  if (card.classList.contains('collapsed')) {
+    toggleMissionCard(n);
+    return;
+  }
+  // Otherwise, normal launch flow
+  if (n === 1) launchSection(1);
+  else tryLaunch(n);
+}
+
+function toggleMissionCard(n) {
+  const card = document.getElementById('mcard'+n);
+  if (card.classList.contains('collapsed')) {
+    card.classList.remove('collapsed');
+    card.classList.add('expanded');
+    // Animate chevron
+    const chevron = card.querySelector('.mc-collapse-chevron');
+    if (chevron) chevron.style.transform = 'rotate(90deg)';
+  } else {
+    card.classList.add('collapsed');
+    card.classList.remove('expanded');
+    const chevron = card.querySelector('.mc-collapse-chevron');
+    if (chevron) chevron.style.transform = '';
+  }
 }
 
 // ════════════════════════════════════════════
@@ -2192,6 +2372,7 @@ function s1Init() {
   // Reset diag panel to initial (pre-play) state
   document.getElementById('s1diagSecured').style.display='none';
   document.getElementById('s1ibSubmitCta').style.display='none';
+  const s1msR = document.getElementById('s1mobileSubmit'); if(s1msR) s1msR.style.display='none';
   document.getElementById('s1ibSeverity').style.opacity='1';
   document.getElementById('s1iwDrain').textContent='';
   document.getElementById('s1iwDrain').className='ib-drain-label';
@@ -2406,8 +2587,11 @@ function s1Classify(chosen) {
     document.getElementById('s1iwDrain').className='ib-drain-label secured';
     document.getElementById('s1diagSecured').style.display='flex';
     document.getElementById('s1ibSubmitCta').style.display='flex';
+    // Show mobile submit button on mobile
+    const s1ms = document.getElementById('s1mobileSubmit');
+    if (s1ms && window.innerWidth <= 768) s1ms.style.display='block';
     document.getElementById('s1ibSeverity').style.opacity='0';
-    if(window.innerWidth <= 768) {
+    if(window.innerWidth > 768) {
       setTimeout(() => {
         const diag = document.getElementById('s1diag');
         if(diag && !diag.classList.contains('panel-open')) {
@@ -2415,7 +2599,6 @@ function s1Classify(chosen) {
           const lbl = diag.querySelector('.diag-toggle-lbl');
           if(lbl) lbl.textContent = '▼  CLOSE PANEL';
         }
-        // After panel expand animation, scroll to reveal submit button
         setTimeout(() => {
           if(diag) diag.scrollTop = diag.scrollHeight;
           const btn = document.getElementById('s1ibSubmitCta');
@@ -2533,6 +2716,7 @@ function vAdvance(prefix, step) {
 function s1EndGame(reason) {
   if(!s1state.gameActive) return; s1state.gameActive=false;
   dismissToast();
+  const s1msEnd = document.getElementById('s1mobileSubmit'); if(s1msEnd) s1msEnd.style.display='none';
   vAdvance('s1',1);
   document.getElementById('s1vBonus').style.display='none';
   updatePauseBtn();
@@ -2626,6 +2810,9 @@ function s2Init() {
   document.getElementById('s2diagSecured').style.display='none';
   document.getElementById('s2submitBtn').disabled=true;
   const s2icon=document.getElementById('s2submitIcon'); if(s2icon) s2icon.textContent='—';
+  const s2msR2 = document.getElementById('s2mobileSubmit'); if(s2msR2) s2msR2.style.display='none';
+  const s2msbR = document.getElementById('s2mobileSubmitBtn'); if(s2msbR) s2msbR.disabled=true;
+  const s2mscR = document.getElementById('s2mobileSubmitCounter'); if(s2mscR) s2mscR.textContent='(0 / 6)';
   document.getElementById('s2vBonus').style.display='none';
   // Reset diag cats
   ['Citations','Figures','Laws'].forEach((k,i)=>{
@@ -2878,6 +3065,8 @@ function s2Classify(chosen) {
   const total=s2state.flagsCorrect;
   document.getElementById('s2flagCount').textContent=total;
   document.getElementById('s2submitCounter').textContent=`(${total} / 6)`;
+  const s2mscU = document.getElementById('s2mobileSubmitCounter');
+  if(s2mscU) s2mscU.textContent=`(${total} / 6)`;
   const allFlagged = total>=6;
   const catLabel={'citation':'Fake Citation','figure':'Wrong Figure','law':'Fake Law'}[tok.cat]||'Flagged';
   if(S2_TEACH[id]?.correct) showToast(catLabel, S2_TEACH[id].correct);
@@ -2889,7 +3078,14 @@ function s2Classify(chosen) {
     document.getElementById('s2diagSecured').style.display='flex';
     document.getElementById('s2iwDrain').textContent='✓ report verified';
     document.getElementById('s2iwDrain').className='ib-drain-label secured';
-    if(window.innerWidth <= 768) {
+    // Show mobile submit button
+    const s2ms = document.getElementById('s2mobileSubmit');
+    const s2msb = document.getElementById('s2mobileSubmitBtn');
+    if (s2ms && window.innerWidth <= 768) { s2ms.style.display='block'; }
+    if (s2msb) { s2msb.disabled=false; }
+    const s2msc = document.getElementById('s2mobileSubmitCounter');
+    if (s2msc) s2msc.textContent='✓';
+    if(window.innerWidth > 768) {
       setTimeout(() => {
         const diag = document.getElementById('s2diag');
         if(diag && !diag.classList.contains('panel-open')) {
@@ -2897,7 +3093,6 @@ function s2Classify(chosen) {
           const lbl = diag.querySelector('.diag-toggle-lbl');
           if(lbl) lbl.textContent = '▼  CLOSE PANEL';
         }
-        // After panel expand animation, scroll to reveal submit button
         setTimeout(() => {
           if(diag) diag.scrollTop = diag.scrollHeight;
           const btn = document.getElementById('s2submitBtn');
@@ -2960,6 +3155,7 @@ function s2Submit() {
 function s2EndGame(reason) {
   if(!s2state.gameActive) return; s2state.gameActive=false;
   dismissToast();
+  const s2msEnd = document.getElementById('s2mobileSubmit'); if(s2msEnd) s2msEnd.style.display='none';
   vAdvance('s2',1);
   document.getElementById('s2vBonus').style.display='none';
   updatePauseBtn();
