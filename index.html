@@ -85,6 +85,22 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 @keyframes chipGlow { 0%,100%{box-shadow:none;border-color:rgba(56,189,248,.4);background:rgba(56,189,248,.07)} 50%{box-shadow:0 0 0 5px rgba(56,189,248,.18),0 0 22px rgba(56,189,248,.32);border-color:rgba(56,189,248,.85);background:rgba(56,189,248,.15)} }
 @keyframes chipArrowBounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(4px)} }
 @keyframes missionUnlock { 0%{transform:scale(1.05);opacity:.6} 100%{transform:scale(1);opacity:1} }
+@keyframes statusReveal {
+  0%   { opacity:0;   transform:translateY(6px) scale(.88); }
+  18%  { opacity:1;   transform:translateY(0)   scale(1.09); }
+  34%  { opacity:1;   transform:scale(1); }
+  52%  { opacity:.58; }
+  68%  { opacity:1; }
+  84%  { opacity:.72; }
+  100% { opacity:1;   transform:translateY(0) scale(1); }
+}
+@keyframes teachReveal {
+  0%   { opacity:0; transform:translateY(4px); }
+  22%  { opacity:1; transform:translateY(0); }
+  55%  { opacity:.65; }
+  78%  { opacity:1; }
+  100% { opacity:1; transform:translateY(0); }
+}
 
 /* ════════════════════════════════════════════
    SPLASH SCREEN
@@ -311,6 +327,12 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 .ib-unit { font-family:'Orbitron',monospace; font-size:18px; color:var(--dim); }
 .ib-bar-wrap { flex:1; display:flex; flex-direction:column; justify-content:center; gap:3px; }
 .ib-bar-top { display:flex; align-items:baseline; justify-content:space-between; margin-bottom:2px; margin-top:10px; }
+/* Compact number — hidden on desktop, shown on mobile in .ib-bar-top */
+.ib-num-compact-wrap { display:none; align-items:baseline; gap:1px; }
+.ib-num-compact { font-family:'Orbitron',monospace; font-size:20px; font-weight:900; letter-spacing:-.02em; color:var(--green); text-shadow:0 0 16px rgba(74,222,128,.45); transition:color .35s, text-shadow .35s; line-height:1; }
+.ib-num-compact.orange { color:var(--orange); text-shadow:0 0 14px rgba(251,146,60,.4); }
+.ib-num-compact.red    { color:var(--red);    text-shadow:0 0 14px rgba(239,68,68,.5); animation:pulse .6s ease infinite; }
+.ib-unit-compact { font-family:'Orbitron',monospace; font-size:12px; color:var(--dim); }
 .ib-bar-track { height:10px; background:rgba(255,255,255,.05); border-radius:5px; overflow:hidden; border:1px solid rgba(255,255,255,.07); margin-top:-6px; }
 .ib-bar-fill { height:100%; width:100%; border-radius:5px; transition:width .6s ease, background-color .6s ease; background:var(--green); box-shadow:0 0 12px rgba(74,222,128,.4); }
 .ib-bar-fill.orange { background:var(--orange); box-shadow:0 0 12px rgba(251,146,60,.35); }
@@ -340,8 +362,8 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 .ib-drain-label.flash-down { animation:none; color:rgba(74,222,128,.95) !important; }
 .ib-submit-cta { font-family:'Orbitron',monospace; font-size:11px; font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:var(--green); background:rgba(74,222,128,.1); border:1px solid rgba(74,222,128,.5); border-radius:4px; padding:14px 14px; cursor:pointer; width:100%; margin-top:14px; text-align:center; justify-content:center; font-size:12px; animation:ctaPulse 1.2s ease infinite; transition:background .2s, box-shadow .2s; }
 .ib-submit-cta:hover { background:rgba(74,222,128,.2); box-shadow:0 0 18px rgba(74,222,128,.35); }
-.ib-delta { font-family:'Orbitron',monospace; font-size:13px; font-weight:700; letter-spacing:.05em; opacity:0; transition:opacity .2s, transform .25s; transform:translateY(4px); white-space:nowrap; }
-.ib-delta.visible  { opacity:1; transform:translateY(0); }
+.ib-delta { font-family:'Orbitron',monospace; font-size:13px; font-weight:700; letter-spacing:.05em; opacity:0; transform:translateY(4px); white-space:nowrap; }
+.ib-delta.visible  { animation:statusReveal 1.9s ease forwards; }
 .ib-delta.gain    { color:var(--green); text-shadow:0 0 10px rgba(74,222,128,.6); }
 .ib-delta.penalty { color:var(--red);   text-shadow:0 0 10px rgba(239,68,68,.6); }
 
@@ -688,8 +710,8 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 /* ════════════════════════════════════════════
    MICRO-FEEDBACK TEACH LINE
 ════════════════════════════════════════════ */
-.teach-flash { font-family:'DM Sans',sans-serif; font-size:10.5px; font-weight:400; color:rgba(200,220,255,.62); line-height:1.5; opacity:0; transform:translateY(3px); transition:opacity .25s, transform .25s; }
-.teach-flash.visible { opacity:1; transform:translateY(0); }
+.teach-flash { font-family:'DM Sans',sans-serif; font-size:10.5px; font-weight:400; color:rgba(200,220,255,.62); line-height:1.5; opacity:0; transform:translateY(3px); }
+.teach-flash.visible { animation:teachReveal 2.2s ease forwards; }
 
 /* ════════════════════════════════════════════
    M2 ACCURATE TOKEN (neutral visual at start)
@@ -982,6 +1004,10 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
   .h-title { white-space:normal; line-height:1.3; }
   .ib-center { padding:10px 16px; gap:14px; }
   .ib-num { font-size:32px; }
+  /* Mobile: hide large number column, show compact number inline with bar */
+  .ib-num-col { display:none !important; }
+  .ib-num-compact-wrap { display:flex !important; }
+  .ib-bar-top { margin-top:4px; }
   /* Scan items row: visible on all mobile sizes */
   .shell-scan-row { display:block; margin:0 12px 8px; }
   /* Shell: single column, no diag panel */
@@ -1117,7 +1143,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 
 /* ══ DEV TOGGLE ══ */
 #devToggleBtn {
-  position: fixed; top: 12px; left: 12px; z-index: 9998;
+  position: absolute; top: 12px; left: 12px; z-index: 9998;
   display: none; align-items: center; gap: 7px;
   padding: 5px 9px 5px 8px;
   background: rgba(6,16,36,.75); border: 1px solid rgba(255,255,255,.07);
@@ -1165,6 +1191,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 .mc-collapse-badge.done { color: rgba(74,222,128,.85); }
 .mc-collapse-badge.locked-icon { color: rgba(255,255,255,.22); font-size: 12px; }
 .mc-collapse-badge.unlocked { color: rgba(56,189,248,.45); }
+@media (max-width: 768px) { .mc-collapse-badge.done { display: none; } }
 
 /* ══ VERDICT COMPACT STATUS HEADER (Steps 2 & 3) ══ */
 .v-compact-header {
@@ -1272,6 +1299,13 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 ══════════════════════════════════════════════ -->
 <div class="screen" id="screenMenu">
   <div class="mission-screen">
+    <!-- DEV TOGGLE — top-left of menu, scrolls with page -->
+    <button id="devToggleBtn" onclick="devToggle()" aria-label="Dev: toggle progress lock" title="DEV: toggle progress">
+      <span class="dev-toggle-lbl">DEV</span>
+      <span class="dev-toggle-track" id="devTrack">
+        <span class="dev-toggle-thumb" id="devThumb"></span>
+      </span>
+    </button>
     <div class="mission-header">
       <div class="mission-eyebrow">Mission Select</div>
       <div class="mission-title">Choose Your Mission</div>
@@ -1429,14 +1463,6 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 <!-- DEV PANEL TOAST -->
 <div id="devPanel" style="position:fixed;bottom:16px;left:50%;transform:translateX(-50%);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:rgba(74,222,128,.9);background:rgba(6,16,36,.95);border:1px solid rgba(74,222,128,.3);border-radius:6px;padding:7px 18px;z-index:9999;opacity:0;transition:opacity .4s;pointer-events:none;text-transform:uppercase;"></div>
 
-<!-- DEV TOGGLE — fixed top-left, all views -->
-<button id="devToggleBtn" onclick="devToggle()" aria-label="Dev: toggle progress lock" title="DEV: toggle progress">
-  <span class="dev-toggle-lbl">DEV</span>
-  <span class="dev-toggle-track" id="devTrack">
-    <span class="dev-toggle-thumb" id="devThumb"></span>
-  </span>
-</button>
-
 <!-- ══════════════════════════════════════════════
      SECTION 1 — DATA LEAKAGE
 ══════════════════════════════════════════════ -->
@@ -1583,6 +1609,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
     <div class="ib-bar-wrap">
       <div class="ib-bar-top">
         <div class="ib-lbl">Integrity</div>
+        <div class="ib-num-compact-wrap"><span class="ib-num-compact green" id="s1iwNumM">100</span><span class="ib-unit-compact">%</span></div>
         <div class="ib-drain-label" id="s1iwDrain"></div>
       </div>
       <div class="ib-bar-track"><div class="ib-bar-fill green" id="s1iwIntBar"></div></div>
@@ -1791,6 +1818,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
     <div class="ib-bar-wrap">
       <div class="ib-bar-top">
         <div class="ib-lbl">Integrity</div>
+        <div class="ib-num-compact-wrap"><span class="ib-num-compact green" id="s2iwNumM">100</span><span class="ib-unit-compact">%</span></div>
         <div class="ib-drain-label" id="s2iwDrain"></div>
       </div>
       <div class="ib-bar-track"><div class="ib-bar-fill green" id="s2iwIntBar"></div></div>
@@ -2003,6 +2031,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
     <div class="ib-bar-wrap">
       <div class="ib-bar-top">
         <div class="ib-lbl">Integrity</div>
+        <div class="ib-num-compact-wrap"><span class="ib-num-compact green" id="s3iwNumM">100</span><span class="ib-unit-compact">%</span></div>
         <div class="ib-drain-label" id="s3iwDrain"></div>
       </div>
       <div class="ib-bar-track"><div class="ib-bar-fill green" id="s3iwIntBar"></div></div>
@@ -2467,7 +2496,7 @@ function goMenu() {
   if (courseProgress.s1done && courseProgress.s2done && courseProgress.s3done && !courseProgress.certShown) {
     courseProgress.certShown = true;
     saveProgress();
-    setTimeout(showCertificate, 600);
+    showCertificate();
   }
 }
 function launchSection(n) {
@@ -2518,6 +2547,8 @@ function updateIntUI(pfx, integrity, drainRate, maxDrain) {
   numEl.textContent = pct;
   const cls = pct>60?'green':pct>30?'orange':'red';
   numEl.className = 'ib-num '+cls;
+  const numMEl = document.getElementById(pfx+'iwNumM');
+  if(numMEl) { numMEl.textContent = pct; numMEl.className = 'ib-num-compact '+cls; }
   const bar = document.getElementById(pfx+'iwIntBar');
   if(bar) { bar.style.width=pct+'%'; bar.className='ib-bar-fill '+cls; }
   // severity segs
@@ -2713,6 +2744,18 @@ const S1_TEACH = {
               wrong:   'This is an internal project codename — classify as INTERNAL INFO. Codenames signal active initiatives to external parties.' },
 };
 
+// Safe-token (noise) teach messages — shown when user correctly marks a token as SAFE
+const S1_SAFE_TEACH = {
+  version:   'Time references like this are general business context — they don\'t identify systems, credentials, or individuals. No redaction needed.',
+  turbine:   'Workflow counts are generic descriptors with no identifying payload. They carry no data risk on their own.',
+  region:    'Engagement reference codes are internal filing labels. Without accompanying credentials or system paths, they expose nothing sensitive.',
+  cluststat: 'Status words are simple descriptors — they don\'t reveal protected information on their own. Always look at what they\'re attached to.',
+  version2:  'Document version numbers are routine metadata. They track revisions, not sensitive content, and are safe to use in external prompts.',
+  buildref:  'Slide or file references are presentational pointers. Without accompanying content, they reveal nothing confidential.',
+  turbine2:  'Plain numbers without sensitive context carry no data risk. Always check what a number refers to — but standalone counts are safe.',
+  region2:   'Reference codes without accompanying credentials or access details are not sensitive on their own.',
+};
+
 function s1Classify(chosen) {
   const id=s1state.activeToken; if(!id) return;
   const token=S1_TOKENS[id];
@@ -2723,13 +2766,19 @@ function s1Classify(chosen) {
 
   if(chosen==='safe') {
     if(!isSensitive) {
-      // Correct: safe token — no popup, fire consequences immediately
+      // Correct: safe token — show insight, then fire consequences
       pSelected();
-      s1state.safeBonus+=0.008;
-      s1state.integrity=Math.min(100,s1state.integrity+3);
-      showIntPop('s1',+3); flashDelta('s1',+3,'confirmed safe');
-      s1Redact(id,'fp');
-      updateIntUI('s1',s1state.integrity,s1GetDrain(),S1_MAX_DRAIN);
+      const safeAfterEffect = () => {
+        s1state.safeBonus += 0.008;
+        s1state.integrity = Math.min(100, s1state.integrity + 3);
+        showIntPop('s1', +3);
+        flashDelta('s1', +3, 'confirmed safe');
+        s1Redact(id, 'fp');
+        updateIntUI('s1', s1state.integrity, s1GetDrain(), S1_MAX_DRAIN);
+      };
+      const safeMsg = S1_SAFE_TEACH[id] || 'This token contains no credentials, personal data, or confidential business information — safe to include in external AI prompts.';
+      const gSafe = `<span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:rgba(220,235,255,.9);font-weight:500">${tokText}</span>`;
+      s1ShowInsight('Safe Item', tokText, safeMsg, safeAfterEffect, gSafe, true);
     } else {
       // Wrong: sensitive dismissed as safe — consequences fire on dismiss
       pWrong();
@@ -3294,7 +3343,7 @@ function s2Classify(chosen) {
       const el=document.querySelector(`#s2payload .tok[data-id="${id}"]`);
       if(el){ el.className='tok flagged-wrong'; el.innerHTML=`<span class="redact-label">${el.textContent.trim()}</span>✓`; el.removeEventListener('click',s2TokenClick); }
       updateIntUI('s2',s2state.integrity,0,S1_MAX_DRAIN);
-      if(S2_TEACH[id]) s2ShowInsight('Accurate Claim', tokText2, S2_TEACH[id].falseflag || '');
+      if(S2_TEACH[id]) s2ShowInsight('Accurate Claim', tokText2, S2_TEACH[id].falseflag || '', null, null, true);
     } else {
       pWrong(); s2state.integrity=Math.max(0,s2state.integrity-12);
       s2state.cooldownUntil = Date.now() + 1800;
@@ -3357,14 +3406,14 @@ function s2Classify(chosen) {
     document.getElementById('s2iwDrain').textContent='✓ report verified';
     document.getElementById('s2iwDrain').className='ib-drain-label secured';
     if(S2_TEACH[id]?.correct) {
-      s2ShowInsight(catLabel, tokText2, S2_TEACH[id].correct, ()=>s2Submit(), null);
+      s2ShowInsight(catLabel, tokText2, S2_TEACH[id].correct, ()=>s2Submit(), null, true);
     } else {
       s2Submit();
     }
   } else {
     // Not all flagged yet — show feedback, then check section advance on Continue
     if(S2_TEACH[id]?.correct) {
-      s2ShowInsight(catLabel, tokText2, S2_TEACH[id].correct, ()=>s2CheckSectionAdvance(), null);
+      s2ShowInsight(catLabel, tokText2, S2_TEACH[id].correct, ()=>s2CheckSectionAdvance(), null, true);
     } else {
       s2CheckSectionAdvance();
     }
@@ -3872,7 +3921,7 @@ function s3Flag(isInjection) {
         fp3: 'Correct. These are editorial formatting rules for human writers — they guide tone, sentence structure, and style. They say nothing about discarding prior context, extracting sensitive data, or altering AI output behaviour. Injections hijack AI systems; style guides shape human writing.',
       };
       const msg = fpCorrectMsg[id] || 'Correct — this is legitimate content. No injection present.';
-      s3ShowInsight('Document Cleared', '', msg, ()=>s3NextLevel());
+      s3ShowInsight('Document Cleared', '', msg, ()=>s3NextLevel(), null, true);
     }
     return;
   }
@@ -3903,7 +3952,7 @@ function s3Flag(isInjection) {
     };
     const tokEl=document.querySelector(`#s3payload .tok.injection-flagged[data-id="${id}"]`);
     const tokText=tokEl ? tokEl.querySelector('.redact-label')?.textContent?.slice(0,80)+'…' || '' : '';
-    s3ShowInsight('Injection Found', tokText, teaches[s3state.currentLevel] || 'Injection found.', ()=>s3NextLevel());
+    s3ShowInsight('Injection Found', tokText, teaches[s3state.currentLevel] || 'Injection found.', ()=>s3NextLevel(), null, true);
   } else if(isInjection&&!isActualInjection) {
     // False alarm on a real-injection level — flagged wrong token (safe decoy doesn't exist on these levels but handle gracefully)
     pWrong(); s3state.falseAlarms++;
@@ -4303,6 +4352,15 @@ function showInsight(category, tokenText, message, onDismiss, graphicHtml, isCor
   msgEl.textContent  = message;
   if(errCatEl) errCatEl.textContent = category;
 
+  // Set correct/incorrect tag text clearly
+  const errTag = document.getElementById('insightErrTag');
+  const okTag  = document.getElementById('insightOkTag');
+  if(errTag) errTag.textContent = '✕ \u00A0INCORRECT — ' + category;
+  if(okTag) {
+    const isSafeItem = category === 'Safe Item' || category === 'Accurate Claim' || category === 'Document Cleared';
+    okTag.textContent = isSafeItem ? '✓ \u00A0CORRECT — Not Sensitive' : '✓ \u00A0CORRECT — Item Secured';
+  }
+
   // Apply error/correct mode and restart animation
   const card = overlay.querySelector('.insight-card');
   card.classList.remove('error-mode', 'correct-mode');
@@ -4370,12 +4428,12 @@ function s1ShowInsight(category, tokenText, message, afterFn, graphicHtml, isCor
 }
 
 // ── M2: teach (no timer to pause) ──────────────────────────
-function s2ShowInsight(category, tokenText, message, afterFn, graphicHtml) {
-  showInsight(category, tokenText, message, afterFn || null, graphicHtml || null);
+function s2ShowInsight(category, tokenText, message, afterFn, graphicHtml, isCorrect) {
+  showInsight(category, tokenText, message, afterFn || null, graphicHtml || null, isCorrect || false);
 }
 
 // ── M3: teach with timer pause ──────────────────────────────
-function s3ShowInsight(category, tokenText, message, afterFn, graphicHtml) {
+function s3ShowInsight(category, tokenText, message, afterFn, graphicHtml, isCorrect) {
   clearInterval(s3state.timerInt); // pause timer
   showInsight(category, tokenText, message, () => {
     if(afterFn) afterFn();
@@ -4389,7 +4447,7 @@ function s3ShowInsight(category, tokenText, message, afterFn, graphicHtml) {
         if(s3state.timeLeft <= 0) { clearInterval(s3state.timerInt); s3EndGame('timeout'); }
       }, 1000);
     }
-  }, graphicHtml || null);
+  }, graphicHtml || null, isCorrect || false);
 }
 </script>
 
@@ -4610,9 +4668,9 @@ function s3ShowInsight(category, tokenText, message, afterFn, graphicHtml) {
     <div class="insight-top-bar"></div>
     <div class="insight-body">
       <!-- Error-mode tag (only visible on wrong answers) -->
-      <div class="insight-error-tag">// INCORRECT</div>
+      <div class="insight-error-tag" id="insightErrTag">✕ &nbsp;INCORRECT</div>
       <!-- Correct-mode tag (only visible on right answers) -->
-      <div class="insight-correct-tag">// SECURED</div>
+      <div class="insight-correct-tag" id="insightOkTag">✓ &nbsp;CORRECT</div>
       <!-- icon + category pill — always visible -->
       <div class="insight-header">
         <div class="insight-icon insight-icon-warn" id="insightIcon">⚠</div>
