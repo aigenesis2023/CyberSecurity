@@ -2475,6 +2475,16 @@ const AUDIO_FILES = {
   hover:    { file:'Hover.mp3',              volume:0.6 },
 };
 
+// ── Per-screen voiceover clips ──────────────────────────────────────────
+const VO_CLIPS = [
+  'VO-INTRO',
+  'VO-M1-BRIEF','VO-M1-PASS','VO-M1-FAIL',
+  'VO-M2-BRIEF','VO-M2-PASS','VO-M2-FAIL',
+  'VO-M3-BRIEF','VO-M3-PASS','VO-M3-FAIL',
+  'VO-COMPLETE'
+];
+let _activeVO = null;
+
 function _makeAudio(key, def) {
   try {
     const a = new Audio(AUDIO_BASE + def.file);
@@ -2491,12 +2501,22 @@ function preloadAudio() {
   Object.entries(AUDIO_FILES).forEach(([key, def]) => {
     SND[key] = _makeAudio(key, def);
   });
-  Object.values(SND).forEach(a => { if(a) try { a.load(); } catch(e){} });
+  // Preload per-screen voiceover clips
+  SND.vo = {};
+  VO_CLIPS.forEach(name => {
+    SND.vo[name] = _makeAudio('vo_'+name, { file: name+'.mp3', volume: 1.0 });
+  });
+  // Trigger browser preload on all audio objects
+  Object.entries(SND).forEach(([k,v]) => {
+    if(k==='vo') Object.values(v).forEach(a => { if(a) try { a.load(); } catch(e){} });
+    else if(v) try { v.load(); } catch(e){}
+  });
 }
 let _muted = false;
 function startAudio() {
   if (audioReady) return; audioReady=true;
   if (!_muted && SND.bg) SND.bg.play().catch(()=>{});
+  playVO('VO-INTRO');
 }
 function _setMuteIcon(muted) {
   const x = document.getElementById('muteX'); if(x) x.setAttribute('opacity', muted ? '1' : '0');
@@ -2507,7 +2527,7 @@ function toggleMute() {
   const btn = document.getElementById('muteBtn');
   if(btn) btn.classList.toggle('muted', _muted);
   _setMuteIcon(_muted);
-  Object.values(SND).forEach(a => { if(a) a.muted = _muted; });
+  _muteAllSND(_muted);
   try { localStorage.setItem('adg_muted', _muted ? '1' : '0'); } catch(e){}
 }
 function loadMuteState() {
@@ -2517,6 +2537,32 @@ function loadMuteState() {
   } catch(e){}
 }
 function _play(a) { if(a) { a.muted=_muted; a.play().catch(()=>{}); } }
+function _muteAllSND(muted) {
+  Object.entries(SND).forEach(([k,v]) => {
+    if(k==='vo') Object.values(v).forEach(a => { if(a) a.muted = muted; });
+    else if(v && typeof v.muted !== 'undefined') v.muted = muted;
+  });
+  if(_activeVO) _activeVO.muted = muted;
+}
+
+// ── Voiceover playback ──────────────────────────────────────────────────
+function playVO(name) {
+  if(!audioReady) return;
+  stopVO();
+  const clip = SND.vo && SND.vo[name];
+  if(!clip) return;
+  try {
+    const a = new Audio(clip.src);
+    a.volume = 1.0;
+    a.muted = _muted;
+    a.play().catch(()=>{});
+    _activeVO = a;
+  } catch(e){}
+}
+function stopVO() {
+  if(_activeVO) { _activeVO.pause(); _activeVO.currentTime = 0; _activeVO = null; }
+}
+function stopVoiceover() { stopVO(); }
 function pClick()    { if(!audioReady||!SND.click)   return; const a=new Audio(SND.click.src);    a.volume=0.35; _play(a); }
 function pWrong()    { if(!audioReady||!SND.wrong)   return; const a=new Audio(SND.wrong.src);    a.volume=0.8;  _play(a); }
 function pSelected() { if(!audioReady||!SND.selected)return; const a=SND.selected.cloneNode();    _play(a); }
@@ -2780,6 +2826,7 @@ function showScreen(id) {
   if(devBtn) devBtn.style.display = (id === 'screenMenu') ? 'flex' : 'none';
 }
 function goMenu() {
+  stopVO();
   dismissToast();
   clearAllTimers();
   // Close any open mobile diag panels
@@ -2843,6 +2890,8 @@ function launchSection(n) {
   if (n===1) s1Init();
   if (n===2) s2Init();
   if (n===3) s3Init();
+  // Briefing VO — plays over the briefing overlay (Step 1 only)
+  playVO('VO-M'+n+'-BRIEF');
 }
 function clearAllTimers() {
   [s1state, s2state, s3state].forEach(s => {
@@ -3283,6 +3332,7 @@ function s1GetDrain() {
 }
 function s1Submit() { s1EndGame('submit'); }
 function s1Start() {
+  stopVO();
   const b=document.getElementById('s1briefing'); b.classList.add('hidden');
   setTimeout(()=>b.style.display='none',600);
   s1state.gameActive=true;
@@ -3304,6 +3354,7 @@ function s1Start() {
   // (nudge/zoom removed — chip uses subtle breathing glow to indicate it's clickable)
 }
 function vAdvance(prefix, step) {
+  if(step>1) stopVO(); // VO only on Step 1
   for(let i=1;i<=3;i++){
     const el=document.getElementById(prefix+'vStep'+i);
     if(el) el.style.display=(i===step)?'':'none';
@@ -3359,6 +3410,7 @@ function s1EndGame(reason) {
   const precisionPass = pass && s1state.classifyErrors===0;
   if(pass){ pSuccess(); courseProgress.s1done=true; saveProgress(); }
   else pError();
+  setTimeout(()=>playVO(pass?'VO-M1-PASS':'VO-M1-FAIL'),600);
   scormReport(intFinal, pass, 's1');
   const sg=document.getElementById('s1vSuccess'), fg=document.getElementById('s1vFail');
   sg.style.display='none'; fg.style.display='none'; sg.classList.remove('animate');
@@ -3734,6 +3786,7 @@ function s2UpdateDiag() {
   }
 }
 function s2Start() {
+  stopVO();
   var b=document.getElementById('s2briefing'); b.classList.add('hidden'); setTimeout(function(){ b.style.display='none'; },600);
   s2state.gameActive=true;
   // Reset all scroll positions — page and payload
@@ -3784,6 +3837,7 @@ function s2EndGame(reason) {
   var precisionPass = pass && s2state.flagsCorrect>=S2_HAL_COUNT && s2state.flagsWrong===0;
   if(pass){ pSuccess(); courseProgress.s2done=true; saveProgress(); }
   else pError();
+  setTimeout(()=>playVO(pass?'VO-M2-PASS':'VO-M2-FAIL'),600);
   scormReport(intFinal, pass, 's2');
   var sg=document.getElementById('s2vSuccess'), fg=document.getElementById('s2vFail');
   sg.style.display='none'; fg.style.display='none'; sg.classList.remove('animate');
@@ -4011,6 +4065,7 @@ function s3UpdateTimer() {
 }
 
 function s3Start() {
+  stopVO();
   const b=document.getElementById('s3briefing'); b.classList.add('hidden'); setTimeout(()=>b.style.display='none',600);
   s3state.gameActive=true;
   updatePauseBtn();
@@ -4249,6 +4304,7 @@ function s3EndGame(reason) {
   const precisionPass = pass && s3state.falseAlarms===0 && s3state.timeouts===0;
   if(pass){ pSuccess(); courseProgress.s3done=true; saveProgress(); }
   else pError();
+  setTimeout(()=>playVO(pass?'VO-M3-PASS':'VO-M3-FAIL'),600);
   scormReport(intFinal, pass, 's3');
   const sg=document.getElementById('s3vSuccess'), fg=document.getElementById('s3vFail');
   sg.style.display='none'; fg.style.display='none'; sg.classList.remove('animate');
@@ -4357,8 +4413,10 @@ function showCertificate() {
     dateEl.textContent = '⬡ Completed: ' + now.toLocaleDateString('en-GB', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
   }
   document.getElementById('certOverlay').classList.add('show');
+  playVO('VO-COMPLETE');
 }
 function closeCert() {
+  stopVO();
   document.getElementById('certOverlay').classList.remove('show');
   goMenu();
 }
@@ -4589,7 +4647,7 @@ function togglePause() {
     if (sec === 's1') { clearInterval(s1state.drainInt); }
     if (sec === 's3') { clearInterval(s3state.timerInt); }
     // Mute audio while paused (without toggling the mute preference)
-    Object.values(SND).forEach(a => { if(a) a.muted = true; });
+    _muteAllSND(true);
     // Switch to play icon
     const pi=document.getElementById('pauseIcon'); if(pi) pi.innerHTML='<polygon points="4,2 14,8 4,14"/>';
   } else {
@@ -4597,7 +4655,7 @@ function togglePause() {
     const pi=document.getElementById('pauseIcon'); if(pi) pi.innerHTML='<rect x="3" y="2" width="3.5" height="12" rx="1"/><rect x="9.5" y="2" width="3.5" height="12" rx="1"/>';
     const pl=document.querySelector('#pauseBtn .ctrl-lbl'); if(pl) pl.textContent='PAUSE';
     // Restore mute state
-    Object.values(SND).forEach(a => { if(a) a.muted = _muted; });
+    _muteAllSND(_muted);
     // Restart drain / timer for active section
     if (sec === 's1' && s1state.gameActive && !s1AllSecured()) {
       s1state.drainInt = setInterval(()=>{
