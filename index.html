@@ -689,10 +689,11 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 .hal-fc-num { font-family:'Orbitron',monospace; font-size:28px; font-weight:900; color:var(--blue2); }
 .hal-fc-total { font-family:'Orbitron',monospace; font-size:14px; color:var(--dim); }
 .hal-fc-label { font-family:'JetBrains Mono',monospace; font-size:8px; color:var(--dim); letter-spacing:.06em; margin-top:4px; }
-/* Submit button: neutral/blue when locked, green when enabled */
-.hal-submit-btn { width:100%; padding:13px; font-family:'Orbitron',monospace; font-size:10px; font-weight:700; letter-spacing:.16em; background:rgba(56,189,248,.06); border:1px solid rgba(56,189,248,.22); color:rgba(56,189,248,.55); border-radius:6px; cursor:not-allowed; transition:all .3s; }
-.hal-submit-btn:not(:disabled) { background:rgba(74,222,128,.1); border-color:rgba(74,222,128,.5); color:var(--green); cursor:pointer; animation:ctaPulse 1.2s ease infinite; }
-.hal-submit-btn:not(:disabled):hover { background:rgba(74,222,128,.2); box-shadow:0 0 18px rgba(74,222,128,.3); }
+/* Submit button: neutral/blue always, green when all found */
+.hal-submit-btn { width:100%; padding:13px; font-family:'Orbitron',monospace; font-size:10px; font-weight:700; letter-spacing:.16em; background:rgba(56,189,248,.06); border:1px solid rgba(56,189,248,.22); color:rgba(56,189,248,.55); border-radius:6px; cursor:pointer; transition:all .3s; }
+.hal-submit-btn:hover { background:rgba(56,189,248,.12); border-color:rgba(56,189,248,.45); color:rgba(56,189,248,.85); }
+.hal-submit-btn.ready { background:rgba(74,222,128,.1); border-color:rgba(74,222,128,.5); color:var(--green); animation:ctaPulse 1.2s ease infinite; }
+.hal-submit-btn.ready:hover { background:rgba(74,222,128,.2); box-shadow:0 0 18px rgba(74,222,128,.3); }
 
 /* Hallucination diag cats */
 .diag-cat.hal-cat { border-color:rgba(56,189,248,.15); background:rgba(56,189,248,.03); }
@@ -1577,7 +1578,6 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
           <div class="v-anchor-lbl">⬡ Real World</div>
           <div class="v-anchor-text" id="s1vAnchorText"></div>
         </div>
-        <button class="v-reset" onclick="s1Reset()">↺ REVIEW AGAIN</button>
         <button class="v-menu-btn" id="s1menuBtn" onclick="goMenu()">← MISSION SELECT</button>
       </div>
     </div>
@@ -1786,7 +1786,6 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
           <div class="v-anchor-lbl">⬡ Real World</div>
           <div class="v-anchor-text" id="s2vAnchorText"></div>
         </div>
-        <button class="v-reset" onclick="s2Reset()">↺ REVIEW AGAIN</button>
         <button class="v-menu-btn" id="s2menuBtn" onclick="goMenu()">← MISSION SELECT</button>
       </div>
     </div>
@@ -1853,7 +1852,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
   </div>
   <!-- Mobile submit — visible only on mobile when diag panel is hidden -->
   <div class="mobile-submit-wrap" id="s2mobileSubmit" style="display:none">
-    <button class="hal-submit-btn mobile-submit-btn" id="s2mobileSubmitBtn" onclick="s2Submit()" disabled><span>—</span> &nbsp; SUBMIT REPORT <span id="s2mobileSubmitCounter">(0 / 6)</span></button>
+    <button class="hal-submit-btn mobile-submit-btn" id="s2mobileSubmitBtn" onclick="s2Submit()"><span>—</span> &nbsp; SUBMIT REPORT <span id="s2mobileSubmitCounter">(0 / 6)</span></button>
   </div>
   <div class="card diag" id="s2diag">
     <button class="diag-toggle" onclick="toggleDiag(this)">
@@ -1888,7 +1887,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
       <div class="diag-secured-label">ALL CLAIMS FLAGGED</div>
     </div>
     <div class="diag-actions" style="margin-top:auto">
-      <button class="hal-submit-btn" id="s2submitBtn" onclick="s2Submit()" disabled><span id="s2submitIcon">—</span> &nbsp; SUBMIT REPORT <span id="s2submitCounter">(0 / 6)</span></button>
+      <button class="hal-submit-btn" id="s2submitBtn" onclick="s2Submit()"><span id="s2submitIcon">—</span> &nbsp; SUBMIT REPORT <span id="s2submitCounter">(0 / 6)</span></button>
     </div>
   </div>
 </div>
@@ -1999,7 +1998,6 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
           <div class="v-anchor-lbl">⬡ Real World</div>
           <div class="v-anchor-text" id="s3vAnchorText"></div>
         </div>
-        <button class="v-reset" onclick="s3Reset()">↺ REVIEW AGAIN</button>
         <button class="v-menu-btn" id="s3menuBtn" onclick="goMenu()">← MISSION SELECT</button>
       </div>
     </div>
@@ -3107,10 +3105,10 @@ function s2Init() {
   document.getElementById('s2submitCounter').textContent='(0 / 6)';
   document.getElementById('s2flagStatus').textContent='Flag all fabricated claims. Accurate claims: leave them.';
   document.getElementById('s2diagSecured').style.display='none';
-  document.getElementById('s2submitBtn').disabled=true;
   const s2icon=document.getElementById('s2submitIcon'); if(s2icon) s2icon.textContent='—';
+  const s2sb2=document.getElementById('s2submitBtn'); if(s2sb2) s2sb2.classList.remove('ready');
+  const s2msb2=document.getElementById('s2mobileSubmitBtn'); if(s2msb2) s2msb2.classList.remove('ready');
   const s2msR2 = document.getElementById('s2mobileSubmit'); if(s2msR2) s2msR2.style.display='none';
-  const s2msbR = document.getElementById('s2mobileSubmitBtn'); if(s2msbR) s2msbR.disabled=true;
   const s2mscR = document.getElementById('s2mobileSubmitCounter'); if(s2mscR) s2mscR.textContent='(0 / 6)';
   document.getElementById('s2vBonus').style.display='none';
   // Reset diag cats
@@ -3215,7 +3213,6 @@ function s2BuildPayload() {
       <div class="ai-response-body" id="s2docBody">${sectionHTML}</div>
       <div class="s2-section-nav" id="s2SectionNav">
         <span class="s2-section-counter" id="s2SectionCounter">Section 1 of 3</span>
-        <button class="s2-next-btn" id="s2NextBtn" onclick="s2NextSection()">SKIP TO NEXT SECTION →</button>
       </div>
     </div>`;
 
@@ -3253,11 +3250,6 @@ function s2NextSection() {
     // Update section counter
     const counter = document.getElementById('s2SectionCounter');
     if (counter) counter.textContent = `Section ${next} of ${totalSections}`;
-    // Hide NEXT on last section
-    if (next >= totalSections) {
-      const btn = document.getElementById('s2NextBtn');
-      if (btn) btn.style.display = 'none';
-    }
     // Scroll doc body to top
     const body = document.getElementById('s2docBody');
     if (body) body.scrollTop = 0;
@@ -3405,6 +3397,8 @@ function s2Classify(chosen) {
   if(allFlagged) {
     // All hallucinations found — update UI state, then lightbox → auto-submit on Continue
     document.getElementById('s2flagStatus').textContent='All hallucinations flagged.';
+    const s2sb=document.getElementById('s2submitBtn'); if(s2sb) s2sb.classList.add('ready');
+    const s2msb=document.getElementById('s2mobileSubmitBtn'); if(s2msb) s2msb.classList.add('ready');
     document.getElementById('s2diagSecured').style.display='flex';
     document.getElementById('s2iwDrain').textContent='✓ report verified';
     document.getElementById('s2iwDrain').className='ib-drain-label secured';
