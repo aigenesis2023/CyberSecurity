@@ -2534,7 +2534,7 @@ function flashTeach(pfx, msg) {
   el._t = setTimeout(()=>el.classList.remove('visible'), 3800);
 }
 function updateIntUI(pfx, integrity, drainRate, maxDrain) {
-  const pct = Math.max(0, Math.round(integrity));
+  const pct = Math.min(100, Math.max(0, Math.round(integrity)));
   const numEl = document.getElementById(pfx+'iwNum');
   if(!numEl) return;
   numEl.textContent = pct;
@@ -2582,6 +2582,11 @@ function s1Init() {
   s1state.integrity=100; s1state.gameActive=false;
   s1state.classifyErrors=0; s1state.safeBonus=0; s1state.activeToken=null;
   clearInterval(s1state.timerInt); clearInterval(s1state.drainInt);
+  s1state.drainInt=null;
+  forceCloseInsight();
+  // Snap bar to 100% instantly (no CSS transition) to avoid overflow on retry
+  const s1bar=document.getElementById('s1iwIntBar');
+  if(s1bar){ s1bar.style.transition='none'; s1bar.style.width='100%'; s1bar.className='ib-bar-fill green'; void s1bar.offsetWidth; s1bar.style.transition=''; }
   s1BuildPayload(); s1BuildSegments();
   updateIntUI('s1', 100, 0, S1_MAX_DRAIN);
   // Reset diag panel to initial (pre-play) state
@@ -2649,7 +2654,7 @@ function s1BuildPayload() {
               The engagement is called <span class="tok clickable" data-id="project">Project Cobalt-Seven</span> — that's our internal codename so don't include it in the output. My client contact is <span class="tok clickable" data-id="name">James Okafor</span> at <span class="tok clickable" data-id="email">j.okafor@pinnacle-group.com</span>.<br><br>
               This is a <span class="tok clickable noise" data-id="version">Q4 review</span> covering <span class="tok clickable noise" data-id="turbine">3 workstreams</span>. I've attached my briefing notes doc — the summary should be formal and about one page.
               <div class="gpt-attach-row">
-                <div class="chip-callout" id="s1chipCallout"><span class="chip-callout-arrow">↓</span> Review attached document before proceeding</div>
+                <div class="chip-callout" id="s1chipCallout"><span class="chip-callout-arrow">↓</span> Review attached document</div>
                 <div class="gpt-attach-chip" onclick="s1ToggleAttach()">
                   <span class="chip-icon">📄</span>
                   <span class="chip-name">client_briefing_notes.docx</span>
@@ -2819,7 +2824,7 @@ function s1Classify(chosen) {
     const willBreach=s1state.integrity<=0;
     const afterEffect=()=>{
       showIntPop('s1',-3);
-      flashDelta('s1',-3,'Identified correctly — but category matters for incident reporting. Try again.');
+      flashDelta('s1',-3,'Wrong category — try again.');
       updateIntUI('s1',s1state.integrity,s1GetDrain(),S1_MAX_DRAIN);
       if(willBreach) s1EndGame('breach');
     };
@@ -2942,6 +2947,7 @@ function s1Start() {
   // Delay drain start by 5s — give learners time to read first
   setTimeout(()=>{
     if(!s1state.gameActive) return;
+    clearInterval(s1state.drainInt); // guard against ghost drain if insight dismissed early
     s1state.drainInt=setInterval(()=>{
       if(!s1state.gameActive) return;
       s1state.integrity=Math.max(0,s1state.integrity-s1GetDrain()*(100/1000));
@@ -4321,7 +4327,7 @@ function showInsight(category, tokenText, message, onDismiss, graphicHtml, isCor
   // Set correct/incorrect tag text clearly
   const errTag = document.getElementById('insightErrTag');
   const okTag  = document.getElementById('insightOkTag');
-  if(errTag) errTag.textContent = '✕ \u00A0INCORRECT — ' + category;
+  if(errTag) errTag.textContent = '✕ \u00A0INCORRECT';
   if(okTag) {
     const isSafeItem = category === 'Safe Item' || category === 'Accurate Claim' || category === 'Document Cleared';
     okTag.textContent = isSafeItem ? '✓ \u00A0CORRECT — Not Sensitive' : '✓ \u00A0CORRECT — Item Secured';
@@ -4393,9 +4399,21 @@ function s1ShowInsight(category, tokenText, message, afterFn, graphicHtml, isCor
   }, graphicHtml || null, isCorrect);
 }
 
-// ── M2: teach (no timer to pause) ──────────────────────────
+// ── M2: teach — pause gentle drain during insight ──────────
 function s2ShowInsight(category, tokenText, message, afterFn, graphicHtml, isCorrect) {
-  showInsight(category, tokenText, message, afterFn || null, graphicHtml || null, isCorrect || false);
+  clearInterval(s2state.drainInt); s2state.drainInt=null; // pause drain
+  showInsight(category, tokenText, message, () => {
+    if(afterFn) afterFn();
+    // Resume gentle drain if game still active
+    if(s2state.gameActive) {
+      s2state.drainInt = setInterval(()=>{
+        if(!s2state.gameActive) return;
+        s2state.integrity = Math.max(0, s2state.integrity - 0.0005);
+        updateIntUI('s2', s2state.integrity, 0, S1_MAX_DRAIN);
+        if(s2state.integrity<=0) s2EndGame('breach');
+      }, 100);
+    }
+  }, graphicHtml || null, isCorrect || false);
 }
 
 // ── M3: teach with timer pause ──────────────────────────────
