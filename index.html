@@ -3134,15 +3134,15 @@ document.addEventListener('mousedown', e => {
 // Per-token teach messages for M1
 const S1_TEACH = {
   apikey:   { correct: 'API keys give direct access to company systems. AI tools can log everything you type — if a key appears in a prompt, anyone who accesses that log has the same access you do. Even old keys can reveal how your systems are set up.',
-              wrong:   'This is an API key — classify as CREDENTIALS. Keys grant direct access to systems; anyone who sees this can use it.' },
+              wrong:   'This is an API key — it falls under CREDENTIALS, not personal data or internal info. The difference matters: credentials give direct system access, which means the damage is immediate and exploitable. Someone with this key can act as your organisation right now.' },
   password: { correct: 'Passwords in prompts are high-risk. AI tools log inputs — a logged password is a compromised password.',
-              wrong:   'This is a password — classify as CREDENTIALS. Passwords should never appear in any text sent to an external service.' },
+              wrong:   'This is a password — it falls under CREDENTIALS, not personal data. Passwords grant direct access to systems. Personal data is a compliance risk; credentials are an active security breach. Anyone who sees this can log in.' },
   email:    { correct: 'Email addresses are personal data under GDPR. They identify a real person and could be used for phishing or social engineering if they end up in the wrong hands.',
-              wrong:   'This is a personal email address — classify as PERSONAL DATA. Sharing it with external AI tools may breach data protection policy.' },
+              wrong:   'This is a personal email address — it falls under PERSONAL DATA, not credentials or internal info. It identifies a real individual and is protected under GDPR. Unlike credentials it won\'t grant system access, but it can be used for targeted phishing or social engineering.' },
   name:     { correct: 'Personal names are protected data under GDPR. Combined with someone\'s role and company name, an AI tool could store enough to identify a real person — data your colleague never consented to share.',
-              wrong:   'This is a person\'s name — classify as PERSONAL DATA. Names are personal identifiers even without additional data.' },
+              wrong:   'This is a person\'s name — it falls under PERSONAL DATA, not internal info. Names identify real individuals and are protected under GDPR. Internal codenames identify projects and initiatives; personal names identify people. That\'s what makes it personal data.' },
   project:  { correct: 'Internal codenames reveal organisational structure and active work to external services. Competitors pay attention.',
-              wrong:   'This is an internal project codename — classify as INTERNAL INFO. Codenames signal active initiatives to external parties.' },
+              wrong:   'This is an internal project codename — it falls under INTERNAL INFO, not personal data. It doesn\'t identify a person or grant system access, but it reveals what your organisation is working on. Competitors and external services can piece together strategic direction from codenames alone.' },
 };
 
 // Safe-token (noise) teach messages — shown when user correctly marks a token as SAFE
@@ -3531,14 +3531,19 @@ function s2CheckSectionAdvance() {
 // 'missed' shown after marking a hallucination as accurate
 const S2_TEACH = {
   fig1: { correct: 'The notes say 27% improvement in process turnaround times \u2014 the AI inflated this to 34% and changed \u201Cturnaround times\u201D to \u201Coperational efficiency\u201D. AI tools routinely adjust figures upward and generalise specific metrics.',
+          missed: 'You called this accurate, but the notes say 27% improvement in process turnaround times \u2014 the AI inflated this to 34% and changed \u201Cturnaround times\u201D to \u201Coperational efficiency\u201D. This is exactly how hallucinations survive review: the number is close enough to feel right. Always check the exact figure against the source.',
           label: 'Wrong Figure' },
   fig2: { correct: 'The approved budget was \u00A3400,000 \u2014 not \u00A3420,000. A \u00A320,000 discrepancy in a client report could trigger a budget review or damage trust. Always verify financial figures against source documents.',
+          missed: 'You called this accurate, but the approved budget was \u00A3400,000 \u2014 not \u00A3420,000. A \u00A320,000 discrepancy sounds minor, but in a client report it could trigger a budget review or damage trust. Small financial errors are the ones that get through because they feel plausible.',
           label: 'Wrong Figure' },
   det1: { correct: 'The notes identify James Okafor as a Pinnacle Group contact but never mention his job title. \u201CHead of Digital Transformation\u201D sounds plausible, but AI models routinely invent professional titles when they aren\u2019t provided.',
+          missed: 'You called this accurate, but the notes never mention James Okafor\u2019s job title. \u201CHead of Digital Transformation\u201D sounds plausible \u2014 and that\u2019s the problem. AI models invent professional titles when they aren\u2019t provided, and they always sound credible. If it\u2019s not in the source material, it\u2019s not verified.',
           label: 'Invented Detail' },
   det2: { correct: 'There is no \u201C2025 Digital Acceleration Strategy\u201D in the meeting notes. The AI invented a formal strategy name to make the report sound more authoritative. Fabricated proper nouns are one of the hardest hallucinations to spot.',
+          missed: 'You called this accurate, but there is no \u201C2025 Digital Acceleration Strategy\u201D anywhere in the meeting notes. AI models don\u2019t retrieve facts \u2014 they predict what plausible text looks like. A formal strategy name makes the report sound more authoritative, so the model generates one. Fabricated proper nouns are among the hardest hallucinations to spot because they feel like something you\u2019d expect to exist.',
           label: 'Invented Detail' },
   claim1: { correct: 'The notes mention one distribution centre (Birmingham) with positive results. The AI fabricated a recommendation to expand to Leeds and Bristol \u2014 a concrete action plan that was never discussed. This is the most dangerous type: AI-generated recommendations that sound like agreed decisions.',
+            missed: 'You called this accurate, but the notes only mention one distribution centre (Birmingham) with positive results. The AI fabricated a recommendation to expand to Leeds and Bristol \u2014 a concrete action plan that was never discussed. This is the most dangerous type of hallucination: AI-generated recommendations that sound like agreed decisions. The client could act on a plan nobody proposed.',
             label: 'Unsupported Claim' },
   acc1: { falseflag: 'The three-week delay due to vendor-related issues is directly in the meeting notes. Flagging accurate claims as hallucinations can be just as damaging \u2014 it undermines confidence in the parts of the report that are correct.' },
   acc2: { falseflag: 'Six Meridian consultants on-site is confirmed in the meeting notes. Not every specific detail is a hallucination \u2014 the skill is checking each claim against the source.' },
@@ -3724,7 +3729,7 @@ function s2Classify(chosen) {
       if(el){ el.className='tok flagged-missed'; el.innerHTML='<span class="redact-label">'+el.textContent.trim()+'</span>\u2717'; el.removeEventListener('click',s2TokenClick); }
       updateIntUI('s2',s2state.integrity,0,S1_MAX_DRAIN);
       if(s2state.integrity<=0) { s2EndGame('breach'); return; }
-      var missMsg = S2_TEACH[id] ? S2_TEACH[id].correct : '';
+      var missMsg = S2_TEACH[id] ? (S2_TEACH[id].missed || S2_TEACH[id].correct) : '';
       s2ShowInsight('FLAG', tokText2, missMsg, function(){ showIntPop('s2',-20); flashDelta('s2',-20,'missed hallucination'); s2CheckAllDone(); }, null, false, 'accurate');
     }
     return;
@@ -3875,7 +3880,7 @@ function s2EndGame(reason) {
   document.getElementById('s2vFalseFlags').className='v-rv '+(s2state.flagsWrong===0?'green':'red');
   var anchorText2=document.getElementById('s2vAnchorText');
   if(pass) {
-    anchorText2.innerHTML = 'A 2024 study found that professionals shown AI-generated reports identified fewer than half of the factual errors without access to source documents. In the Mata v. Avianca case (2023), lawyers submitted AI-generated case citations to a US federal court \u2014 every cited case was invented. The attorneys were sanctioned.' + '<br><br><span style="font-family:\'JetBrains Mono\',monospace;font-size:9px;letter-spacing:.12em;color:rgba(56,189,248,.5);text-transform:uppercase;">What you now do differently</span><br><span style="font-size:11px;line-height:1.9;color:rgba(200,220,255,.65);">\u2192 Always verify AI-generated content against the original source material<br>\u2192 Check every figure, name, and recommendation \u2014 not just the ones that feel wrong<br>\u2192 Never send an AI-drafted document to a client without a line-by-line review</span>';
+    anchorText2.innerHTML = 'Research consistently shows that professionals reading AI-generated reports miss the majority of factual errors when they don\u2019t have access to the original source material. In the Mata v. Avianca case (2023), lawyers submitted AI-generated case citations to a US federal court \u2014 every cited case was invented. The attorneys were sanctioned.' + '<br><br><span style="font-family:\'JetBrains Mono\',monospace;font-size:9px;letter-spacing:.12em;color:rgba(56,189,248,.5);text-transform:uppercase;">What you now do differently</span><br><span style="font-size:11px;line-height:1.9;color:rgba(200,220,255,.65);">\u2192 Always verify AI-generated content against the original source material<br>\u2192 Check every figure, name, and recommendation \u2014 not just the ones that feel wrong<br>\u2192 Never send an AI-drafted document to a client without a line-by-line review</span>';
     if(precisionPass){ var bonus=document.getElementById('s2vBonus'); bonus.style.display='block'; bonus.innerHTML='<div class="v-bonus-wrap"><span class="v-precision-bonus">\u2B21 PRECISION BONUS \u2014 All hallucinations caught, zero false alarms</span></div>'; }
   } else {
     anchorText2.textContent = 'In the Mata v. Avianca case (2023), lawyers submitted AI-generated case citations to a US federal court \u2014 every cited case was invented. The attorneys were sanctioned. AI-fabricated content in client reports carries direct professional and financial consequences. Always verify against source material.';
