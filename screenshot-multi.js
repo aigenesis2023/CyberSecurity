@@ -74,22 +74,22 @@ async function runViewport(browser, vp) {
   await wait(200);
   await shot(page, 'splash-ready');
 
-  // ─── MISSION SELECT ──────────────────────────────
+  // ─── BOOT → OBJECTIVES → MISSION SELECT ─────────
   await page.click('.splash-btn');
+
+  // Wait for boot to finish and objectives overlay to appear
+  await page.waitForFunction(() => {
+    const o = document.getElementById('objOverlay');
+    return o && o.classList.contains('show');
+  }, { timeout: 25000 });
+  await wait(800);
+  await shot(page, 'objectives-interstitial');
+
+  // Dismiss objectives → menu appears
+  await page.evaluate(() => dismissObjectives());
   await page.waitForSelector('#screenMenu.active', { timeout: 8000 });
   await wait(700);
   await shot(page, 'mission-select');
-
-  // Objectives interstitial
-  try {
-    await page.waitForFunction(() => {
-      const o = document.getElementById('objOverlay');
-      return o && o.classList.contains('show');
-    }, { timeout: 5000 });
-    await shot(page, 'objectives-interstitial');
-    await page.evaluate(() => dismissObjectives());
-    await wait(500);
-  } catch(e) { /* may not appear on re-run */ }
 
   // ─── MISSION 1 ───────────────────────────────────
   console.log(`  [${vp.name}] M1...`);
@@ -160,9 +160,9 @@ async function runViewport(browser, vp) {
   await wait(700);
   await shot(page, 'm2-gameplay');
 
-  // Show popup on hallucination
+  // Show popup on a hallucination token
   await page.evaluate(() => {
-    s2state.activeToken = 'law1';
+    s2state.activeToken = 'fig1';
     const popup = document.getElementById('s2halPopup');
     popup.classList.add('show');
     popup.style.top = '50%'; popup.style.left = '50%';
@@ -171,23 +171,28 @@ async function runViewport(browser, vp) {
   await wait(300);
   await shot(page, 'm2-popup');
 
-  // Wrong type → insight
-  await page.evaluate(() => s2Classify('citation'));
+  // False alarm — flag an accurate token as hallucination → insight error
+  await page.evaluate(() => { s2state.activeToken = 'acc1'; s2Classify('flag'); });
   await wait(500);
-  await shot(page, 'm2-insight-wrong-type');
+  await shot(page, 'm2-insight-wrong');
   await dismissInsightHelper(page);
 
-  // Correctly classify all
+  // Correctly flag all hallucinations
   await page.evaluate(() => {
-    ['law1','cit1','cit2','fig1','fig2','law2'].forEach(id => {
-      if (!s2state.tokState[id].flagged) { s2state.activeToken = id; s2Classify(s2state.tokState[id].cat); }
+    S2_TOKENS.filter(t => t.isHal).forEach(t => {
+      if (!s2state.tokState[t.id].flagged) { s2state.activeToken = t.id; s2Classify('flag'); }
     });
   });
   await wait(400);
-
-  // Reveal sections
-  await page.evaluate(() => { s2RevealSection(1); s2RevealSection(2); s2RevealSection(3); });
+  // Mark remaining accurate tokens
+  await page.evaluate(() => {
+    S2_TOKENS.filter(t => !t.isHal).forEach(t => {
+      if (!s2state.tokState[t.id].flagged) { s2state.activeToken = t.id; s2Classify('accurate'); }
+    });
+  });
   await wait(400);
+  await dismissInsightHelper(page);
+  await wait(300);
   await shot(page, 'm2-all-flagged');
 
   // Submit
