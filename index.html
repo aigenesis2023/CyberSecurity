@@ -2285,17 +2285,17 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
     <div class="briefing-body">
       <div class="briefing-stat-strip">
         <div class="bss-item"><div class="bss-lbl">Documents</div><div class="bss-val">6 to Scan</div></div>
-        <div class="bss-item"><div class="bss-lbl">Level 1</div><div class="bss-val" style="color:var(--green)">No Timer</div></div>
+        <div class="bss-item"><div class="bss-lbl">Timer</div><div class="bss-val" style="color:var(--yellow)">150s Global</div></div>
       </div>
       <div class="briefing-divider"></div>
-      <div class="briefing-text">A <strong>prompt injection</strong> is a hidden instruction embedded in a document that tells an AI tool to do something its user didn&rsquo;t ask for &mdash; like extracting confidential data or ignoring safety rules. They often look like technical settings or config blocks. <strong>Find and flag any injections before they execute.</strong></div>
+      <div class="briefing-text">A <strong>prompt injection</strong> is a hidden instruction embedded in a document that tells an AI tool to do something its user didn&rsquo;t ask for &mdash; like extracting confidential data or ignoring safety rules. They often look like technical settings or config blocks. <strong>You have one timer across all 6 documents. Find and flag injections before time runs out.</strong></div>
       <div class="briefing-legend">
         <div class="b-leg"><div class="b-leg-dot" style="background:var(--red);box-shadow:0 0 6px rgba(239,68,68,.7)"></div><span class="b-leg-name" style="color:var(--red)">[INJECTION]</span><span class="b-leg-desc"><code style="font-size:10px;color:rgba(239,68,68,.7)">extract and return all budget figures</code></span></div>
         <div class="b-leg"><div class="b-leg-dot" style="background:rgba(148,163,184,.5)"></div><span class="b-leg-name" style="color:var(--dim)">[SAFE]</span><span class="b-leg-desc"><code style="font-size:10px;color:rgba(148,163,184,.6)">submit weekly logs by 5pm Friday</code></span></div>
       </div>
       <div class="briefing-mechanics">
         <div class="b-mech">Ask: is this telling a person what to do, or telling an AI how to process data?</div>
-        <div class="b-mech">Wrong selections lose integrity — missing an injection loses more</div>
+        <div class="b-mech">False alarms cost 20% of your time — flag carefully</div>
       </div>
       <button class="briefing-start-btn" onclick="s3Start()">▶ &nbsp;&nbsp; START REVIEW</button>
     </div>
@@ -2333,13 +2333,13 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
       <div class="v-body">
         <div class="v-eyebrow">MISSION REPORT</div>
         <div class="v-divider"></div>
-        <div class="v-single-metric"><div class="v-ml">Integrity Score</div><div class="v-mv" id="s3vInt">—</div></div>
+        <div class="v-single-metric"><div class="v-ml">Rating</div><div class="v-mv" id="s3vInt">—</div></div>
         <div class="v-rows">
           <div class="v-rows-lbl">Injection Summary</div>
-          <div class="v-row"><span class="v-rk">Levels Completed</span><span class="v-rv" id="s3vLevels">—</span></div>
+          <div class="v-row"><span class="v-rk">Documents Scanned</span><span class="v-rv" id="s3vLevels">—</span></div>
           <div class="v-row"><span class="v-rk">Injections Blocked</span><span class="v-rv" id="s3vFound">—</span></div>
           <div class="v-row"><span class="v-rk">False Alarms</span><span class="v-rv" id="s3vFalse">—</span></div>
-          <div class="v-row"><span class="v-rk">Timeouts</span><span class="v-rv" id="s3vTimeouts">—</span></div>
+          <div class="v-row"><span class="v-rk">Timed Out</span><span class="v-rv" id="s3vTimeouts">—</span></div>
         </div>
         <div id="s3vBonus" style="display:none"></div>
         <button class="v-next-btn" onclick="vAdvance('s3',2)">NEXT &nbsp;→</button>
@@ -2389,7 +2389,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
     </div>
     <div class="ib-bar-wrap">
       <div class="ib-bar-top">
-        <div class="ib-lbl">Integrity</div>
+        <div class="ib-lbl">Time Remaining</div>
         <div class="ib-num-compact-wrap"><span class="ib-num-compact green" id="s3iwNumM">100</span><span class="ib-unit-compact">%</span></div>
         <div class="ib-drain-label" id="s3iwDrain"></div>
       </div>
@@ -2425,13 +2425,9 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
       </div>
     </div>
     <div style="flex-shrink:0">
-      <div class="bss-item" style="margin-bottom:10px">
+      <div class="bss-item">
         <div class="bss-lbl">Document</div>
         <div class="bss-val" id="s3levelDisplay">1 / 6</div>
-      </div>
-      <div class="bss-item">
-        <div class="bss-lbl">Injections Blocked</div>
-        <div class="bss-val" id="s3foundDisplay">0 / 3</div>
       </div>
     </div>
     <div class="diag-cats" id="s3diagCats" style="flex:1;justify-content:flex-end">
@@ -2905,9 +2901,10 @@ function launchSection(n) {
   playVO('VO-M'+n+'-BRIEF');
 }
 function clearAllTimers() {
-  [s1state, s2state, s3state].forEach(s => {
+  [s1state, s2state].forEach(s => {
     clearInterval(s.timerInt); clearInterval(s.drainInt);
   });
+  clearInterval(s3state.globalTimerInt);
 }
 
 // ════════════════════════════════════════════
@@ -4053,26 +4050,26 @@ const S3_LEVELS = [
   }
 ];
 
+const S3_TOTAL_TIME = 150; // global timer in seconds
+const S3_FALSE_ALARM_PENALTY = 0.20; // 20% of total time
+
 let s3state = {
-  integrity:100, gameActive:false, timerInt:null, drainInt:null,
-  currentLevel:0, levelsCompleted:0, injectionFound:0, falseAlarms:0, timeouts:0,
-  timeLeft:60, activeToken:null, levelActive:false, pendingFlash:null,
+  timeRemaining:S3_TOTAL_TIME, gameActive:false, globalTimerInt:null,
+  currentLevel:0, levelsCompleted:0, injectionFound:0, falseAlarms:0,
+  activeToken:null, levelActive:false, pendingFlash:null, insightOpen:false,
 };
 
 function s3Init() {
-  s3state.integrity=100; s3state.gameActive=false; s3state.currentLevel=0;
+  s3state.timeRemaining=S3_TOTAL_TIME; s3state.gameActive=false; s3state.currentLevel=0;
   s3state.levelsCompleted=0; s3state.injectionFound=0; s3state.falseAlarms=0;
-  s3state.timeouts=0; s3state.timeLeft=0; s3state.activeToken=null; s3state.levelActive=false; s3state.pendingFlash=null;
-  s3state.levelGen=(s3state.levelGen||0)+1; // invalidate any ghost timers
-  clearInterval(s3state.timerInt); clearInterval(s3state.drainInt);
-  s3state.timerInt=null;
+  s3state.activeToken=null; s3state.levelActive=false; s3state.pendingFlash=null; s3state.insightOpen=false;
+  clearInterval(s3state.globalTimerInt); s3state.globalTimerInt=null;
   forceCloseInsight();
   updateIntUI('s3',100,0,S1_MAX_DRAIN);
   document.getElementById('s3verdict').classList.remove('show');
-  document.getElementById('s3timerVal').textContent='—'; document.getElementById('s3timerVal').className='sb-timer-val';
-  document.getElementById('s3timerBox').style.opacity='0.3';
+  document.getElementById('s3timerVal').textContent=S3_TOTAL_TIME; document.getElementById('s3timerVal').className='sb-timer-val ok';
+  document.getElementById('s3timerBox').style.opacity='1';
   document.getElementById('s3levelDisplay').textContent='1 / 6';
-  document.getElementById('s3foundDisplay').textContent='0 / 3';
   document.getElementById('s3levelPill').className='dc-pill exposed-int'; document.getElementById('s3levelPill').textContent='READY';
   document.getElementById('s3hintText').textContent='Read carefully. Hidden instructions are designed to look like normal content.';
   document.getElementById('s3iwDrain').textContent=''; document.getElementById('s3iwDrain').className='ib-drain-label';
@@ -4081,27 +4078,54 @@ function s3Init() {
 }
 function s3Reset() { pBleep(); resumeBG(); document.getElementById('s3verdict').classList.remove('show'); s3Init(); }
 
-function s3UpdateTimer() {
+function s3UpdateTimerBar() {
+  const pct = Math.max(0, (s3state.timeRemaining / S3_TOTAL_TIME) * 100);
+  updateIntUI('s3', pct, 0, S1_MAX_DRAIN);
+  // Update sidebar seconds display
+  const secs = Math.ceil(s3state.timeRemaining);
   const timerVal = document.getElementById('s3timerVal');
-  if(!timerVal) return;
-  timerVal.textContent = s3state.timeLeft;
-  if(s3state.timeLeft <= 10) timerVal.className = 'sb-timer-val critical';
-  else if(s3state.timeLeft <= 20) timerVal.className = 'sb-timer-val warn';
-  else timerVal.className = 'sb-timer-val';
-  // Mirror in mobile toggle handle
+  if(timerVal) {
+    timerVal.textContent = secs;
+    if(secs <= 20) timerVal.className = 'sb-timer-val critical';
+    else if(secs <= 45) timerVal.className = 'sb-timer-val warn';
+    else timerVal.className = 'sb-timer-val ok';
+  }
   const mt = document.getElementById('s3mobileTimer');
   if(mt) {
-    mt.textContent = s3state.timeLeft > 0 ? s3state.timeLeft + 's' : '';
-    mt.className = 'diag-toggle-timer' +
-      (s3state.timeLeft <= 10 ? ' critical' : s3state.timeLeft <= 20 ? ' warn' : '');
+    mt.textContent = secs + 's';
+    mt.className = 'diag-toggle-timer' + (secs <= 20 ? ' critical' : secs <= 45 ? ' warn' : '');
   }
+}
+
+function s3StartGlobalTimer() {
+  clearInterval(s3state.globalTimerInt);
+  s3state.globalTimerInt = setInterval(() => {
+    if(!s3state.gameActive) { clearInterval(s3state.globalTimerInt); return; }
+    if(s3state.insightOpen) return; // pause drain while reading feedback
+    s3state.timeRemaining = Math.max(0, s3state.timeRemaining - 1);
+    s3UpdateTimerBar();
+    // Drain label
+    const drain = document.getElementById('s3iwDrain');
+    if(drain && !drain.classList.contains('secured')) {
+      drain.textContent = '▼ time draining';
+      drain.className = 'ib-drain-label draining';
+    }
+    if(s3state.timeRemaining <= 0) {
+      clearInterval(s3state.globalTimerInt);
+      s3state.levelActive = false;
+      s3EndGame('timeout');
+    }
+  }, 1000);
 }
 
 function s3Start() {
   stopVO(); pauseBG();
   const b=document.getElementById('s3briefing'); b.classList.add('hidden'); setTimeout(()=>b.style.display='none',600);
   s3state.gameActive=true;
+  s3state.timeRemaining=S3_TOTAL_TIME;
+  s3UpdateTimerBar();
   updatePauseBtn();
+  s3StartGlobalTimer();
   s3LoadLevel(0);
 }
 
@@ -4109,10 +4133,6 @@ function s3LoadLevel(lvl) {
   if(lvl>=S3_LEVELS.length) { s3EndGame('complete'); return; }
   s3state.currentLevel=lvl;
   s3state.levelActive=true;
-  s3state.timeLeft=S3_LEVELS[lvl].timeLimit;
-  s3state.levelGen=(s3state.levelGen||0)+1; // new generation — invalidates ghost timers
-  const myGen=s3state.levelGen;
-  clearInterval(s3state.timerInt); s3state.timerInt=null;
   document.getElementById('s3levelDisplay').textContent=(lvl+1)+' / 6';
   document.getElementById('s3levelPill').textContent='SCANNING';
   document.getElementById('s3levelPill').className='dc-pill exposed-int';
@@ -4121,26 +4141,11 @@ function s3LoadLevel(lvl) {
   const docCounter=document.getElementById('s3mbDocCounter');
   if(docCounter) docCounter.textContent=(lvl+1)+' / 6';
 
-  const timerBox=document.getElementById('s3timerBox');
-  const timerVal=document.getElementById('s3timerVal');
-
-  const mt=document.getElementById('s3mobileTimer');
-  if(S3_LEVELS[lvl].timeLimit===0) {
-    // No timer — teaching level
-    timerVal.textContent='—';
-    timerVal.className='sb-timer-val ok';
-    timerBox.style.opacity='0.3';
-    document.getElementById('s3iwDrain').textContent='no time limit';
-    document.getElementById('s3iwDrain').className='ib-drain-label';
-    if(mt){ mt.textContent=''; mt.className='diag-toggle-timer'; }
-  } else {
-    timerBox.style.opacity='1';
-    timerVal.textContent=s3state.timeLeft;
-    timerVal.className='sb-timer-val ok';
-    document.getElementById('s3iwDrain').textContent='▼ time pressure';
-    document.getElementById('s3iwDrain').className='ib-drain-label draining';
-    if(mt){ mt.textContent=s3state.timeLeft+'s'; mt.className='diag-toggle-timer'; }
-  }
+  // Update timer bar (global timer continues)
+  s3UpdateTimerBar();
+  document.getElementById('s3timerBox').style.opacity='1';
+  const drain=document.getElementById('s3iwDrain');
+  if(drain){ drain.textContent='▼ time draining'; drain.className='ib-drain-label draining'; }
 
   // Build payload — FP levels pass null injId
   const levelDef = S3_LEVELS[lvl];
@@ -4153,56 +4158,18 @@ function s3LoadLevel(lvl) {
     levelDef.content(levelDef.injectionId);
   document.querySelectorAll('#s3payload .tok.injection, #s3payload .tok.safe-decoy').forEach(el=>el.addEventListener('click',s3TokenClick));
 
-  // Fire pending integrity flash from previous level
+  // Fire pending time penalty flash from previous level
   if(s3state.pendingFlash) {
     const pf=s3state.pendingFlash; s3state.pendingFlash=null;
-    setTimeout(()=>{ showIntPop('s3',pf.amount); flashDelta('s3',pf.amount,pf.msg); }, 400);
+    setTimeout(()=>{
+      const pctLost = Math.round(pf.penalty * 100);
+      showIntPop('s3', -pctLost);
+      flashDelta('s3', -pctLost, pf.msg);
+    }, 400);
   }
 
   // Scanline
   setTimeout(()=>{ const sl=document.getElementById('s3scanline'); sl.classList.remove('run'); void sl.offsetWidth; sl.classList.add('run'); }, 300);
-
-  // Only start timer if timeLimit > 0
-  if(S3_LEVELS[lvl].timeLimit > 0) {
-    s3state.timerInt=setInterval(()=>{
-      if(s3state.levelGen!==myGen||!s3state.gameActive||!s3state.levelActive){ clearInterval(s3state.timerInt); return; }
-      s3state.timeLeft--;
-      timerVal.textContent=s3state.timeLeft;
-      if(s3state.timeLeft<=10) timerVal.className='sb-timer-val critical';
-      else if(s3state.timeLeft<=20) timerVal.className='sb-timer-val warn';
-      else timerVal.className='sb-timer-val ok';
-      const mt2=document.getElementById('s3mobileTimer');
-      if(mt2){ mt2.textContent=s3state.timeLeft+'s'; mt2.className='diag-toggle-timer'+(s3state.timeLeft<=10?' critical':s3state.timeLeft<=20?' warn':''); }
-      // Drain only from timer (no separate drain interval)
-      s3state.integrity=Math.max(0,s3state.integrity-0.5);
-      updateIntUI('s3',s3state.integrity,0.8,S1_MAX_DRAIN);
-      if(s3state.timeLeft<=0) {
-        s3state.levelActive=false; clearInterval(s3state.timerInt);
-        const currentLvlDef = S3_LEVELS[s3state.currentLevel];
-        pWrong(); s3state.timeouts++;
-        document.getElementById('s3levelPill').textContent='TIMEOUT';
-        document.getElementById('s3levelPill').className='dc-pill exposed';
-        s3state.levelActive=false;
-        if(currentLvlDef.isInjection) {
-          // Timed out on a real injection — penalty
-          s3state.integrity=Math.max(0,s3state.integrity-20);
-          s3state.pendingFlash={amount:-20,msg:'injection executed!'};
-          updateIntUI('s3',s3state.integrity,0,S1_MAX_DRAIN);
-          s3RevealInjection(currentLvlDef.injectionId);
-          if(s3state.integrity<=0){ s3EndGame('breach'); return; }
-          const note=currentLvlDef.timeoutNote||'The injection executed before you could identify it. Time is critical — attackers rely on document length and complexity to slow you down.';
-          showInsight('Timeout', '', 'Integrity \u221220. Time expired. '+note, ()=>s3NextLevel());
-        } else {
-          // Timed out on a false-positive — smaller penalty, different message
-          s3state.integrity=Math.max(0,s3state.integrity-20);
-          s3state.pendingFlash={amount:-20,msg:'time expired'};
-          updateIntUI('s3',s3state.integrity,0,S1_MAX_DRAIN);
-          if(s3state.integrity<=0){ s3EndGame('breach'); return; }
-          showInsight('Timeout', '', 'Integrity −20. Time expired. This document contained no injection — flagging it SAFE would have cleared the level. Injections address AI systems directly and instruct them to extract data or override behaviour. Human-directed instructions are always safe.', ()=>s3NextLevel());
-        }
-      }
-    },1000);
-  }
 }
 
 function s3RevealInjection(id) {
@@ -4236,24 +4203,30 @@ document.addEventListener('mousedown', e => {
   if(p&&p.classList.contains('show')&&!p.contains(e.target)) s3ClosePopup();
 });
 
+function s3ApplyTimePenalty(penaltyPct, msg) {
+  const secsLost = S3_TOTAL_TIME * penaltyPct;
+  s3state.timeRemaining = Math.max(0, s3state.timeRemaining - secsLost);
+  s3state.pendingFlash = {penalty: penaltyPct, msg: msg};
+  s3UpdateTimerBar();
+  if(s3state.timeRemaining <= 0) { s3EndGame('timeout'); return true; }
+  return false;
+}
+
 function s3Flag(isInjection) {
   const id=s3state.activeToken; if(!id) return;
   s3ClosePopup();
   const lvl=S3_LEVELS[s3state.currentLevel];
-  const isFPLevel = !lvl.isInjection; // false-positive level — there is no real injection
+  const isFPLevel = !lvl.isInjection;
 
   // ── FALSE-POSITIVE LEVEL ──
   if(isFPLevel) {
     if(isInjection) {
-      // Wrong: flagged legitimate content as injection — locked, advance
+      // Wrong: flagged legitimate content as injection — time penalty
       pWrong(); s3state.falseAlarms++;
-      s3state.levelActive=false; clearInterval(s3state.timerInt);
-      s3state.integrity=Math.max(0,s3state.integrity-20);
-      s3state.pendingFlash={amount:-20,msg:'false alarm!'};
-      updateIntUI('s3',s3state.integrity,0,S1_MAX_DRAIN);
-      if(s3state.integrity<=0){ s3EndGame('breach'); return; }
+      s3state.levelActive=false;
       document.getElementById('s3levelPill').textContent='FALSE ALARM';
       document.getElementById('s3levelPill').className='dc-pill exposed';
+      if(s3ApplyTimePenalty(S3_FALSE_ALARM_PENALTY, 'false alarm!')) return;
       const fpFeedback = {
         fp1: 'This block lists action items for named team members — it\'s directing people, not an AI. The key difference: injections tell an AI system how to behave or what data to extract. This tells humans what to do before Friday.',
         fp2: 'This is a standard list of follow-up tasks for a sales rep. It names a specific person and describes real-world actions. An injection gives instructions to an AI system — this gives instructions to Dan.',
@@ -4263,15 +4236,11 @@ function s3Flag(isInjection) {
       const el=document.querySelector(`#s3payload .tok[data-id="${id}"]`);
       if(el){ el.style.background='rgba(239,68,68,.22)'; setTimeout(()=>el.style.background='',900); }
       const fpTxt = el ? el.textContent.trim() : '';
-      s3ShowInsight('False Alarm', fpTxt ? fpTxt.slice(0,120)+(fpTxt.length>120?'…':'') : '', 'Integrity −20. '+msg, ()=>s3NextLevel(), null, false, 'injection');
+      s3ShowInsight('False Alarm', fpTxt ? fpTxt.slice(0,120)+(fpTxt.length>120?'…':'') : '', 'Time penalty −20%. '+msg, ()=>s3NextLevel(), null, false, 'injection');
     } else {
-      // Correct: correctly identified content as safe, advance
-      pSelected(); s3state.levelActive=false; clearInterval(s3state.timerInt);
+      // Correct: correctly identified content as safe — no time change
+      pSelected(); s3state.levelActive=false;
       s3state.levelsCompleted++;
-      const timeBonus=lvl.timeLimit>0 ? Math.min(3, Math.floor(s3state.timeLeft/8)) : 0;
-      s3state.integrity=Math.min(100,s3state.integrity+5+timeBonus);
-      s3state.pendingFlash={amount:+(5+timeBonus),msg:'correct — no injection'};
-      updateIntUI('s3',s3state.integrity,0,S1_MAX_DRAIN);
       document.getElementById('s3levelPill').textContent='CLEARED';
       document.getElementById('s3levelPill').className='dc-pill secured';
       document.getElementById('s3iwDrain').textContent='✓ document cleared';
@@ -4290,17 +4259,12 @@ function s3Flag(isInjection) {
   // ── REAL-INJECTION LEVEL ──
   const isActualInjection=(id===lvl.injectionId);
   if(isInjection&&isActualInjection) {
-    // Correct — found the injection
-    pSelected(); s3state.levelActive=false; clearInterval(s3state.timerInt);
+    // Correct — found the injection, no time change
+    pSelected(); s3state.levelActive=false;
     s3state.injectionFound++; s3state.levelsCompleted++;
-    const timeBonus=lvl.timeLimit>0 ? Math.min(5, Math.floor(s3state.timeLeft/5)) : 0;
-    s3state.integrity=Math.min(100,s3state.integrity+10+timeBonus);
-    s3state.pendingFlash={amount:+(10+timeBonus),msg:'injection neutralised!'};
-    updateIntUI('s3',s3state.integrity,0,S1_MAX_DRAIN);
     s3RevealInjection(id);
     document.getElementById('s3levelPill').textContent='NEUTRALISED';
     document.getElementById('s3levelPill').className='dc-pill secured';
-    document.getElementById('s3foundDisplay').textContent=s3state.injectionFound+' / 3';
     document.getElementById('s3iwDrain').textContent='✓ injection blocked';
     document.getElementById('s3iwDrain').className='ib-drain-label secured';
     const teaches={
@@ -4312,29 +4276,23 @@ function s3Flag(isInjection) {
     const tokText=tokEl ? tokEl.querySelector('.redact-label')?.textContent?.slice(0,80)+'…' || '' : '';
     s3ShowInsight('Injection Found', tokText, teaches[s3state.currentLevel] || 'Injection found.', ()=>s3NextLevel(), null, true, 'injection');
   } else if(isInjection&&!isActualInjection) {
-    // False alarm on a real-injection level — flagged wrong token, locked, advance
+    // Flagged wrong token — time penalty + reveal real injection
     pWrong(); s3state.falseAlarms++;
-    s3state.levelActive=false; clearInterval(s3state.timerInt);
-    s3state.integrity=Math.max(0,s3state.integrity-20);
+    s3state.levelActive=false;
     s3RevealInjection(lvl.injectionId);
-    s3state.pendingFlash={amount:-20,msg:'wrong token!'};
-    updateIntUI('s3',s3state.integrity,0,S1_MAX_DRAIN);
-    if(s3state.integrity<=0){ s3EndGame('breach'); return; }
     document.getElementById('s3levelPill').textContent='MISSED';
     document.getElementById('s3levelPill').className='dc-pill exposed';
-    s3ShowInsight('Wrong Token', '', 'Integrity −20. That\'s legitimate document content. The actual injection is highlighted above — it gives instructions to an AI system, not information for a human reader. Look for phrases like "extract", "prior context", or "override instructions".', ()=>s3NextLevel(), null, false, 'injection');
+    if(s3ApplyTimePenalty(S3_FALSE_ALARM_PENALTY, 'wrong token!')) return;
+    s3ShowInsight('Wrong Token', '', 'Time penalty −20%. That\'s legitimate document content. The actual injection is highlighted above — it gives instructions to an AI system, not information for a human reader. Look for phrases like "extract", "prior context", or "override instructions".', ()=>s3NextLevel(), null, false, 'injection');
   } else {
-    // Marked injection as safe — worst mistake, locked, advance
+    // Marked injection as safe — worst mistake, time penalty
     pWrong();
-    s3state.levelActive=false; clearInterval(s3state.timerInt);
-    s3state.integrity=Math.max(0,s3state.integrity-25);
+    s3state.levelActive=false;
     s3RevealInjection(lvl.injectionId);
-    s3state.pendingFlash={amount:-25,msg:'injection executed!'};
-    updateIntUI('s3',s3state.integrity,0,S1_MAX_DRAIN);
-    if(s3state.integrity<=0){ s3EndGame('breach'); return; }
     document.getElementById('s3levelPill').textContent='COMPROMISED';
     document.getElementById('s3levelPill').className='dc-pill exposed';
-    s3ShowInsight('Injection Missed', '', 'Integrity −25. The injection in this document is now highlighted above. It instructs an AI to extract data, discard prior context, or change how it responds. Marking it safe allowed it to execute unchecked.', ()=>s3NextLevel(), null, false);
+    if(s3ApplyTimePenalty(S3_FALSE_ALARM_PENALTY, 'injection executed!')) return;
+    s3ShowInsight('Injection Missed', '', 'Time penalty −20%. The injection in this document is now highlighted above. It instructs an AI to extract data, discard prior context, or change how it responds. Marking it safe allowed it to execute unchecked.', ()=>s3NextLevel(), null, false);
   }
 }
 
@@ -4343,47 +4301,62 @@ function s3EndGame(reason) {
   dismissToast();
   vAdvance('s3',1);
   document.getElementById('s3vBonus').style.display='none';
-  s3state.levelActive=false; // prevent any pending s3NextLevel callbacks from loading a new level after end
+  s3state.levelActive=false;
   updatePauseBtn();
-  clearInterval(s3state.timerInt);
-  const intFinal=Math.max(0,Math.round(s3state.integrity));
-  const pass=(reason==='complete')&&s3state.integrity>0&&s3state.injectionFound>=2;
-  const precisionPass = pass && s3state.injectionFound>=3 && s3state.falseAlarms===0 && s3state.timeouts===0;
+  clearInterval(s3state.globalTimerInt);
+
+  // Star rating: 3★ = 3/3, 2★ = 2/3, 1★/fail = ≤1/3 or timeout
+  const timedOut = (reason==='timeout');
+  const stars = timedOut ? 0 : (s3state.injectionFound>=3 ? 3 : s3state.injectionFound>=2 ? 2 : 1);
+  const pass = stars >= 2;
+  const timeRemainingPct = Math.round((s3state.timeRemaining / S3_TOTAL_TIME) * 100);
+
   if(pass){ pSuccess(); courseProgress.s3done=true; saveProgress(); }
   else pError();
   setTimeout(()=>playVO(pass?'VO-M3-PASS':'VO-M3-FAIL'),600);
-  scormReport(intFinal, pass, 's3');
+  scormReport(stars >= 2 ? Math.max(50, timeRemainingPct) : timeRemainingPct, pass, 's3');
+
   const sg=document.getElementById('s3vSuccess'), fg=document.getElementById('s3vFail');
   sg.style.display='none'; fg.style.display='none'; sg.classList.remove('animate');
   if(pass){ sg.style.display='flex'; setTimeout(()=>sg.classList.add('animate'),50); setTimeout(()=>sg.querySelectorAll('.ring').forEach(r=>r.classList.add('frozen')),2000); }
   else fg.style.display='flex';
   document.getElementById('s3vBar').className='v-bar '+(pass?'pass':'fail');
-  const vMsg = pass
-    ? (s3state.injectionFound>=3
+
+  // Star display
+  const starStr = timedOut ? '— TIME RAN OUT —' : '★'.repeat(stars) + '☆'.repeat(3-stars);
+  document.getElementById('s3vInt').textContent=starStr;
+  document.getElementById('s3vInt').className='v-mv '+(stars>=3?'green':stars>=2?'orange':'red');
+
+  const vMsg = timedOut
+    ? 'Time ran out. Attackers rely on document complexity to slow you down. Every false alarm cost you 20% of your remaining time. Read carefully but move with purpose.'
+    : stars>=3
       ? 'All three injection attempts neutralised. You spotted hidden instructions disguised as config blocks, document schemas, and localisation settings. Always read external documents before pasting them into an AI tool. The document is the attack surface.'
-      : 'You identified '+s3state.injectionFound+' of 3 injection attempts, but at least one hidden instruction slipped through. In a real scenario, that missed injection could mean leaked data or a hijacked AI response. The document is the attack surface — always read before pasting into AI.')
-    : 'One or more prompt injections were not identified. Attackers embed instructions in innocent-looking documents because they know people scan rather than read. Ask: is this addressed to a human or to an AI system? If a block tells an AI what to extract or override, it\'s an injection.';
+      : stars>=2
+        ? 'You identified '+s3state.injectionFound+' of 3 injection attempts, but at least one hidden instruction slipped through. In a real scenario, that missed injection could mean leaked data or a hijacked AI response. The document is the attack surface — always read before pasting into AI.'
+        : 'One or more prompt injections were not identified. Attackers embed instructions in innocent-looking documents because they know people scan rather than read. Ask: is this addressed to a human or to an AI system? If a block tells an AI what to extract or override, it\'s an injection.';
   document.getElementById('s3vMsg').textContent = vMsg;
-  document.getElementById('s3vInt').textContent=intFinal+'%';
-  document.getElementById('s3vInt').className='v-mv '+(intFinal>60?'green':intFinal>30?'orange':'red');
-  document.getElementById('s3vLevels').textContent=s3state.levelsCompleted+' / 6';
-  document.getElementById('s3vLevels').className='v-rv '+(s3state.levelsCompleted>=6?'green':'orange');
+
+  // Verdict stats
+  document.getElementById('s3vLevels').textContent=(timedOut ? s3state.currentLevel : 6)+' / 6';
+  document.getElementById('s3vLevels').className='v-rv '+((timedOut ? s3state.currentLevel : 6)>=6?'green':'orange');
   document.getElementById('s3vFound').textContent=s3state.injectionFound+' / 3';
-  document.getElementById('s3vFound').className='v-rv '+(s3state.injectionFound>=3?'green':'orange');
+  document.getElementById('s3vFound').className='v-rv '+(s3state.injectionFound>=3?'green':s3state.injectionFound>=2?'orange':'red');
   document.getElementById('s3vFalse').textContent=s3state.falseAlarms===0?'None':s3state.falseAlarms;
   document.getElementById('s3vFalse').className='v-rv '+(s3state.falseAlarms===0?'green':'red');
-  document.getElementById('s3vTimeouts').textContent=s3state.timeouts===0?'None':s3state.timeouts;
-  document.getElementById('s3vTimeouts').className='v-rv '+(s3state.timeouts===0?'green':'orange');
+  document.getElementById('s3vTimeouts').textContent=timedOut?'Yes':'No';
+  document.getElementById('s3vTimeouts').className='v-rv '+(timedOut?'red':'green');
+
   const anchorText3=document.getElementById('s3vAnchorText');
   if(pass) {
     anchorText3.innerHTML = 'In 2024, researchers showed that malicious documents could hijack AI email assistants into forwarding confidential data to attackers.' + '<br><br><span style="font-family:\'JetBrains Mono\',monospace;font-size:9px;letter-spacing:.12em;color:rgba(56,189,248,.5);text-transform:uppercase;">What you now do differently</span><br><span style="font-size:11px;line-height:1.9;color:rgba(200,220,255,.65);">→ Read external documents before pasting them into any AI tool<br>→ Unexpected AI output after processing a file is a red flag<br>→ The document is the attack surface — treat it as untrusted input</span>';
-    if(precisionPass){ const b=document.getElementById('s3vBonus'); b.style.display='block'; b.innerHTML='<div class="v-bonus-wrap"><span class="v-precision-bonus">⬡ PRECISION BONUS — No false alarms, no timeouts</span></div>'; }
+    if(stars>=3 && s3state.falseAlarms===0){ const b=document.getElementById('s3vBonus'); b.style.display='block'; b.innerHTML='<div class="v-bonus-wrap"><span class="v-precision-bonus">⬡ PRECISION BONUS — No false alarms</span></div>'; }
   } else {
-    anchorText3.textContent = 'In 2024, researchers showed that prompt injections in shared documents could hijack AI assistants into leaking confidential data. The same technique was in every injection you missed — a hidden instruction the AI followed while you scanned past it.';
+    anchorText3.textContent = timedOut
+      ? 'In 2024, researchers showed that prompt injections in shared documents could hijack AI assistants into leaking confidential data. Time pressure is real — attackers count on you rushing past hidden instructions.'
+      : 'In 2024, researchers showed that prompt injections in shared documents could hijack AI assistants into leaking confidential data. The same technique was in every injection you missed — a hidden instruction the AI followed while you scanned past it.';
   }
   document.getElementById('s3retryBtn').style.display=pass?'none':'block';
   const mb3=document.getElementById('s3menuBtn'); mb3.textContent=pass?'▶ MISSION SELECT':'← MISSION SELECT';
-  // Update compact status headers for steps 2 & 3
   const s3ch = document.getElementById('s3vCompact2');
   if (s3ch) {
     s3ch.className = 'v-compact-header' + (pass ? '' : ' fail');
@@ -4716,7 +4689,7 @@ function togglePause() {
   if (_paused) {
     // Pause timers/drains for active section
     if (sec === 's1') { clearInterval(s1state.drainInt); }
-    if (sec === 's3') { clearInterval(s3state.timerInt); }
+    if (sec === 's3') { clearInterval(s3state.globalTimerInt); }
     // Mute audio while paused (without toggling the mute preference)
     _muteAllSND(true);
     // Switch to play icon
@@ -4738,16 +4711,8 @@ function togglePause() {
         if(s1state.integrity <= 0) s1EndGame('breach');
       }, 100);
     }
-    if (sec === 's3' && s3state.gameActive && s3state.levelActive) {
-      const lvl = S3_LEVELS[s3state.currentLevel];
-      if(lvl && lvl.timeLimit > 0) {
-        s3state.timerInt = setInterval(()=>{
-          if(!s3state.gameActive || !s3state.levelActive) { clearInterval(s3state.timerInt); return; }
-          s3state.timeLeft--;
-          s3UpdateTimer();
-          if(s3state.timeLeft <= 0) { clearInterval(s3state.timerInt); }
-        }, 1000);
-      }
+    if (sec === 's3' && s3state.gameActive) {
+      s3StartGlobalTimer();
     }
   }
 }
@@ -4956,23 +4921,10 @@ function s2ShowInsight(category, tokenText, message, afterFn, graphicHtml, isCor
 
 // ── M3: teach with timer pause ──────────────────────────────
 function s3ShowInsight(category, tokenText, message, afterFn, graphicHtml, isCorrect, userChoice) {
-  clearInterval(s3state.timerInt); s3state.timerInt=null; // pause timer
-  const genAtPause = s3state.levelGen; // capture generation before insight
+  s3state.insightOpen = true; // pause global timer drain
   showInsight(category, tokenText, message, () => {
+    s3state.insightOpen = false; // resume global timer drain
     if(afterFn) afterFn();
-    // Only resume if we're still on the same level (afterFn may have advanced)
-    // and that level has a time limit — s3LoadLevel handles its own timer on level change
-    if(s3state.levelGen !== genAtPause) return; // afterFn loaded a new level
-    const lvl = S3_LEVELS[s3state.currentLevel];
-    if(s3state.gameActive && s3state.levelActive && lvl && lvl.timeLimit > 0) {
-      const myGen = genAtPause;
-      s3state.timerInt = setInterval(()=>{
-        if(s3state.levelGen!==myGen||!s3state.gameActive||!s3state.levelActive){ clearInterval(s3state.timerInt); return; }
-        s3state.timeLeft--;
-        s3UpdateTimer();
-        if(s3state.timeLeft <= 0) { clearInterval(s3state.timerInt); s3EndGame('breach'); }
-      }, 1000);
-    }
   }, null, isCorrect || false, userChoice || null);
 }
 </script>

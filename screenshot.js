@@ -492,10 +492,10 @@ async function main() {
   await page.evaluate(() => s3Start());
   await wait(300);
   await page.evaluate(() => {
-    // Drain integrity to zero then call breach
-    s3state.integrity = 0;
+    // Drain time to zero then call timeout
+    s3state.timeRemaining = 0;
     s3state.gameActive = true;
-    s3EndGame('breach');
+    s3EndGame('timeout');
   });
   await wait(900);
   await shot(page, 'm3-verdict-fail');
