@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI Data Guardian — Cybersecurity Awareness Training</title>
+<meta name="description" content="Gamified AI security training for non-technical employees. Three missions, real workplace scenarios, immediate feedback. SCORM-ready. About 15 minutes.">
+<meta property="og:title" content="AI Data Guardian">
+<meta property="og:description" content="Gamified AI security training for non-technical employees. Three missions, real workplace scenarios, immediate feedback. SCORM-ready. About 15 minutes.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://aidataguardians.com">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="AI Data Guardian">
+<meta name="twitter:description" content="Gamified AI security training for non-technical employees. Three missions, real workplace scenarios, immediate feedback. SCORM-ready. About 15 minutes.">
 <noscript><style>body{display:flex;align-items:center;justify-content:center;min-height:100vh;background:#020610;font-family:sans-serif;color:#ddeeff;text-align:center;padding:20px}.ns-msg{max-width:400px}.ns-msg h1{font-size:1.4rem;margin-bottom:12px}.ns-msg p{opacity:.65;font-size:.9rem;line-height:1.6}</style><div class="ns-msg"><h1>JavaScript Required</h1><p>This training module requires JavaScript to run. Please enable JavaScript in your browser and reload the page.</p></div></noscript>
 <link rel="stylesheet" href="assets/fonts/fonts.css">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -257,16 +265,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
   transition:left .55s ease;
   pointer-events:none; z-index:1;
 }
-.mission-card.unlocked:hover::before { left:130%; }
-
-/* Hover — subtle lift + scale + unified cyan glow for all missions */
-.mission-card.unlocked:hover {
-  transform:translateY(-3px) scale(1.015);
-  transition:transform .22s cubic-bezier(.34,1.56,.64,1), box-shadow .22s, border-color .22s, background .22s;
-  border-color:var(--m1-border);
-  background:rgba(6,22,48,0.88);
-  box-shadow:0 18px 44px rgba(0,0,0,.65), 0 0 32px rgba(56,189,248,.16), 0 0 0 1px rgba(56,189,248,.18), inset 0 1px 0 rgba(56,189,248,.14);
-}
+/* Hover states removed */
 
 .mission-card.locked { cursor: default; border-color: rgba(255,255,255,.05) !important; box-shadow: 0 4px 16px rgba(0,0,0,.3) !important; }
 .mission-card.locked:hover { transform: none !important; border-color: rgba(255,255,255,.05) !important; box-shadow: 0 4px 16px rgba(0,0,0,.3) !important; }
@@ -5299,7 +5298,7 @@ document.addEventListener('DOMContentLoaded', () => {
     <div class="cert-body">
       <p class="cert-eyebrow">Certificate of Completion</p>
       <h2 class="cert-title"><span id="certName"></span> — AI Data Guardian</h2>
-      <div class="cert-subtitle">Three missions. Three real threats \u2014 sensitive data exposure, AI hallucinations, and prompt injection attacks. You identified them all. The risks don\u2019t change, but now you know what to look for.</div>
+      <div class="cert-subtitle">Three missions. Three real threats — sensitive data exposure, AI hallucinations, and prompt injection attacks. You identified them all. The risks don't change, but now you know what to look for.</div>
       <div class="cert-scores-header">Scores</div>
       <div class="cert-scores">
         <div class="cert-score-item">
