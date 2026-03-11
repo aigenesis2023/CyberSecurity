@@ -3777,6 +3777,25 @@ function s2Classify(chosen) {
 function s2CheckAllDone() {
   if(s2AllClassified() && s2state.gameActive) {
     setTimeout(function(){ s2Submit(); }, 600);
+    return;
+  }
+  // Auto-complete remaining safe tokens once all hallucinations are found
+  if(s2state.flagsCorrect >= S2_HAL_COUNT) {
+    var remaining = Object.keys(s2state.tokState).filter(function(id){ return !s2state.tokState[id].flagged; });
+    if(remaining.length > 0) {
+      s2ClosePopup();
+      remaining.forEach(function(id, i) {
+        setTimeout(function() {
+          s2state.tokState[id].flagged = true;
+          var el = document.querySelector('#s2payload .tok[data-id="'+id+'"]');
+          if(el){ el.className='tok flagged-wrong'; el.innerHTML='<span class="redact-label">'+el.textContent.trim()+'</span>'; el.removeEventListener('click',s2TokenClick); }
+          // After the last one, submit
+          if(i === remaining.length - 1) {
+            setTimeout(function(){ s2Submit(); }, 400);
+          }
+        }, 300 * (i + 1));
+      });
+    }
   }
 }
 function s2FlashTok(id,color) {
