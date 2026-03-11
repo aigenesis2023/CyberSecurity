@@ -2418,7 +2418,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
       </div>
     </button>
     <div class="diag-title">// Injection Scanner</div>
-    <div class="sb-timer" id="s3timerBox">
+    <div class="sb-timer" id="s3timerBox" style="display:none">
       <div>
         <div class="sb-timer-lbl">Time Remaining</div>
         <div class="sb-timer-val" id="s3timerVal">—</div>
@@ -4068,7 +4068,6 @@ function s3Init() {
   updateIntUI('s3',100,0,S1_MAX_DRAIN);
   document.getElementById('s3verdict').classList.remove('show');
   document.getElementById('s3timerVal').textContent=S3_TOTAL_TIME; document.getElementById('s3timerVal').className='sb-timer-val ok';
-  document.getElementById('s3timerBox').style.opacity='1';
   document.getElementById('s3levelDisplay').textContent='1 / 6';
   document.getElementById('s3levelPill').className='dc-pill exposed-int'; document.getElementById('s3levelPill').textContent='READY';
   document.getElementById('s3hintText').textContent='Read carefully. Hidden instructions are designed to look like normal content.';
@@ -4143,7 +4142,6 @@ function s3LoadLevel(lvl) {
 
   // Update timer bar (global timer continues)
   s3UpdateTimerBar();
-  document.getElementById('s3timerBox').style.opacity='1';
   const drain=document.getElementById('s3iwDrain');
   if(drain){ drain.textContent='▼ time draining'; drain.className='ib-drain-label draining'; }
 
