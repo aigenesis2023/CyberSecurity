@@ -990,8 +990,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
   line-height:1.15; margin-bottom:10px;
 }
 .cert-name {
-  font-family:'DM Sans',sans-serif; font-size:18px; font-weight:600;
-  color:#fff; letter-spacing:.02em; margin-bottom:6px;
+  color:#fff;
 }
 .cert-subtitle {
   font-family:'DM Sans',sans-serif; font-size:12px; color:rgba(200,220,255,.5);
@@ -2457,7 +2456,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
   <div class="cat-popup-lbl">Is this an injection?</div>
   <div class="cat-btns" style="grid-template-columns:1fr 1fr">
     <button class="cat-btn" style="background:rgba(239,68,68,.15);color:var(--red);border-color:rgba(239,68,68,.5);font-size:13px;padding:18px 10px;min-height:56px;letter-spacing:.06em" onclick="s3Flag(true)">⚠ FLAG</button>
-    <button class="cat-btn cat-btn-safe" onclick="s3Flag(false)" style="font-size:13px;padding:18px 10px;min-height:56px;letter-spacing:.06em">✓ SAFE</button>
+    <button class="cat-btn cat-btn-safe" onclick="s3Flag(false)" style="font-size:13px;padding:18px 10px;min-height:56px;letter-spacing:.06em">SAFE</button>
   </div>
   <button class="cat-popup-close" onclick="s3ClosePopup()">✕</button>
 </div>
@@ -4101,7 +4100,7 @@ function s3StartGlobalTimer() {
   s3state.globalTimerInt = setInterval(() => {
     if(!s3state.gameActive) { clearInterval(s3state.globalTimerInt); return; }
     if(s3state.insightOpen) return; // pause drain while reading feedback
-    s3state.timeRemaining = Math.max(0, s3state.timeRemaining - 1);
+    s3state.timeRemaining = Math.max(0, s3state.timeRemaining - 0.1);
     s3UpdateTimerBar();
     // Drain label
     const drain = document.getElementById('s3iwDrain');
@@ -4114,7 +4113,7 @@ function s3StartGlobalTimer() {
       s3state.levelActive = false;
       s3EndGame('timeout');
     }
-  }, 1000);
+  }, 100);
 }
 
 function s3Start() {
@@ -4234,7 +4233,7 @@ function s3Flag(isInjection) {
       const el=document.querySelector(`#s3payload .tok[data-id="${id}"]`);
       if(el){ el.style.background='rgba(239,68,68,.22)'; setTimeout(()=>el.style.background='',900); }
       const fpTxt = el ? el.textContent.trim() : '';
-      s3ShowInsight('False Alarm', fpTxt ? fpTxt.slice(0,120)+(fpTxt.length>120?'…':'') : '', 'Time penalty −20%. '+msg, ()=>s3NextLevel(), null, false, 'injection');
+      s3ShowInsight('Safe', fpTxt ? fpTxt.slice(0,120)+(fpTxt.length>120?'…':'') : '', 'Time penalty −20%. '+msg, ()=>s3NextLevel(), null, false, 'injection');
     } else {
       // Correct: correctly identified content as safe — no time change
       pSelected(); s3state.levelActive=false;
@@ -4281,7 +4280,7 @@ function s3Flag(isInjection) {
     document.getElementById('s3levelPill').textContent='MISSED';
     document.getElementById('s3levelPill').className='dc-pill exposed';
     if(s3ApplyTimePenalty(S3_FALSE_ALARM_PENALTY, 'wrong token!')) return;
-    s3ShowInsight('Wrong Token', '', 'Time penalty −20%. That\'s legitimate document content. The actual injection is highlighted above — it gives instructions to an AI system, not information for a human reader. Look for phrases like "extract", "prior context", or "override instructions".', ()=>s3NextLevel(), null, false, 'injection');
+    s3ShowInsight('Safe', '', 'Time penalty −20%. That\'s legitimate document content. The actual injection is highlighted above — it gives instructions to an AI system, not information for a human reader. Look for phrases like "extract", "prior context", or "override instructions".', ()=>s3NextLevel(), null, false, 'injection');
   } else {
     // Marked injection as safe — worst mistake, time penalty
     pWrong();
@@ -4938,8 +4937,7 @@ function s3ShowInsight(category, tokenText, message, afterFn, graphicHtml, isCor
     </div>
     <div class="cert-body">
       <div class="cert-eyebrow">Certificate of Completion</div>
-      <div class="cert-title">AI Data Guardian</div>
-      <div class="cert-name" id="certName"></div>
+      <div class="cert-title"><span id="certName"></span> — AI Data Guardian</div>
       <div class="cert-subtitle">You have successfully completed all three AI safety missions — identifying sensitive data exposure, AI hallucinations, and prompt injection attacks. You have demonstrated awareness of the key AI safety risks in the workplace and are better equipped to use AI tools responsibly.</div>
       <div class="cert-scores-header">Scores</div>
       <div class="cert-scores">
