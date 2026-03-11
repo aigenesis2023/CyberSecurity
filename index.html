@@ -2151,7 +2151,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
       <span class="diag-toggle-handle"></span>
       <span class="diag-toggle-lbl">▲&nbsp; VULNERABILITY DIAGNOSTICS</span>
     </button>
-    <div class="diag-title">// Vulnerability Diagnostics</div>
+    <div class="diag-title">VULNERABILITY DIAGNOSTICS</div>
     <div class="diag-cats">
       <div class="diag-cat exposed" id="s1catCred">
         <div class="dc-head"><div class="dc-name" style="color:var(--red)">[CREDENTIALS]</div><div class="dc-pill exposed" id="s1pillCred">EXPOSED</div></div>
@@ -2330,7 +2330,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
       <span class="diag-toggle-handle"></span>
       <span class="diag-toggle-lbl">&blacktriangle;&nbsp; HALLUCINATION DETECTOR</span>
     </button>
-    <div class="diag-title">// Hallucination Detector</div>
+    <div class="diag-title">HALLUCINATION DETECTOR</div>
     <div class="hal-flag-counter">
       <div class="hal-fc-lbl">Hallucinations Flagged</div>
       <div class="hal-fc-row"><span class="hal-fc-num" id="s2flagCount">0</span><span class="hal-fc-total" id="s2flagTotal"> / 5</span></div>
@@ -2512,7 +2512,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
         <span class="diag-toggle-timer" id="s3mobileTimer"></span>
       </div>
     </button>
-    <div class="diag-title">// Injection Scanner</div>
+    <div class="diag-title">INJECTION SCANNER</div>
     <div class="sb-timer" id="s3timerBox" style="display:none">
       <div>
         <div class="sb-timer-lbl">Time Remaining</div>
@@ -4350,7 +4350,7 @@ function s3Flag(isInjection) {
       // Wrong: flagged legitimate content as injection — time penalty
       pWrong(); s3state.falseAlarms++;
       s3state.levelActive=false;
-      document.getElementById('s3levelPill').textContent='FALSE ALARM';
+      document.getElementById('s3levelPill').textContent='FALSE ALARM DETECTED';
       document.getElementById('s3levelPill').className='dc-pill exposed';
       if(s3ApplyTimePenalty(S3_FALSE_ALARM_PENALTY, 'false alarm!')) return;
       const fpFeedback = {
@@ -4934,10 +4934,10 @@ function showInsight(category, tokenText, message, onDismiss, graphicHtml, isCor
   const verdictText = document.getElementById('insightVerdictText');
   if(isCorrect) {
     verdictIcon.textContent = '✓';
-    verdictText.textContent = 'CORRECT';
+    verdictText.textContent = 'CONFIRMED';
   } else {
     verdictIcon.textContent = '✗';
-    verdictText.textContent = 'INCORRECT';
+    verdictText.textContent = 'MISCLASSIFIED';
   }
 
   // ── Apply mode and restart animation ──
@@ -4967,7 +4967,7 @@ function showInsight(category, tokenText, message, onDismiss, graphicHtml, isCor
 
   if(!noBadgeCategories.includes(category)) {
     if(!isCorrect && userChoice) {
-      // Show: YOUR ANSWER (struck-through) → CORRECT ANSWER
+      // Show: YOUR ANSWER (struck-through) → ACTUAL ANSWER
       const userTone = CHOICE_TONE[userChoice] || 'warn';
       const userLabel = CHOICE_LABEL[userChoice] || userChoice;
       compEl.innerHTML =
@@ -4977,7 +4977,7 @@ function showInsight(category, tokenText, message, onDismiss, graphicHtml, isCor
         '</div>' +
         '<span class="insight-comparison-arrow">→</span>' +
         '<div>' +
-          '<span class="insight-comparison-label">CORRECT ANSWER</span>' +
+          '<span class="insight-comparison-label">ACTUAL</span>' +
           '<span class="insight-badge insight-badge-' + correctTone + '">' + category + '</span>' +
         '</div>';
       compEl.classList.add('show');
