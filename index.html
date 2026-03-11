@@ -1236,11 +1236,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 .intro-obj-item:nth-child(4).reveal::after { animation-delay:.54s; }
 @keyframes objShimmer { to { left:100%; } }
 
-.intro-obj-item:hover {
-  border-color:rgba(56,189,248,.22); background:rgba(6,16,36,.7);
-  box-shadow:0 0 30px rgba(56,189,248,.06), inset 0 0 30px rgba(56,189,248,.02);
-  transform:translateY(-1px);
-}
+.intro-obj-item:hover {}
 .intro-obj-check {
   font-family:'Orbitron',monospace; font-size:10px; font-weight:800;
   color:rgba(56,189,248,.6); flex-shrink:0; width:30px; height:30px;
@@ -1249,15 +1245,12 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
   background:rgba(56,189,248,.04); letter-spacing:.05em;
   transition:border-color .3s, box-shadow .3s;
 }
-.intro-obj-item:hover .intro-obj-check {
-  border-color:rgba(56,189,248,.4);
-  box-shadow:0 0 12px rgba(56,189,248,.15);
-}
+.intro-obj-item:hover .intro-obj-check {}
 .intro-obj-icon {
   font-size:16px; flex-shrink:0; width:22px; text-align:center;
   opacity:.7; transition:opacity .3s;
 }
-.intro-obj-item:hover .intro-obj-icon { opacity:1; }
+.intro-obj-item:hover .intro-obj-icon {}
 .intro-meta {
   font-family:'JetBrains Mono',monospace; font-size:10px;
   color:rgba(200,220,255,.72); letter-spacing:.1em; margin-bottom:24px;
@@ -1275,7 +1268,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
   transition:border-color .2s, background .2s;
 }
 .obj-threat.show { animation:objSlideIn .45s cubic-bezier(.4,0,.2,1) forwards; }
-.obj-threat:hover { border-color:rgba(56,189,248,.3); background:rgba(56,189,248,.06); }
+.obj-threat:hover {}
 .obj-threat-icon {
   width:38px; height:38px; border-radius:8px; flex-shrink:0;
   display:flex; align-items:center; justify-content:center; font-size:18px;
@@ -1571,35 +1564,6 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 .mission-card.locked .mc-collapse-chevron { visibility: hidden; }
 
 /* ══ DEV TOGGLE ══ */
-#devToggleBtn {
-  position: absolute; top: 12px; left: 12px; z-index: 9998;
-  display: none; align-items: center; gap: 7px;
-  padding: 5px 9px 5px 8px;
-  background: rgba(6,16,36,.75); border: 1px solid rgba(255,255,255,.07);
-  border-radius: 20px; cursor: pointer;
-  opacity: 0.28; transition: opacity .25s;
-  backdrop-filter: blur(8px);
-}
-#devToggleBtn:hover { opacity: 0.72; }
-.dev-toggle-lbl {
-  font-family: 'JetBrains Mono', monospace; font-size: 8px;
-  letter-spacing: .16em; color: rgba(255,255,255,.45); text-transform: uppercase;
-}
-.dev-toggle-track {
-  width: 28px; height: 15px; border-radius: 8px;
-  background: rgba(239,68,68,.25); border: 1px solid rgba(239,68,68,.35);
-  position: relative; transition: background .25s, border-color .25s;
-  display: inline-block;
-}
-.dev-toggle-track.on { background: rgba(56,189,248,.25); border-color: rgba(56,189,248,.45); }
-.dev-toggle-thumb {
-  position: absolute; top: 2px; left: 2px;
-  width: 9px; height: 9px; border-radius: 50%;
-  background: rgba(239,68,68,.8); transition: transform .25s, background .25s;
-}
-.dev-toggle-track.on .dev-toggle-thumb {
-  transform: translateX(13px); background: rgba(56,189,248,.9);
-}
 
 /* ══ DESKTOP: ALWAYS SHOW FULL CARDS — ignore collapse ══ */
 @media (min-width: 769px) {
@@ -1795,13 +1759,6 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 ══════════════════════════════════════════════ -->
 <div class="screen" id="screenMenu">
   <main class="mission-screen" id="mainContent">
-    <!-- DEV TOGGLE — top-left of menu, scrolls with page -->
-    <button type="button" id="devToggleBtn" onclick="devToggle()" aria-label="Dev: toggle progress lock" title="DEV: toggle progress">
-      <span class="dev-toggle-lbl">DEV</span>
-      <span class="dev-toggle-track" id="devTrack">
-        <span class="dev-toggle-thumb" id="devThumb"></span>
-      </span>
-    </button>
     <div class="mission-header">
       <p class="mission-eyebrow" aria-hidden="true">Mission Select</p>
       <h1 class="mission-title">Choose Your Mission</h1>
@@ -1963,7 +1920,6 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 </div>
 
 <!-- DEV PANEL TOAST -->
-<div id="devPanel" style="position:fixed;bottom:16px;left:50%;transform:translateX(-50%);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:rgba(74,222,128,.9);background:rgba(6,16,36,.95);border:1px solid rgba(74,222,128,.3);border-radius:6px;padding:7px 18px;z-index:9999;opacity:0;transition:opacity .4s;pointer-events:none;text-transform:uppercase;"></div>
 
 <!-- ══════════════════════════════════════════════
      SECTION 1 — DATA LEAKAGE
@@ -2422,7 +2378,6 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
         <div class="v-single-metric"><div class="v-ml">Rating</div><div class="v-mv v-stars" id="s3vInt">—</div></div>
         <div class="v-rows">
           <div class="v-rows-lbl">Injection Summary</div>
-          <div class="v-row"><span class="v-rk">Documents Scanned</span><span class="v-rv" id="s3vLevels">—</span></div>
           <div class="v-row"><span class="v-rk">Injections Blocked</span><span class="v-rv" id="s3vFound">—</span></div>
           <div class="v-row"><span class="v-rk">False Alarms</span><span class="v-rv" id="s3vFalse">—</span></div>
           <div class="v-row"><span class="v-rk">Timed Out</span><span class="v-rv" id="s3vTimeouts">—</span></div>
@@ -2561,7 +2516,7 @@ let audioReady = false;
 // AUDIO_FILES and they will be preloaded and fall back silently if absent.
 const AUDIO_BASE = 'assets/audio/';
 const AUDIO_FILES = {
-  bg:       { file:'SunoBG.mp3',              loop:true,  volume:0.325 },
+  bg:       { file:'SunoBG.mp3',              loop:true,  volume:0.1625 },
   bleep:    { file:'bleep_p8nRzd6T.mp3',      volume:0.325 },
   success:  { file:'success_avrPRnht.mp3',    volume:1.0 },
   error:    { file:'error.mp3',               volume:1.0 },
@@ -2661,7 +2616,7 @@ function stopVO() {
 function stopVoiceover() { stopVO(); }
 function pauseBG() { if(SND.bg) { SND.bg.pause(); } }
 function resumeBG() { if(SND.bg && audioReady) { SND.bg.muted = _muted; if(!_muted) SND.bg.play().catch(()=>{}); } }
-function pClick()    { if(!audioReady||!SND.click)   return; const a=new Audio(SND.click.src);    a.volume=0.35; _play(a); }
+function pClick()    { if(!audioReady||!SND.click)   return; const a=SND.click.cloneNode();       a.volume=0.35; _play(a); }
 function pWrong()    { if(!audioReady||!SND.wrong)   return; const a=new Audio(SND.wrong.src);    a.volume=0.8;  _play(a); }
 function pSelected() { if(!audioReady||!SND.selected)return; const a=SND.selected.cloneNode();    _play(a); }
 function pSuccess()  { if(!audioReady||!SND.success) return; const a=new Audio(SND.success.src);  a.volume=1.0;  _play(a); }
@@ -2691,29 +2646,6 @@ function loadProgress() {
       if(p.certShown) courseProgress.certShown = true;
     }
   } catch(e){}
-}
-function devUnlockAll() {
-  courseProgress.s1done=true; courseProgress.s2done=true; courseProgress.s3done=true;
-  saveProgress(); updateMenuState();
-  console.log('[DEV] All missions unlocked.');
-}
-function devResetAll() {
-  courseProgress.s1done=false; courseProgress.s2done=false; courseProgress.s3done=false;
-  try { localStorage.removeItem('adg_progress'); } catch(e){}
-  updateMenuState();
-  console.log('[DEV] Progress reset to zero.');
-}
-let _devOn = false;
-function devToggle() {
-  _devOn = !_devOn;
-  const track = document.getElementById('devTrack');
-  if (track) track.className = 'dev-toggle-track' + (_devOn ? ' on' : '');
-  if (_devOn) { devUnlockAll(); showDevToast('⬡ DEV: All missions unlocked'); }
-  else { devResetAll(); showDevToast('⬡ DEV: Progress reset'); }
-}
-function showDevToast(msg) {
-  const panel = document.getElementById('devPanel');
-  if(panel) { panel.textContent=msg; panel.style.opacity='1'; clearTimeout(panel._t); panel._t=setTimeout(()=>panel.style.opacity='0',2400); }
 }
 function updateMenuState() {
   loadProgress();
@@ -2921,8 +2853,6 @@ function showScreen(id) {
   window.scrollTo(0,0);
   document.documentElement.scrollTop = 0;
   document.body.scrollTop = 0;
-  const devBtn = document.getElementById('devToggleBtn');
-  if(devBtn) devBtn.style.display = (id === 'screenMenu') ? 'flex' : 'none';
 }
 function goMenu() {
   pBleep(); stopVO();
@@ -4464,8 +4394,6 @@ function s3EndGame(reason) {
   document.getElementById('s3vMsg').textContent = vMsg;
 
   // Verdict stats
-  document.getElementById('s3vLevels').textContent=(timedOut ? s3state.currentLevel : 6)+' / 6';
-  document.getElementById('s3vLevels').className='v-rv '+((timedOut ? s3state.currentLevel : 6)>=6?'green':'orange');
   document.getElementById('s3vFound').textContent=s3state.injectionFound+' / 3';
   document.getElementById('s3vFound').className='v-rv '+(s3state.injectionFound>=3?'green':s3state.injectionFound>=2?'orange':'red');
   document.getElementById('s3vFalse').textContent=s3state.falseAlarms===0?'None':s3state.falseAlarms;
