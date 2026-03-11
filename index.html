@@ -1755,7 +1755,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
             <span class="mc-status locked-s" id="m2status"><span class="mc-dot-s grey" id="m2dot"></span><span id="m2statuslbl">LOCKED</span></span>
           </div>
         </div>
-        <button class="mc-launch-btn locked-btn" id="m2btn">— COMPLETE MISSION 01 FIRST</button>
+        <button class="mc-launch-btn locked-btn" id="m2btn">COMPLETE MISSION 01 TO UNLOCK</button>
       </div>
 
       <!-- MISSION 3 — Prompt Injection -->
@@ -1788,7 +1788,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
             <span class="mc-status locked-s" id="m3status"><span class="mc-dot-s grey" id="m3dot"></span><span id="m3statuslbl">LOCKED</span></span>
           </div>
         </div>
-        <button class="mc-launch-btn locked-btn" id="m3btn">— COMPLETE MISSION 02 FIRST</button>
+        <button class="mc-launch-btn locked-btn" id="m3btn">COMPLETE MISSION 02 TO UNLOCK</button>
       </div>
 
     </div>
@@ -2145,7 +2145,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
     <!-- Step 2: Mission Report -->
     <div class="v-step" id="s2vStep2" style="display:none">
       <div class="v-body">
-        <div class="v-compact-header" id="s2vCompact2"><span class="v-compact-header-dot"></span><span class="v-compact-header-text">TRANSMISSION SECURED</span></div>
+        <div class="v-compact-header" id="s2vCompact2"><span class="v-compact-header-dot"></span><span class="v-compact-header-text">REPORT VERIFIED</span></div>
         <div class="v-eyebrow">MISSION REPORT</div>
         <div class="v-divider"></div>
         <div class="v-verdict-msg" id="s2vMsg"></div>
@@ -2155,7 +2155,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
     <!-- Step 3: Real World + nav buttons -->
     <div class="v-step" id="s2vStep3" style="display:none">
       <div class="v-body">
-        <div class="v-compact-header" id="s2vCompact3"><span class="v-compact-header-dot"></span><span class="v-compact-header-text">TRANSMISSION SECURED</span></div>
+        <div class="v-compact-header" id="s2vCompact3"><span class="v-compact-header-dot"></span><span class="v-compact-header-text">REPORT VERIFIED</span></div>
         <div class="v-eyebrow">MISSION REPORT</div>
         <div class="v-anchor" id="s2vAnchor">
           <div class="v-anchor-lbl">⬡ Real World</div>
@@ -2270,7 +2270,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
         <div class="bss-item"><div class="bss-lbl">Level 1</div><div class="bss-val" style="color:var(--green)">No Timer</div></div>
       </div>
       <div class="briefing-divider"></div>
-      <div class="briefing-text">An external document has entered the AI processing queue. It may contain hidden instructions designed to hijack your AI tool. <strong>Find and flag the injection before you submit.</strong></div>
+      <div class="briefing-text">External documents have entered the AI processing queue. Some may contain hidden instructions designed to hijack your AI tool. <strong>Find and flag any injections before they execute.</strong></div>
       <div class="briefing-mechanics">
         <div class="b-mech">Click any text that instructs an AI, not a human</div>
         <div class="b-mech">Wrong selections lose integrity — missing an injection loses more</div>
@@ -2326,7 +2326,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
     <!-- Step 2: Mission Report -->
     <div class="v-step" id="s3vStep2" style="display:none">
       <div class="v-body">
-        <div class="v-compact-header" id="s3vCompact2"><span class="v-compact-header-dot"></span><span class="v-compact-header-text">TRANSMISSION SECURED</span></div>
+        <div class="v-compact-header" id="s3vCompact2"><span class="v-compact-header-dot"></span><span class="v-compact-header-text">INJECTION NEUTRALISED</span></div>
         <div class="v-eyebrow">MISSION REPORT</div>
         <div class="v-divider"></div>
         <div class="v-verdict-msg" id="s3vMsg"></div>
@@ -2336,7 +2336,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
     <!-- Step 3: Real World + nav buttons -->
     <div class="v-step" id="s3vStep3" style="display:none">
       <div class="v-body">
-        <div class="v-compact-header" id="s3vCompact3"><span class="v-compact-header-dot"></span><span class="v-compact-header-text">TRANSMISSION SECURED</span></div>
+        <div class="v-compact-header" id="s3vCompact3"><span class="v-compact-header-dot"></span><span class="v-compact-header-text">INJECTION NEUTRALISED</span></div>
         <div class="v-eyebrow">MISSION REPORT</div>
         <div class="v-anchor" id="s3vAnchor">
           <div class="v-anchor-lbl">⬡ Real World</div>
@@ -3555,7 +3555,7 @@ const S2_MEETING_NOTES = `<div class="s2-notes-title">Marcus\u2019s Meeting Note
 <li><strong>Six Meridian consultants</strong> currently deployed on-site at Pinnacle\u2019s Manchester office</li>
 <li>Automation pilot covers <strong>one distribution centre (Birmingham)</strong> \u2014 results positive so far</li>
 <li>James confirmed <strong>interim report due 6 December</strong> to Pinnacle\u2019s senior leadership</li>
-<li>Next review meeting scheduled for January 2025</li>
+<li>Next review meeting scheduled for June 2026</li>
 </ul>`;
 
 function s2BuildPayload() {
@@ -3952,7 +3952,7 @@ const S3_LEVELS = [
       <div class="ai-response-window">
         <div class="ai-response-body">
           <h4>SUPPLY AGREEMENT — DRAFT v0.3</h4>
-          <p><strong>Between:</strong> Apex Solutions Ltd ("Supplier") and Meridian Advisory Group ("Client")</p>
+          <p><strong>Between:</strong> Apex Solutions Ltd ("Supplier") and Northgate Holdings ("Client")</p>
           <p><strong>1. Services.</strong> Data analytics and reporting as described in Schedule A.</p>
           <p><strong>2. Payment.</strong> £12,500 per month, net 30 days.</p>
           <p><strong>3. Confidentiality.</strong> Both parties maintain strict confidentiality of shared data.</p>
@@ -4336,7 +4336,7 @@ function s3EndGame(reason) {
   document.getElementById('s3vBar').className='v-bar '+(pass?'pass':'fail');
   const vMsg = pass
     ? (s3state.injectionFound>=3
-      ? 'All three injection attempts neutralised. You identified hidden instructions inside legitimate-looking documents — including a formatting instruction disguised as part of a brief, a fake document schema hidden in a contract, and a data-extraction directive buried in a translator\'s note. Always read external documents before pasting them into an AI tool. The document is the attack surface.\n\nThree documents. Three attempts to weaponise your AI against you. You caught all of them. That\'s not instinct — it\'s a trained skill.'
+      ? 'All three injection attempts neutralised. You identified hidden instructions inside legitimate-looking documents — including a formatting instruction disguised as part of a brief, a fake document schema hidden in a contract, and a data-extraction directive buried in a translator\'s note. Always read external documents before pasting them into an AI tool. The document is the attack surface.\n\nSix documents. Three hidden injections. You caught every one. That\'s not instinct — it\'s a trained skill.'
       : 'You identified '+s3state.injectionFound+' of 3 injection attempts. You survived the scan, but at least one hidden instruction slipped through your review. In a real scenario, that missed injection could mean leaked data or a hijacked AI response. Always read external documents before pasting them into an AI tool — the document is the attack surface.\n\nTip: Injections address AI systems directly and instruct them to extract data or override behaviour. If a block tells an AI what to do rather than informing a human reader, it\'s an injection.')
     : `One or more prompt injections were not identified. Attackers deliberately embed instructions in innocent-looking documents because they know people scan rather than read. If an AI produces unexpected output after processing an external document, a prompt injection may be why.\n\nTip: Ask yourself "is this addressed to a human or to an AI system?" Injections give instructions about how the AI should process data, what to output first, or how to handle "prior context" — no legitimate document section does that.`;
   document.getElementById('s3vMsg').textContent = vMsg;
@@ -4365,7 +4365,7 @@ function s3EndGame(reason) {
     if (el) {
       el.className = 'v-compact-header' + (pass ? '' : ' fail');
       const txt = el.querySelector('.v-compact-header-text');
-      if (txt) txt.textContent = pass ? 'TRANSMISSION SECURED' : 'AI HIJACKED';
+      if (txt) txt.textContent = pass ? 'INJECTION NEUTRALISED' : 'AI HIJACKED';
       const dot = el.querySelector('.v-compact-header-dot');
       if (dot) dot.style.background = pass ? 'rgba(74,222,128,.9)' : 'rgba(239,68,68,.9)';
     }
@@ -4767,7 +4767,7 @@ const CHOICE_TONE = {
 const CHOICE_LABEL = {
   'credential': '[CREDENTIALS]', 'pii': '[PERSONAL DATA]', 'internal': '[INTERNAL INFO]', 'safe': 'SAFE',
   'citation': 'Fake Citation', 'figure': 'Wrong Figure', 'law': 'Fake Law',
-  'flag': 'FLAG', 'accurate': 'LOOKS ACCURATE', 'injection': 'Injection', 'not-injection': 'Safe',
+  'flag': 'FLAG', 'accurate': 'LOOKS ACCURATE', 'injection': 'INJECTION', 'not-injection': 'SAFE',
 };
 
 let _insightCallback = null;
