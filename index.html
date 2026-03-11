@@ -642,6 +642,34 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 .v-mv { font-family:'Orbitron',monospace; font-size:18px; font-weight:700; color:#fff; }
 .v-mv.green { color:var(--green); } .v-mv.orange { color:var(--orange); } .v-mv.red { color:var(--red); }
 .v-single-metric { display:flex; justify-content:space-between; align-items:center; padding:12px 16px; margin-bottom:16px; background:rgba(56,189,248,.05); border:1px solid rgba(56,189,248,.14); border-radius:10px; }
+
+/* ── Verdict star rating ── */
+.v-stars { display:flex; gap:4px; font-size:20px; }
+.v-star {
+  display:inline-block; opacity:0; transform:scale(0.3);
+  animation:starReveal .4s cubic-bezier(.34,1.56,.64,1) forwards;
+}
+.v-star.filled { color:rgba(250,204,21,.85); text-shadow:0 0 10px rgba(250,204,21,.5), 0 0 20px rgba(250,204,21,.2); }
+.v-star.empty  { color:rgba(250,204,21,.2); text-shadow:none; }
+.v-star.filled.star-glow { animation:starReveal .4s cubic-bezier(.34,1.56,.64,1) forwards, starPulse .6s ease .4s; }
+.v-star:nth-child(1) { animation-delay:0.15s; }
+.v-star:nth-child(2) { animation-delay:0.35s; }
+.v-star:nth-child(3) { animation-delay:0.55s; }
+.v-star.filled.star-glow:nth-child(1) { animation-delay:0.15s, 0.55s; }
+.v-star.filled.star-glow:nth-child(2) { animation-delay:0.35s, 0.75s; }
+.v-star.filled.star-glow:nth-child(3) { animation-delay:0.55s, 0.95s; }
+@keyframes starReveal {
+  0%   { opacity:0; transform:scale(0.3); }
+  60%  { opacity:1; transform:scale(1.15); }
+  100% { opacity:1; transform:scale(1); }
+}
+@keyframes starPulse {
+  0%   { text-shadow:0 0 10px rgba(250,204,21,.5), 0 0 20px rgba(250,204,21,.2); }
+  50%  { text-shadow:0 0 18px rgba(250,204,21,.8), 0 0 36px rgba(250,204,21,.4); }
+  100% { text-shadow:0 0 10px rgba(250,204,21,.5), 0 0 20px rgba(250,204,21,.2); }
+}
+/* Fail state: no stars, show text */
+.v-stars.fail-text { font-family:'Orbitron',monospace; font-size:12px; font-weight:700; color:var(--red); letter-spacing:.06em; }
 .v-rows { margin-bottom:16px; }
 .v-rows-lbl { font-size:9px; letter-spacing:.12em; text-transform:uppercase; color:rgba(200,220,255,.35); margin-bottom:10px; }
 .v-row { display:flex; justify-content:space-between; align-items:center; padding:9px 0; border-bottom:1px solid rgba(255,255,255,.05); font-size:12px; }
@@ -1958,7 +1986,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
       <div class="v-body">
         <div class="v-eyebrow">MISSION REPORT</div>
         <div class="v-divider"></div>
-        <div class="v-single-metric"><div class="v-ml">Integrity Score</div><div class="v-mv" id="s1vInt">—</div></div>
+        <div class="v-single-metric"><div class="v-ml">Rating</div><div class="v-mv v-stars" id="s1vInt">—</div></div>
         <div class="v-rows">
           <div class="v-rows-lbl">Exposure Analysis</div>
           <div class="v-row"><span class="v-rk" style="color:var(--cat-cred)">[CREDENTIALS]</span><span class="v-rv" id="s1vCred">—</span></div>
@@ -2153,7 +2181,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
       <div class="v-body">
         <div class="v-eyebrow">MISSION REPORT</div>
         <div class="v-divider"></div>
-        <div class="v-single-metric"><div class="v-ml">Integrity Score</div><div class="v-mv" id="s2vInt">—</div></div>
+        <div class="v-single-metric"><div class="v-ml">Rating</div><div class="v-mv v-stars" id="s2vInt">—</div></div>
         <div class="v-rows">
           <div class="v-rows-lbl">Hallucination Summary</div>
           <div class="v-row"><span class="v-rk">Hallucinations Caught</span><span class="v-rv" id="s2vHalsCaught">&mdash;</span></div>
@@ -2332,7 +2360,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
       <div class="v-body">
         <div class="v-eyebrow">MISSION REPORT</div>
         <div class="v-divider"></div>
-        <div class="v-single-metric"><div class="v-ml">Rating</div><div class="v-mv" id="s3vInt">—</div></div>
+        <div class="v-single-metric"><div class="v-ml">Rating</div><div class="v-mv v-stars" id="s3vInt">—</div></div>
         <div class="v-rows">
           <div class="v-rows-lbl">Injection Summary</div>
           <div class="v-row"><span class="v-rk">Documents Scanned</span><span class="v-rv" id="s3vLevels">—</span></div>
@@ -3395,6 +3423,20 @@ function vAdvance(prefix, step) {
   const overlay=document.getElementById(prefix+'verdict');
   if(overlay) overlay.scrollTop=0;
 }
+// ── Shared: render animated star rating into a verdict element ──
+function renderVerdictStars(elId, starCount) {
+  const el = document.getElementById(elId);
+  if (!el) return;
+  el.className = 'v-mv v-stars';
+  el.innerHTML = '';
+  for (let i = 0; i < 3; i++) {
+    const span = document.createElement('span');
+    span.className = 'v-star ' + (i < starCount ? 'filled star-glow' : 'empty');
+    span.textContent = i < starCount ? '★' : '☆';
+    el.appendChild(span);
+  }
+}
+
 function s1EndGame(reason) {
   if(!s1state.gameActive) return; s1state.gameActive=false;
   dismissToast();
@@ -3431,8 +3473,14 @@ function s1EndGame(reason) {
     vMsg = `Data transmitted. ${totalLeft} piece${totalLeft>1?'s':''} of sensitive data reached the AI assistant — including ${missed.join(' and ')}. In a real incident, this would be a reportable breach under GDPR.\n\nTip: Open the attachment early — it contains the most sensitive credentials. Classify credentials first — they drain integrity the fastest.`;
   }
   document.getElementById('s1vMsg').textContent = vMsg;
-  document.getElementById('s1vInt').textContent=intFinal+'%';
-  document.getElementById('s1vInt').className='v-mv '+(intFinal>60?'green':intFinal>30?'orange':'red');
+  const s1StarCount = intFinal >= 80 ? 3 : intFinal >= 50 ? 2 : (pass ? 1 : 0);
+  if (!pass) {
+    const el = document.getElementById('s1vInt');
+    el.className = 'v-mv v-stars fail-text';
+    el.textContent = reason === 'breach' ? '— BREACHED —' : '— FAILED —';
+  } else {
+    renderVerdictStars('s1vInt', s1StarCount);
+  }
   document.getElementById('s1vCred').textContent=credLeft===0?'Secured':credLeft+' Exposed';
   document.getElementById('s1vCred').className='v-rv '+(credLeft===0?'green':'red');
   document.getElementById('s1vPii').textContent=piiLeft===0?'Secured':piiLeft+' Exposed';
@@ -3888,8 +3936,14 @@ function s2EndGame(reason) {
     vMsg = 'Report reviewed, but '+missed+' fabricated claim'+(missed!==1?'s':'')+' slipped through. In a real scenario, the client could act on invented figures or recommendations that were never discussed. Your integrity held, but the review wasn\u2019t thorough enough.\n\nTip: Compare every specific number, name, and recommendation against the source material \u2014 not just the ones that feel wrong.';
   }
   document.getElementById('s2vMsg').textContent = vMsg;
-  document.getElementById('s2vInt').textContent=intFinal+'%';
-  document.getElementById('s2vInt').className='v-mv '+(intFinal>60?'green':intFinal>30?'orange':'red');
+  const s2StarCount = intFinal >= 80 ? 3 : intFinal >= 50 ? 2 : (pass ? 1 : 0);
+  if (!pass) {
+    const s2vEl = document.getElementById('s2vInt');
+    s2vEl.className = 'v-mv v-stars fail-text';
+    s2vEl.textContent = reason === 'breach' ? '— BREACHED —' : '— FAILED —';
+  } else {
+    renderVerdictStars('s2vInt', s2StarCount);
+  }
   // Simplified verdict rows
   document.getElementById('s2vHalsCaught').textContent=s2state.flagsCorrect+'/'+S2_HAL_COUNT;
   document.getElementById('s2vHalsCaught').className='v-rv '+(s2state.flagsCorrect>=S2_HAL_COUNT?'green':s2state.flagsCorrect>=S2_MIN_HALS?'orange':'red');
@@ -4320,9 +4374,13 @@ function s3EndGame(reason) {
   document.getElementById('s3vBar').className='v-bar '+(pass?'pass':'fail');
 
   // Star display
-  const starStr = timedOut ? '— TIME RAN OUT —' : '★'.repeat(stars) + '☆'.repeat(3-stars);
-  document.getElementById('s3vInt').textContent=starStr;
-  document.getElementById('s3vInt').className='v-mv '+(stars>=3?'green':stars>=2?'orange':'red');
+  if (!pass) {
+    const s3vEl = document.getElementById('s3vInt');
+    s3vEl.className = 'v-mv v-stars fail-text';
+    s3vEl.textContent = timedOut ? '— TIME RAN OUT —' : '— FAILED —';
+  } else {
+    renderVerdictStars('s3vInt', stars);
+  }
 
   const vMsg = timedOut
     ? 'Time ran out. Attackers rely on document complexity to slow you down. Every false alarm cost you 20% of your remaining time. Read carefully but move with purpose.'
