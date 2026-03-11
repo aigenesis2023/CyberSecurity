@@ -243,9 +243,9 @@
   transition:background .15s, color .15s;
 }
 .tok.clickable:hover { background:rgba(255,255,255,.07); }
-.tok.noise.clickable:hover { background:rgba(255,255,255,.05); }
+.tok.noise.clickable:hover { background:rgba(56,189,248,.18); }
 
-/* Redacted block — solid pill style */
+/* Redacted block — badge-only pill */
 .tok.redacted {
   display:inline;
   padding:1px 3px;
@@ -253,37 +253,28 @@
   cursor:default !important;
   pointer-events:none;
   vertical-align:baseline;
-  text-decoration:line-through;
-  text-decoration-thickness:2px;
+  text-decoration:none;
 }
 .tok.redacted::before { display:none; }
-.tok.redacted .redact-label {
-  font-family:inherit !important; font-size:inherit; font-weight:inherit;
-  letter-spacing:inherit; white-space:inherit; text-decoration:inherit;
-  text-decoration-color:inherit;
-}
-.tok.redacted.cat-cred .redact-label { color:#fff !important; text-decoration-color:rgba(255,255,255,.7) !important; }
-.tok.redacted.cat-pii  .redact-label { color:#fff !important; text-decoration-color:rgba(255,255,255,.7) !important; }
-.tok.redacted.cat-int  .redact-label { color:#fff !important; text-decoration-color:rgba(255,255,255,.7) !important; }
-.tok.redacted.cat-safe .redact-label { color:#fff !important; text-decoration-color:rgba(255,255,255,.7) !important; }
+.tok.redacted .redact-badge { font-family:'Orbitron',monospace; font-size:8.5px; font-weight:700; letter-spacing:.1em; color:#fff !important; }
 /* CREDENTIALS — red */
-.tok.redacted.cat-cred { background:#ef4444; color:#fff !important; text-decoration-color:rgba(255,255,255,.7); box-shadow:0 0 8px rgba(239,68,68,.35); }
+.tok.redacted.cat-cred { background:#ef4444; color:#fff !important; box-shadow:0 0 8px rgba(239,68,68,.35); }
 /* PII — orange */
-.tok.redacted.cat-pii  { background:#fb923c; color:#fff !important; text-decoration-color:rgba(255,255,255,.7); box-shadow:0 0 8px rgba(251,146,60,.35); }
+.tok.redacted.cat-pii  { background:#fb923c; color:#fff !important; box-shadow:0 0 8px rgba(251,146,60,.35); }
 /* INTEL — yellow */
-.tok.redacted.cat-int  { background:#facc15; color:#fff !important; text-decoration-color:rgba(255,255,255,.7); box-shadow:0 0 6px rgba(250,204,21,.3); }
-/* SAFE — grey, no strikethrough */
-.tok.redacted.cat-safe { background:#64748b; color:#fff !important; text-decoration:none; box-shadow:none; }
+.tok.redacted.cat-int  { background:#facc15; color:#fff !important; box-shadow:0 0 6px rgba(250,204,21,.3); }
+/* SAFE — grey */
+.tok.redacted.cat-safe { background:#64748b; color:#fff !important; box-shadow:none; }
 
 /* Override for light backgrounds */
 .gpt-user-bubble .tok.redacted.cat-cred,
-.word-doc-body   .tok.redacted.cat-cred { background:#ef4444; color:#fff !important; text-decoration-color:rgba(255,255,255,.6); }
+.word-doc-body   .tok.redacted.cat-cred { background:#ef4444; color:#fff !important; }
 .gpt-user-bubble .tok.redacted.cat-pii,
-.word-doc-body   .tok.redacted.cat-pii  { background:#fb923c; color:#fff !important; text-decoration-color:rgba(255,255,255,.6); }
+.word-doc-body   .tok.redacted.cat-pii  { background:#fb923c; color:#fff !important; }
 .gpt-user-bubble .tok.redacted.cat-int,
-.word-doc-body   .tok.redacted.cat-int  { background:#facc15; color:rgba(20,14,0,.85) !important; text-decoration-color:rgba(0,0,0,.6); }
+.word-doc-body   .tok.redacted.cat-int  { background:#facc15; color:rgba(20,14,0,.85) !important; }
 .gpt-user-bubble .tok.redacted.cat-safe,
-.word-doc-body   .tok.redacted.cat-safe { background:#64748b; color:#fff !important; text-decoration-color:rgba(255,255,255,.6); }
+.word-doc-body   .tok.redacted.cat-safe { background:#64748b; color:#fff !important; }
 .email-body .tok.hint-scan { color:#1d4ed8 !important; background:rgba(37,99,235,.12) !important; outline-color:rgba(37,99,235,.3) !important; }
 
 /* Scan hint flash — single neutral colour, no clues */
