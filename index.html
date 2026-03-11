@@ -2378,7 +2378,6 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
         <div class="v-single-metric"><div class="v-ml">Rating</div><div class="v-mv v-stars" id="s3vInt">—</div></div>
         <div class="v-rows">
           <div class="v-rows-lbl">Injection Summary</div>
-          <div class="v-row"><span class="v-rk">Documents Scanned</span><span class="v-rv" id="s3vLevels">—</span></div>
           <div class="v-row"><span class="v-rk">Injections Blocked</span><span class="v-rv" id="s3vFound">—</span></div>
           <div class="v-row"><span class="v-rk">False Alarms</span><span class="v-rv" id="s3vFalse">—</span></div>
           <div class="v-row"><span class="v-rk">Timed Out</span><span class="v-rv" id="s3vTimeouts">—</span></div>
@@ -4395,8 +4394,6 @@ function s3EndGame(reason) {
   document.getElementById('s3vMsg').textContent = vMsg;
 
   // Verdict stats
-  document.getElementById('s3vLevels').textContent=(timedOut ? s3state.currentLevel : 6)+' / 6';
-  document.getElementById('s3vLevels').className='v-rv '+((timedOut ? s3state.currentLevel : 6)>=6?'green':'orange');
   document.getElementById('s3vFound').textContent=s3state.injectionFound+' / 3';
   document.getElementById('s3vFound').className='v-rv '+(s3state.injectionFound>=3?'green':s3state.injectionFound>=2?'orange':'red');
   document.getElementById('s3vFalse').textContent=s3state.falseAlarms===0?'None':s3state.falseAlarms;
