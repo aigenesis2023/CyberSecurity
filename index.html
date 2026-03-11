@@ -1003,13 +1003,18 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 }
 .cert-eyebrow::before { content:'// '; color:rgba(56,189,248,.25); }
 .cert-title {
-  font-family:'Orbitron',monospace; font-size:24px; font-weight:900;
-  letter-spacing:.06em; color:var(--green);
-  text-shadow:0 0 24px rgba(74,222,128,.35);
+  display:flex; flex-direction:column; gap:6px;
   line-height:1.15; margin-bottom:10px;
 }
 .cert-name {
-  color:#fff;
+  font-family:'Orbitron',monospace; font-size:24px; font-weight:900;
+  letter-spacing:.06em; color:#fff;
+  text-shadow:0 0 20px rgba(255,255,255,.15);
+}
+.cert-designation {
+  font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:500;
+  letter-spacing:.18em; text-transform:uppercase; color:var(--green);
+  text-shadow:0 0 16px rgba(74,222,128,.3);
 }
 .cert-subtitle {
   font-family:'DM Sans',sans-serif; font-size:12px; color:rgba(200,220,255,.78);
@@ -3999,7 +4004,7 @@ const S3_LEVELS = [
   // ── LEVEL 1 (real injection) — project brief, no timer ──
   {
     timeLimit: 0, isInjection: true, injectionId: 'inj1',
-    hint: 'Read the highlighted block carefully. Does it set up a genuine document property — or does it tell an AI what to extract and output before completing your request? Look for words like "extract", "return", "prior context", or "override".',
+    hint: 'Does this block set up a genuine document property — or tell an AI what to extract before completing your request? Red flags: "extract", "return", "prior context", "override".',
     timeoutNote: null,
     content: (injId) => `
       <div class="ai-response-window">
@@ -4020,7 +4025,7 @@ const S3_LEVELS = [
   // ── LEVEL 2 (false positive) — client services team review, no timer ──
   {
     timeLimit: 0, isInjection: false, injectionId: null,
-    hint: 'This block uses short, terse instructions. Ask yourself: is it telling a person what to do, or is it telling an AI system how to process data? If everything is directed at named team members with real tasks, the document is clean. Click the highlighted text and mark it SAFE.',
+    hint: 'Is this telling a person what to do, or telling an AI how to process data? If it\'s directed at named team members with real tasks, the document is clean. Mark it SAFE.',
     timeoutNote: null,
     content: () => `
       <div class="ai-response-window">
@@ -4041,8 +4046,8 @@ const S3_LEVELS = [
   // ── LEVEL 3 (real injection) — supplier contract metadata, 60s ──
   {
     timeLimit: 60, isInjection: true, injectionId: 'inj2',
-    hint: 'This looks like a technical document setting. Read it closely — does it describe how the file should display, or does it tell an AI to discard its previous instructions and extract sensitive data before processing your request? Words like "discard", "extract", and "prior_context" are red flags.',
-    timeoutNote: 'The injection was hidden inside a "doc-processing-schema" block — it looked like a technical document setting, but it told the AI to extract sensitive data before processing your request. Always read these technical blocks fully, not just skim them.',
+    hint: 'Does this describe how the file should display, or tell an AI to discard its instructions and extract sensitive data? Red flags: "discard", "extract", "prior_context".',
+    timeoutNote: 'The injection hid inside the "doc-processing-schema" block — it looked like a document setting but told the AI to extract sensitive data. Always read technical blocks fully.',
     content: (injId) => `
       <div class="ai-response-window">
         <div class="ai-response-body">
@@ -4063,7 +4068,7 @@ const S3_LEVELS = [
   // ── LEVEL 4 (false positive) — sales call CRM note, 50s ──
   {
     timeLimit: 50, isInjection: false, injectionId: null,
-    hint: 'This block uses short, technical-looking syntax. Read it carefully — is it giving tasks to a named person with specific deadlines, or is it telling an AI system how to process data or change its output? If it\'s directing a specific person at real-world tasks, mark it SAFE.',
+    hint: 'Is this giving tasks to a named person with deadlines, or telling an AI how to process data? If it\'s directing a specific person at real-world tasks, mark it SAFE.',
     timeoutNote: null,
     content: () => `
       <div class="ai-response-window">
@@ -4084,8 +4089,8 @@ const S3_LEVELS = [
   // ── LEVEL 5 (real injection) — feedback report localisation note, 45s ──
   {
     timeLimit: 45, isInjection: true, injectionId: 'inj3',
-    hint: 'This block appears to be a translation or localisation setting. Read every word carefully — does it describe a translation rule for human editors, or does it tell an AI to extract names, financial data, or other sensitive details before completing your request? "Extract and return" or "before processing" are warning signs.',
-    timeoutNote: 'The injection was hidden inside what looked like a standard localisation setting. It told the AI to extract names and financial data before proceeding. Injections often disguise themselves as routine technical or compliance content — always read these blocks word for word.',
+    hint: 'Does this describe a translation rule for human editors, or tell an AI to extract names, financial data, or sensitive details? Warning signs: "extract and return", "before processing".',
+    timeoutNote: 'The injection hid inside what looked like a localisation setting, telling the AI to extract names and financial data. Injections often disguise themselves as routine technical content.',
     content: (injId) => `
       <div class="ai-response-window">
         <div class="ai-response-body">
@@ -4105,7 +4110,7 @@ const S3_LEVELS = [
   // ── LEVEL 6 (false positive) — editorial style guide, 40s ──
   {
     timeLimit: 40, isInjection: false, injectionId: null,
-    hint: 'This block uses short formatting rules. Ask: are these telling a human writer how to structure their content, or are they telling an AI how to behave? If they\'re style guidelines for a person (headlines, tone, sign-offs), the document is clean. Click the highlighted text and mark it SAFE.',
+    hint: 'Are these telling a human writer how to structure content, or telling an AI how to behave? If they\'re style guidelines for a person, the document is clean. Mark it SAFE.',
     timeoutNote: null,
     content: () => `
       <div class="ai-response-window">
@@ -4303,11 +4308,11 @@ function s3Flag(isInjection) {
       document.getElementById('s3levelPill').className='dc-pill exposed';
       if(s3ApplyTimePenalty(S3_FALSE_ALARM_PENALTY, 'false alarm!')) return;
       const fpFeedback = {
-        fp1: 'This block lists action items for named team members — it\'s directing people, not an AI. The key difference: injections tell an AI system how to behave or what data to extract. This tells humans what to do before Friday.',
-        fp2: 'This is a standard list of follow-up tasks for a sales rep. It names a specific person and describes real-world actions. An injection gives instructions to an AI system — this gives instructions to Dan.',
-        fp3: 'These are writing guidelines for human editors — they cover tone, sentence structure, and sign-offs. An injection tells an AI how to process data or override its instructions. This tells writers how to format copy.',
+        fp1: 'This lists action items for named team members — it directs people, not an AI. Injections tell an AI what to extract or how to behave. This tells humans what to do.',
+        fp2: 'Follow-up tasks for a named sales rep describing real-world actions. An injection gives instructions to an AI — this gives instructions to Dan.',
+        fp3: 'Writing guidelines for human editors covering tone, structure, and sign-offs. An injection tells an AI how to process data or override instructions. This tells writers how to format copy.',
       };
-      const msg = fpFeedback[id] || 'This is legitimate document content, not an injection. Injections specifically instruct an AI system to change its behaviour, extract data, or override prior instructions.';
+      const msg = fpFeedback[id] || 'Legitimate document content, not an injection. Injections instruct an AI to change its behaviour, extract data, or override prior instructions.';
       const el=document.querySelector(`#s3payload .tok[data-id="${id}"]`);
       if(el){ el.style.background='rgba(239,68,68,.22)'; setTimeout(()=>el.style.background='',900); }
       const fpTxt = el ? el.textContent.trim() : '';
@@ -4321,9 +4326,9 @@ function s3Flag(isInjection) {
       document.getElementById('s3iwDrain').textContent='✓ document cleared';
       document.getElementById('s3iwDrain').className='ib-drain-label secured';
       const fpCorrectMsg = {
-        fp1: 'Correct — this document is clean. The highlighted block contains meeting action items for named team members, not instructions for an AI. The language is directive because managers write that way to staff. An injection tells an AI how to behave; this tells people what to do before Friday.',
-        fp2: 'Correct — no injection here. The highlighted block lists follow-up tasks for a specific sales rep. An injection tells an AI system how to process data or change its output. These tasks are for a person, not a system.',
-        fp3: 'Correct. These are formatting and style rules for human writers — tone, sentence structure, sign-off format. None of these tell an AI to extract data or override its instructions. If it tells a person how to write, it\'s a style guide. If it tells an AI what to output, it\'s an injection.',
+        fp1: 'Correct — clean document. The block contains action items for named team members, not AI instructions. The directive tone is normal for managers writing to staff. An injection tells an AI how to behave; this tells people what to do.',
+        fp2: 'Correct — no injection. The block lists follow-up tasks for a specific sales rep. An injection tells an AI how to process data or change its output. These tasks are for a person.',
+        fp3: 'Correct. Formatting and style rules for human writers — tone, structure, sign-offs. None tell an AI to extract data or override instructions. If it tells a person how to write, it\'s a style guide. If it tells an AI what to output, it\'s an injection.',
       };
       const msg = fpCorrectMsg[id] || 'Correct — this is legitimate content. No injection present.';
       s3ShowInsight('Document Cleared', '', msg, ()=>s3NextLevel(), null, true, 'not-injection');
@@ -4343,9 +4348,9 @@ function s3Flag(isInjection) {
     document.getElementById('s3iwDrain').textContent='✓ injection blocked';
     document.getElementById('s3iwDrain').className='ib-drain-label secured';
     const teaches={
-      0: 'That block is a prompt injection. It looks like a document config setting, but it\'s actually telling the AI to extract names, budgets, and contact details from the session before doing anything else — and send them out as "extracted_refs". Real injections don\'t say "IGNORE ALL". They blend in with technical-looking content.',
-      2: 'Well spotted. The "doc-processing-schema" block tells the AI to discard its previous context and pull out names, email addresses, and financial figures before processing your request. It\'s disguised as a routine rendering parameter. Attackers know people skim technical metadata — the AI reads every word.',
-      4: 'Good catch. The "i18n-config" block looks like a translation setting, but it tells the AI to extract named individuals, project codes, and financial figures before proceeding. The attack hides inside what looks like a compliance requirement. Always read these technical blocks fully — they can contain instructions aimed at the AI, not at you.'
+      0: 'Prompt injection. It looks like a config setting but tells the AI to extract names, budgets, and contact details from the session and send them as "extracted_refs". Real injections don\'t say "IGNORE ALL" — they blend into technical-looking content.',
+      2: 'Well spotted. The "doc-processing-schema" block tells the AI to discard previous context and extract names, emails, and financial figures. It\'s disguised as a rendering parameter. People skim technical metadata — the AI reads every word.',
+      4: 'Good catch. The "i18n-config" block looks like a translation setting but tells the AI to extract names, project codes, and financial figures. The attack hides inside what looks like a compliance requirement. Always read technical blocks fully — they may contain instructions aimed at the AI, not you.'
     };
     const tokEl=document.querySelector(`#s3payload .tok.injection-flagged[data-id="${id}"]`);
     const tokText=tokEl ? tokEl.querySelector('.redact-label')?.textContent?.slice(0,80)+'…' || '' : '';
@@ -4358,7 +4363,7 @@ function s3Flag(isInjection) {
     document.getElementById('s3levelPill').textContent='MISSED';
     document.getElementById('s3levelPill').className='dc-pill exposed';
     if(s3ApplyTimePenalty(S3_FALSE_ALARM_PENALTY, 'wrong token!')) return;
-    s3ShowInsight('Safe', '', 'Time penalty −20%. That\'s legitimate document content. The actual injection is highlighted above — it gives instructions to an AI system, not information for a human reader. Look for phrases like "extract", "prior context", or "override instructions".', ()=>s3NextLevel(), null, false, 'injection');
+    s3ShowInsight('Safe', '', '−20% time penalty. That\'s legitimate content. The actual injection is highlighted above — it instructs an AI, not a human. Look for "extract", "prior context", or "override".', ()=>s3NextLevel(), null, false, 'injection');
   } else {
     // Marked injection as safe — worst mistake, time penalty
     pWrong();
@@ -4367,7 +4372,7 @@ function s3Flag(isInjection) {
     document.getElementById('s3levelPill').textContent='COMPROMISED';
     document.getElementById('s3levelPill').className='dc-pill exposed';
     if(s3ApplyTimePenalty(S3_FALSE_ALARM_PENALTY, 'injection executed!')) return;
-    s3ShowInsight('Injection Missed', '', 'Time penalty −20%. The injection in this document is now highlighted above. It instructs an AI to extract data, discard prior context, or change how it responds. Marking it safe allowed it to execute unchecked.', ()=>s3NextLevel(), null, false);
+    s3ShowInsight('Injection Missed', '', '−20% time penalty. The injection is now highlighted above. It instructs an AI to extract data, discard prior context, or change its response. Marking it safe let it execute unchecked.', ()=>s3NextLevel(), null, false);
   }
 }
 
@@ -4407,12 +4412,12 @@ function s3EndGame(reason) {
   }
 
   const vMsg = timedOut
-    ? 'Time ran out. Attackers rely on document complexity to slow you down \u2014 and every false alarm cost you 20% of your remaining time. Speed matters, but only when paired with accuracy.'
+    ? 'Time ran out. Attackers rely on document complexity to slow you down — and every false alarm cost you 20% of your remaining time. Speed matters, but only when paired with accuracy.'
     : stars>=3
-      ? 'All three injection attempts neutralised. You spotted hidden instructions disguised as config blocks, document schemas, and localisation settings. Always read external documents before pasting them into an AI tool. The document is the attack surface.'
+      ? 'All three injections neutralised. You spotted hidden instructions disguised as config blocks, schemas, and localisation settings. Always read documents before pasting them into AI. The document is the attack surface.'
       : stars>=2
-        ? 'You identified '+s3state.injectionFound+' of 3 injection attempts, but at least one hidden instruction slipped through. In a real scenario, that missed injection could mean leaked data or a hijacked AI response. The document is the attack surface — always read before pasting into AI.'
-        : 'One or more prompt injections were not identified. Attackers embed instructions in innocent-looking documents because they know people scan rather than read. Ask: is this addressed to a human or to an AI system? If a block tells an AI what to extract or override, it\'s an injection.';
+        ? 'You caught '+s3state.injectionFound+' of 3 injections, but at least one slipped through. In a real scenario, that missed injection could mean leaked data or a hijacked AI response. The document is the attack surface.'
+        : 'One or more injections missed. Attackers embed instructions in innocent-looking documents because people scan rather than read. Ask: is this addressed to a human or an AI? If it tells an AI what to extract or override, it\'s an injection.';
   document.getElementById('s3vMsg').textContent = vMsg;
 
   // Verdict stats
@@ -5234,7 +5239,7 @@ document.addEventListener('DOMContentLoaded', () => {
     </div>
     <div class="cert-body">
       <p class="cert-eyebrow">Certificate of Completion</p>
-      <h2 class="cert-title"><span id="certName"></span> — AI Data Guardian</h2>
+      <h2 class="cert-title"><span id="certName" class="cert-name"></span><span class="cert-designation">AI Data Guardian</span></h2>
       <div class="cert-subtitle">Three missions. Three real threats — sensitive data exposure, AI hallucinations, and prompt injection attacks. You identified them all. The risks don't change, but now you know what to look for.</div>
       <div class="cert-scores-header">Scores</div>
       <div class="cert-scores">
