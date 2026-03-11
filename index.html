@@ -583,9 +583,8 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 .b-leg-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
 .b-leg-name { font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:700; letter-spacing:.04em; flex-shrink:0; min-width:120px; }
 .b-leg-desc { font-family:'JetBrains Mono',monospace; color:var(--dim); font-size:9px; letter-spacing:.01em; }
-.briefing-mechanics { display:flex; flex-direction:column; gap:7px; margin-bottom:20px; padding-top:14px; border-top:1px solid rgba(255,255,255,.08); }
-.b-mech { font-family:'JetBrains Mono',monospace; font-size:9px; color:rgba(200,220,255,.78); letter-spacing:.02em; line-height:1.5; padding-left:18px; position:relative; }
-.b-mech::before { content:'ℹ'; position:absolute; left:0; top:0; font-size:10px; color:rgba(56,189,248,.6); font-style:normal; }
+.briefing-mechanics { display:flex; flex-direction:column; gap:8px; margin-bottom:20px; padding-top:14px; border-top:1px solid rgba(255,255,255,.06); }
+.b-mech { font-family:'DM Sans',sans-serif; font-size:11px; color:rgba(200,220,255,.7); line-height:1.55; padding:10px 14px; background:rgba(56,189,248,.04); border:1px solid rgba(56,189,248,.12); border-radius:8px; border-left:3px solid rgba(56,189,248,.4); }
 .briefing-start-btn { width:100%; padding:13px; font-family:'Orbitron',monospace; font-size:11px; font-weight:700; letter-spacing:.2em; text-transform:uppercase; background:transparent; border:1px solid rgba(255,255,255,.2); border-radius:8px; color:rgba(255,255,255,.85); cursor:pointer; transition:all .2s; }
 .briefing-start-btn:hover { background:rgba(255,255,255,.05); border-color:rgba(255,255,255,.4); }
 
@@ -2183,9 +2182,6 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
         <div class="b-leg"><div class="b-leg-dot" style="background:var(--red);box-shadow:0 0 6px rgba(239,68,68,.7)"></div><span class="b-leg-name" style="color:var(--red)">[HALLUCINATION]</span><span class="b-leg-desc">Claim doesn&rsquo;t match the meeting notes</span></div>
         <div class="b-leg"><div class="b-leg-dot" style="background:rgba(148,163,184,.5)"></div><span class="b-leg-name" style="color:var(--dim)">[ACCURATE]</span><span class="b-leg-desc">Claim matches the notes &mdash; flagging it costs integrity</span></div>
       </div>
-      <div class="briefing-mechanics">
-        <div class="b-mech">Each flag is final &mdash; just like sending a report to a client</div>
-      </div>
       <button type="button" class="briefing-start-btn" onclick="s2Start()"><span aria-hidden="true">&blacktriangleright; &nbsp;&nbsp;</span>START REVIEW</button>
     </div>
   </div>
@@ -3529,7 +3525,7 @@ function s1EndGame(reason) {
   }
   const anchorText1=document.getElementById('s1vAnchorText');
   if(pass) {
-    anchorText1.innerHTML = 'In 2023, Samsung engineers pasted proprietary source code into ChatGPT. The data was potentially retained for model training. Samsung banned AI tools company-wide.' + '<br><br><span style="font-family:\'JetBrains Mono\',monospace;font-size:9px;letter-spacing:.12em;color:rgba(56,189,248,.5);text-transform:uppercase;">What you now do differently</span><br><span style="font-size:11px;line-height:1.9;color:rgba(200,220,255,.65);">→ Never paste credentials, PII, or internal codenames into public AI tools<br>→ Treat every AI prompt like an email sent to a stranger<br>→ When in doubt, redact first — ask your manager before including sensitive data</span>';
+    anchorText1.innerHTML = 'In 2023, Samsung engineers pasted proprietary source code into ChatGPT. The data was potentially retained for model training. Samsung banned AI tools company-wide.' + '<br><br><span style="font-family:\'JetBrains Mono\',monospace;font-size:9px;letter-spacing:.12em;color:rgba(56,189,248,.5);text-transform:uppercase;">What you now do differently</span><br><span style="font-size:11px;line-height:1.9;color:rgba(200,220,255,.65);">→ Never paste credentials, personal data, or internal codenames into public AI tools<br>→ Treat every AI prompt like an email sent to a stranger<br>→ When in doubt, redact first — ask your manager before including sensitive data</span>';
     if(precisionPass){ const b=document.getElementById('s1vBonus'); b.style.display='block'; b.innerHTML='<div class="v-bonus-wrap"><span class="v-precision-bonus">⬡ PRECISION BONUS — Zero classification errors</span></div>'; }
   } else {
     anchorText1.textContent = 'In 2023, Samsung engineers pasted proprietary source code into ChatGPT — the data was potentially retained for model training. Samsung banned AI tools company-wide. Every unclassified item you missed could have the same consequence.';
