@@ -243,7 +243,7 @@
   transition:background .15s, color .15s;
 }
 .tok.clickable:hover { background:rgba(255,255,255,.07); }
-.tok.noise.clickable:hover { background:rgba(255,255,255,.05); }
+.tok.noise.clickable:hover { background:rgba(56,189,248,.18); }
 
 /* Redacted block — solid pill style */
 .tok.redacted {
