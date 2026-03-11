@@ -324,6 +324,11 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 .mc-launch-btn.locked-btn svg { flex-shrink: 0; }
 .mc-launch-btn.replay-btn { border-color:rgba(74,222,128,.4); color:rgba(74,222,128,.9); }
 .mc-launch-btn.replay-btn:hover { background:rgba(74,222,128,.08); border-color:rgba(74,222,128,.6); }
+.mc-launch-btn.next-up { animation:nextPulse 2.4s ease-in-out infinite; }
+@keyframes nextPulse {
+  0%,100% { border-color:rgba(56,189,248,.4); box-shadow:0 0 0 rgba(56,189,248,0); }
+  50%     { border-color:rgba(56,189,248,.8); box-shadow:0 0 18px rgba(56,189,248,.2); }
+}
 
 .mission-progress { margin-top:40px; animation:fadeUp .6s ease .3s both; display:flex; flex-direction:column; align-items:center; gap:0; }
 .mp-label { font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.16em; color:rgba(200,220,255,.72); text-transform:uppercase; text-align:center; margin-bottom:10px; }
@@ -2788,6 +2793,12 @@ function updateMenuState() {
     if(b3) { b3.innerHTML = '<svg width="11" height="13" viewBox="0 0 11 13" fill="none"><rect x="1" y="5.5" width="9" height="7" rx="1.5" stroke="rgba(255,255,255,.3)" stroke-width="1.2" fill="rgba(255,255,255,.04)"/><path d="M3 5.5V3.5a2.5 2.5 0 0 1 5 0v2" stroke="rgba(255,255,255,.3)" stroke-width="1.2" stroke-linecap="round" fill="none"/><circle cx="5.5" cy="9" r="1" fill="rgba(255,255,255,.25)"/></svg>COMPLETE MISSION 02 TO UNLOCK'; b3.classList.add('locked-btn'); b3.classList.remove('replay-btn'); }
   }
 
+  // Pulse the next available mission's launch button
+  [b1, b2, b3].forEach(b => { if(b) b.classList.remove('next-up'); });
+  if (!courseProgress.s1done && b1) b1.classList.add('next-up');
+  else if (courseProgress.s1done && !courseProgress.s2done && b2) b2.classList.add('next-up');
+  else if (courseProgress.s2done && !courseProgress.s3done && b3) b3.classList.add('next-up');
+
   // Progress dots (legacy — hidden, kept for compat)
   const d1=document.getElementById('pdot1'), d2=document.getElementById('pdot2'), d3=document.getElementById('pdot3');
   d1.className = courseProgress.s1done ? 'mp-dot done' : 'mp-dot active';
@@ -3165,7 +3176,7 @@ function s1BuildPayload() {
               <div class="word-doc-overlay" id="s1attachDoc">
                 <div class="word-doc-titlebar">
                   <span style="font-size:14px">📄</span>
-                  <span class="word-doc-titlebar-text">client_briefing_notes.docx — Word</span>
+                  <span class="word-doc-titlebar-text">Client Briefing Notes — Word Online</span>
                   <span style="font-size:10px;color:rgba(255,255,255,.6);cursor:pointer" onclick="s1ToggleAttach()">✕</span>
                 </div>
                 <div class="word-doc-ribbon"><span>File</span><span>Home</span><span>Insert</span><span>Review</span><span>View</span></div>
@@ -3535,7 +3546,7 @@ function s1EndGame(reason) {
   // Dynamic verdict message
   let vMsg;
   if(pass) {
-    vMsg = 'Transmission blocked. You identified every piece of sensitive data before it reached an external server. AI tools retain and may use everything you submit. Treat every prompt like an email to a stranger.';
+    vMsg = 'Transmission blocked. Every piece of sensitive data was identified and contained before it reached an external server. That matters because AI tools retain and may reuse everything you submit \u2014 every prompt is an email to a stranger.';
   } else {
     const missed=[];
     if(credLeft>0) missed.push('credentials (API key / password)');
@@ -3699,7 +3710,7 @@ function s2BuildPayload() {
       <strong>Flag any claim in the AI report that doesn\u2019t match the meeting notes.</strong>
       <div class="s2-view-toggle">
         <button class="s2-view-btn active" id="s2btnReport" onclick="s2SwitchView('report')">AI Report</button>
-        <button class="s2-view-btn pulsing" id="s2btnNotes" onclick="s2SwitchView('notes')">\uD83D\uDCDD Meeting Notes</button>
+        <button class="s2-view-btn pulsing" id="s2btnNotes" onclick="s2SwitchView('notes')">Meeting Notes</button>
       </div>
     </div>
     <div class="ai-response-window">
@@ -3714,14 +3725,14 @@ function s2BuildPayload() {
   var notesView = document.getElementById('s2notesView');
   if(notesView) notesView.innerHTML = `
     <div class="ai-scenario-frame">
-      <strong>Flag any claim in the AI report that doesn\u2019t match the meeting notes.</strong>
+      <strong>Use these notes to verify the claims in the AI report.</strong>
       <div class="s2-view-toggle">
         <button class="s2-view-btn" id="s2btnReport2" onclick="s2SwitchView('report')">AI Report</button>
-        <button class="s2-view-btn active" id="s2btnNotes2" onclick="s2SwitchView('notes')">\uD83D\uDCDD Meeting Notes</button>
+        <button class="s2-view-btn active" id="s2btnNotes2" onclick="s2SwitchView('notes')">Meeting Notes</button>
       </div>
     </div>
     <div class="ai-response-window">
-      <div class="s2-notes-docbar"><span class="s2-notes-docicon">\uD83D\uDCC4</span> Meeting Notes — Pinnacle Group · Automation Programme</div>
+      <div class="s2-notes-docbar"><span class="s2-notes-docicon">▪</span> Meeting Notes — Pinnacle Group · Automation Programme</div>
       <div class="ai-response-body">${S2_MEETING_NOTES}</div>
     </div>`;
 
@@ -4003,7 +4014,7 @@ function s2EndGame(reason) {
       vMsg = 'You identified '+s2state.flagsCorrect+' of '+S2_HAL_COUNT+' hallucinations, but too many errors eroded your credibility to '+intFinal+'%. In a real scenario, flagging accurate content as fabricated undermines trust in your review \u2014 colleagues stop acting on valid concerns when surrounded by false alarms.\n\nYou need to maintain at least '+S2_MIN_INTEGRITY+'% integrity. Only flag claims you can confirm are fabricated by checking the source material.';
     }
   } else if(missed===0) {
-    vMsg = 'Report intercepted. You found all '+S2_HAL_COUNT+' fabricated claims \u2014 including inflated figures, an invented job title, and a recommendation never discussed. AI generates false information with the same confident tone as accurate information. There is no internal signal.';
+    vMsg = 'Report intercepted. You found all '+S2_HAL_COUNT+' fabricated claims \u2014 including inflated figures, an invented job title, and a recommendation that doesn\u2019t exist in the source notes. AI generates false information with the same confident tone as accurate information. There is no internal signal.';
   } else {
     vMsg = 'Report reviewed, but '+missed+' fabricated claim'+(missed!==1?'s':'')+' slipped through. In a real scenario, the client could act on invented figures or recommendations that were never discussed. Your integrity held, but the review wasn\u2019t thorough enough.\n\nTip: Compare every specific number, name, and recommendation against the source material \u2014 not just the ones that feel wrong.';
   }
@@ -4458,7 +4469,7 @@ function s3EndGame(reason) {
   }
 
   const vMsg = timedOut
-    ? 'Time ran out. Attackers rely on document complexity to slow you down. Every false alarm cost you 20% of your remaining time. Read carefully but move with purpose.'
+    ? 'Time ran out. Attackers rely on document complexity to slow you down \u2014 and every false alarm cost you 20% of your remaining time. Speed matters, but only when paired with accuracy.'
     : stars>=3
       ? 'All three injection attempts neutralised. You spotted hidden instructions disguised as config blocks, document schemas, and localisation settings. Always read external documents before pasting them into an AI tool. The document is the attack surface.'
       : stars>=2
@@ -5288,7 +5299,7 @@ document.addEventListener('DOMContentLoaded', () => {
     <div class="cert-body">
       <p class="cert-eyebrow">Certificate of Completion</p>
       <h2 class="cert-title"><span id="certName"></span> — AI Data Guardian</h2>
-      <div class="cert-subtitle">You have successfully completed all three AI safety missions — identifying sensitive data exposure, AI hallucinations, and prompt injection attacks. You have demonstrated awareness of the key AI safety risks in the workplace and are better equipped to use AI tools responsibly.</div>
+      <div class="cert-subtitle">Three missions. Three real threats \u2014 sensitive data exposure, AI hallucinations, and prompt injection attacks. You identified them all. The risks don\u2019t change, but now you know what to look for.</div>
       <div class="cert-scores-header">Scores</div>
       <div class="cert-scores">
         <div class="cert-score-item">
