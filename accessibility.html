@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Accessibility Statement — Cybersecurity Awareness Training</title>
+  <style>
+    body { font-family: Georgia, serif; max-width: 800px; margin: 40px auto; padding: 0 24px; color: #222; line-height: 1.7; }
+    h1 { font-size: 1.6rem; border-bottom: 2px solid #222; padding-bottom: 8px; }
+    h2 { font-size: 1.15rem; margin-top: 2em; }
+    table { border-collapse: collapse; width: 100%; margin: 1em 0; }
+    th, td { border: 1px solid #ccc; padding: 8px 12px; text-align: left; vertical-align: top; }
+    th { background: #f4f4f4; }
+    .pass  { color: #276127; font-weight: bold; }
+    .na    { color: #555; }
+    .exception { color: #7a4a00; font-weight: bold; }
+    footer { margin-top: 3em; font-size: 0.85rem; color: #666; border-top: 1px solid #ddd; padding-top: 1em; }
+  </style>
+</head>
+<body>
+
+<h1>Accessibility Statement</h1>
+<p><strong>Product:</strong> Cybersecurity Awareness Training<br>
+<strong>Version:</strong> 1.0<br>
+<strong>Statement date:</strong> March 2026</p>
+
+<p>This training application is designed to conform to <strong>Web Content Accessibility Guidelines (WCAG) 2.1 Level AA</strong>. We are committed to ensuring that the learning experience is accessible to the widest possible audience, including users of assistive technology.</p>
+
+<h2>Conformance Status</h2>
+<p>This product is <strong>substantially conformant</strong> with WCAG 2.1 Level AA. The known exceptions and partial conformances are documented below.</p>
+
+<h2>Measures Taken</h2>
+<ul>
+  <li>All text meets a minimum 4.5:1 contrast ratio against its background.</li>
+  <li>All non-text UI components (progress bars, segment indicators, borders) meet a 3:1 contrast ratio.</li>
+  <li>All interactive elements are keyboard operable (Tab, Enter, Space, Escape).</li>
+  <li>Focus indicators are visible on all interactive elements.</li>
+  <li>Modal dialogs trap focus and return focus to the triggering element on close.</li>
+  <li>All decorative images and icons are hidden from assistive technology (<code>aria-hidden="true"</code>).</li>
+  <li>Appropriate ARIA roles, labels, and live regions are used throughout.</li>
+  <li>A skip navigation link is provided.</li>
+  <li>Animations and transitions are suppressed when the user has enabled <code>prefers-reduced-motion</code>.</li>
+  <li>Touch targets are a minimum of 44×44 CSS pixels on mobile viewports.</li>
+  <li>Page titles are updated on each screen transition.</li>
+  <li>The <code>lang</code> attribute is set to <code>en</code> on the root element.</li>
+</ul>
+
+<h2>Known Exceptions and Limitations</h2>
+
+<table>
+  <thead>
+    <tr><th>Success Criterion</th><th>Level</th><th>Status</th><th>Notes</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>2.2.1 Timing Adjustable</td>
+      <td>A</td>
+      <td class="exception">Exception applied</td>
+      <td>Mission 03 (Prompt Injection) includes a countdown timer that is <strong>essential to the learning objective</strong>. The timed constraint simulates real-world conditions under which prompt injection attacks must be identified. Removing, pausing, or extending the time limit would invalidate the activity. This exception is permitted under WCAG 2.2.1 (essential timing). Note: the timer is paused automatically during all feedback interactions so users are not penalised while reading instructional content.</td>
+    </tr>
+    <tr>
+      <td>1.4.1 Use of Color</td>
+      <td>A</td>
+      <td class="exception">Partial</td>
+      <td>The integrity score indicator changes colour (green → amber → red) to signal severity. A numeric percentage value is displayed alongside the colour at all times, providing a non-colour alternative.</td>
+    </tr>
+    <tr>
+      <td>1.4.10 Reflow</td>
+      <td>AA</td>
+      <td class="exception">Partial</td>
+      <td>The simulated document and chat interfaces within missions may require horizontal scrolling at viewport widths below 375px. The application is designed and tested for a minimum viewport width of 375px (smallest mainstream mobile device).</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Testing</h2>
+<p>This application has been evaluated using:</p>
+<ul>
+  <li>Manual keyboard-only navigation testing</li>
+  <li>Colour contrast verification against WCAG 2.1 AA ratios</li>
+  <li>Code review against WCAG 2.1 Level AA success criteria</li>
+</ul>
+
+<h2>Feedback and Contact</h2>
+<p>If you encounter an accessibility barrier or have feedback on the accessibility of this product, please contact the developer. We aim to respond to accessibility feedback within 5 business days.</p>
+
+<footer>
+  This statement was prepared in accordance with the Web Content Accessibility Guidelines (WCAG) 2.1, published by the World Wide Web Consortium (W3C).
+</footer>
+
+</body>
+</html>
