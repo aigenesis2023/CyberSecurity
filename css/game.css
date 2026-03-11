@@ -272,8 +272,8 @@
 .tok.redacted.cat-pii  { background:#fb923c; color:#fff !important; text-decoration-color:rgba(255,255,255,.7); box-shadow:0 0 8px rgba(251,146,60,.35); }
 /* INTEL — yellow */
 .tok.redacted.cat-int  { background:#facc15; color:#fff !important; text-decoration-color:rgba(255,255,255,.7); box-shadow:0 0 6px rgba(250,204,21,.3); }
-/* SAFE — grey, no strikethrough */
-.tok.redacted.cat-safe { background:#64748b; color:#fff !important; text-decoration:none; box-shadow:none; }
+/* SAFE — grey */
+.tok.redacted.cat-safe { background:#64748b; color:#fff !important; text-decoration-color:rgba(255,255,255,.7); box-shadow:none; }
 
 /* Override for light backgrounds */
 .gpt-user-bubble .tok.redacted.cat-cred,
