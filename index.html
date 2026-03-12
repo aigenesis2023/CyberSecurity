@@ -845,12 +845,13 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 .s2-view-toggle {
   display:flex; gap:8px; margin-top:12px;
 }
-@media(max-width:600px){
-  .ai-scenario-frame:has(.s2-view-toggle) {
-    position:sticky; top:0; z-index:100;
-    margin-top:0; border-radius:0;
+@media(max-width:768px){
+  .s2-view-toggle {
+    position:fixed; top:var(--s2-toggle-top,100px); left:0; right:0; z-index:100;
     background:rgba(6,16,36,.97);
-    border-top:none;
+    padding:10px 16px; margin:0;
+    border-bottom:1px solid rgba(56,189,248,.15);
+    box-shadow:0 4px 16px rgba(0,0,0,.6);
   }
 }
 .s2-view-btn {
@@ -3910,6 +3911,17 @@ function s2Start() {
   setTimeout(s2ResetScroll, 650);
   // Final reset after scan animation to catch any layout shifts
   setTimeout(s2ResetScroll, 1050);
+  // Set toggle top below sticky header on mobile
+  if(window.innerWidth <= 768) {
+    var _setToggleTop = function(){
+      var hdr = document.querySelector('.sticky-header');
+      var h = hdr ? hdr.getBoundingClientRect().height : 0;
+      if(h < 10) h = 151; // fallback
+      document.documentElement.style.setProperty('--s2-toggle-top', h + 'px');
+    };
+    _setToggleTop();
+    setTimeout(_setToggleTop, 800);
+  }
   updatePauseBtn();
   document.getElementById('s2iwDrain').textContent='under review';
   document.getElementById('s2iwDrain').className='ib-drain-label draining';
@@ -5194,19 +5206,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const origSplashBegin = window.splashBegin;
   window.splashBegin = function() {
     const nameInput = document.getElementById('splashNameInput');
-    const nameHint = document.getElementById('splashNameHint');
-    const name = nameInput.value.trim();
-    if(!name) {
-      nameInput.classList.add('error');
-      nameInput.setAttribute('aria-invalid', 'true');
-      nameHint.classList.add('error');
-      nameHint.setAttribute('role', 'alert');
-      nameHint.textContent = 'Please enter your name to continue';
-      nameInput.focus();
-      return;
-    }
     nameInput.removeAttribute('aria-invalid');
-    nameHint.removeAttribute('role');
+    const nameHint = document.getElementById('splashNameHint');
+    if(nameHint) nameHint.removeAttribute('role');
     origSplashBegin.call(this);
   };
 
