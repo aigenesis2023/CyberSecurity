@@ -1734,8 +1734,8 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
   <!-- Name input -->
   <div class="splash-name-wrap">
     <label class="splash-name-label" for="splashNameInput">Enter your name</label>
-    <input type="text" id="splashNameInput" class="splash-name-input" placeholder="Your full name" maxlength="60" autocomplete="name" required aria-describedby="splashNameHint">
-    <div class="splash-name-hint" id="splashNameHint" role="status">Required for your completion certificate</div>
+    <input type="text" id="splashNameInput" class="splash-name-input" placeholder="Your full name" maxlength="60" autocomplete="name" aria-describedby="splashNameHint">
+    <div class="splash-name-hint" id="splashNameHint" role="status">Optional — used for your completion certificate</div>
   </div>
   <!-- Loading -->
   <div class="splash-load-wrap">
@@ -4555,14 +4555,7 @@ function splashBegin() {
   const nameInput = document.getElementById('splashNameInput');
   const nameHint = document.getElementById('splashNameHint');
   const name = nameInput.value.trim();
-  if (!name) {
-    nameInput.classList.add('error');
-    nameHint.classList.add('error');
-    nameHint.textContent = 'Please enter your name to continue';
-    nameInput.focus();
-    return;
-  }
-  window._userName = name;
+  window._userName = name || 'Learner';
   // Play bleep directly on user gesture — audio context requires this
   try { const b=_makeAudio('_bleep',AUDIO_FILES.bleep); if(b){b.volume=0.325;b.play().catch(()=>{});} } catch(e){}
   startAudio();
@@ -4574,7 +4567,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (ni) ni.addEventListener('input', () => {
     ni.classList.remove('error');
     const h = document.getElementById('splashNameHint');
-    if (h) { h.classList.remove('error'); h.textContent = 'Required for your completion certificate'; }
+    if (h) { h.classList.remove('error'); h.textContent = 'Optional — used for your completion certificate'; }
   });
 });
 function runSplashLoader() {
