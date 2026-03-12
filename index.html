@@ -4769,6 +4769,10 @@ function togglePause() {
   overlay.classList.toggle('show', _paused);
 
   if (_paused) {
+    // Close any open classification popup so it doesn't sit behind the overlay
+    if (sec === 's1') s1ClosePopup();
+    if (sec === 's2') s2ClosePopup();
+    if (sec === 's3') s3ClosePopup();
     // Pause timers/drains for active section
     if (sec === 's1') { clearInterval(s1state.drainInt); }
     if (sec === 's3') { clearInterval(s3state.globalTimerInt); }
