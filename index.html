@@ -721,8 +721,8 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 .word-doc-body { padding:16px; font-family:'DM Sans',sans-serif; font-size:11px; line-height:1.75; color:#222; }
 .word-doc-body .tok.clickable { background:rgba(99,102,241,.10); color:#222; border-bottom-color:rgba(99,102,241,.35); }
 .word-doc-body .tok.clickable:hover { background:rgba(99,102,241,.22); }
-.word-doc-body .tok.clickable.noise { background:rgba(56,189,248,.08); border-bottom-color:rgba(56,189,248,.3); color:inherit; }
-.word-doc-body .tok.clickable.noise:hover { background:rgba(56,189,248,.18); }
+.word-doc-body .tok.clickable.noise { background:rgba(99,102,241,.10); border-bottom-color:rgba(99,102,241,.35); color:#222; }
+.word-doc-body .tok.clickable.noise:hover { background:rgba(99,102,241,.22); }
 .word-doc-title { font-size:16px; font-weight:700; margin-bottom:4px; color:#111; }
 .word-doc-subtitle { font-size:9px; color:#888; margin-bottom:12px; letter-spacing:.04em; }
 .word-doc-section { font-weight:600; color:#1e3a8a; margin-bottom:6px; }
@@ -2492,7 +2492,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
         <div class="bss-val" id="s3levelDisplay">1 / 6</div>
       </div>
     </div>
-    <div class="diag-cats" id="s3diagCats" style="flex:1;justify-content:flex-end">
+    <div class="diag-cats" id="s3diagCats" style="margin-top:12px">
       <div class="diag-cat hal-cat" id="s3levelStatus">
         <div class="dc-head"><div class="dc-name" style="color:var(--yellow)">[HINT]</div><div class="dc-pill exposed-int" id="s3levelPill">SCANNING</div></div>
         <div style="font-family:'DM Sans',sans-serif;font-size:10px;color:rgba(200,220,255,.55);line-height:1.55;margin-top:6px;font-weight:300" id="s3hintText">Scan the document carefully.</div>
@@ -3014,7 +3014,7 @@ const S1_MAX_DRAIN = 1.664;
 
 let s1state = {
   tokState:{}, integrity:100, gameActive:false, classifyErrors:0,
-  safeBonus:0, timerInt:null, drainInt:null, activeToken:null,
+  safeBonus:0, timerInt:null, drainInt:null, drainDelayTm:null, insightOpen:false, activeToken:null,
 };
 
 function s1FreshState() {
@@ -3025,7 +3025,8 @@ function s1Init() {
   s1state.integrity=100; s1state.gameActive=false;
   s1state.classifyErrors=0; s1state.safeBonus=0; s1state.activeToken=null;
   clearInterval(s1state.timerInt); clearInterval(s1state.drainInt);
-  s1state.drainInt=null;
+  clearTimeout(s1state.drainDelayTm);
+  s1state.drainInt=null; s1state.drainDelayTm=null; s1state.insightOpen=false;
   forceCloseInsight();
   // Snap bar to 100% instantly (no CSS transition) to avoid overflow on retry
   const s1bar=document.getElementById('s1iwIntBar');
@@ -3391,11 +3392,12 @@ function s1Start() {
   s1state.gameActive=true;
   updatePauseBtn();
   // Delay drain start by 5s — give learners time to read first
-  setTimeout(()=>{
+  s1state.drainDelayTm=setTimeout(()=>{
+    s1state.drainDelayTm=null;
     if(!s1state.gameActive) return;
     clearInterval(s1state.drainInt); // guard against ghost drain if insight dismissed early
     s1state.drainInt=setInterval(()=>{
-      if(!s1state.gameActive) return;
+      if(!s1state.gameActive||s1state.insightOpen) return;
       s1state.integrity=Math.max(0,s1state.integrity-s1GetDrain()*(100/1000));
       const drain=s1GetDrain();
       document.getElementById('s1iwDrain').textContent='▼ data exposed';
@@ -4767,6 +4769,10 @@ function togglePause() {
   overlay.classList.toggle('show', _paused);
 
   if (_paused) {
+    // Close any open classification popup so it doesn't sit behind the overlay
+    if (sec === 's1') s1ClosePopup();
+    if (sec === 's2') s2ClosePopup();
+    if (sec === 's3') s3ClosePopup();
     // Pause timers/drains for active section
     if (sec === 's1') { clearInterval(s1state.drainInt); }
     if (sec === 's3') { clearInterval(s3state.globalTimerInt); }
@@ -4783,7 +4789,7 @@ function togglePause() {
     // Restart drain / timer for active section
     if (sec === 's1' && s1state.gameActive && !s1AllSecured()) {
       s1state.drainInt = setInterval(()=>{
-        if(!s1state.gameActive) return;
+        if(!s1state.gameActive||s1state.insightOpen) return;
         s1state.integrity = Math.max(0, s1state.integrity - s1GetDrain()*(100/1000));
         document.getElementById('s1iwDrain').textContent = '▼ data exposed';
         document.getElementById('s1iwDrain').className = 'ib-drain-label draining';
@@ -4964,13 +4970,20 @@ function forceCloseInsight() {
 
 // ── M1: teach with drain pause ──────────────────────────────
 function s1ShowInsight(category, tokenText, message, afterFn, graphicHtml, isCorrect, userChoice) {
+  s1state.insightOpen=true;
   clearInterval(s1state.drainInt); // pause drain
+  // Snap bar — kill CSS transition so no visual drift during feedback
+  const _bar=document.getElementById('s1iwIntBar');
+  if(_bar){ _bar.style.transition='none'; void _bar.offsetWidth; }
   showInsight(category, tokenText, message, () => {
+    s1state.insightOpen=false;
+    // Restore CSS transition
+    if(_bar) _bar.style.transition='';
     if(afterFn) afterFn();
     // Resume drain using original 100ms tick and scaled formula
     if(s1state.gameActive && !s1AllSecured()) {
       s1state.drainInt = setInterval(()=>{
-        if(!s1state.gameActive) return;
+        if(!s1state.gameActive||s1state.insightOpen) return;
         s1state.integrity = Math.max(0, s1state.integrity - s1GetDrain()*(100/1000));
         const drain = s1GetDrain();
         document.getElementById('s1iwDrain').textContent = '▼ data exposed';
