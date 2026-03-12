@@ -3014,7 +3014,7 @@ const S1_MAX_DRAIN = 1.664;
 
 let s1state = {
   tokState:{}, integrity:100, gameActive:false, classifyErrors:0,
-  safeBonus:0, timerInt:null, drainInt:null, activeToken:null,
+  safeBonus:0, timerInt:null, drainInt:null, drainDelayTm:null, insightOpen:false, activeToken:null,
 };
 
 function s1FreshState() {
@@ -3025,7 +3025,8 @@ function s1Init() {
   s1state.integrity=100; s1state.gameActive=false;
   s1state.classifyErrors=0; s1state.safeBonus=0; s1state.activeToken=null;
   clearInterval(s1state.timerInt); clearInterval(s1state.drainInt);
-  s1state.drainInt=null;
+  clearTimeout(s1state.drainDelayTm);
+  s1state.drainInt=null; s1state.drainDelayTm=null; s1state.insightOpen=false;
   forceCloseInsight();
   // Snap bar to 100% instantly (no CSS transition) to avoid overflow on retry
   const s1bar=document.getElementById('s1iwIntBar');
@@ -3391,11 +3392,12 @@ function s1Start() {
   s1state.gameActive=true;
   updatePauseBtn();
   // Delay drain start by 5s — give learners time to read first
-  setTimeout(()=>{
+  s1state.drainDelayTm=setTimeout(()=>{
+    s1state.drainDelayTm=null;
     if(!s1state.gameActive) return;
     clearInterval(s1state.drainInt); // guard against ghost drain if insight dismissed early
     s1state.drainInt=setInterval(()=>{
-      if(!s1state.gameActive) return;
+      if(!s1state.gameActive||s1state.insightOpen) return;
       s1state.integrity=Math.max(0,s1state.integrity-s1GetDrain()*(100/1000));
       const drain=s1GetDrain();
       document.getElementById('s1iwDrain').textContent='▼ data exposed';
@@ -4783,7 +4785,7 @@ function togglePause() {
     // Restart drain / timer for active section
     if (sec === 's1' && s1state.gameActive && !s1AllSecured()) {
       s1state.drainInt = setInterval(()=>{
-        if(!s1state.gameActive) return;
+        if(!s1state.gameActive||s1state.insightOpen) return;
         s1state.integrity = Math.max(0, s1state.integrity - s1GetDrain()*(100/1000));
         document.getElementById('s1iwDrain').textContent = '▼ data exposed';
         document.getElementById('s1iwDrain').className = 'ib-drain-label draining';
@@ -4964,13 +4966,20 @@ function forceCloseInsight() {
 
 // ── M1: teach with drain pause ──────────────────────────────
 function s1ShowInsight(category, tokenText, message, afterFn, graphicHtml, isCorrect, userChoice) {
+  s1state.insightOpen=true;
   clearInterval(s1state.drainInt); // pause drain
+  // Snap bar — kill CSS transition so no visual drift during feedback
+  const _bar=document.getElementById('s1iwIntBar');
+  if(_bar){ _bar.style.transition='none'; void _bar.offsetWidth; }
   showInsight(category, tokenText, message, () => {
+    s1state.insightOpen=false;
+    // Restore CSS transition
+    if(_bar) _bar.style.transition='';
     if(afterFn) afterFn();
     // Resume drain using original 100ms tick and scaled formula
     if(s1state.gameActive && !s1AllSecured()) {
       s1state.drainInt = setInterval(()=>{
-        if(!s1state.gameActive) return;
+        if(!s1state.gameActive||s1state.insightOpen) return;
         s1state.integrity = Math.max(0, s1state.integrity - s1GetDrain()*(100/1000));
         const drain = s1GetDrain();
         document.getElementById('s1iwDrain').textContent = '▼ data exposed';
