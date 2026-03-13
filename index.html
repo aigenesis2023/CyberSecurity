@@ -2620,9 +2620,6 @@ const SND = {};
 let audioReady = false;
 
 // ── Audio path helper — resolves relative to the HTML file ──────────────
-// AUDIO_BASE is relative so it works in LMS iframes, local servers, and
-// GitHub Pages without hard-coded absolute URLs. Add new filenames to
-// AUDIO_FILES and they will be preloaded and fall back silently if absent.
 const AUDIO_BASE = 'assets/audio/';
 const AUDIO_FILES = {
   bg:       { file:'SunoBG.mp3',              loop:true,  volume:0.1625 },
@@ -2645,21 +2642,56 @@ const VO_CLIPS = [
 ];
 let _activeVO = null;
 
+// ── Web Audio API for instant SFX playback (esp. mobile) ────────────────
+let _actx = null;     // AudioContext — created on first user gesture
+const _buf = {};      // key → AudioBuffer (pre-decoded PCM, instant play)
+const _vobuf = {};    // voiceover name → AudioBuffer
+
+function _ensureCtx() {
+  if (_actx) return _actx;
+  try { _actx = new (window.AudioContext || window.webkitAudioContext)(); }
+  catch(e) { _actx = null; }
+  return _actx;
+}
+
+function _fetchAndDecode(url, target, key) {
+  fetch(url).then(r => r.arrayBuffer()).then(ab => {
+    if (!_actx) return;
+    return _actx.decodeAudioData(ab);
+  }).then(buf => { if(buf) target[key] = buf; }).catch(()=>{});
+}
+
+// Play a pre-decoded buffer through Web Audio API — instant, overlapping
+function _playSFX(key, vol) {
+  if (!audioReady || _muted || !_actx || !_buf[key]) return;
+  try {
+    const src = _actx.createBufferSource();
+    src.buffer = _buf[key];
+    const gain = _actx.createGain();
+    gain.gain.value = vol;
+    src.connect(gain).connect(_actx.destination);
+    src.start(0);
+  } catch(e){}
+}
+
+// ── HTML Audio fallback for BG music (needs streaming/loop) ─────────────
 function _makeAudio(key, def) {
   try {
     const a = new Audio(AUDIO_BASE + def.file);
     a.volume = def.volume ?? 1.0;
     if (def.loop) a.loop = true;
     a.preload = 'auto';
-    // Silent fallback: if file 404s or can't decode, mark as unavailable
     a.addEventListener('error', () => { SND[key] = null; }, { once:true });
     return a;
   } catch(e) { return null; }
 }
 
 function preloadAudio() {
+  // BG music still uses HTML Audio for streaming/loop
+  SND.bg = _makeAudio('bg', AUDIO_FILES.bg);
+  // Pre-create HTML Audio objects (used as fallback & for preload)
   Object.entries(AUDIO_FILES).forEach(([key, def]) => {
-    SND[key] = _makeAudio(key, def);
+    if (key !== 'bg') SND[key] = _makeAudio(key, def);
   });
   // Preload per-screen voiceover clips
   SND.vo = {};
@@ -2675,6 +2707,17 @@ function preloadAudio() {
 let _muted = false;
 function startAudio() {
   if (audioReady) return; audioReady=true;
+  // Create AudioContext on user gesture (required by mobile browsers)
+  _ensureCtx();
+  if (_actx && _actx.state === 'suspended') _actx.resume().catch(()=>{});
+  // Decode all SFX into AudioBuffers for instant playback
+  Object.entries(AUDIO_FILES).forEach(([key, def]) => {
+    if (key !== 'bg') _fetchAndDecode(AUDIO_BASE + def.file, _buf, key);
+  });
+  // Decode voiceover clips
+  VO_CLIPS.forEach(name => {
+    _fetchAndDecode(AUDIO_BASE + name + '.mp3', _vobuf, name);
+  });
   if (!_muted && SND.bg) SND.bg.play().catch(()=>{});
   playVO('VO-INTRO');
 }
@@ -2698,17 +2741,34 @@ function loadMuteState() {
 }
 function _play(a) { if(a) { a.muted=_muted; a.play().catch(()=>{}); } }
 function _muteAllSND(muted) {
-  Object.entries(SND).forEach(([k,v]) => {
-    if(k==='vo') Object.values(v).forEach(a => { if(a) a.muted = muted; });
-    else if(v && typeof v.muted !== 'undefined') v.muted = muted;
-  });
-  if(_activeVO) _activeVO.muted = muted;
+  // Mute/unmute BG music (HTML Audio)
+  if(SND.bg && typeof SND.bg.muted !== 'undefined') SND.bg.muted = muted;
+  // Mute/unmute active voiceover (HTML Audio or Web Audio API)
+  if(_activeVO) {
+    if (_activeVO._gain) _activeVO._gain.gain.value = muted ? 0 : 1.0;
+    else if (typeof _activeVO.muted !== 'undefined') _activeVO.muted = muted;
+  }
+  // Web Audio API SFX respect _muted flag checked in _playSFX
 }
 
-// ── Voiceover playback ──────────────────────────────────────────────────
+// ── Voiceover playback (Web Audio API with HTML Audio fallback) ─────────
 function playVO(name) {
   if(!audioReady) return;
   stopVO();
+  // Try Web Audio API first (instant on mobile)
+  if (_actx && _vobuf[name]) {
+    try {
+      const src = _actx.createBufferSource();
+      src.buffer = _vobuf[name];
+      const gain = _actx.createGain();
+      gain.gain.value = _muted ? 0 : 1.0;
+      src.connect(gain).connect(_actx.destination);
+      src.start(0);
+      _activeVO = { _src: src, _gain: gain, pause: function(){ try{this._src.stop();}catch(e){} }, currentTime: 0 };
+      return;
+    } catch(e){}
+  }
+  // Fallback to HTML Audio
   const clip = SND.vo && SND.vo[name];
   if(!clip) return;
   try {
@@ -2725,12 +2785,13 @@ function stopVO() {
 function stopVoiceover() { stopVO(); }
 function pauseBG() { if(SND.bg) { SND.bg.pause(); } }
 function resumeBG() { if(SND.bg && audioReady) { SND.bg.muted = _muted; if(!_muted) SND.bg.play().catch(()=>{}); } }
-function pClick()    { if(!audioReady||!SND.click)   return; const a=SND.click.cloneNode();       a.volume=0.35; _play(a); }
-function pWrong()    { if(!audioReady||!SND.wrong)   return; const a=new Audio(SND.wrong.src);    a.volume=0.8;  _play(a); }
-function pSelected() { if(!audioReady||!SND.selected)return; const a=SND.selected.cloneNode();    _play(a); }
-function pSuccess()  { if(!audioReady||!SND.success) return; const a=new Audio(SND.success.src);  a.volume=1.0;  _play(a); }
-function pError()    { if(!audioReady||!SND.error)   return; const a=SND.error.cloneNode();        _play(a); }
-function pBleep()    { if(!audioReady||!SND.bleep)   return; const a=SND.bleep.cloneNode();        _play(a); }
+function pClick()    { _playSFX('click',    0.35); }
+function pWrong()    { _playSFX('wrong',    0.8);  }
+function pSelected() { _playSFX('selected', 0.8);  }
+function pSuccess()  { _playSFX('success',  1.0);  }
+function pError()    { _playSFX('error',    1.0);  }
+function pBleep()    { _playSFX('bleep',    0.325); }
+function pHover()    { _playSFX('hover',    0.6);  }
 
 // ════════════════════════════════════════════
 //  COURSE PROGRESS
