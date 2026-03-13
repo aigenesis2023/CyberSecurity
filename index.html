@@ -845,6 +845,20 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 .s2-view-toggle {
   display:flex; gap:8px; margin-top:12px;
 }
+/* Mobile-only sticky bar for M2 report/notes toggle */
+.s2-mobile-bar {
+  display:none; /* hidden on desktop */
+}
+@media(max-width:768px){
+  .s2-mobile-bar {
+    display:flex; gap:8px;
+    background:rgba(6,16,36,.97);
+    padding:8px 12px;
+    border-bottom:1px solid rgba(56,189,248,.15);
+  }
+  /* Hide inline toggles on mobile — the sticky bar replaces them */
+  .s2-view-toggle { display:none !important; }
+}
 .s2-view-btn {
   flex:1; padding:10px 14px;
   font-family:'Orbitron',monospace; font-size:10px; font-weight:700;
@@ -1734,8 +1748,8 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
   <!-- Name input -->
   <div class="splash-name-wrap">
     <label class="splash-name-label" for="splashNameInput">Enter your name</label>
-    <input type="text" id="splashNameInput" class="splash-name-input" placeholder="Your full name" maxlength="60" autocomplete="name" required aria-describedby="splashNameHint">
-    <div class="splash-name-hint" id="splashNameHint" role="status">Required for your completion certificate</div>
+    <input type="text" id="splashNameInput" class="splash-name-input" placeholder="Your full name" maxlength="60" autocomplete="name" aria-describedby="splashNameHint">
+    <div class="splash-name-hint" id="splashNameHint" role="status">Optional — used for your completion certificate</div>
   </div>
   <!-- Loading -->
   <div class="splash-load-wrap">
@@ -2285,6 +2299,11 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
       </div>
     </div>
   </div>
+</div>
+<!-- Mobile-only sticky toggle for M2 report/notes switching — inside sticky-header so they move as one block -->
+<div class="s2-mobile-bar" id="s2MobileBar">
+  <button class="s2-view-btn active" id="s2mbReport" onclick="s2SwitchView('report')">AI Report</button>
+  <button class="s2-view-btn pulsing" id="s2mbNotes" onclick="s2SwitchView('notes')">Meeting Notes</button>
 </div>
 </div>
 
@@ -3693,26 +3712,29 @@ function s2SwitchView(view) {
     // Stop pulsing once user has seen notes
     var nb = document.getElementById('s2btnNotes');
     if(nb) nb.classList.remove('pulsing');
+    var mbN = document.getElementById('s2mbNotes');
+    if(mbN) mbN.classList.remove('pulsing');
   } else {
     payload.style.display = 'block';
     notesView.style.display = 'none';
   }
-  // Update active states on both sets of buttons
-  var r1 = document.getElementById('s2btnReport');
-  var n1 = document.getElementById('s2btnNotes');
-  var r2 = document.getElementById('s2btnReport2');
-  var n2 = document.getElementById('s2btnNotes2');
-  if(view === 'notes') {
-    if(r1) r1.classList.remove('active');
-    if(n1) n1.classList.add('active');
-    if(r2) r2.classList.remove('active');
-    if(n2) n2.classList.add('active');
-  } else {
-    if(r1) r1.classList.add('active');
-    if(n1) n1.classList.remove('active');
-    if(r2) r2.classList.add('active');
-    if(n2) n2.classList.remove('active');
-  }
+  // Update active states on all sets of buttons (inline + mobile bar)
+  var btns = [
+    ['s2btnReport','s2btnNotes'],
+    ['s2btnReport2','s2btnNotes2'],
+    ['s2mbReport','s2mbNotes'],
+  ];
+  btns.forEach(function(pair){
+    var r = document.getElementById(pair[0]);
+    var n = document.getElementById(pair[1]);
+    if(view === 'notes') {
+      if(r) r.classList.remove('active');
+      if(n) n.classList.add('active');
+    } else {
+      if(r) r.classList.add('active');
+      if(n) n.classList.remove('active');
+    }
+  });
   // Scroll to top of whichever view is now shown
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -4555,14 +4577,12 @@ function splashBegin() {
   const nameInput = document.getElementById('splashNameInput');
   const nameHint = document.getElementById('splashNameHint');
   const name = nameInput.value.trim();
-  if (!name) {
-    nameInput.classList.add('error');
-    nameHint.classList.add('error');
-    nameHint.textContent = 'Please enter your name to continue';
-    nameInput.focus();
-    return;
+  window._userName = name || 'Learner';
+  // Dev mode: ?dev=1 unlocks all missions
+  if(new URLSearchParams(window.location.search).get('dev')==='1'){
+    courseProgress.s1done=true; courseProgress.s2done=true; courseProgress.s3done=true;
+    saveProgress(); setTimeout(function(){ updateMenuState(); },500);
   }
-  window._userName = name;
   // Play bleep directly on user gesture — audio context requires this
   try { const b=_makeAudio('_bleep',AUDIO_FILES.bleep); if(b){b.volume=0.325;b.play().catch(()=>{});} } catch(e){}
   startAudio();
@@ -4574,7 +4594,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (ni) ni.addEventListener('input', () => {
     ni.classList.remove('error');
     const h = document.getElementById('splashNameHint');
-    if (h) { h.classList.remove('error'); h.textContent = 'Required for your completion certificate'; }
+    if (h) { h.classList.remove('error'); h.textContent = 'Optional — used for your completion certificate'; }
   });
 });
 function runSplashLoader() {
@@ -5193,19 +5213,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const origSplashBegin = window.splashBegin;
   window.splashBegin = function() {
     const nameInput = document.getElementById('splashNameInput');
-    const nameHint = document.getElementById('splashNameHint');
-    const name = nameInput.value.trim();
-    if(!name) {
-      nameInput.classList.add('error');
-      nameInput.setAttribute('aria-invalid', 'true');
-      nameHint.classList.add('error');
-      nameHint.setAttribute('role', 'alert');
-      nameHint.textContent = 'Please enter your name to continue';
-      nameInput.focus();
-      return;
-    }
     nameInput.removeAttribute('aria-invalid');
-    nameHint.removeAttribute('role');
+    const nameHint = document.getElementById('splashNameHint');
+    if(nameHint) nameHint.removeAttribute('role');
     origSplashBegin.call(this);
   };
 
