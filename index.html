@@ -372,7 +372,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 ════════════════════════════════════════════ */
 .page-wrap { display:flex; flex-direction:column; min-height:100%; }
 .sticky-header { position:sticky; top:0; z-index:10; padding-top:0; }
-.int-banner { position:relative; margin:0 124px 0 18px; display:grid; grid-template-columns: auto 1fr; align-items:stretch; min-height:70px; animation:fadeUp .5s ease both; overflow:hidden; }
+.int-banner { position:relative; margin:0 164px 0 18px; display:grid; grid-template-columns: auto 1fr; align-items:stretch; min-height:70px; animation:fadeUp .5s ease both; overflow:hidden; }
 .int-banner > * + * { border-left:1px solid rgba(56,189,248,.12); }
 .ib-brand { display:flex; align-items:center; gap:12px; padding:0 26px 0 20px; flex-shrink:0; }
 .h-dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; background:var(--green); animation:statusDot 2.4s ease infinite; }
@@ -1389,7 +1389,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
   box-shadow:0 2px 16px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.04);
   overflow:hidden;
 }
-#pauseBtn, #muteBtn {
+#abortBtn, #pauseBtn, #muteBtn {
   pointer-events:all;
   display:none; align-items:center; justify-content:center;
   width:44px;
@@ -1398,23 +1398,56 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
   cursor:pointer; transition:color .18s, background .18s;
   padding:0; flex-shrink:0;
 }
+#abortBtn { display:none; }
+#abortBtn.visible { display:flex; }
 #pauseBtn { display:none; }
 #pauseBtn.visible { display:flex; }
 #muteBtn { display:flex; }
-/* Thin divider between the two — only visible when both are shown */
+/* Thin dividers between ctrl buttons */
+#abortBtn.visible + #pauseBtn,
+#abortBtn.visible + #pauseBtn.visible + #muteBtn,
+#abortBtn.visible + #muteBtn {
+  border-left:1px solid rgba(255,255,255,.08);
+}
 #pauseBtn.visible + #muteBtn {
   border-left:1px solid rgba(255,255,255,.08);
 }
-#pauseBtn:hover, #muteBtn:hover {
+#abortBtn:hover, #pauseBtn:hover, #muteBtn:hover {
   background:rgba(255,255,255,.06);
   color:rgba(255,255,255,.9);
 }
-#pauseBtn:active, #muteBtn:active { color:rgba(255,255,255,1); }
+#abortBtn:active, #pauseBtn:active, #muteBtn:active { color:rgba(255,255,255,1); }
 .ctrl-icon { width:16px; height:16px; flex-shrink:0; }
 /* Hide labels — icon-only */
 .ctrl-lbl { display:none; }
 #muteBtn.muted { color:rgba(255,255,255,.22); }
 #muteBtn.muted:hover { color:rgba(255,255,255,.7); background:rgba(255,255,255,.06); }
+/* Abort confirmation overlay */
+#abortOverlay {
+  position:fixed; inset:0; z-index:8500;
+  background:rgba(2,6,16,0.92);
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:18px;
+  opacity:0; pointer-events:none; transition:opacity .3s ease;
+  backdrop-filter:blur(10px);
+}
+#abortOverlay.show { opacity:1; pointer-events:all; }
+.abort-title { font-family:'Orbitron',monospace; font-size:18px; font-weight:900; letter-spacing:.1em; color:#fff; }
+.abort-sub { font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.08em; color:rgba(200,220,255,.55); text-transform:uppercase; text-align:center; line-height:1.6; max-width:320px; }
+.abort-actions { display:flex; gap:12px; margin-top:6px; }
+.abort-confirm-btn {
+  padding:12px 36px;
+  font-family:'Orbitron',monospace; font-size:10px; font-weight:700; letter-spacing:.18em; text-transform:uppercase;
+  background:rgba(239,68,68,.08); border:1px solid rgba(239,68,68,.35); color:rgba(239,68,68,.8);
+  border-radius:8px; cursor:pointer; transition:all .2s;
+}
+.abort-confirm-btn:hover { background:rgba(239,68,68,.15); border-color:rgba(239,68,68,.6); color:rgba(239,68,68,1); }
+.abort-cancel-btn {
+  padding:12px 36px;
+  font-family:'Orbitron',monospace; font-size:10px; font-weight:700; letter-spacing:.18em; text-transform:uppercase;
+  background:rgba(56,189,248,.08); border:1px solid rgba(56,189,248,.4); color:var(--blue2);
+  border-radius:8px; cursor:pointer; transition:all .2s;
+}
+.abort-cancel-btn:hover { background:rgba(56,189,248,.18); border-color:var(--blue); }
 
 /* ════════════════════════════════════════════
    RESPONSIVE  (inline overrides — see also css/responsive.css)
@@ -1438,8 +1471,8 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
   .int-banner { grid-template-columns:1fr; margin:0 12px; overflow:visible; }
   #gameCtrlBar { height:auto; top:13px; }
   #ctrlPill { height:38px; }
-  #pauseBtn, #muteBtn { width:38px; }
-  .ib-brand { padding:10px 112px 8px 16px; border-right:none; border-bottom:1px solid rgba(56,189,248,.1); overflow:visible; }
+  #abortBtn, #pauseBtn, #muteBtn { width:38px; }
+  .ib-brand { padding:10px 148px 8px 16px; border-right:none; border-bottom:1px solid rgba(56,189,248,.1); overflow:visible; }
   .h-title { white-space:normal; line-height:1.3; }
   .ib-center { padding:10px 16px; gap:14px; }
   .ib-num { font-size:32px; }
@@ -1471,7 +1504,7 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 
 @media (max-width: 480px) {
   .int-banner { margin:8px 8px 0; }
-  .ib-brand { padding:8px 112px 7px 12px; }
+  .ib-brand { padding:8px 148px 7px 12px; }
   .h-title { font-size:9px; letter-spacing:.12em; }
   .shell { display:flex; flex-direction:column; padding:6px 8px 8px 8px; gap:8px; }
   .ib-num { font-size:26px; }
@@ -1934,6 +1967,11 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 <!-- GLOBAL GAME CONTROLS (pause + mute, top-right pill) -->
 <div id="gameCtrlBar">
   <div id="ctrlPill">
+    <button type="button" id="abortBtn" onclick="showAbortConfirm()" title="Back to menu" aria-label="Back to mission select">
+      <svg class="ctrl-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+        <path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </svg>
+    </button>
     <button type="button" id="pauseBtn" onclick="togglePause()" title="Pause / Resume (P)" aria-label="Pause game">
       <svg id="pauseIcon" class="ctrl-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
         <rect x="3" y="2" width="3.5" height="12" rx="1"/>
@@ -1956,6 +1994,16 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
   <button type="button" class="pause-resume-btn" onclick="togglePause()"><span aria-hidden="true">▶ &nbsp;</span>RESUME</button>
   <button type="button" class="pause-quit-btn" onclick="pauseQuitToMenu()"><span aria-hidden="true">← &nbsp;</span>QUIT TO MENU</button>
   <p class="pause-quit-warn">Quitting now will restart this mission from the beginning</p>
+</div>
+
+<!-- ABORT CONFIRMATION OVERLAY -->
+<div id="abortOverlay" role="dialog" aria-modal="true" aria-label="Abort mission confirmation">
+  <div class="abort-title">ABORT MISSION?</div>
+  <div class="abort-sub">Your current attempt will be lost.<br>Completion status and stars are not affected.</div>
+  <div class="abort-actions">
+    <button type="button" class="abort-confirm-btn" onclick="confirmAbort()"><span aria-hidden="true">&larr; &nbsp;</span>QUIT</button>
+    <button type="button" class="abort-cancel-btn" onclick="cancelAbort()">CONTINUE</button>
+  </div>
 </div>
 
 <!-- DEV PANEL TOAST -->
@@ -2904,7 +2952,7 @@ function goMenu() {
     const lbl = d.querySelector('.diag-toggle-lbl');
     if(lbl) lbl.textContent = lbl.textContent.replace('▼','▲').replace('CLOSE PANEL','ANALYSIS PANEL');
   });
-  ['s1verdict','s2verdict','s3verdict'].forEach(id => {
+  ['s1verdict','s2verdict','s3verdict','abortOverlay'].forEach(id => {
     const el = document.getElementById(id);
     if(el) el.classList.remove('show');
   });
@@ -4830,15 +4878,46 @@ function pauseQuitToMenu() {
   goMenu();
 }
 
-// Show/hide pause button based on whether a mission is active
-function updatePauseBtn() {
-  const btn = document.getElementById('pauseBtn');
-  const active = _getActiveSection() !== null;
-  if(btn) btn.classList.toggle('visible', active);
+// Abort mission — confirmation overlay
+function showAbortConfirm() {
+  pBleep();
+  // Pause gameplay while confirming
+  if (!_paused && _getActiveSection()) togglePause();
+  document.getElementById('abortOverlay').classList.add('show');
+}
+function confirmAbort() {
+  pBleep();
+  document.getElementById('abortOverlay').classList.remove('show');
+  // If paused (we auto-paused on open), clean up pause state
+  if (_paused) {
+    _paused = false;
+    document.getElementById('pauseOverlay').classList.remove('show');
+  }
+  _muteAllSND(_muted);
+  goMenu();
+}
+function cancelAbort() {
+  pBleep();
+  document.getElementById('abortOverlay').classList.remove('show');
+  // Resume from auto-pause
+  if (_paused) togglePause();
 }
 
-// Keyboard shortcut: P to pause/resume, M to mute
+// Show/hide pause + abort buttons based on whether a mission is active
+function updatePauseBtn() {
+  const active = _getActiveSection() !== null;
+  const pauseBtn = document.getElementById('pauseBtn');
+  const abortBtn = document.getElementById('abortBtn');
+  if(pauseBtn) pauseBtn.classList.toggle('visible', active);
+  if(abortBtn) abortBtn.classList.toggle('visible', active);
+}
+
+// Keyboard shortcut: P to pause/resume, M to mute, Escape to dismiss abort overlay
 document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    const ao = document.getElementById('abortOverlay');
+    if (ao && ao.classList.contains('show')) { cancelAbort(); return; }
+  }
   if (e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT') return;
   if (e.key === 'p' || e.key === 'P') { if (_getActiveSection() || _paused) togglePause(); }
   if (e.key === 'm' || e.key === 'M') toggleMute();
