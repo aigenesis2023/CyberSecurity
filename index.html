@@ -4907,7 +4907,6 @@ function showAbortConfirm() {
   document.getElementById('abortOverlay').classList.add('show');
 }
 function confirmAbort() {
-  pBleep();
   document.getElementById('abortOverlay').classList.remove('show');
   // If paused (we auto-paused on open), clean up pause state
   if (_paused) {
