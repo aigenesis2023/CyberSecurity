@@ -852,11 +852,9 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
 @media(max-width:768px){
   .s2-mobile-bar {
     display:flex; gap:8px;
-    position:sticky; top:0; z-index:50;
     background:rgba(6,16,36,.97);
     padding:8px 12px;
     border-bottom:1px solid rgba(56,189,248,.15);
-    box-shadow:0 4px 16px rgba(0,0,0,.5);
   }
   /* Hide inline toggles on mobile — the sticky bar replaces them */
   .s2-view-toggle { display:none !important; }
@@ -2302,12 +2300,11 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
     </div>
   </div>
 </div>
-</div>
-
-<!-- Mobile-only sticky toggle for M2 report/notes switching -->
+<!-- Mobile-only sticky toggle for M2 report/notes switching — inside sticky-header so they move as one block -->
 <div class="s2-mobile-bar" id="s2MobileBar">
   <button class="s2-view-btn active" id="s2mbReport" onclick="s2SwitchView('report')">AI Report</button>
   <button class="s2-view-btn pulsing" id="s2mbNotes" onclick="s2SwitchView('notes')">Meeting Notes</button>
+</div>
 </div>
 
 <div class="shell">
