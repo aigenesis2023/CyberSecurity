@@ -360,6 +360,23 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
   color:var(--green); border-radius:6px; cursor:pointer;
   transition:background .2s, border-color .2s, box-shadow .2s;
 }
+.contact-footer {
+  margin-top:48px; padding-top:24px;
+  border-top:1px solid rgba(56,189,248,.08);
+  text-align:center; animation:fadeUp .6s ease .5s both;
+}
+.contact-footer p {
+  font-family:'DM Sans',sans-serif; font-size:13px;
+  color:rgba(200,220,255,.45); line-height:1.6; margin:0;
+}
+.contact-footer a {
+  font-family:'JetBrains Mono',monospace; font-size:12px;
+  color:rgba(56,189,248,.7); text-decoration:none;
+  letter-spacing:.04em; transition:color .2s, text-shadow .2s;
+}
+.contact-footer a:hover {
+  color:rgba(56,189,248,1); text-shadow:0 0 12px rgba(56,189,248,.3);
+}
 .cert-view-btn:hover {
   background:rgba(74,222,128,.18); border-color:rgba(74,222,128,.65);
   box-shadow:0 0 16px rgba(74,222,128,.2);
@@ -1960,6 +1977,10 @@ html, body { width:100%; height:100%; background:#020610; font-family:'DM Sans',
       <div class="mp-level-label" id="mpLevelLabel"></div>
     </div>
 
+    <div class="contact-footer">
+      <p>Interested in licensing this for your organisation?</p>
+      <a href="mailto:leoduncan.elearning@gmail.com">leoduncan.elearning@gmail.com</a>
+    </div>
 
   </main>
 </div>
