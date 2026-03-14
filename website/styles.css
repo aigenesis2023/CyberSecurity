@@ -896,11 +896,6 @@ h1.gradient-text {
   .nav-links { display: none; }
   .nav-cta-mobile { display: inline-flex; }
 
-  /* Let <br> tags reflow naturally */
-  br { display: inline; }
-  br::before { content: ' '; }
-  h2 br, .hero-sub br { display: none; }
-
   .hero-buttons {
     flex-direction: column;
     align-items: center;
@@ -917,6 +912,16 @@ h1.gradient-text {
     height: 300px;
   }
 
+  /* Section headings — more space on mobile */
+  .section-label {
+    margin-bottom: 0.75rem;
+  }
+
+  h2 {
+    font-size: clamp(1.4rem, 5.5vw, 1.8rem);
+    margin-bottom: 0.75rem;
+  }
+
   /* Reduce card padding */
   .mission-card,
   .feature-card,
@@ -931,6 +936,7 @@ h1.gradient-text {
   .compliance-grid,
   .stats-row {
     grid-template-columns: 1fr;
+    margin-top: 2rem;
   }
 
   .final-cta { padding: 5rem 0; }
@@ -950,9 +956,30 @@ h1.gradient-text {
 
   .hero-icon { margin-bottom: 1.5rem; }
 
-  .problem-text { font-size: 1rem; }
+  .hero-sub {
+    font-size: 0.9rem;
+    margin-top: 1.25rem;
+    font-weight: 400;
+  }
+
+  .hero-hint {
+    font-size: 0.75rem;
+  }
+
+  .hero-buttons {
+    margin-top: 2rem;
+  }
+
+  .problem-text {
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
 
   .final-cta { padding: 4rem 0; }
+
+  .final-cta p {
+    font-size: 0.95rem;
+  }
 }
 
 /* Reduce motion for accessibility */
