@@ -167,58 +167,61 @@ section + section {
   z-index: 1;
 }
 
-/* --- Geometric shapes --- */
-.geo {
-  position: absolute;
-  border: 1px solid rgba(255,255,255,0.05);
-  pointer-events: none;
-  z-index: 0;
+/* --- Hero orb (replaces shield icon) --- */
+.hero-orb {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 2.5rem;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.geo-1 {
-  width: 240px;
-  height: 240px;
-  top: 12%;
-  right: 6%;
-  border-radius: 6px;
-  transform: rotate(35deg);
-  animation: geo-float-1 18s ease-in-out infinite;
-}
-
-.geo-2 {
-  width: 140px;
-  height: 140px;
-  bottom: 22%;
-  left: 4%;
+.orb-core {
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  border-color: rgba(168,85,247,0.08);
-  animation: geo-float-2 20s ease-in-out infinite;
+  background: radial-gradient(circle at 40% 35%, #a78bfa, #6366f1 60%, #3b82f6);
+  box-shadow:
+    0 0 30px rgba(99,102,241,0.5),
+    0 0 60px rgba(168,85,247,0.25);
+  animation: orb-pulse 4s ease-in-out infinite;
 }
 
-.geo-3 {
-  width: 100px;
-  height: 100px;
-  top: 28%;
-  left: 10%;
-  border-radius: 6px;
-  border-color: rgba(59,130,246,0.06);
-  transform: rotate(60deg);
-  animation: geo-float-3 14s ease-in-out infinite;
+@keyframes orb-pulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 30px rgba(99,102,241,0.5), 0 0 60px rgba(168,85,247,0.25); }
+  50% { transform: scale(1.15); box-shadow: 0 0 50px rgba(99,102,241,0.6), 0 0 100px rgba(168,85,247,0.35); }
 }
 
-@keyframes geo-float-1 {
-  0%, 100% { transform: rotate(35deg) translateY(0); opacity: 0.3; }
-  50% { transform: rotate(45deg) translateY(-25px); opacity: 0.6; }
+.orb-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(129,140,248,0.15);
+  animation: orb-ring-expand 4s ease-in-out infinite;
 }
 
-@keyframes geo-float-2 {
-  0%, 100% { transform: translateY(0) scale(1); opacity: 0.3; }
-  50% { transform: translateY(-15px) scale(1.05); opacity: 0.5; }
+.orb-ring-1 {
+  inset: 8px;
+  border-color: rgba(129,140,248,0.25);
+  animation-delay: 0s;
 }
 
-@keyframes geo-float-3 {
-  0%, 100% { transform: rotate(60deg) translateY(0); opacity: 0.2; }
-  50% { transform: rotate(70deg) translateY(-20px); opacity: 0.5; }
+.orb-ring-2 {
+  inset: -2px;
+  border-color: rgba(129,140,248,0.15);
+  animation-delay: 0.5s;
+}
+
+.orb-ring-3 {
+  inset: -14px;
+  border-color: rgba(129,140,248,0.08);
+  animation-delay: 1s;
+}
+
+@keyframes orb-ring-expand {
+  0%, 100% { transform: scale(1); opacity: 0.4; }
+  50% { transform: scale(1.1); opacity: 1; }
 }
 
 /* ═══ SCROLL REVEAL ═══ */
@@ -361,98 +364,18 @@ section + section {
   z-index: 1;
 }
 
-/* ═══ SHIELD ICON — ANIMATED ═══ */
-.hero-shield {
-  width: 72px;
-  height: 72px;
-  margin: 0 auto 2.5rem;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Glow behind shield */
-.shield-glow {
-  position: absolute;
-  inset: -20px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(99,102,241,0.3), transparent 70%);
-  animation: shield-glow-pulse 3s ease-in-out infinite;
-  pointer-events: none;
-}
-
-@keyframes shield-glow-pulse {
-  0%, 100% { opacity: 0.4; transform: scale(1); }
-  50% { opacity: 0.8; transform: scale(1.15); }
-}
-
-/* Rotating gradient border rings */
-.shield-ring {
-  position: absolute;
-  inset: -8px;
-  border-radius: 20px;
-  border: 1.5px solid transparent;
-  background: linear-gradient(var(--bg), var(--bg)) padding-box,
-              linear-gradient(135deg, var(--accent), var(--purple), var(--blue), var(--accent)) border-box;
-  animation: shield-rotate 8s linear infinite;
-}
-
-.shield-ring-2 {
-  inset: -16px;
-  border-radius: 26px;
-  opacity: 0.3;
-  animation: shield-rotate 12s linear infinite reverse;
-}
-
-@keyframes shield-rotate {
-  to { transform: rotate(360deg); }
-}
-
-.hero-shield svg {
-  width: 28px;
-  height: 28px;
-  fill: none;
-  stroke: var(--accent2);
-  stroke-width: 1.5;
-  animation: shield-breathe 3s ease-in-out infinite;
-  position: relative;
-  z-index: 1;
-  filter: drop-shadow(0 0 8px rgba(129,140,248,0.5));
-}
-
-@keyframes shield-breathe {
-  0%, 100% { opacity: 0.85; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.1); }
-}
-
 /* ═══ HEADLINE ═══ */
 .hero h1 span {
   display: block;
 }
 
-/* Gradient headline — bright, high contrast, unmissable */
+/* Gradient headline — NO animation, just a bright static gradient.
+   The parent h1.fade-up handles the fade-in. */
 .hero h1 .highlight {
-  color: #c4b5fd; /* Fallback */
   background: linear-gradient(135deg, #a78bfa 0%, #e879f9 35%, #818cf8 65%, #60a5fa 100%);
-  background-size: 300% 300%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-}
-
-/* When .highlight also has .fade-up, combine BOTH animations
-   so the gradient shift doesn't overwrite the fade-in */
-.hero h1 .highlight.fade-up {
-  animation:
-    fade-up-in 1s cubic-bezier(0.16, 1, 0.3, 1) forwards,
-    gradient-shift 8s ease-in-out infinite;
-  animation-delay: var(--delay, 0s), 0s;
-}
-
-@keyframes gradient-shift {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
 }
 
 .hero-sub {
@@ -976,8 +899,6 @@ section + section {
     width: 400px;
     height: 300px;
   }
-
-  .geo { display: none; }
 
   .bg-orb-1 { width: 350px; height: 350px; }
   .bg-orb-2 { width: 300px; height: 300px; }
