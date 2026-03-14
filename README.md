@@ -12,10 +12,7 @@ Gamified AI security awareness training for non-technical employees.
 │   ├── index.html    ← The game itself
 │   └── assets/       ← Audio files and fonts used by the game
 │
-├── screenshots/      ← Game screenshots (used on the landing page)
-│
-└── source/           ← Original source CSS/JS files (not loaded by the game —
-                        the game has everything inlined in its HTML file)
+└── screenshots/      ← Game screenshots (used on the landing page)
 ```
 
 ## How to preview locally
