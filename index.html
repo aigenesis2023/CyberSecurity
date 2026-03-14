@@ -45,11 +45,21 @@
 <section class="hero">
   <div class="hero-glow"></div>
   <div class="hero-inner">
-    <div class="hero-orb fade-up" style="--delay: 0s">
-      <div class="orb-core"></div>
-      <div class="orb-ring orb-ring-1"></div>
-      <div class="orb-ring orb-ring-2"></div>
-      <div class="orb-ring orb-ring-3"></div>
+    <div class="hero-icon fade-up" style="--delay: 0s">
+      <svg class="hero-shield" viewBox="0 0 64 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path class="shield-body" d="M32 2L6 16v20c0 16.6 11.1 32.1 26 34 14.9-1.9 26-17.4 26-34V16L32 2z" stroke="url(#shield-grad)" stroke-width="1.5" fill="none"/>
+        <path class="shield-eye" d="M20 36c0-6.6 5.4-10 12-10s12 3.4 12 10-5.4 12-12 12-12-5.4-12-12z" stroke="rgba(129,140,248,0.4)" stroke-width="1" fill="none"/>
+        <circle class="shield-pupil" cx="32" cy="36" r="4" fill="url(#shield-grad)"/>
+        <line class="shield-scan" x1="12" y1="36" x2="52" y2="36" stroke="url(#shield-grad)" stroke-width="1" opacity="0.5"/>
+        <defs>
+          <linearGradient id="shield-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#818cf8"/>
+            <stop offset="50%" stop-color="#a855f7"/>
+            <stop offset="100%" stop-color="#3b82f6"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <div class="hero-icon-glow"></div>
     </div>
     <p class="hero-eyebrow fade-up" style="--delay: 0.1s">Your employees are already using ChatGPT.</p>
     <h1 class="fade-up" style="--delay: 0.2s">Most have no idea what not&nbsp;to&nbsp;paste&nbsp;into&nbsp;it.</h1>
@@ -57,8 +67,7 @@
       Interactive training that puts your team in real AI risk scenarios. They make decisions, get instant feedback, and actually learn. No slides. No videos. Just practice.
     </p>
     <div class="hero-buttons fade-up" style="--delay: 0.5s">
-      <a href="game/index.html" class="btn btn-primary btn-hero">
-        <span class="btn-glow"></span>
+      <a href="game/index.html" class="btn btn-primary">
         Try the Demo
         <svg class="btn-arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10m-4-4l4 4-4 4"/></svg>
       </a>
@@ -225,8 +234,7 @@
     <h2>Ready to see it in action?</h2>
     <p>Try the full demo yourself, or get in touch to discuss licensing for your organisation.</p>
     <div class="hero-buttons">
-      <a href="game/index.html" class="btn btn-primary btn-hero">
-        <span class="btn-glow"></span>
+      <a href="game/index.html" class="btn btn-primary">
         Try the Demo
         <svg class="btn-arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10m-4-4l4 4-4 4"/></svg>
       </a>
