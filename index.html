@@ -14,12 +14,13 @@
 <meta name="twitter:description" content="Gamified AI security awareness training. Three missions. Real scenarios. Immediate feedback.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="website/styles.css">
 </head>
 <body>
 
 <div class="page-bg">
+  <div class="bg-grid"></div>
   <div class="bg-orb bg-orb-1"></div>
   <div class="bg-orb bg-orb-2"></div>
   <div class="bg-orb bg-orb-3"></div>
@@ -42,7 +43,6 @@
 
 <!-- HERO -->
 <section class="hero">
-  <!-- Geometric accents -->
   <div class="geo geo-1"></div>
   <div class="geo geo-2"></div>
   <div class="geo geo-3"></div>
@@ -50,7 +50,9 @@
   <div class="hero-glow"></div>
   <div class="hero-inner">
     <div class="hero-shield">
+      <div class="shield-glow"></div>
       <div class="shield-ring"></div>
+      <div class="shield-ring shield-ring-2"></div>
       <svg viewBox="0 0 24 24"><path d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </div>
     <h1>
@@ -61,7 +63,8 @@
       Interactive security awareness training that puts employees in real AI risk scenarios. They make decisions, get instant feedback, and learn by doing — not by watching slides.
     </p>
     <div class="hero-buttons fade-up" style="--delay: 0.3s">
-      <a href="game/index.html" class="btn btn-primary">
+      <a href="game/index.html" class="btn btn-primary btn-hero">
+        <span class="btn-glow"></span>
         Try the Demo
         <svg class="btn-arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10m-4-4l4 4-4 4"/></svg>
       </a>
@@ -124,34 +127,6 @@
         <div class="mission-takeaway">Outcome: Spot manipulation before AI acts on it</div>
       </div>
 
-    </div>
-  </div>
-</section>
-
-<!-- SCREENSHOTS -->
-<section id="preview" class="reveal">
-  <div class="container">
-    <p class="section-label">Inside the Training</p>
-    <h2>Real Scenarios, Not Slides</h2>
-    <div class="screenshots-row">
-      <div class="screenshot-float reveal-child" style="--float-offset: 0s">
-        <div class="screenshot-frame">
-          <img src="screenshots/desktop/06-m1-gameplay.png" alt="Mission 1 gameplay — reviewing an AI chat transcript for sensitive data" loading="lazy">
-        </div>
-        <p class="screenshot-caption">Spotting sensitive data</p>
-      </div>
-      <div class="screenshot-float reveal-child" style="--float-offset: 0.5s">
-        <div class="screenshot-frame">
-          <img src="screenshots/desktop/15-m2-gameplay.png" alt="Mission 2 gameplay — auditing an AI-generated report for hallucinations" loading="lazy">
-        </div>
-        <p class="screenshot-caption">Catching AI mistakes</p>
-      </div>
-      <div class="screenshot-float reveal-child" style="--float-offset: 1s">
-        <div class="screenshot-frame">
-          <img src="screenshots/desktop/23-m3-level1.png" alt="Mission 3 gameplay — detecting hidden prompt injections in documents" loading="lazy">
-        </div>
-        <p class="screenshot-caption">Finding hidden threats</p>
-      </div>
     </div>
   </div>
 </section>
@@ -249,7 +224,8 @@
     <h2>Ready to see it in action?</h2>
     <p>Try the full demo yourself, or get in touch to discuss licensing for your organisation.</p>
     <div class="hero-buttons">
-      <a href="game/index.html" class="btn btn-primary">
+      <a href="game/index.html" class="btn btn-primary btn-hero">
+        <span class="btn-glow"></span>
         Try the Demo
         <svg class="btn-arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10m-4-4l4 4-4 4"/></svg>
       </a>
@@ -277,15 +253,14 @@
     entries.forEach(function(entry) {
       if (entry.isIntersecting) {
         entry.target.classList.add('is-visible');
-        // Stagger children
         var children = entry.target.querySelectorAll('.reveal-child');
         children.forEach(function(child, i) {
-          child.style.transitionDelay = (i * 0.1) + 's';
+          child.style.transitionDelay = (i * 0.12) + 's';
           child.classList.add('is-visible');
         });
       }
     });
-  }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
 
   document.querySelectorAll('.reveal').forEach(function(el) {
     observer.observe(el);
