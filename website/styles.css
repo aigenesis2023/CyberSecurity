@@ -339,6 +339,11 @@ section + section {
   box-shadow: 0 0 24px rgba(99,102,241,0.45);
 }
 
+/* Mobile-only Try Demo CTA — hidden on desktop */
+.nav-cta-mobile {
+  display: none;
+}
+
 /* ═══ HERO ═══ */
 .hero {
   min-height: 100vh;
@@ -522,34 +527,6 @@ h1.gradient-text {
   letter-spacing: 0.01em;
 }
 
-/* Hero meta */
-.hero-meta {
-  margin-top: 3rem;
-  display: flex;
-  gap: 2rem;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.hero-meta span {
-  font-size: 0.8rem;
-  color: var(--text3);
-  font-weight: 400;
-  letter-spacing: 0.02em;
-  position: relative;
-}
-
-.hero-meta span + span::before {
-  content: '';
-  position: absolute;
-  left: -1rem;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 3px;
-  height: 3px;
-  border-radius: 50%;
-  background: var(--text3);
-}
 
 /* ═══ PROBLEM ═══ */
 .stats-row {
@@ -910,14 +887,19 @@ h1.gradient-text {
 }
 
 /* ═══ RESPONSIVE ═══ */
+
+/* --- Tablet (601–768px) --- */
 @media (max-width: 768px) {
-  section { padding: 4rem 0; }
+  section { padding: 3.5rem 0; }
 
+  /* Hide desktop nav links, show mobile Try Demo CTA */
   .nav-links { display: none; }
+  .nav-cta-mobile { display: inline-flex; }
 
-  .hero-meta {
-    gap: 1.25rem;
-  }
+  /* Let <br> tags reflow naturally */
+  br { display: inline; }
+  br::before { content: ' '; }
+  h2 br, .hero-sub br { display: none; }
 
   .hero-buttons {
     flex-direction: column;
@@ -935,14 +917,42 @@ h1.gradient-text {
     height: 300px;
   }
 
+  /* Reduce card padding */
+  .mission-card,
+  .feature-card,
+  .compliance-item,
+  .stat-card {
+    padding: 1.5rem 1.25rem;
+  }
+
+  /* Stack grids to single column */
+  .missions-grid,
+  .features-grid,
+  .compliance-grid,
+  .stats-row {
+    grid-template-columns: 1fr;
+  }
+
+  .final-cta { padding: 5rem 0; }
+
   .bg-orb-1 { width: 350px; height: 350px; }
   .bg-orb-2 { width: 300px; height: 300px; }
   .bg-orb-3 { display: none; }
 }
 
+/* --- Small mobile (≤480px) --- */
 @media (max-width: 480px) {
-  h1 { font-size: 1.8rem; }
   .container { padding: 0 1.25rem; }
+
+  section { padding: 3rem 0; }
+
+  .hero { min-height: auto; padding-top: 6rem; padding-bottom: 3rem; }
+
+  .hero-icon { margin-bottom: 1.5rem; }
+
+  .problem-text { font-size: 1rem; }
+
+  .final-cta { padding: 4rem 0; }
 }
 
 /* Reduce motion for accessibility */
