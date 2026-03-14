@@ -424,16 +424,14 @@ h1.gradient-text {
 }
 
 .hero-sub {
-  font-size: clamp(0.85rem, 1.4vw, 0.95rem);
+  font-size: clamp(0.95rem, 1.6vw, 1.05rem);
   color: var(--text3);
-  margin-top: 1.5rem;
+  margin-top: 1.75rem;
+  max-width: 520px;
   margin-left: auto;
   margin-right: auto;
-  line-height: 1.6;
-  font-weight: 400;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  white-space: nowrap;
+  line-height: 1.7;
+  font-weight: 300;
 }
 
 .hero-buttons {
