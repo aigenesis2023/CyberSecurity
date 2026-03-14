@@ -433,14 +433,21 @@ section + section {
 
 /* Gradient headline — bright, high contrast, unmissable */
 .hero h1 .highlight {
-  color: #c4b5fd; /* Fallback — visible even without gradient */
+  color: #c4b5fd; /* Fallback */
   background: linear-gradient(135deg, #a78bfa 0%, #e879f9 35%, #818cf8 65%, #60a5fa 100%);
   background-size: 300% 300%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: gradient-shift 8s ease-in-out infinite;
-  filter: brightness(1.1);
+}
+
+/* When .highlight also has .fade-up, combine BOTH animations
+   so the gradient shift doesn't overwrite the fade-in */
+.hero h1 .highlight.fade-up {
+  animation:
+    fade-up-in 1s cubic-bezier(0.16, 1, 0.3, 1) forwards,
+    gradient-shift 8s ease-in-out infinite;
+  animation-delay: var(--delay, 0s), 0s;
 }
 
 @keyframes gradient-shift {
