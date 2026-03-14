@@ -578,10 +578,10 @@ h1.gradient-text {
 }
 
 .problem-text {
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   color: var(--text2);
   max-width: 680px;
-  line-height: 1.8;
+  line-height: 1.65;
   font-weight: 300;
 }
 
@@ -995,8 +995,8 @@ h1.gradient-text {
   }
 
   .problem-text {
-    font-size: 0.95rem;
-    line-height: 1.7;
+    font-size: 0.9rem;
+    line-height: 1.6;
   }
 
   .final-cta { padding: 4rem 0; }
