@@ -19,7 +19,12 @@
 </head>
 <body>
 
-<div class="page-bg"></div>
+<div class="page-bg">
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+  <div class="bg-orb bg-orb-3"></div>
+</div>
+
 <div class="page-content">
 
 <!-- NAV -->
@@ -30,29 +35,39 @@
       <li><a href="#missions">Missions</a></li>
       <li><a href="#why">Why It Works</a></li>
       <li><a href="#setup">Setup</a></li>
-<li><a href="game/index.html" class="nav-cta">Try Demo</a></li>
+      <li><a href="game/index.html" class="nav-cta">Try Demo</a></li>
     </ul>
   </div>
 </nav>
 
 <!-- HERO -->
 <section class="hero">
+  <!-- Geometric accents -->
+  <div class="geo geo-1"></div>
+  <div class="geo geo-2"></div>
+  <div class="geo geo-3"></div>
+
+  <div class="hero-glow"></div>
   <div class="hero-inner">
     <div class="hero-shield">
+      <div class="shield-ring"></div>
       <svg viewBox="0 0 24 24"><path d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </div>
     <h1>
-      <span>Teach Your Team to</span>
-      <span class="highlight">Use AI Safely</span>
+      <span class="fade-up" style="--delay: 0s">Teach Your Team to</span>
+      <span class="highlight fade-up" style="--delay: 0.1s">Use AI Safely</span>
     </h1>
-    <p class="hero-sub">
+    <p class="hero-sub fade-up" style="--delay: 0.2s">
       Interactive security awareness training that puts employees in real AI risk scenarios. They make decisions, get instant feedback, and learn by doing — not by watching slides.
     </p>
-    <div class="hero-buttons">
-      <a href="game/index.html" class="btn btn-primary">Try the Demo</a>
+    <div class="hero-buttons fade-up" style="--delay: 0.3s">
+      <a href="game/index.html" class="btn btn-primary">
+        Try the Demo
+        <svg class="btn-arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10m-4-4l4 4-4 4"/></svg>
+      </a>
       <a href="#missions" class="btn btn-ghost">See What's Inside</a>
     </div>
-    <div class="hero-meta">
+    <div class="hero-meta fade-up" style="--delay: 0.4s">
       <span>25–30 min</span>
       <span>Works with any LMS</span>
       <span>Fully accessible</span>
@@ -61,7 +76,7 @@
 </section>
 
 <!-- THE PROBLEM -->
-<section id="problem">
+<section id="problem" class="reveal">
   <div class="container">
     <p class="section-label">The Problem</p>
     <h2>Your employees are already using AI.<br>Most have zero training on the risks.</h2>
@@ -69,15 +84,15 @@
       ChatGPT, Copilot, Gemini — your people are using them daily. One employee pastes confidential client data into an AI chat and you have a data breach. An AI hallucinates a statistic in a board report and nobody catches it. A document with hidden malicious instructions gets processed by your AI tools. <strong>These aren't hypothetical scenarios. They're happening right now.</strong>
     </p>
     <div class="stats-row">
-      <div class="stat-card">
+      <div class="stat-card reveal-child">
         <span class="stat-number">75%</span>
         <span class="stat-label">of employees use AI tools at work without formal guidance</span>
       </div>
-      <div class="stat-card">
+      <div class="stat-card reveal-child">
         <span class="stat-number">Art. 4</span>
         <span class="stat-label">EU AI Act mandates AI literacy for all staff handling AI systems</span>
       </div>
-      <div class="stat-card">
+      <div class="stat-card reveal-child">
         <span class="stat-number">40–60%</span>
         <span class="stat-label">typical completion rate for passive compliance training</span>
       </div>
@@ -86,27 +101,27 @@
 </section>
 
 <!-- THE THREE MISSIONS -->
-<section id="missions">
+<section id="missions" class="reveal">
   <div class="container">
     <p class="section-label">What It Covers</p>
     <h2>Three Missions. Three Real Risks.</h2>
     <div class="missions-grid">
 
-      <div class="mission-card">
+      <div class="mission-card reveal-child">
         <div class="mission-number">Mission 01</div>
         <h3>Sensitive Data Exposure</h3>
         <p>Employees review an AI chat transcript and identify sensitive data that should never have been shared — credentials, personal information, confidential client details.</p>
         <div class="mission-takeaway">Outcome: Know what never to paste into AI tools</div>
       </div>
 
-      <div class="mission-card">
+      <div class="mission-card reveal-child">
         <div class="mission-number">Mission 02</div>
         <h3>AI Hallucination Detection</h3>
         <p>Employees audit an AI-generated business report against source documents, spotting fabricated statistics, fake citations, and invented facts before they reach stakeholders.</p>
         <div class="mission-takeaway">Outcome: Always verify AI output before trusting it</div>
       </div>
 
-      <div class="mission-card">
+      <div class="mission-card reveal-child">
         <div class="mission-number">Mission 03</div>
         <h3>Hidden AI Manipulation</h3>
         <p>Employees review documents under time pressure and detect hidden malicious instructions embedded in files — learning how attackers can trick AI systems into doing the wrong thing.</p>
@@ -118,24 +133,24 @@
 </section>
 
 <!-- SCREENSHOTS -->
-<section id="preview">
+<section id="preview" class="reveal">
   <div class="container">
     <p class="section-label">Inside the Training</p>
     <h2>Real Scenarios, Not Slides</h2>
     <div class="screenshots-row">
-      <div>
+      <div class="screenshot-float reveal-child" style="--float-offset: 0s">
         <div class="screenshot-frame">
           <img src="screenshots/desktop/06-m1-gameplay.png" alt="Mission 1 gameplay — reviewing an AI chat transcript for sensitive data" loading="lazy">
         </div>
         <p class="screenshot-caption">Spotting sensitive data</p>
       </div>
-      <div>
+      <div class="screenshot-float reveal-child" style="--float-offset: 0.5s">
         <div class="screenshot-frame">
           <img src="screenshots/desktop/15-m2-gameplay.png" alt="Mission 2 gameplay — auditing an AI-generated report for hallucinations" loading="lazy">
         </div>
         <p class="screenshot-caption">Catching AI mistakes</p>
       </div>
-      <div>
+      <div class="screenshot-float reveal-child" style="--float-offset: 1s">
         <div class="screenshot-frame">
           <img src="screenshots/desktop/23-m3-level1.png" alt="Mission 3 gameplay — detecting hidden prompt injections in documents" loading="lazy">
         </div>
@@ -146,13 +161,13 @@
 </section>
 
 <!-- WHY IT WORKS -->
-<section id="why">
+<section id="why" class="reveal">
   <div class="container">
     <p class="section-label">Why It Works</p>
     <h2>Built to Actually Change Behaviour</h2>
     <div class="features-grid">
 
-      <div class="feature-card">
+      <div class="feature-card reveal-child">
         <div class="feature-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4m0 14v4m-8.66-14.5l3.46 2m10.4 6l3.46 2M1 12h4m14 0h4M4.34 4.34l2.83 2.83m9.66 9.66l2.83 2.83M4.34 19.66l2.83-2.83m9.66-9.66l2.83-2.83"/></svg>
         </div>
@@ -160,7 +175,7 @@
         <p>Employees make decisions in realistic workplace scenarios. No slides. No narrated videos. Every screen requires active engagement.</p>
       </div>
 
-      <div class="feature-card">
+      <div class="feature-card reveal-child">
         <div class="feature-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
         </div>
@@ -168,7 +183,7 @@
         <p>Every choice is explained — not just marked right or wrong. Employees understand why something is risky, not just that it is.</p>
       </div>
 
-      <div class="feature-card">
+      <div class="feature-card reveal-child">
         <div class="feature-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.27 5.82 22 7 14.14l-5-4.87 6.91-1.01L12 2z"/></svg>
         </div>
@@ -176,7 +191,7 @@
         <p>Star ratings, mastery meters, and a completion certificate. Expect 95%+ completion rates vs 40-60% for typical compliance training.</p>
       </div>
 
-      <div class="feature-card">
+      <div class="feature-card reveal-child">
         <div class="feature-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
         </div>
@@ -189,13 +204,13 @@
 </section>
 
 <!-- SETUP & COMPLIANCE -->
-<section id="setup">
+<section id="setup" class="reveal">
   <div class="container">
     <p class="section-label">Setup &amp; Compliance</p>
     <h2>Easy to Deploy. Ready for Audit.</h2>
     <div class="compliance-grid">
 
-      <div class="compliance-item">
+      <div class="compliance-item reveal-child">
         <div class="compliance-badge">LMS</div>
         <div>
           <h3>Works With Any LMS</h3>
@@ -203,7 +218,7 @@
         </div>
       </div>
 
-      <div class="compliance-item">
+      <div class="compliance-item reveal-child">
         <div class="compliance-badge">A</div>
         <div>
           <h3>Accessible to Everyone</h3>
@@ -211,7 +226,7 @@
         </div>
       </div>
 
-      <div class="compliance-item">
+      <div class="compliance-item reveal-child">
         <div class="compliance-badge">EU</div>
         <div>
           <h3>EU AI Act Ready</h3>
@@ -219,7 +234,7 @@
         </div>
       </div>
 
-      <div class="compliance-item">
+      <div class="compliance-item reveal-child">
         <div class="compliance-badge">5m</div>
         <div>
           <h3>Set Up in Minutes</h3>
@@ -232,12 +247,16 @@
 </section>
 
 <!-- FINAL CTA -->
-<section class="final-cta">
+<section class="final-cta reveal">
   <div class="container">
+    <div class="cta-glow"></div>
     <h2>Ready to see it in action?</h2>
     <p>Try the full demo yourself, or get in touch to discuss licensing for your organisation.</p>
     <div class="hero-buttons">
-      <a href="game/index.html" class="btn btn-primary">Try the Demo</a>
+      <a href="game/index.html" class="btn btn-primary">
+        Try the Demo
+        <svg class="btn-arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10m-4-4l4 4-4 4"/></svg>
+      </a>
       <a href="mailto:leoduncan.elearning@gmail.com" class="btn btn-ghost">Get in Touch</a>
     </div>
   </div>
@@ -253,5 +272,28 @@
 </div><!-- /page-content -->
 
 <script data-goatcounter="https://aidataguardians.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+
+<!-- Scroll reveal -->
+<script>
+(function() {
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        // Stagger children
+        var children = entry.target.querySelectorAll('.reveal-child');
+        children.forEach(function(child, i) {
+          child.style.transitionDelay = (i * 0.1) + 's';
+          child.classList.add('is-visible');
+        });
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(function(el) {
+    observer.observe(el);
+  });
+})();
+</script>
 </body>
 </html>
