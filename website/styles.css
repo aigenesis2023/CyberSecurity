@@ -528,53 +528,6 @@ section + section {
   font-weight: 300;
 }
 
-/* ═══ ABOUT ═══ */
-.about-content {
-  display: flex;
-  gap: 3rem;
-  align-items: flex-start;
-  margin-top: 2rem;
-}
-
-.about-text {
-  flex: 1;
-}
-
-.about-text p {
-  font-size: 1.05rem;
-  color: var(--text2);
-  line-height: 1.8;
-  margin-bottom: 1rem;
-  font-weight: 300;
-}
-
-.about-text p strong {
-  color: var(--text);
-  font-weight: 500;
-}
-
-.client-logos {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: 1.5rem;
-}
-
-.client-tag {
-  font-size: 0.75rem;
-  font-weight: 400;
-  padding: 0.4rem 0.85rem;
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  color: var(--text3);
-  transition: border-color 0.2s, color 0.2s;
-}
-
-.client-tag:hover {
-  border-color: var(--border2);
-  color: var(--text2);
-}
-
 /* ═══ FINAL CTA ═══ */
 .final-cta {
   text-align: center;
@@ -626,10 +579,6 @@ section + section {
     max-width: 500px;
     margin-left: auto;
     margin-right: auto;
-  }
-
-  .about-content {
-    flex-direction: column;
   }
 
   .hero-meta {
