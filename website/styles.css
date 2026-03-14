@@ -679,7 +679,7 @@ h1.gradient-text {
 .missions-anchor {
   margin-top: 2.5rem;
   font-size: 0.85rem;
-  color: var(--muted);
+  color: var(--text3);
   text-align: center;
   line-height: 1.7;
   max-width: 600px;
@@ -888,13 +888,23 @@ h1.gradient-text {
 
 /* ═══ RESPONSIVE ═══ */
 
-/* --- Tablet (601–768px) --- */
+/* --- Tablet & mobile (≤768px) --- */
 @media (max-width: 768px) {
   section { padding: 3.5rem 0; }
 
   /* Hide desktop nav links, show mobile Try Demo CTA */
   .nav-links { display: none; }
   .nav-cta-mobile { display: inline-flex; }
+  .nav-inner { padding: 0 1.25rem; }
+
+  /* Hero needs side padding (no .container wrapper) */
+  .hero-inner {
+    padding: 0 1.5rem;
+  }
+
+  .hero h1 {
+    font-size: clamp(1.8rem, 7vw, 2.6rem);
+  }
 
   .hero-buttons {
     flex-direction: column;
@@ -912,7 +922,7 @@ h1.gradient-text {
     height: 300px;
   }
 
-  /* Section headings — more space on mobile */
+  /* Section headings */
   .section-label {
     margin-bottom: 0.75rem;
   }
@@ -920,6 +930,16 @@ h1.gradient-text {
   h2 {
     font-size: clamp(1.4rem, 5.5vw, 1.8rem);
     margin-bottom: 0.75rem;
+  }
+
+  /* Bump weight 300 body text to 400 for legibility on mobile */
+  .problem-text,
+  .mission-card p,
+  .feature-card p,
+  .compliance-item p,
+  .stat-label,
+  .hero-sub {
+    font-weight: 400;
   }
 
   /* Reduce card padding */
@@ -949,6 +969,7 @@ h1.gradient-text {
 /* --- Small mobile (≤480px) --- */
 @media (max-width: 480px) {
   .container { padding: 0 1.25rem; }
+  .hero-inner { padding: 0 1.25rem; }
 
   section { padding: 3rem 0; }
 
@@ -956,10 +977,13 @@ h1.gradient-text {
 
   .hero-icon { margin-bottom: 1.5rem; }
 
+  .hero-eyebrow {
+    font-size: 0.95rem;
+  }
+
   .hero-sub {
     font-size: 0.9rem;
     margin-top: 1.25rem;
-    font-weight: 400;
   }
 
   .hero-hint {
