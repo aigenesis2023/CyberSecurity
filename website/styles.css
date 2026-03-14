@@ -861,6 +861,12 @@ section + section {
   color: var(--text);
 }
 
+.footer-credit {
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--text3);
+}
+
 /* ═══ RESPONSIVE ═══ */
 @media (max-width: 768px) {
   section { padding: 4rem 0; }
