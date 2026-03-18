@@ -4848,6 +4848,7 @@ function showObjectivesIfNeeded() {
   });
 }
 function dismissObjectives() {
+  stopVO();
   document.getElementById('objOverlay').classList.remove('show');
   try { localStorage.setItem('adg_objectives_seen', '1'); } catch(e){}
   showScreen('screenMenu');
