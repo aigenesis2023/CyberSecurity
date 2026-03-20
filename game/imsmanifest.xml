@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest identifier="AIDGModule_001"
+         version="1.0"
+         xmlns="http://www.imsproject.org/xsd/imscp_rootv1p1p2"
+         xmlns:adlcp="http://www.adlnet.org/xsd/adlcp_rootv1p2"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://www.imsproject.org/xsd/imscp_rootv1p1p2 imscp_rootv1p1p2.xsd
+                             http://www.imsglobal.org/xsd/imsmd_rootv1p2p1 imsmd_rootv1p2p1.xsd
+                             http://www.adlnet.org/xsd/adlcp_rootv1p2 adlcp_rootv1p2.xsd">
+  <metadata>
+    <schema>ADL SCORM</schema>
+    <schemaversion>1.2</schemaversion>
+  </metadata>
+
+  <organizations default="ORG_001">
+    <organization identifier="ORG_001">
+      <title>AI Data Guardian — AI Security Awareness Training</title>
+      <item identifier="ITEM_001" identifierref="RES_001">
+        <title>AI Data Guardian</title>
+        <adlcp:masteryscore>50</adlcp:masteryscore>
+      </item>
+    </organization>
+  </organizations>
+
+  <resources>
+    <resource identifier="RES_001" type="webcontent" adlcp:scormtype="sco" href="index.html">
+      <file href="index.html"/>
+      <file href="assets/fonts/fonts.css"/>
+      <file href="assets/fonts/orbitron-latin-700-normal.woff2"/>
+      <file href="assets/fonts/orbitron-latin-900-normal.woff2"/>
+      <file href="assets/fonts/dm-sans-latin-300-normal.woff2"/>
+      <file href="assets/fonts/dm-sans-latin-400-normal.woff2"/>
+      <file href="assets/fonts/dm-sans-latin-500-normal.woff2"/>
+      <file href="assets/fonts/jetbrains-mono-latin-400-normal.woff2"/>
+      <file href="assets/fonts/jetbrains-mono-latin-500-normal.woff2"/>
+      <file href="assets/audio/SunoBG.mp3"/>
+      <file href="assets/audio/bleep_p8nRzd6T.mp3"/>
+      <file href="assets/audio/success_avrPRnht.mp3"/>
+      <file href="assets/audio/error.mp3"/>
+      <file href="assets/audio/selected_wbItGBcM.mp3"/>
+      <file href="assets/audio/click.mp3"/>
+      <file href="assets/audio/wronganswer.mp3"/>
+      <file href="assets/audio/Hover.mp3"/>
+      <file href="assets/audio/VO-INTRO.mp3"/>
+      <file href="assets/audio/VO-M1-BRIEF.mp3"/>
+      <file href="assets/audio/VO-M1-PASS.mp3"/>
+      <file href="assets/audio/VO-M1-FAIL.mp3"/>
+      <file href="assets/audio/VO-M2-BRIEF.mp3"/>
+      <file href="assets/audio/VO-M2-PASS.mp3"/>
+      <file href="assets/audio/VO-M2-FAIL.mp3"/>
+      <file href="assets/audio/VO-M3-BRIEF.mp3"/>
+      <file href="assets/audio/VO-M3-PASS.mp3"/>
+      <file href="assets/audio/VO-M3-FAIL.mp3"/>
+      <file href="assets/audio/VO-COMPLETE.mp3"/>
+    </resource>
+  </resources>
+</manifest>
