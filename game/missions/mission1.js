@@ -80,7 +80,10 @@ function s1BuildSegments() {
 
 function s1BuildPayload() {
   document.getElementById('s1payload').innerHTML = `
-    <div class="ai-scenario-frame">📋 <strong>Your task:</strong> This prompt contains sensitive data. Identify and classify every piece before it reaches the AI.</div>
+    <div class="ai-scenario-frame">
+      <div class="scenario-header"><span class="scenario-icon"><svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="rgba(56,189,248,.9)" stroke-width="1.5"/><circle cx="8" cy="8" r="2" fill="rgba(56,189,248,.9)"/><line x1="8" y1="1" x2="8" y2="4" stroke="rgba(56,189,248,.6)" stroke-width="1.2"/><line x1="8" y1="12" x2="8" y2="15" stroke="rgba(56,189,248,.6)" stroke-width="1.2"/><line x1="1" y1="8" x2="4" y2="8" stroke="rgba(56,189,248,.6)" stroke-width="1.2"/><line x1="12" y1="8" x2="15" y2="8" stroke="rgba(56,189,248,.6)" stroke-width="1.2"/></svg></span>YOUR TASK</div>
+      <div class="scenario-action">This prompt contains sensitive data. <strong>Click each highlighted item</strong> and classify it as Credentials, Personal Data, Internal Info, or Safe.</div>
+    </div>
     <div class="gpt-window">
       <div class="gpt-sidebar">
         <div class="gpt-sidebar-icon">☰</div>

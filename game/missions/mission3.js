@@ -227,9 +227,10 @@ function s3LoadLevel(lvl) {
 
   // Build payload — FP levels pass null injId
   const levelDef = S3_LEVELS[lvl];
+  const iconSvg = '<span class="scenario-icon"><svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="rgba(56,189,248,.9)" stroke-width="1.5"/><circle cx="8" cy="8" r="2" fill="rgba(56,189,248,.9)"/><line x1="8" y1="1" x2="8" y2="4" stroke="rgba(56,189,248,.6)" stroke-width="1.2"/><line x1="8" y1="12" x2="8" y2="15" stroke="rgba(56,189,248,.6)" stroke-width="1.2"/><line x1="1" y1="8" x2="4" y2="8" stroke="rgba(56,189,248,.6)" stroke-width="1.2"/><line x1="12" y1="8" x2="15" y2="8" stroke="rgba(56,189,248,.6)" stroke-width="1.2"/></svg></span>';
   const warningText = levelDef.isInjection
-    ? '📋 <strong>Your task:</strong> Read this document carefully. Find and flag any hidden instruction aimed at an AI — not a human reader.'
-    : '📋 <strong>Your task:</strong> Read this document carefully. Not all suspicious-looking text is an injection — flag only what directly instructs an AI system.';
+    ? '<div class="scenario-header">' + iconSvg + 'YOUR TASK</div><div class="scenario-action"><strong>Click the hidden instruction</strong> aimed at an AI \u2014 not a human reader. Look inside technical-looking blocks.</div>'
+    : '<div class="scenario-header">' + iconSvg + 'YOUR TASK</div><div class="scenario-action">Not all suspicious-looking text is an injection. <strong>Click only what directly instructs an AI system</strong>, or mark the document Safe.</div>';
   document.getElementById('s3payload').innerHTML =
     '<div class="s3-timeout-msg" id="s3timeoutMsg"></div>' +
     `<div class="ai-scenario-frame">${warningText}</div>` +

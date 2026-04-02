@@ -24,6 +24,12 @@ Pure vanilla HTML/CSS/JS. Zero dependencies. No build tools. No frameworks.
 - Progress persists via localStorage (`adg_progress`)
 - SCORM API integration reports composite scores across all missions
 
+## Access modes
+Default is **demo mode** (M1 only). Hidden keyboard shortcuts switch modes:
+- **A+1** — Full version (normal progression: M2 unlocks after M1, M3 after M2)
+- **A+2** — Dev mode (all missions unlocked immediately)
+Controlled by `_accessMode` variable in `core.js`. No visible UI for mode switching.
+
 ## Do not touch
 - `index.html` (root) — landing page, Cloudflare deployment points here
 - `.env` files — may contain API keys

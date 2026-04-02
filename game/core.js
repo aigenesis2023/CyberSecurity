@@ -222,10 +222,11 @@ function updateMenuState() {
     if(b1) { b1.textContent = '▶  LAUNCH MISSION'; b1.classList.remove('replay-btn'); b1.classList.remove('locked-btn'); }
   }
 
-  // ── M2 — locked until M1 done ──
+  // ── M2 — demo: locked, full: locked until M1 done, dev: always open ──
   const mcard2 = document.getElementById('mcard2');
   const b2 = document.getElementById('m2btn');
-  if (courseProgress.s1done) {
+  const m2open = _accessMode === 'dev' || (_accessMode === 'full' && courseProgress.s1done);
+  if (m2open) {
     mcard2.classList.remove('locked'); mcard2.classList.add('unlocked');
     document.getElementById('m2status').className = 'mc-status unlocked-s';
     document.getElementById('m2dot').className = 'mc-dot-s green';
@@ -240,14 +241,21 @@ function updateMenuState() {
     mcard2.classList.add('locked'); mcard2.classList.remove('unlocked');
     document.getElementById('m2status').className = 'mc-status locked-s';
     document.getElementById('m2dot').className = 'mc-dot-s grey';
-    document.getElementById('m2statuslbl').textContent = 'LOCKED';
-    if(b2) { b2.innerHTML = '<svg width="11" height="13" viewBox="0 0 11 13" fill="none"><rect x="1" y="5.5" width="9" height="7" rx="1.5" stroke="rgba(255,255,255,.3)" stroke-width="1.2" fill="rgba(255,255,255,.04)"/><path d="M3 5.5V3.5a2.5 2.5 0 0 1 5 0v2" stroke="rgba(255,255,255,.3)" stroke-width="1.2" stroke-linecap="round" fill="none"/><circle cx="5.5" cy="9" r="1" fill="rgba(255,255,255,.25)"/></svg>COMPLETE MISSION 01 TO UNLOCK'; b2.classList.add('locked-btn'); b2.classList.remove('replay-btn'); }
+    const m2lockSvg = '<svg width="11" height="13" viewBox="0 0 11 13" fill="none"><rect x="1" y="5.5" width="9" height="7" rx="1.5" stroke="rgba(255,255,255,.3)" stroke-width="1.2" fill="rgba(255,255,255,.04)"/><path d="M3 5.5V3.5a2.5 2.5 0 0 1 5 0v2" stroke="rgba(255,255,255,.3)" stroke-width="1.2" stroke-linecap="round" fill="none"/><circle cx="5.5" cy="9" r="1" fill="rgba(255,255,255,.25)"/></svg>';
+    if (_accessMode === 'demo') {
+      document.getElementById('m2statuslbl').textContent = 'FULL VERSION';
+      if(b2) { b2.innerHTML = m2lockSvg + 'AVAILABLE IN FULL VERSION'; b2.classList.add('locked-btn'); b2.classList.remove('replay-btn'); }
+    } else {
+      document.getElementById('m2statuslbl').textContent = 'LOCKED';
+      if(b2) { b2.innerHTML = m2lockSvg + 'COMPLETE MISSION 01 TO UNLOCK'; b2.classList.add('locked-btn'); b2.classList.remove('replay-btn'); }
+    }
   }
 
-  // ── M3 — locked until M2 done ──
+  // ── M3 — demo: locked, full: locked until M2 done, dev: always open ──
   const mcard3 = document.getElementById('mcard3');
   const b3 = document.getElementById('m3btn');
-  if (courseProgress.s2done) {
+  const m3open = _accessMode === 'dev' || (_accessMode === 'full' && courseProgress.s2done);
+  if (m3open) {
     mcard3.classList.remove('locked'); mcard3.classList.add('unlocked');
     document.getElementById('m3status').className = 'mc-status unlocked-s';
     document.getElementById('m3dot').className = 'mc-dot-s green';
@@ -262,15 +270,21 @@ function updateMenuState() {
     mcard3.classList.add('locked'); mcard3.classList.remove('unlocked');
     document.getElementById('m3status').className = 'mc-status locked-s';
     document.getElementById('m3dot').className = 'mc-dot-s grey';
-    document.getElementById('m3statuslbl').textContent = 'LOCKED';
-    if(b3) { b3.innerHTML = '<svg width="11" height="13" viewBox="0 0 11 13" fill="none"><rect x="1" y="5.5" width="9" height="7" rx="1.5" stroke="rgba(255,255,255,.3)" stroke-width="1.2" fill="rgba(255,255,255,.04)"/><path d="M3 5.5V3.5a2.5 2.5 0 0 1 5 0v2" stroke="rgba(255,255,255,.3)" stroke-width="1.2" stroke-linecap="round" fill="none"/><circle cx="5.5" cy="9" r="1" fill="rgba(255,255,255,.25)"/></svg>COMPLETE MISSION 02 TO UNLOCK'; b3.classList.add('locked-btn'); b3.classList.remove('replay-btn'); }
+    const m3lockSvg = '<svg width="11" height="13" viewBox="0 0 11 13" fill="none"><rect x="1" y="5.5" width="9" height="7" rx="1.5" stroke="rgba(255,255,255,.3)" stroke-width="1.2" fill="rgba(255,255,255,.04)"/><path d="M3 5.5V3.5a2.5 2.5 0 0 1 5 0v2" stroke="rgba(255,255,255,.3)" stroke-width="1.2" stroke-linecap="round" fill="none"/><circle cx="5.5" cy="9" r="1" fill="rgba(255,255,255,.25)"/></svg>';
+    if (_accessMode === 'demo') {
+      document.getElementById('m3statuslbl').textContent = 'FULL VERSION';
+      if(b3) { b3.innerHTML = m3lockSvg + 'AVAILABLE IN FULL VERSION'; b3.classList.add('locked-btn'); b3.classList.remove('replay-btn'); }
+    } else {
+      document.getElementById('m3statuslbl').textContent = 'LOCKED';
+      if(b3) { b3.innerHTML = m3lockSvg + 'COMPLETE MISSION 02 TO UNLOCK'; b3.classList.add('locked-btn'); b3.classList.remove('replay-btn'); }
+    }
   }
 
   // Pulse the next available mission's launch button
   [b1, b2, b3].forEach(b => { if(b) b.classList.remove('next-up'); });
   if (!courseProgress.s1done && b1) b1.classList.add('next-up');
-  else if (courseProgress.s1done && !courseProgress.s2done && b2) b2.classList.add('next-up');
-  else if (courseProgress.s2done && !courseProgress.s3done && b3) b3.classList.add('next-up');
+  else if (m2open && !courseProgress.s2done && b2) b2.classList.add('next-up');
+  else if (m3open && !courseProgress.s3done && b3) b3.classList.add('next-up');
 
   // Progress dots (legacy — hidden, kept for compat)
   const d1=document.getElementById('pdot1'), d2=document.getElementById('pdot2'), d3=document.getElementById('pdot3');
@@ -356,8 +370,11 @@ function updateMenuState() {
 }
 
 function tryLaunch(n) {
-  if (n===2 && !courseProgress.s1done) { pWrong(); shakeCard(n); return; }
-  if (n===3 && !courseProgress.s2done) { pWrong(); shakeCard(n); return; }
+  if (_accessMode === 'demo' && n >= 2) { pWrong(); shakeCard(n); return; }
+  if (_accessMode === 'full') {
+    if (n===2 && !courseProgress.s1done) { pWrong(); shakeCard(n); return; }
+    if (n===3 && !courseProgress.s2done) { pWrong(); shakeCard(n); return; }
+  }
   launchSection(n);
 }
 function shakeCard(n) {
@@ -633,6 +650,24 @@ function scormReport(score, passed, missionId) {
 // ════════════════════════════════════════════
 //  SPLASH SCREEN
 // ════════════════════════════════════════════
+// ── Access modes: 'demo' (M1 only), 'full' (normal progression), 'dev' (all unlocked) ──
+let _accessMode = 'demo';
+
+// Shortcuts: A+1 = full version, A+2 = dev unlock all
+const _devKeys = {};
+document.addEventListener('keydown', e => {
+  _devKeys[e.key.toLowerCase()] = true;
+  if (_devKeys['a'] && _devKeys['1'] && _accessMode !== 'full') {
+    _accessMode = 'full'; updateMenuState();
+  }
+  if (_devKeys['a'] && _devKeys['2']) {
+    _accessMode = 'dev';
+    courseProgress.s1done = true; courseProgress.s2done = true; courseProgress.s3done = true;
+    saveProgress(); updateMenuState();
+  }
+});
+document.addEventListener('keyup', e => { _devKeys[e.key.toLowerCase()] = false; });
+
 function splashBegin() {
   // Validate name input
   const nameInput = document.getElementById('splashNameInput');
