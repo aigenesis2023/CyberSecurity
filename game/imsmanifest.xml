@@ -25,6 +25,11 @@
   <resources>
     <resource identifier="RES_001" type="webcontent" adlcp:scormtype="sco" href="index.html">
       <file href="index.html"/>
+      <file href="styles.css"/>
+      <file href="core.js"/>
+      <file href="missions/mission1.js"/>
+      <file href="missions/mission2.js"/>
+      <file href="missions/mission3.js"/>
       <file href="assets/fonts/fonts.css"/>
       <file href="assets/fonts/orbitron-latin-700-normal.woff2"/>
       <file href="assets/fonts/orbitron-latin-900-normal.woff2"/>
